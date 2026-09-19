@@ -1,215 +1,357 @@
 <!-- ================================================================= -->
-<!-- FEATURE 1: INSTANT INFRACTION TRIAGE WIDGET (HOTKEY & QUICK-ACTION) -->
+<!-- COMBINED SPOCA // TACTICAL PROCTOR COMMAND CENTER (METAL SLUG HUD) -->
 <!-- ================================================================= -->
 
-<!-- HTML Component (Insert into Dashboard Panel or Sidebar) -->
-<div id="triage-quick-bar" class="triage-bar">
-  <div class="triage-header">
-    <span class="triage-title">⚡ Instant Infraction Triage</span>
-    <span class="triage-hint">Press 1-6 for instant response</span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPOCA // Tactical Proctor Command Center</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- CRT Scanline & Vignette Overlay -->
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+
+  <!-- Metal Slug Inspired Parallax Desert Canvas -->
+  <canvas id="metal-slug-bg" class="tactical-bg"></canvas>
+
+  <!-- Main Command Center Shell -->
+  <div class="command-container">
+    
+    <!-- Top Tactical Header -->
+    <header class="command-header">
+      <div class="header-left">
+        <div class="status-indicator live"></div>
+        <h1>SPOCA // OPS COMMAND</h1>
+        <span class="secure-badge">SECURE TACTICAL NET</span>
+      </div>
+      <div class="header-center">
+        <div class="global-search-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="global-search" placeholder="Search policies, infractions, canned messages (Press '/' to focus)..." oninput="handleSearch(this.value)">
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="sys-clock" id="sys-clock">00:00:00 UTC</div>
+        <button class="sys-btn" onclick="toggleThemeMode()">⚡ TACTICAL HUD</button>
+      </div>
+    </header>
+
+    <!-- Main Navigation Bar -->
+    <nav class="tactical-nav">
+      <button class="nav-tab active" onclick="switchTab('dashboard', event)">📊 Home Dashboard</button>
+      <button class="nav-tab" onclick="switchTab('checkin', event)">🛂 Check-In Steps</button>
+      <button class="nav-tab" onclick="switchTab('canned', event)">💬 Canned Messages</button>
+      <button class="nav-tab" onclick="switchTab('policy-gen', event)">⚖️ Policy Generator</button>
+      <button class="nav-tab" onclick="switchTab('client-db', event)">🗄️ Client Database</button>
+      <button class="nav-tab" onclick="switchTab('infractions', event)">🚨 Infractions Matrix</button>
+      <button class="nav-tab" onclick="switchTab('knowledge', event)">📚 Knowledge Base</button>
+    </nav>
+
+    <!-- Operational Content Panels -->
+    <main class="tactical-main">
+
+      <!-- 1. HOME DASHBOARD PANEL -->
+      <section id="panel-dashboard" class="content-panel active">
+        <div class="panel-grid-top">
+          <!-- Quick Status Card -->
+          <div class="tactical-card">
+            <h3>ACTIVE SESSION TELEMETRY</h3>
+            <div class="metric-grid">
+              <div class="metric-item">
+                <span class="metric-val" id="stat-active">24</span>
+                <span class="metric-lbl">Active Proctors</span>
+              </div>
+              <div class="metric-item warning">
+                <span class="metric-val" id="stat-alerts">3</span>
+                <span class="metric-lbl">Pending Escalations</span>
+              </div>
+              <div class="metric-item success">
+                <span class="metric-val">99.4%</span>
+                <span class="metric-lbl">Net Compliance</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Integrated Instant Infraction Triage Widget with Interactive Output Panel -->
+          <div class="tactical-card span-2">
+            <div class="triage-header-inner">
+              <h3>⚡ INSTANT INFRACTION TRIAGE (5-SEC PROTOCOL)</h3>
+              <span class="triage-hint">Press keys 1-6 for instant response</span>
+            </div>
+            <p class="card-subtitle">Select an infraction to instantly dispatch protocol, view policy match, and copy canned warning:</p>
+            <div class="triage-grid">
+              <button class="triage-btn" onclick="triggerTriage('blurry-id')"><span class="key">1</span> Blurry ID</button>
+              <button class="triage-btn" onclick="triggerTriage('name-mismatch')"><span class="key">2</span> Name Mismatch</button>
+              <button class="triage-btn" onclick="triggerTriage('phone-detected')"><span class="key">3</span> Phone Detected</button>
+              <button class="triage-btn" onclick="triggerTriage('looking-away')"><span class="key">4</span> Gaze Deviation</button>
+              <button class="triage-btn" onclick="triggerTriage('break-violation')"><span class="key">5</span> Unauth. Break</button>
+              <button class="triage-btn" onclick="triggerTriage('remote-desktop')"><span class="key">6</span> Remote Software</button>
+            </div>
+            
+            <!-- Dynamic Triage Output Drawer -->
+            <div id="triage-output-panel" class="triage-output hidden">
+              <div class="triage-output-header">
+                <span id="triage-action-title">Action Protocol</span>
+                <button onclick="closeTriageOutput()">✕</button>
+              </div>
+              <div class="triage-content">
+                <p><strong>Canned Message:</strong> <span id="triage-msg"></span></p>
+                <p><strong>Policy Rule:</strong> <span id="triage-policy"></span></p>
+                <button class="copy-btn" onclick="copyTriageMessage()">📋 Copy Message</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Activity Stream -->
+        <div class="tactical-card">
+          <h3>RECENT OPERATIONS FEED</h3>
+          <div class="table-container">
+            <table class="tactical-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Candidate ID</th>
+                  <th>Event Type</th>
+                  <th>Action Taken</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="live-activity-body">
+                <tr>
+                  <td>13:42:01</td>
+                  <td>CAND-9941</td>
+                  <td>Phone Detected</td>
+                  <td>Warning Issued (Lvl 2)</td>
+                  <td><span class="status-tag warning">Pending Review</span></td>
+                </tr>
+                <tr>
+                  <td>13:40:15</td>
+                  <td>CAND-8820</td>
+                  <td>Blurry ID</td>
+                  <td>Re-upload Prompted</td>
+                  <td><span class="status-tag success">Resolved</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. CHECK-IN STEPS PANEL -->
+      <section id="panel-checkin" class="content-panel">
+        <div class="tactical-card">
+          <h3>🛂 MANDATORY VERIFICATION PIPELINE</h3>
+          <div class="steps-container">
+            <div class="step-card active">
+              <span class="step-num">01</span>
+              <h4>ID Validation</h4>
+              <p>Verify government ID clarity, holograms, and expiration status.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">02</span>
+              <h4>Facial Match</h4>
+              <p>Confirm candidate live webcam capture matches ID document.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">03</span>
+              <h4>Environment Scan</h4>
+              <p>Inspect 360-degree workspace for unauthorized materials or displays.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">04</span>
+              <h4>System Lockdown</h4>
+              <p>Verify browser lockdown mode and termination of prohibited background apps.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. CANNED MESSAGES PANEL -->
+      <section id="panel-canned" class="content-panel">
+        <div class="tactical-card">
+          <h3>💬 RAPID DISPATCH CANNED MESSAGES</h3>
+          <div class="filter-bar">
+            <button class="filter-pill active" onclick="filterCanned('all', event)">All Messages</button>
+            <button class="filter-pill" onclick="filterCanned('id', event)">ID & Identity</button>
+            <button class="filter-pill" onclick="filterCanned('behavior', event)">Behavioral</button>
+            <button class="filter-pill" onclick="filterCanned('technical', event)">Technical</button>
+          </div>
+          <div class="canned-grid" id="canned-grid">
+            <div class="canned-card" data-category="id">
+              <h4>Blurry ID Notice</h4>
+              <p>Please hold your government-issued ID closer to the webcam and wipe the lens for clarity.</p>
+              <button class="copy-btn" onclick="copyText(this)">📋 Copy Message</button>
+            </div>
+            <div class="canned-card" data-category="behavior">
+              <h4>Gaze Warning</h4>
+              <p>Warning: Please maintain direct focus on the monitor. Looking away is prohibited during assessment.</p>
+              <button class="copy-btn" onclick="copyText(this)">📋 Copy Message</button>
+            </div>
+            <div class="canned-card" data-category="technical">
+              <h4>Remote Software Detected</h4>
+              <p>Active screen-sharing or remote desktop utilities detected. Close them immediately.</p>
+              <button class="copy-btn" onclick="copyText(this)">📋 Copy Message</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. POLICY GENERATOR PANEL -->
+      <section id="panel-policy-gen" class="content-panel">
+        <div class="tactical-card">
+          <h3>⚖️ DYNAMIC POLICY & INCIDENT REPORT GENERATOR</h3>
+          <div class="generator-grid">
+            <div class="form-group">
+              <label>Client / Enterprise Target</label>
+              <select id="gen-client">
+                <option>Wells Fargo Assessment Protocol</option>
+                <option>JPMorgan Chase Compliance Standard</option>
+                <option>Global Standard BPO Tier-1</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Infraction Classification</label>
+              <select id="gen-infraction">
+                <option>Level 1 - Minor Procedural Warning</option>
+                <option>Level 2 - Direct Workspace Violation</option>
+                <option>Level 3 - Critical Security Breach / Disqualification</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top: 16px;">
+            <label>Custom Incident Notes</label>
+            <textarea id="gen-notes" rows="4" placeholder="Enter specific observations..."></textarea>
+          </div>
+          <button class="tactical-action-btn" onclick="generateIncidentReport()">Generate Official Incident Package</button>
+          <div id="gen-output" class="output-box hidden"></div>
+        </div>
+      </section>
+
+      <!-- 5. CLIENT POLICY DATABASE PANEL -->
+      <section id="panel-client-db" class="content-panel">
+        <div class="tactical-card">
+          <h3>🗄️ CLIENT POLICY DATABASE</h3>
+          <div class="table-container">
+            <table class="tactical-table">
+              <thead>
+                <tr>
+                  <th>Client Enterprise</th>
+                  <th>ID Strictness</th>
+                  <th>Allowed Break Time</th>
+                  <th>Secondary Device Rule</th>
+                  <th>Escalation SLA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Wells Fargo</strong></td>
+                  <td>Strict (Government Only)</td>
+                  <td>0 Mins (Zero Tolerance)</td>
+                  <td>Strictly Prohibited</td>
+                  <td>30 Seconds</td>
+                </tr>
+                <tr>
+                  <td><strong>JPMorgan Chase</strong></td>
+                  <td>Standard (Secondary Accepted)</td>
+                  <td>5 Mins Max</td>
+                  <td>Prohibited (Reviewable)</td>
+                  <td>45 Seconds</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. INFRACTIONS MATRIX PANEL -->
+      <section id="panel-infractions" class="content-panel">
+        <div class="tactical-card">
+          <h3>🚨 INFRACTIONS MATRIX & PENALTY SCALE</h3>
+          <div class="table-container">
+            <table class="tactical-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Infraction Description</th>
+                  <th>Severity Level</th>
+                  <th>Required Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>INF-01</td>
+                  <td>Blurry or Unreadable ID Document</td>
+                  <td><span class="status-tag warning">Level 1</span></td>
+                  <td>Prompt candidate for re-upload</td>
+                </tr>
+                <tr>
+                  <td>INF-02</td>
+                  <td>Extended Gaze Deviation (>15s)</td>
+                  <td><span class="status-tag warning">Level 1</span></td>
+                  <td>Issue audio warning and log event</td>
+                </tr>
+                <tr>
+                  <td>INF-03</td>
+                  <td>Mobile Device Visible in Workspace</td>
+                  <td><span class="status-tag danger">Level 3</span></td>
+                  <td>Immediate formal warning / Confiscation prompt</td>
+                </tr>
+                <tr>
+                  <td>INF-04</td>
+                  <td>Active Remote Desktop / VM Tool</td>
+                  <td><span class="status-tag critical">Level 4</span></td>
+                  <td>Instant Session Termination</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. KNOWLEDGE BASE PANEL -->
+      <section id="panel-knowledge" class="content-panel">
+        <div class="tactical-card">
+          <h3>📚 PROCTOR KNOWLEDGE BASE & SOPs</h3>
+          <div class="kb-grid">
+            <div class="kb-card" onclick="openKbModal('Escalation Protocol', 'When an escalation occurs, immediately notify the senior duty officer via comms channel 2, lock candidate state, and archive telemetry snapshot.')">
+              <h4>📋 Standard Escalation SOP</h4>
+              <p>Step-by-step guidelines for handling high-priority security breaches.</p>
+            </div>
+            <div class="kb-card" onclick="openKbModal('Technical Failure Guide', 'If candidate loses connection, maintain session state for 180 seconds before flagging as abandoned.')">
+              <h4>⚙️ Technical Disconnect Protocol</h4>
+              <p>Recovery procedures for dropped video feeds or browser crashes.</p>
+            </div>
+            <div class="kb-card" onclick="openKbModal('ID Verification Standards', 'Verify holographic seal, expiration date, and exact character match against registration record.')">
+              <h4>🛂 ID Verification Manual</h4>
+              <p>Comprehensive visual reference for checking foreign and domestic IDs.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
   </div>
-  <div class="triage-grid">
-    <button class="triage-btn" data-infraction="blurry-id" onclick="triggerTriage('blurry-id')">
-      <span class="key">1</span> Blurry ID
-    </button>
-    <button class="triage-btn" data-infraction="name-mismatch" onclick="triggerTriage('name-mismatch')">
-      <span class="key">2</span> Name Mismatch
-    </button>
-    <button class="triage-btn" data-infraction="phone-detected" onclick="triggerTriage('phone-detected')">
-      <span class="key">3</span> Phone Detected
-    </button>
-    <button class="triage-btn" data-infraction="looking-away" onclick="triggerTriage('looking-away')">
-      <span class="key">4</span> Looking Away
-    </button>
-    <button class="triage-btn" data-infraction="break-violation" onclick="triggerTriage('break-violation')">
-      <span class="key">5</span> Break Violation
-    </button>
-    <button class="triage-btn" data-infraction="remote-desktop" onclick="triggerTriage('remote-desktop')">
-      <span class="key">6</span> Remote Desktop
-    </button>
-  </div>
-  <div id="triage-output-panel" class="triage-output hidden">
-    <div class="triage-output-header">
-      <span id="triage-action-title">Action Protocol</span>
-      <button onclick="closeTriageOutput()">✕</button>
+
+  <!-- Toast Notifications Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- KB Modal Overlay -->
+  <div id="kb-modal" class="modal-overlay hidden" onclick="closeKbModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="modal-title">Knowledge Base</h3>
+        <button class="modal-close" onclick="closeKbModalDirect()">✕</button>
+      </div>
+      <div class="modal-body" id="modal-content"></div>
     </div>
-    <div class="triage-content">
-      <p><strong>Canned Message:</strong> <span id="triage-msg"></span></p>
-      <p><strong>Policy Rule:</strong> <span id="triage-policy"></span></p>
-      <button class="copy-btn" onclick="copyTriageMessage()">📋 Copy Message</button>
-    </div>
   </div>
-</div>
 
-<!-- CSS Component (Insert into <style> section) -->
-<style>
-  .triage-bar {
-    background: rgba(15, 23, 42, 0.9);
-    border: 1px solid rgba(59, 130, 246, 0.4);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 20px;
-    font-family: inherit;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  }
-  .triage-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-  .triage-title {
-    color: #38bdf8;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.5px;
-  }
-  .triage-hint {
-    color: #94a3b8;
-    font-size: 11px;
-  }
-  .triage-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 8px;
-  }
-  .triage-btn {
-    background: #1e293b;
-    border: 1px solid #334155;
-    color: #f8fafc;
-    padding: 10px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  .triage-btn:hover {
-    background: #3b82f6;
-    border-color: #60a5fa;
-    transform: translateY(-1px);
-  }
-  .triage-btn .key {
-    background: rgba(0, 0, 0, 0.4);
-    color: #38bdf8;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 700;
-  }
-  .triage-output {
-    margin-top: 12px;
-    background: #090d16;
-    border: 1px solid #1e3a8a;
-    border-radius: 8px;
-    padding: 12px;
-  }
-  .triage-output.hidden { display: none; }
-  .triage-output-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #60a5fa;
-    font-weight: 600;
-    font-size: 13px;
-    margin-bottom: 8px;
-    border-bottom: 1px solid #1e293b;
-    padding-bottom: 6px;
-  }
-  .triage-output-header button {
-    background: none;
-    border: none;
-    color: #94a3b8;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .triage-content p {
-    color: #cbd5e1;
-    font-size: 12px;
-    margin: 6px 0;
-  }
-  .copy-btn {
-    margin-top: 8px;
-    background: #2563eb;
-    border: none;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 600;
-  }
-  .copy-btn:hover { background: #1d4ed8; }
-</style>
-
-<!-- JavaScript Component (Insert into <script> section) -->
-<script>
-  const triageData = {
-    'blurry-id': {
-      title: 'Blurry ID Protocol',
-      message: 'Please hold your valid government-issued photo ID closer to the webcam and ensure the camera lens is clean so your details are fully legible.',
-      policy: 'Infractions Matrix -> Section 3.1: Unclear Identification (Level 1)'
-    },
-    'name-mismatch': {
-      title: 'Name Mismatch Protocol',
-      message: 'The name on your submitted identification does not match the registration profile. Please provide secondary identification or confirmation of legal name change.',
-      policy: 'Infractions Matrix -> Section 3.2: Identity Discrepancy (Level 2)'
-    },
-    'phone-detected': {
-      title: 'Phone Detected Protocol',
-      message: 'Warning: A mobile device or electronic communication tool was detected within your workspace view. Please store it completely out of reach immediately.',
-      policy: 'Infractions Matrix -> Section 4.1: Prohibited Electronic Device (Level 3)'
-    },
-    'looking-away': {
-      title: 'Looking Away Protocol',
-      message: 'Please maintain your focus toward the testing screen. Looking away from the monitor for extended periods violates active session monitoring guidelines.',
-      policy: 'Infractions Matrix -> Section 2.4: Gaze Deviation Warning (Level 1)'
-    },
-    'break-violation': {
-      title: 'Break Violation Protocol',
-      message: 'Unscheduled breaks are not permitted during active examination blocks. Please return your focus to the screen or request formal approval.',
-      policy: 'Infractions Matrix -> Section 5.0: Unauthorized Departure (Level 2)'
-    },
-    'remote-desktop': {
-      title: 'Remote Desktop Protocol',
-      message: 'Active remote desktop control software or screen-sharing utilities have been identified on your machine. You must close them immediately to proceed.',
-      policy: 'Infractions Matrix -> Section 6.2: Virtual Machine / Remote Software (Level 4)'
-    }
-  };
-
-  function triggerTriage(key) {
-    const data = triageData[key];
-    if (!data) return;
-    document.getElementById('triage-action-title').textContent = data.title;
-    document.getElementById('triage-msg').textContent = data.message;
-    document.getElementById('triage-policy').textContent = data.policy;
-    document.getElementById('triage-output-panel').classList.remove('hidden');
-  }
-
-  function closeTriageOutput() {
-    document.getElementById('triage-output-panel').classList.add('hidden');
-  }
-
-  function copyTriageMessage() {
-    const text = document.getElementById('triage-msg').textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      if (typeof showToast === 'function') {
-        showToast('Canned response copied to clipboard!');
-      } else {
-        alert('Copied to clipboard!');
-      }
-    });
-  }
-
-  document.addEventListener('keydown', (e) => {
-    if (['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) return;
-    if (e.key >= '1' && e.key <= '6') {
-      const keys = ['blurry-id', 'name-mismatch', 'phone-detected', 'looking-away', 'break-violation', 'remote-desktop'];
-      triggerTriage(keys[parseInt(e.key) - 1]);
-    }
-  });
-</script>
+  <script src="script.js"></script>
+</body>
+</html>
