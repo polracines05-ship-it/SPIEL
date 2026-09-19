@@ -3,203 +3,132 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Certiverse Proctor Hub</title>
+<title>FiveActs Proctor Hub</title>
 <style>
-  :root{
-    --bg-primary:#000000;
-    --bg-secondary:#0c0c0e;
-    --bg-card:#141417;
-    --text-main:#ffffff;
-    --text-muted:#a1a1aa;
-    --accent:#00c853;
-    --accent-hover:#00963e;
-    --border:#27272a;
+  :root {
+    --bg-primary: #000000;
+    --bg-secondary: #0c0c0e;
+    --bg-card: #141417;
+    --text-main: #ffffff;
+    --text-muted: #a1a1aa;
+    --accent: #00c853;
+    --accent-hover: #00963e;
+    --border: #27272a;
   }
-  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
-  html,body{height:100%;}
-  body{
-    background-color:var(--bg-primary);
-    color:var(--text-main);
-    display:flex;
-    min-height:100vh;
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+  html, body { height: 100%; overflow: hidden; background-color: var(--bg-primary); }
+  body { display: flex; }
+
+  /* ---------- Sidebar Navigation Panel ---------- */
+  .sidebar {
+    width: 280px;
+    background-color: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 14px;
+    flex-shrink: 0;
+    height: 100vh;
+    overflow-y: auto;
   }
-
-  /* ---------- Sidebar ---------- */
-  .sidebar{
-    width:280px;
-    background-color:var(--bg-secondary);
-    border-right:1px solid var(--border);
-    display:flex;
-    flex-direction:column;
-    padding:20px 14px;
-    flex-shrink:0;
-    height:100vh;
-    position:sticky;
-    top:0;
-    overflow-y:auto;
+  .sidebar-header { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); text-align: center; }
+  .brand-logo-container {
+    width: 100%; background: #ffffff; padding: 12px; border-radius: 8px; margin-bottom: 12px;
+    display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 14px rgba(0, 200, 83, 0.2);
   }
-  .sidebar-header{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);text-align:center;}
-  .brand-logo-container{
-    width:100%;background:#ffffff;padding:12px;border-radius:8px;margin-bottom:12px;
-    display:flex;justify-content:center;align-items:center;
+  .brand-logo { max-width: 80%; height: auto; display: block; }
+  .sidebar-header h1 { font-size: 1rem; color: #fff; font-weight: 700; letter-spacing: .4px; }
+  
+  .view-selectors { border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 12px; display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .view-btn {
+    width: 95%; background: none; border: 2px solid var(--border); color: var(--text-muted);
+    padding: 10px 12px; font-size: .84rem; font-weight: 600; border-radius: 50px; cursor: pointer;
+    margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all .15s ease;
   }
-  .brand-logo{max-width:80%;height:auto;display:block;}
-  .sidebar-header h1{font-size:1rem;letter-spacing:.4px;color:#fff;font-weight:700;}
-  .sidebar-header p{font-size:.68rem;color:var(--accent);margin-top:4px;font-weight:600;}
+  .view-btn:hover { background-color: var(--bg-card); color: #fff; border-color: var(--text-muted); }
+  .view-btn.active { background-color: var(--bg-card); color: var(--accent); border-color: var(--accent); }
+  .btn-icon { font-size: 1rem; }
 
-  /* Center-Aligned Oval Pill Selectors */
-  .view-selectors{
-    border-bottom:1px solid var(--border);
-    padding-bottom:12px;
-    margin-bottom:12px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    width:100%;
+  .nav-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: #52525b; margin: 10px 6px 6px; font-weight: 700; }
+  .nav-links { list-style: none; }
+  .nav-links li { margin-bottom: 2px; }
+  .nav-links a { display: block; padding: 6px 10px; color: var(--text-muted); text-decoration: none; border-radius: 4px; font-size: .8rem; transition: all .12s; }
+  .nav-links a:hover { background-color: var(--bg-card); color: var(--accent); padding-left: 14px; }
+  .sidebar-footer { padding-top: 12px; border-top: 1px solid var(--border); font-size: .68rem; color: #52525b; text-align: center; margin-top: auto; }
+
+  /* ---------- Main Workspace ---------- */
+  .main-content { flex-grow: 1; padding: 24px 28px 40px; min-width: 0; overflow-y: auto; height: 100vh; }
+  .search-wrapper { position: sticky; top: 0; background-color: var(--bg-primary); padding: 4px 0 18px; z-index: 100; }
+  .search-input {
+    width: 100%; padding: 12px 18px; font-size: .95rem; border-radius: 8px; border: 2px solid var(--border);
+    background-color: var(--bg-secondary); color: var(--text-main); outline: none; transition: border-color .15s;
   }
-  .view-btn{
-    width:92%;
-    background:none;
-    border:2px solid var(--border);
-    color:var(--text-muted);
-    padding:10px 12px;
-    font-size:.84rem;
-    font-weight:600;
-    border-radius:50px;
-    cursor:pointer;
-    margin-bottom:8px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    transition:background-color .15s,color .15s,border-color .15s,transform .1s;
+  .search-input:focus { border-color: var(--accent); }
+  .search-count { font-size: .75rem; color: var(--text-muted); margin-top: 8px; min-height: 1em; }
+
+  .dashboard-view { display: none; }
+  .dashboard-view.active { display: block; }
+  .section-container { margin-bottom: 30px; scroll-margin-top: 90px; }
+  .section-title { font-size: 1.15rem; font-weight: 700; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 14px; color: #fff; display: flex; align-items: center; gap: 8px; }
+  .section-count { font-size: .72rem; font-weight: 600; color: var(--text-muted); background: var(--bg-card); border: 1px solid var(--border); padding: 2px 8px; border-radius: 10px; }
+  .empty-state { color: #52525b; font-size: .85rem; padding: 24px 0; text-align: center; display: none; }
+
+  /* ---------- Operational Interface Cards ---------- */
+  .card {
+    background-color: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 16px;
   }
-  .view-btn:hover{background-color:var(--bg-card);color:#fff;border-color:var(--text-muted);}
-  .view-btn.active{background-color:var(--bg-card);color:var(--accent);border-color:var(--accent);}
-  .view-btn:active{transform:scale(0.97);}
-  .btn-icon{font-size:1rem;display:inline-block;line-height:1;}
+  .card-body { flex-grow: 1; min-width: 0; }
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+  .card-tags:empty { display: none; }
+  .card-tag { display: inline-block; font-size: .62rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; background-color: #27272a; color: #fff; }
+  .card-tag.win { background-color: #1e3a8a; }
+  .card-tag.mac { background-color: #581c87; }
+  .card-tag.linux { background-color: #14532d; }
+  .card-tag.term { background-color: #7f1d1d; color: #fca5a5; }
+  .card-tag.new { background-color: #b45309; }
 
-  .nav-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:#52525b;margin:10px 6px 6px;font-weight:700;}
-  .nav-links{list-style:none;overflow-y:auto;flex-grow:1;}
-  .nav-links li{margin-bottom:2px;}
-  .nav-links a{display:block;padding:6px 10px;color:var(--text-muted);text-decoration:none;border-radius:4px;font-size:.8rem;transition:background-color .12s,color .12s,padding-left .12s;}
-  .nav-links a:hover{background-color:var(--bg-card);color:var(--accent);padding-left:14px;}
+  /* Robust Grid System for Data views */
+  .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .data-card { background-color: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .data-header { font-size: 1.05rem; font-weight: 700; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  .data-row { display: flex; justify-content: space-between; font-size: 0.85rem; line-height: 1.4; }
+  .data-label { color: var(--text-muted); font-weight: 600; }
+  .data-value { color: #e4e4e7; text-align: right; max-width: 60%; }
 
-  .sidebar-footer{padding-top:12px;border-top:1px solid var(--border);font-size:.68rem;color:#52525b;text-align:center;}
-
-  /* ---------- Main content ---------- */
-  .main-content{flex-grow:1;padding:24px 28px 40px;min-width:0;overflow-y:auto;height:100vh;}
-  .search-wrapper{position:sticky;top:0;background-color:var(--bg-primary);padding:4px 0 18px;z-index:100;}
-  .search-input{
-    width:100%;padding:12px 18px;font-size:.95rem;border-radius:8px;border:2px solid var(--border);
-    background-color:var(--bg-secondary);color:var(--text-main);outline:none;transition:border-color .15s;
+  .message-text { font-size: .94rem; line-height: 1.55; white-space: pre-line; color: #e4e4e7; }
+  .copy-btn {
+    background-color: var(--accent); color: #000; border: none; padding: 9px 14px; border-radius: 6px;
+    cursor: pointer; font-size: .8rem; font-weight: 700; white-space: nowrap; min-width: 118px; transition: background-color .15s; flex-shrink: 0;
   }
-  .search-input:focus{border-color:var(--accent);}
-  .search-count{font-size:.75rem;color:var(--text-muted);margin-top:8px;min-height:1em;}
+  .copy-btn:hover { background-color: var(--accent-hover); }
+  .copy-btn.copied { background-color: #ffffff; color: #000; border: 1px solid var(--accent); }
 
-  .dashboard-view{display:none;}
-  .dashboard-view.active{display:block;}
+  .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: .65rem; font-weight: 700; text-transform: uppercase; }
+  .badge-minor { background-color: #27272a; color: #f4f4f5; }
+  .badge-major { background-color: #7f1d1d; color: #fca5a5; }
 
-  .section-container{margin-bottom:30px;scroll-margin-top:90px;}
-  .section-title{
-    font-size:1.15rem;font-weight:700;border-bottom:2px solid var(--border);
-    padding-bottom:8px;margin-bottom:14px;color:#fff;display:flex;align-items:center;gap:8px;
-  }
-  .section-count{font-size:.72rem;font-weight:600;color:var(--text-muted);background:var(--bg-card);border:1px solid var(--border);padding:2px 8px;border-radius:10px;}
-
-  .empty-state{color:#52525b;font-size:.85rem;padding:24px 0;text-align:center;display:none;}
-
-  /* ---------- Cards ---------- */
-  .card{
-    background-color:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;
-    padding:14px 16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:16px;
-  }
-  .card-body{flex-grow:1;min-width:0;}
-  .card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
-  .card-tags:empty{display:none;}
-  .card-tag{
-    display:inline-block;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:4px;
-    background-color:#27272a;color:#fff;letter-spacing:.03em;
-  }
-  .card-tag.win{background-color:#1e3a8a;}
-  .card-tag.mac{background-color:#581c87;}
-  .card-tag.linux{background-color:#14532d;}
-  .card-tag.critical{background-color:#7f1d1d;color:#fca5a5;}
-  .card-tag.term{background-color:#7f1d1d;color:#fca5a5;}
-  .card-tag.new{background-color:#b45309;}
-
-  .message-text{font-size:.94rem;line-height:1.55;white-space:pre-line;color:#e4e4e7;}
-
-  .copy-btn{
-    background-color:var(--accent);color:#000;border:none;padding:9px 14px;border-radius:6px;
-    cursor:pointer;font-size:.8rem;font-weight:700;white-space:nowrap;min-width:118px;
-    transition:background-color .15s;flex-shrink:0;
-  }
-  .copy-btn:hover{background-color:var(--accent-hover);}
-  .copy-btn.copied{background-color:#ffffff;color:#000;border:1px solid var(--accent);}
-  .copy-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
-
-  /* ---------- Tables ---------- */
-  .table-responsive{width:100%;overflow-x:auto;background-color:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;}
-  table{width:100%;border-collapse:collapse;text-align:left;font-size:.83rem;min-width:760px;}
-  th{background-color:#141417;color:#fff;padding:12px;border-bottom:2px solid var(--border);white-space:nowrap;position:sticky;top:0;}
-  td{padding:10px 12px;border-bottom:1px solid var(--border);color:#e4e4e7;}
-  tbody tr:hover td{background-color:#16161a;}
-  tbody tr:last-child td{border-bottom:none;}
-
-  .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;}
-  .badge-minor{background-color:#27272a;color:#f4f4f5;}
-  .badge-major{background-color:#7f1d1d;color:#fca5a5;}
-
-  .num-cell{font-variant-numeric:tabular-nums;text-align:center;}
-
-  /* ---------- Scrollbars ---------- */
-  ::-webkit-scrollbar{width:10px;height:10px;}
-  ::-webkit-scrollbar-track{background:transparent;}
-  ::-webkit-scrollbar-thumb{background:#27272a;border-radius:6px;}
-  ::-webkit-scrollbar-thumb:hover{background:#3f3f46;}
-
-  /* ---------- Responsive ---------- */
-  @media (max-width:900px){
-    body{flex-direction:row;}
-    .sidebar{width:220px;height:100vh;position:sticky;flex-direction:column;flex-wrap:nowrap;align-items:stretch;}
-    .sidebar-header{width:100%;}
-    .view-selectors{width:100%;}
-    .nav-links{display:block;}
-    .main-content{padding:18px;}
-  }
-  @media (max-width:600px){
-    body{flex-direction:column;}
-    .sidebar{width:100%;height:auto;position:relative;}
-    .nav-links{display:none;}
-    .card{flex-direction:column;align-items:stretch;}
-    .copy-btn{width:100%;}
-  }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
 </style>
 </head>
 <body>
 
-  <!-- SIDEBAR NAVIGATION PANEL -->
+  <!-- SIDEBAR CONTROL MODULE -->
   <div class="sidebar">
     <div class="sidebar-header">
       <div class="brand-logo-container">
-        <img src="FiveActs-Logo.png" alt="FiveActs Brand Logo" class="brand-logo" onerror="this.parentElement.style.display='none';">
+        <img src="FiveActs-Logo.png" alt="FiveActs Logo" class="brand-logo" onerror="this.parentElement.style.display='none';">
       </div>
       <h1>FiveActs</h1>
-      <p>PROCTOR HUB</p>
     </div>
 
-    <!-- Centered Oval Buttons with Custom Visual Icons Mapping Layout -->
     <div class="view-selectors">
-      <button class="view-btn active" onclick="switchView('canned-view')">
-        <span class="btn-icon">📋</span> Canned Message
-      </button>
-      <button class="view-btn" onclick="switchView('policies-view')">
-        <span class="btn-icon">📁</span> Name Change policy
-      </button>
-      <button class="view-btn" onclick="switchView('infractions-view')">
-        <span class="btn-icon">🚨</span> Threshold
-      </button>
+      <button class="view-btn active" onclick="switchView('canned-view')"><span class="btn-icon">📋</span> Canned Message</button>
+      <button class="view-btn" onclick="switchView('policies-view')"><span class="btn-icon">📁</span> Name Change policy</button>
+      <button class="view-btn" onclick="switchView('infractions-view')"><span class="btn-icon">🚨</span> Threshold</button>
     </div>
 
     <div id="sidebar-anchors">
@@ -214,23 +143,25 @@
         <li><a href="#troubleshooting">6. Troubleshooting</a></li>
         <li><a href="#warnings">7. System Warnings</a></li>
         <li><a href="#miscellaneous">8. Status & Misc</a></li>
-        <li><a href="#termination">9. Termination Matrices</a></li>
+        <li><a href="#termination">9. Termination</a></li>
       </ul>
     </div>
     <div class="sidebar-footer">v. May 25, 2026</div>
   </div>
 
-  <!-- MAIN WORKSPACE SECTION PANEL -->
+  <!-- WORKSPACE CONTENT CONTAINER -->
   <div class="main-content">
     <div class="search-wrapper">
-      <input type="text" id="globalSearch" class="search-input" placeholder="🔍 Type keywords instantly to filter templates, protocols or tracker entries...">
+      <input type="text" id="globalSearch" class="search-input" placeholder="🔍 Type keywords instantly to filter templates, protocols or tracker cards...">
       <div class="search-count" id="searchCount"></div>
     </div>
 
-    <div id="emptyState" class="empty-state">No matching dashboard entries found. Please try a different query.</div>
+    <div id="emptyState" class="empty-state">No matching dashboard entries found. Please refine your filter word.</div>
 
-    <!-- VIEW 1: CANNED MESSAGES VIEW CONTAINER -->
+    <!-- TAB CONTAINER 1: SEGMENTED CANNED MESSAGES -->
     <div id="canned-view" class="dashboard-view active">
-      
       <section id="preflight" class="section-container">
         <div class="section-title">Pre-flight <span class="section-count"></span></div>
+        <div class="card"><div class="card-body"><p class="message-text">Hi, are you having issues with screensharing?</p></div><button class="copy-btn" onclick="copyText(this)">Copy Message</button></div>
+        <div class="card"><div class="card-body"><div class="card-tags"><span class="card-tag mac">MAC</span></div><p class="message-text">Always remember that there are two steps for MAC screen sharing issues:\n1. Allow screensharing in browser\n2. And then allow screen sharing in system preferences</p></div><button class="copy-btn" onclick="copyText(this)">Copy Message</button></div>
+        <div class="card"><div class="card-body"><p class="message-text">Hi, are you having issues with your camera?\nPlease relaunch the exam and choose the correct camera on the pre-flight screen.</p></div><button class="copy-btn" onclick="copyText(this)">Copy Message</button></div>
