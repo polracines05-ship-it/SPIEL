@@ -1,1021 +1,758 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FiveActs Proctoring Operations Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #5c94fc;
-      overflow-x: hidden;
-      margin: 0;
-      padding: 0;
-    }
-    .mario-font {
-      font-family: 'Press Start 2P', cursive;
-    }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
-    .glass-nav {
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-    }
-    #mario-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-    }
-    .nav-btn {
-      transition: all 0.2s ease;
-    }
-    .nav-btn.active {
-      background-color: #2563eb;
-      color: white;
-      box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
-    }
-    .copy-toast {
-      transform: translateY(100px);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .copy-toast.show {
-      transform: translateY(0);
-    }
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.1);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(37, 99, 235, 0.6);
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(37, 99, 235, 0.9);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FiveActs Proctoring Operations Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.12); }
+        .glass-card { background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .toast { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
 </head>
-<body class="relative min-h-screen text-slate-800">
+<body class="h-full bg-slate-950 text-slate-100 flex flex-col overflow-hidden relative">
 
-  <!-- Super Mario 1-1 Parallax Background Canvas -->
-  <canvas id="mario-canvas"></canvas>
+    <!-- Super Mario World 1-1 Canvas Background -->
+    <canvas id="marioCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
 
-  <!-- Navigation Bar -->
-  <nav class="glass-nav fixed top-0 left-0 right-0 z-50 px-4 py-3 text-white">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center font-bold text-xl shadow-lg border-2 border-white/20 mario-font">5A</div>
-        <div>
-          <h1 class="font-extrabold text-lg tracking-wide text-white flex items-center gap-2">
-            FIVEACTS <span class="bg-blue-600 text-xs px-2 py-0.5 rounded text-blue-100 font-semibold">Proctor Operations</span>
-          </h1>
-          <p class="text-xs text-slate-300">Live Exam Monitoring & Policy Control</p>
-        </div>
-      </div>
-
-      <!-- Main Navigation Buttons -->
-      <div class="flex flex-wrap items-center gap-2">
-        <button onclick="switchTab('home')" id="tab-btn-home" class="nav-btn active px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200">
-          <i class="fa-solid fa-house text-yellow-400"></i> Home
-        </button>
-        <button onclick="switchTab('checkin')" id="tab-btn-checkin" class="nav-btn px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200">
-          <i class="fa-solid fa-clipboard-check text-green-400"></i> Check-in Steps
-        </button>
-        <button onclick="switchTab('canned')" id="tab-btn-canned" class="nav-btn px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200">
-          <i class="fa-solid fa-comment-dots text-blue-400"></i> Canned Messages
-        </button>
-        <button onclick="switchTab('policies')" id="tab-btn-policies" class="nav-btn px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200">
-          <i class="fa-solid fa-shield-halved text-purple-400"></i> Client Policies
-        </button>
-        <button onclick="switchTab('violations')" id="tab-btn-violations" class="nav-btn px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200">
-          <i class="fa-solid fa-triangle-exclamation text-red-400"></i> Infractions Matrix
-        </button>
-      </div>
-
-      <!-- Controls & Toggle -->
-      <div class="flex items-center gap-3">
-        <button onclick="toggleMario()" id="mario-toggle-btn" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-3 py-1.5 rounded-md text-xs flex items-center gap-1.5 shadow">
-          <i class="fa-solid fa-gamepad"></i> Pause Mario
-        </button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Global Search Floating Bar -->
-  <div class="fixed top-20 right-6 z-40 w-72 md:w-80 glass-card p-2 rounded-xl border border-white/50 shadow-2xl">
-    <div class="relative">
-      <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
-      <input type="text" id="global-search" onkeyup="handleGlobalSearch()" placeholder="Search spiels, policies, rules..." class="w-full pl-9 pr-4 py-2 bg-white/90 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner">
-    </div>
-  </div>
-
-  <!-- Main Content Container -->
-  <main class="relative z-10 pt-28 pb-16 px-4 max-w-7xl mx-auto">
-
-    <!-- HOME TAB -->
-    <section id="tab-home" class="tab-content space-y-6">
-      <!-- Welcome Banner -->
-      <div class="glass-card rounded-2xl p-6 border-l-8 border-blue-600 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl">
-        <div class="space-y-2">
-          <div class="flex items-center gap-3">
-            <span class="mario-font text-xl text-red-600">★ WORLD 1-1 ★</span>
-            <span class="bg-green-100 text-green-800 text-xs font-extrabold px-3 py-1 rounded-full border border-green-300">Live Systems Normal</span>
-          </div>
-          <h2 class="text-3xl font-extrabold text-slate-900">Proctoring Operations Command Center</h2>
-          <p class="text-slate-600 font-medium text-sm">Fast-access workflow automation, candidate verification spiels, client policies, and severity tracking.</p>
-        </div>
-        <div class="flex items-center gap-3 bg-white/80 p-4 rounded-xl border border-slate-200 shadow-sm">
-          <i class="fa-solid fa-clock text-blue-600 text-2xl"></i>
-          <div>
-            <div class="text-xs text-slate-500 font-bold uppercase">Active Session Time</div>
-            <div id="live-clock" class="text-xl font-black text-slate-800 font-mono">00:00:00 UTC</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Operational Metrics Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="glass-card p-5 rounded-xl flex items-center gap-4 border-b-4 border-blue-500">
-          <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-users-viewfinder"></i></div>
-          <div>
-            <div class="text-2xl font-black text-slate-900">13 Steps</div>
-            <div class="text-xs font-bold text-slate-500 uppercase">Check-in Sequence</div>
-          </div>
-        </div>
-        <div class="glass-card p-5 rounded-xl flex items-center gap-4 border-b-4 border-purple-500">
-          <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-building-user"></i></div>
-          <div>
-            <div class="text-2xl font-black text-slate-900">16 Clients</div>
-            <div class="text-xs font-bold text-slate-500 uppercase">Policy Matrices</div>
-          </div>
-        </div>
-        <div class="glass-card p-5 rounded-xl flex items-center gap-4 border-b-4 border-amber-500">
-          <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-comments"></i></div>
-          <div>
-            <div class="text-2xl font-black text-slate-900">60+ Templates</div>
-            <div class="text-xs font-bold text-slate-500 uppercase">Canned Responses</div>
-          </div>
-        </div>
-        <div class="glass-card p-5 rounded-xl flex items-center gap-4 border-b-4 border-red-500">
-          <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-triangle-exclamation"></i></div>
-          <div>
-            <div class="text-2xl font-black text-slate-900">28 Rules</div>
-            <div class="text-xs font-bold text-slate-500 uppercase">Infractions & Matrix</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Action Shortcuts -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="glass-card p-6 rounded-2xl space-y-4">
-          <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-            <i class="fa-solid fa-bolt text-amber-500"></i> High-Frequency Quick Copy
-          </h3>
-          <div class="space-y-3">
-            <div class="bg-white/90 p-3 rounded-lg border border-slate-200 flex justify-between items-center gap-3">
-              <p class="text-xs font-medium text-slate-700">"Hello and welcome! I will be your proctor for this exam."</p>
-              <button onclick="copyText(this)" data-copy="Hello and welcome! I will be your proctor for this exam." class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded transition">Copy</button>
+    <!-- Header / Top Navigation Bar -->
+    <header class="glass z-20 px-6 py-4 flex flex-wrap justify-between items-center border-b border-slate-800 shadow-xl">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                <i class="fa-solid fa-shield-halved text-white text-lg"></i>
             </div>
-            <div class="bg-white/90 p-3 rounded-lg border border-slate-200 flex justify-between items-center gap-3">
-              <p class="text-xs font-medium text-slate-700">"Please hold your ID steady and show the expiration date."</p>
-              <button onclick="copyText(this)" data-copy="Please hold your ID steady and show the expiration date." class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded transition">Copy</button>
-            </div>
-            <div class="bg-white/90 p-3 rounded-lg border border-slate-200 flex justify-between items-center gap-3">
-              <p class="text-xs font-medium text-slate-700">"Please ensure all electronic mobile devices are put away and out of reach."</p>
-              <button onclick="copyText(this)" data-copy="Please ensure all electronic mobile devices are put away and out of reach." class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded transition">Copy</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="glass-card p-6 rounded-2xl space-y-4">
-          <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-            <i class="fa-solid fa-triangle-exclamation text-red-500"></i> Critical Protocol Alerts
-          </h3>
-          <div class="space-y-3 text-xs">
-            <div class="p-3 bg-red-50 border-l-4 border-red-500 rounded text-red-900 font-semibold flex items-start gap-2">
-              <i class="fa-solid fa-circle-exclamation mt-0.5 text-red-600"></i>
-              <div><strong>Major Infractions (Threshold 0):</strong> Instant exam termination required for Remote Desktop, Mobile Phone Use, Failure to Return from Break, or Proctor Harassment.</div>
-            </div>
-            <div class="p-3 bg-amber-50 border-l-4 border-amber-500 rounded text-amber-900 font-semibold flex items-start gap-2">
-              <i class="fa-solid fa-triangle-exclamation mt-0.5 text-amber-600"></i>
-              <div><strong>HashiCorp & Non-SEB Reconnections:</strong> Must perform complete Task Manager/Activity Monitor inspection & full room scan prior to exam release.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CHECK-IN STEPS TAB -->
-    <section id="tab-checkin" class="tab-content hidden space-y-6">
-      <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <i class="fa-solid fa-clipboard-list text-green-600"></i> Official Check-in Steps (1–13)
-          </h2>
-          <p class="text-xs text-slate-600">Standardized sequential procedure for candidate onboarding & environment verification.</p>
-        </div>
-        <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl border border-slate-300">
-          <button onclick="filterOS('ALL')" class="os-btn active px-3 py-1 text-xs font-bold rounded-lg bg-blue-600 text-white">ALL OS</button>
-          <button onclick="filterOS('WINDOWS')" class="os-btn px-3 py-1 text-xs font-bold rounded-lg text-slate-700 hover:bg-slate-200">Windows</button>
-          <button onclick="filterOS('MAC')" class="os-btn px-3 py-1 text-xs font-bold rounded-lg text-slate-700 hover:bg-slate-200">Mac</button>
-          <button onclick="filterOS('LINUX')" class="os-btn px-3 py-1 text-xs font-bold rounded-lg text-slate-700 hover:bg-slate-200">Linux</button>
-        </div>
-      </div>
-
-      <div id="checkin-container" class="space-y-4">
-        <!-- Rendered dynamically -->
-      </div>
-    </section>
-
-    <!-- CANNED MESSAGES TAB -->
-    <section id="tab-canned" class="tab-content hidden space-y-6">
-      <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <i class="fa-solid fa-comment-dots text-blue-600"></i> Canned Messages Repository
-          </h2>
-          <p class="text-xs text-slate-600">Pre-approved response templates for pre-flight, troubleshooting, warnings, and terminations.</p>
-        </div>
-      </div>
-
-      <div id="canned-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Rendered dynamically -->
-      </div>
-    </section>
-
-    <!-- CLIENT POLICIES TAB -->
-    <section id="tab-policies" class="tab-content hidden space-y-6">
-      <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <i class="fa-solid fa-shield-halved text-purple-600"></i> Client Policies Tracker
-          </h2>
-          <p class="text-xs text-slate-600">Strict exam requirements, nickname rules, break durations, and SEB configurations per client.</p>
-        </div>
-      </div>
-
-      <!-- Policy Table -->
-      <div class="glass-card rounded-2xl overflow-hidden shadow-xl border border-white/60">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-slate-900 text-white text-xs uppercase font-extrabold tracking-wider">
-                <th class="p-4">Client Name</th>
-                <th class="p-4">Name Change</th>
-                <th class="p-4">Breaks Policy</th>
-                <th class="p-4">Name Policy</th>
-                <th class="p-4">Environment</th>
-                <th class="p-4">Documentation</th>
-              </tr>
-            </thead>
-            <tbody id="policies-table-body" class="divide-y divide-slate-200 text-xs font-semibold bg-white/70">
-              <!-- Rendered dynamically -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Dynamic Spiel Generator -->
-      <div class="glass-card p-6 rounded-2xl border-2 border-purple-500/30 space-y-4">
-        <h3 class="text-lg font-black text-slate-900 flex items-center gap-2">
-          <i class="fa-solid fa-wand-magic-sparkles text-purple-600"></i> Dynamic Policy Spiel Generator
-        </h3>
-        <p class="text-xs text-slate-600">Select a client below to instantly construct official spiels based on their verified policy matrix.</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Select Client</label>
-            <select id="generator-client-select" onchange="generateClientSpiel()" class="w-full p-2.5 bg-white rounded-lg border border-slate-300 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-purple-500">
-              <!-- Rendered dynamically -->
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Scenario Type</label>
-            <select id="generator-scenario-select" onchange="generateClientSpiel()" class="w-full p-2.5 bg-white rounded-lg border border-slate-300 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-purple-500">
-              <option value="name">Name Discrepancy Protocol</option>
-              <option value="break">Break Policy Protocol</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="p-4 bg-slate-900 text-slate-100 rounded-xl relative group space-y-2 border border-slate-800">
-          <div class="text-[10px] uppercase font-bold text-purple-400 tracking-wider">Generated Official Spiel</div>
-          <p id="generated-spiel-text" class="text-xs font-mono leading-relaxed text-emerald-300">Select options above to view generated text...</p>
-          <button onclick="copyGeneratedSpiel()" class="mt-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1.5">
-            <i class="fa-solid fa-copy"></i> Copy Generated Spiel
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- INFRACTIONS MATRIX TAB -->
-    <section id="tab-violations" class="tab-content hidden space-y-6">
-      <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <i class="fa-solid fa-triangle-exclamation text-red-600"></i> Infractions & Severity Index Matrix
-          </h2>
-          <p class="text-xs text-slate-600">Proctoring violation taxonomy, severity index, and system action thresholds (0–1000).</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <select id="violation-filter-severity" onchange="filterViolations()" class="p-2 bg-white rounded-lg border border-slate-300 text-xs font-bold">
-            <option value="ALL">All Severities</option>
-            <option value="Major">Major (Instant Termination)</option>
-            <option value="Minor">Minor Violations</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="glass-card rounded-2xl overflow-hidden shadow-xl border border-white/60">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-slate-900 text-white text-xs uppercase font-extrabold tracking-wider">
-                <th class="p-4">Violation Name</th>
-                <th class="p-4">Context</th>
-                <th class="p-4">Category</th>
-                <th class="p-4">Severity</th>
-                <th class="p-4">Threshold</th>
-              </tr>
-            </thead>
-            <tbody id="violations-table-body" class="divide-y divide-slate-200 text-xs font-semibold bg-white/70">
-              <!-- Rendered dynamically -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Copy Toast Alert -->
-  <div id="copy-toast" class="copy-toast fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-slate-700">
-    <i class="fa-solid fa-circle-check text-green-400 text-lg"></i>
-    <span id="toast-msg" class="text-xs font-bold">Copied to clipboard!</span>
-  </div>
-
-  <!-- JavaScript Logic -->
-  <script>
-    // --- CANVAS ANIMATION (SUPER MARIO WORLD 1-1) ---
-    const canvas = document.getElementById('mario-canvas');
-    const ctx = canvas.getContext('2d');
-    let marioAnimating = true;
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    // Game Loop Variables
-    let cameraX = 0;
-    const groundY = canvas.height - 60;
-
-    // Mario Object
-    const mario = {
-      x: 100,
-      y: groundY - 32,
-      w: 28,
-      h: 32,
-      vy: 0,
-      jumping: false,
-      frame: 0
-    };
-
-    // World Elements (Level 1-1 objects)
-    const blocks = [
-      { x: 300, y: groundY - 100, type: 'Q' },
-      { x: 332, y: groundY - 100, type: 'B' },
-      { x: 364, y: groundY - 100, type: 'Q' },
-      { x: 396, y: groundY - 100, type: 'B' },
-      { x: 700, y: groundY - 100, type: 'Q' },
-      { x: 1100, y: groundY - 120, type: 'Q' },
-      { x: 1132, y: groundY - 120, type: 'Q' },
-    ];
-
-    const pipes = [
-      { x: 500, h: 64 },
-      { x: 850, h: 96 },
-      { x: 1300, h: 80 }
-    ];
-
-    const enemies = [
-      { x: 450, y: groundY - 24, type: 'G', dir: -1 },
-      { x: 920, y: groundY - 24, type: 'K', dir: -1 }
-    ];
-
-    const clouds = [
-      { x: 100, y: 80, scale: 1 },
-      { x: 500, y: 120, scale: 1.2 },
-      { x: 900, y: 60, scale: 0.9 },
-      { x: 1400, y: 100, scale: 1.1 }
-    ];
-
-    function drawPixelRect(x, y, w, h, color) {
-      ctx.fillStyle = color;
-      ctx.fillRect(Math.floor(x), Math.floor(y), w, h);
-    }
-
-    function renderMarioWorld() {
-      if (!marioAnimating) return;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Sky Background
-      ctx.fillStyle = '#5c94fc';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Update Camera / World Scroll
-      cameraX += 2;
-      const effectiveGround = canvas.height - 60;
-
-      // Draw Clouds
-      clouds.forEach(c => {
-        const cx = (c.x - cameraX * 0.3) % (canvas.width + 300);
-        const realX = cx < -150 ? cx + canvas.width + 300 : cx;
-        ctx.fillStyle = 'rgba(255,255,255,0.85)';
-        ctx.beginPath();
-        ctx.arc(realX, c.y, 24 * c.scale, 0, Math.PI * 2);
-        ctx.arc(realX + 20 * c.scale, c.y - 10 * c.scale, 20 * c.scale, 0, Math.PI * 2);
-        ctx.arc(realX + 40 * c.scale, c.y, 24 * c.scale, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // Draw Hills
-      for (let i = -1; i < 5; i++) {
-        const hx = i * 600 - (cameraX * 0.5) % 600;
-        ctx.fillStyle = '#00a800';
-        ctx.beginPath();
-        ctx.arc(hx + 150, effectiveGround, 100, Math.PI, 0);
-        ctx.fill();
-      }
-
-      // Draw Ground
-      ctx.fillStyle = '#c84c0c';
-      ctx.fillRect(0, effectiveGround, canvas.width, 60);
-      ctx.fillStyle = '#00a800';
-      ctx.fillRect(0, effectiveGround, canvas.width, 12);
-
-      // Draw Blocks
-      blocks.forEach(b => {
-        const bx = b.x - (cameraX % 1800);
-        const renderX = bx < -100 ? bx + 1800 : bx;
-
-        if (b.type === 'Q') {
-          drawPixelRect(renderX, b.y, 30, 30, '#fc9838');
-          ctx.fillStyle = '#000';
-          ctx.font = 'bold 16px sans-serif';
-          ctx.fillText('?', renderX + 10, b.y + 22);
-        } else {
-          drawPixelRect(renderX, b.y, 30, 30, '#b84418');
-          drawPixelRect(renderX + 2, b.y + 2, 26, 26, '#d85000');
-        }
-      });
-
-      // Draw Pipes
-      pipes.forEach(p => {
-        const px = p.x - (cameraX % 1800);
-        const renderX = px < -100 ? px + 1800 : px;
-        const py = effectiveGround - p.h;
-
-        drawPixelRect(renderX, py, 50, p.h, '#00a800');
-        drawPixelRect(renderX - 4, py, 58, 20, '#00a800');
-        drawPixelRect(renderX - 2, py + 2, 54, 16, '#00e800');
-      });
-
-      // Draw Enemies
-      enemies.forEach(e => {
-        const ex = e.x - (cameraX % 1800);
-        const renderX = ex < -100 ? ex + 1800 : ex;
-        const ey = effectiveGround - 24;
-
-        if (e.type === 'G') {
-          drawPixelRect(renderX, ey, 24, 24, '#a81000');
-          drawPixelRect(renderX + 4, ey + 18, 16, 6, '#000');
-        } else {
-          drawPixelRect(renderX, ey - 6, 24, 30, '#00a800');
-        }
-      });
-
-      // Update Mario Physics & Logic
-      mario.frame++;
-      if (!mario.jumping && Math.random() < 0.012) {
-        mario.vy = -12;
-        mario.jumping = true;
-      }
-
-      if (mario.jumping) {
-        mario.y += mario.vy;
-        mario.vy += 0.8;
-        if (mario.y >= effectiveGround - 32) {
-          mario.y = effectiveGround - 32;
-          mario.jumping = false;
-        }
-      }
-
-      // Draw Mario Pixel Sprite
-      const mx = mario.x;
-      const my = mario.y;
-
-      // Hat & Shirt (Red)
-      drawPixelRect(mx + 6, my, 18, 8, '#f83800');
-      // Face
-      drawPixelRect(mx + 6, my + 8, 18, 8, '#ffa040');
-      // Overalls (Blue)
-      drawPixelRect(mx + 4, my + 16, 20, 12, '#0028c8');
-      // Shoes
-      drawPixelRect(mx + 2, my + 28, 10, 4, '#a81000');
-      drawPixelRect(mx + 16, my + 28, 10, 4, '#a81000');
-
-      requestAnimationFrame(renderMarioWorld);
-    }
-
-    function toggleMario() {
-      marioAnimating = !marioAnimating;
-      const btn = document.getElementById('mario-toggle-btn');
-      if (marioAnimating) {
-        btn.innerHTML = `<i class="fa-solid fa-gamepad"></i> Pause Mario`;
-        renderMarioWorld();
-      } else {
-        btn.innerHTML = `<i class="fa-solid fa-play"></i> Resume Mario`;
-      }
-    }
-
-    renderMarioWorld();
-
-    // --- DATASETS ---
-
-    const CHECKIN_DATA = [
-      {
-        step: 1,
-        title: "Welcome",
-        items: [
-          "Hello and welcome! I will be your proctor for this exam.",
-          "We have a few steps to complete before your exam begins. This time does not count against your exam time limit.",
-          "Please hold while we prepare your exam. Thank you for waiting."
-        ]
-      },
-      {
-        step: 2,
-        title: "Identification Verification",
-        items: [
-          "We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible.",
-          "Please bring your ID closer to the camera view.",
-          "Please hold your ID steady.",
-          "Please flip your ID.",
-          "Please show the expiration date.",
-          "Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment.",
-          "You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling.",
-          "Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com.",
-          "Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To assist you in reaching out to the exam sponsor who will process the name change, please contact support@certiverse.com. Once completed, you can re-enter the reservation and we will continue.",
-          "Thank you. You may keep your ID away now."
-        ]
-      },
-      {
-        step: 3,
-        title: "System Verification ✦ NEW",
-        items: [
-          { tag: "ALL", text: "Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam." },
-          { tag: "ALL", text: "Please also close the other Certiverse tab, leaving only this one open." },
-          { tag: "WINDOWS", text: "Please open your Task Manager then scroll down slowly until you reach the end of the list. Thank you. You may close the Task Manager now." },
-          { tag: "WINDOWS", text: "Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option." },
-          { tag: "MAC", text: "Please open your Activity Monitor then scroll down slowly until you reach the end of the list. Thank you. You may close the Activity Monitor now." },
-          { tag: "MAC", text: "Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed." },
-          { tag: "LINUX", text: "Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list. Thank you. You may close the System Monitor now." },
-          { tag: "LINUX", text: "Please close or force quit any applications not related to the exam. If needed, select the application and choose “End Process” or “Kill Process." }
-        ]
-      },
-      {
-        step: 4,
-        title: "Clear Desk",
-        items: [
-          "Thank you. If there are any items on your desk surface, please remove them now.",
-          "Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, smart glasses, and any other electronic device.",
-          "Headphones are not allowed during the exam. Please remove them and put them away.",
-          "Hats are not allowed during the exam. Please remove your hat and put it away.",
-          "Please remove your smartwatch and place it out of reach.",
-          "As outlined in the exam policies, only one laptop or computer without extra screens is allowed. Please remove or cover any additional monitors so they are not facing you directly."
-        ]
-      },
-      {
-        step: 5,
-        title: "Room Scan",
-        items: [
-          "Thank you. We will now scan the room to confirm that all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk.",
-          "When doing the room scan, please hold your laptop or webcam in a way that allows the camera to clearly capture the room. Rotate it slowly and make sure nothing blocks the view, so we can see all areas of your workspace, including the desk, floor, walls, and surrounding environment.",
-          "Please show us the desk area.",
-          "Please show the area under the desk.",
-          "All electronics should be out of reach and turned off.",
-          "Please ensure your desk is clear of all items.",
-          "Please direct your camera around the room one more time.",
-          "Please make sure to capture all corners and edges of your desk during the room scan.",
-          "Is it possible for you to improve the lighting in your testing area?",
-          "The window behind you is creating a backlight effect. Adjusting the lighting or moving slightly would help us proceed.",
-          "Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination."
-        ]
-      },
-      {
-        step: 6,
-        title: "Exam Release",
-        items: [
-          "Thank you for your cooperation. You may now click the “Hide Video” button on the side of this chat box.",
-          "Thank you. Do you have any questions before beginning your exam?",
-          "If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection.",
-          "Please use this chat if you have any questions that are not related to the exam content. I will now release your exam.",
-          "You can click the “Hide Chat” button on the side or the X at the top-right to begin your exam."
-        ]
-      },
-      {
-        step: 7,
-        title: "Miscellaneous",
-        items: [
-          "Breaks are not allowed for this exam.",
-          "You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules.",
-          "Please wait briefly while we investigate this issue.",
-          "Sorry, but we cannot assist with content-related questions.",
-          "You can email support@certiverse.com for further assistance with rescheduling.",
-          "Please adjust your camera. Your head and shoulders must remain fully visible during the exam.",
-          "Welcome back! Thank you. You may resume now."
-        ]
-      },
-      {
-        step: 8,
-        title: "Warnings",
-        items: [
-          "Please refrain from talking aloud.",
-          "Please ensure your face is always within camera view.",
-          "Please keep your attention forward.",
-          "Please ask all others to leave the room.",
-          "Please remain on the exam environment tab only.",
-          "Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."
-        ]
-      },
-      {
-        step: 9,
-        title: "Technical Support",
-        items: [
-          "Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open.",
-          "Please click the refresh button on the top left side of the screen.",
-          "Please try to reboot your machine and launch the exam again.",
-          "Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?",
-          "I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared.",
-          "Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser.",
-          "Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs.",
-          "It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network.",
-          "I understand. Are you currently on a company network? Are you currently using a docking station?",
-          "Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled.",
-          "It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.",
-          "You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed."
-        ]
-      },
-      {
-        step: 11,
-        title: "Non-SEB Exams",
-        items: [
-          "Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat.",
-          "You may hide or move the pop-up screen-sharing message at the bottom center of your screen."
-        ]
-      },
-      {
-        step: 12,
-        title: "Termination Messages",
-        items: [
-          "Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
-          "The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
-          "We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
-          "Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
-          "The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance."
-        ]
-      },
-      {
-        step: 13,
-        title: "SEB — Secure Exam Browser",
-        items: [
-          "You may exit the Secure Exam Browser to resolve the issue. Once it is fixed, re-entering SEB will reconnect you so the exam can continue.",
-          "To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen.",
-          "To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen.",
-          "Please try to refresh the SEB and choose a different audio/video input.",
-          "There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."
-        ]
-      }
-    ];
-
-    const CANNED_DATA = [
-      { category: "Pre-flight & Screen Sharing", text: "Hi, are you having issues with screensharing? Always remember that there are two steps for MAC screen sharing issues: 1. Allow screensharing in browser 2. And then allow screen sharing in system preferences" },
-      { category: "Pre-flight & Hardware", text: "Hi, are you having issues with your camera? Please relaunch the exam and choose the correct camera on the pre-flight screen." },
-      { category: "Pre-flight & Hardware", text: "Hi, are you having issues with your microphone? Please relaunch the exam and choose the correct microphone on the pre-flight screen." },
-      { category: "Pre-flight & Browser", text: "Please finish the pre-flight and launch the exam. Can you please switch to Google Chrome?" },
-      { category: "Pre-flight & Browser", text: "Hello, it seems like your screen is not being shared. Can you please refresh your browser?" },
-      { category: "Mac Configuration", text: "How do I enable video recording on my Mac?\n1. On your Mac, choose System Preferences, click Security & Privacy, then click Privacy.\n2. Select Screen Recording." },
-      { category: "Mac Configuration", text: "Screensharing on Mac: Choose Apple menu > System Settings, then click Privacy & Security in the sidebar. Click Screen & System Audio Recording on the right. For each app listed, turn recording on." },
-      { category: "Warnings", text: "Talking or communicating outside of the exam environment is not allowed during your exam, including reading or mouthing questions. Please do not read the questions and answers aloud." },
-      { category: "Warnings", text: "Highlighting/ Underlining the question and answers is not allowed during the test." },
-      { category: "Warnings", text: "Please uninstall the Ultraviewer application from this device, as it has been deemed compromised. We have detected the installation of Ultraviewer prior to your exam, and this action is necessary to ensure system integrity." },
-      { category: "Warnings", text: "Hello- Your eyes keep wandering way too low, as a reminder to please keep them forward and looking at the screen. Thank you." },
-      { category: "Break & Pauses", text: "You have one 5-minute break on this exam. Kindly message me if you need to take a break." },
-      { category: "Break & Pauses", text: "It's okay, You will have 5 minutes. If the break takes longer than the allotted 5 minutes, your exam will be terminated. I will pause your exam now." },
-      { category: "Termination", text: "Unfortunately, the use of foul language has been detected during this exam, which violates our code of conduct. As a result, this exam will now be terminated." },
-      { category: "Termination", text: "Unfortunately, another person has been detected nearby. As a result, this exam will now be terminated. Please email support@certiverse.com." }
-    ];
-
-    const CLIENT_POLICIES = [
-      { client: "Akylade", nameChange: "Allowed", breaks: "One (1) Five (5) Minute Break", namePolicy: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
-      { client: "Atlassian", nameChange: "Not Allowed", breaks: "None", namePolicy: "Nicknames Allowed", seb: "SEB", docs: "Not Allowed" },
-      { client: "Blue Prism", nameChange: "Allowed", breaks: "None", namePolicy: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
-      { client: "BMC", nameChange: "Not Allowed", breaks: "One (1) Five (5) Minute Break", namePolicy: "Name Must Match Govt. ID", seb: "SEB", docs: "Allowed" },
-      { client: "Camunda", nameChange: "Allowed", breaks: "None", namePolicy: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
-      { client: "Casbo", nameChange: "Allowed", breaks: "None", namePolicy: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
-      { client: "DocuSign", nameChange: "Not Allowed", breaks: "None", namePolicy: "Nicknames Allowed", seb: "SEB", docs: "Not Allowed" },
-      { client: "HashiCorp", nameChange: "Not Allowed", breaks: "None (Vault Prep: One 15-Min Break)", namePolicy: "Name Must Match Govt. ID", seb: "Non-SEB", docs: "Not Allowed" },
-      { client: "InterSystems", nameChange: "Not Allowed", breaks: "One (1) Ten (10) Minute Break", namePolicy: "Nicknames Allowed", seb: "SEB", docs: "Depends on Exam" },
-      { client: "NRPP", nameChange: "Allowed", breaks: "One (1) Fifteen (15) Minute Break", namePolicy: "Nicknames Allowed", seb: "SEB", docs: "Allowed" },
-      { client: "NVIDIA", nameChange: "Allowed", breaks: "None (Beta 180: Two 5-Min Breaks)", namePolicy: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
-      { client: "Open Text", nameChange: "Not Allowed", breaks: "None", namePolicy: "Name Must Match Govt. ID", seb: "SEB", docs: "Allowed" },
-      { client: "Project Success Inc.", nameChange: "Allowed", breaks: "None", namePolicy: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
-      { client: "SideFX", nameChange: "Allowed", breaks: "None", namePolicy: "Name Must Match Govt. ID", seb: "SEB", docs: "Textbooks Allowed" },
-      { client: "VastData", nameChange: "Allowed", breaks: "None", namePolicy: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
-      { client: "WellSky", nameChange: "Allowed", breaks: "Unlimited Breaks (10–20 Mins)", namePolicy: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" }
-    ];
-
-    const VIOLATION_MATRIX = [
-      { name: "Another person in the room", context: "Check in, Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 2 },
-      { name: "Books / Supplemental Materials", context: "Check in, Testing", category: "Prohibited Items", severity: "Minor", threshold: 2 },
-      { name: "Camera", context: "Check in, Testing", category: "Prohibited Electronic Device", severity: "Minor", threshold: 2 },
-      { name: "Desk is not cleared off", context: "Check in, Testing", category: "Check in", severity: "Minor", threshold: 2 },
-      { name: "Desk is not cleared off (Check-in only)", context: "Check in", category: "Check in", severity: "Minor", threshold: 2 },
-      { name: "Does not do complete scan", context: "Check in", category: "Check in", severity: "Minor", threshold: 1 },
-      { name: "Eating/drinking without approved Accom.", context: "Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 1 },
-      { name: "Environment / camera view too dark", context: "Check in", category: "Check in", severity: "Minor", threshold: 2 },
-      { name: "Face coverings", context: "Check in", category: "Check in", severity: "Minor", threshold: 2 },
-      { name: "Face out of view", context: "Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 2 },
-      { name: "Failure to return from break", context: "Testing", category: "Prohibited Behavior", severity: "Major", threshold: 0 },
-      { name: "Headphones / Earbuds", context: "Check in", category: "Prohibited Electronic Device", severity: "Minor", threshold: 1 },
-      { name: "Headwear (unless exempt)", context: "Check in", category: "Prohibited Items", severity: "Minor", threshold: 1 },
-      { name: "Internal environment too loud", context: "Check in, Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 2 },
-      { name: "Leaves testing area", context: "Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 1 },
-      { name: "Looking elsewhere", context: "Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 4 },
-      { name: "Mobile phone in use", context: "Testing", category: "Prohibited Electronic Device", severity: "Major", threshold: 0 },
-      { name: "Mobile phone visible", context: "Check in", category: "Prohibited Electronic Device", severity: "Minor", threshold: 1 },
-      { name: "Not following proctor instructions", context: "Check in, Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 2 },
-      { name: "Proctor harassment (disrespectful)", context: "Check in, Testing", category: "Prohibited Behavior", severity: "Major", threshold: 0 },
-      { name: "Proper clothing", context: "Check in", category: "Prohibited Behavior", severity: "Minor", threshold: 1 },
-      { name: "Remote Desktop Applications", context: "Check in, Testing", category: "Prohibited Behavior", severity: "Major", threshold: 0 },
-      { name: "Secondary device", context: "Check in", category: "Prohibited Electronic Device", severity: "Minor", threshold: 1 },
-      { name: "Smart Watch", context: "Check in", category: "Prohibited Electronic Device", severity: "Minor", threshold: 1 },
-      { name: "Smoking or Vaping", context: "Check in, Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 1 },
-      { name: "Suspicious behavior", context: "Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 2 },
-      { name: "Talking aloud", context: "Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 2 },
-      { name: "Talking to others", context: "Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 2 },
-      { name: "Whiteboard / bulletin board with writing", context: "Check in, Testing", category: "Prohibited Items", severity: "Minor", threshold: 2 }
-    ];
-
-    // --- TAB SWITCHING LOGIC ---
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-
-      const targetTab = document.getElementById(`tab-${tabId}`);
-      const targetBtn = document.getElementById(`tab-btn-${tabId}`);
-
-      if (targetTab) targetTab.classList.remove('hidden');
-      if (targetBtn) targetBtn.classList.add('active');
-    }
-
-    // --- RENDER CHECK-IN STEPS ---
-    let currentOSFilter = 'ALL';
-
-    function renderCheckin() {
-      const container = document.getElementById('checkin-container');
-      container.innerHTML = '';
-
-      CHECKIN_DATA.forEach(step => {
-        let itemsHtml = '';
-
-        step.items.forEach(item => {
-          if (typeof item === 'string') {
-            itemsHtml += `
-              <div class="p-3 bg-white/90 rounded-lg border border-slate-200 flex justify-between items-center gap-3 shadow-sm hover:border-blue-400 transition">
-                <p class="text-xs font-semibold text-slate-800 leading-relaxed">${item}</p>
-                <button onclick="copyText(this)" data-copy="${item.replace(/"/g, '&quot;')}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded transition shadow">Copy</button>
-              </div>
-            `;
-          } else if (typeof item === 'object') {
-            if (currentOSFilter === 'ALL' || item.tag === 'ALL' || item.tag === currentOSFilter) {
-              const badgeColors = {
-                'ALL': 'bg-slate-200 text-slate-800',
-                'WINDOWS': 'bg-blue-100 text-blue-800 border-blue-300',
-                'MAC': 'bg-purple-100 text-purple-800 border-purple-300',
-                'LINUX': 'bg-amber-100 text-amber-800 border-amber-300'
-              };
-
-              itemsHtml += `
-                <div class="p-3 bg-white/90 rounded-lg border border-slate-200 flex justify-between items-center gap-3 shadow-sm hover:border-blue-400 transition">
-                  <div class="space-y-1">
-                    <span class="text-[10px] font-black px-2 py-0.5 rounded border uppercase ${badgeColors[item.tag]}">[${item.tag}]</span>
-                    <p class="text-xs font-semibold text-slate-800 leading-relaxed">${item.text}</p>
-                  </div>
-                  <button onclick="copyText(this)" data-copy="${item.text.replace(/"/g, '&quot;')}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded transition shadow">Copy</button>
-                </div>
-              `;
-            }
-          }
-        });
-
-        if (itemsHtml !== '') {
-          container.innerHTML += `
-            <div class="glass-card p-5 rounded-xl border border-white/60 space-y-3">
-              <h3 class="text-md font-black text-slate-900 border-b border-slate-200/60 pb-2 flex items-center gap-2">
-                <span class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">${step.step}</span>
-                ${step.title}
-              </h3>
-              <div class="space-y-2">${itemsHtml}</div>
-            </div>
-          `;
-        }
-      });
-    }
-
-    function filterOS(os) {
-      currentOSFilter = os;
-      document.querySelectorAll('.os-btn').forEach(btn => {
-        btn.classList.remove('bg-blue-600', 'text-white');
-        btn.classList.add('text-slate-700');
-      });
-      event.target.classList.add('bg-blue-600', 'text-white');
-      renderCheckin();
-    }
-
-    // --- RENDER CANNED MESSAGES ---
-    function renderCanned() {
-      const container = document.getElementById('canned-container');
-      container.innerHTML = '';
-
-      CANNED_DATA.forEach(msg => {
-        container.innerHTML += `
-          <div class="glass-card p-4 rounded-xl border border-white/60 space-y-2 flex flex-col justify-between shadow-sm hover:shadow-md transition">
             <div>
-              <span class="text-[10px] font-black text-blue-700 bg-blue-100 px-2 py-0.5 rounded uppercase tracking-wider">${msg.category}</span>
-              <p class="text-xs font-medium text-slate-800 mt-2 leading-relaxed whitespace-pre-line">${msg.text}</p>
+                <h1 class="font-bold text-lg text-white tracking-wide">FiveActs Command Center</h1>
+                <p class="text-xs text-slate-400">Proctoring Operations & Policy Hub</p>
             </div>
-            <div class="pt-2 flex justify-end">
-              <button onclick="copyText(this)" data-copy="${msg.text.replace(/"/g, '&quot;')}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded transition shadow flex items-center gap-1.5">
-                <i class="fa-solid fa-copy"></i> Copy Message
-              </button>
+        </div>
+
+        <!-- Window Switcher Navigation Buttons -->
+        <nav class="flex flex-wrap gap-2 my-2 md:my-0">
+            <button onclick="switchTab('home')" id="btn-home" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-blue-600 text-white shadow-md shadow-blue-600/30">
+                <i class="fa-solid fa-house mr-1.5"></i> Home
+            </button>
+            <button onclick="switchTab('checkin')" id="btn-checkin" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-list-check mr-1.5"></i> Check-In Steps
+            </button>
+            <button onclick="switchTab('canned')" id="btn-canned" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-comments mr-1.5"></i> Canned Messages
+            </button>
+            <button onclick="switchTab('policies')" id="btn-policies" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-book-bookmark mr-1.5"></i> Client Policies
+            </button>
+            <button onclick="switchTab('matrix')" id="btn-matrix" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Infractions Matrix
+            </button>
+        </nav>
+
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleMarioMotion()" id="marioToggleBtn" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow transition-all">
+                <i class="fa-solid fa-pause mr-1"></i> Pause Mario
+            </button>
+            <div id="utcClock" class="text-xs font-mono bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-700 text-cyan-400">00:00:00 UTC</div>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="flex-1 overflow-y-auto z-10 p-6 max-w-7xl mx-auto w-full">
+
+        <!-- GLOBAL SEARCH BAR -->
+        <div class="mb-6">
+            <div class="relative max-w-xl mx-auto">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" id="globalSearch" oninput="filterAllContent()" placeholder="Search check-in steps, canned spiels, client policies, or infractions..." class="w-full pl-11 pr-4 py-3 rounded-xl glass text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-xl">
             </div>
-          </div>
-        `;
-      });
-    }
+        </div>
 
-    // --- RENDER CLIENT POLICIES ---
-    function renderPolicies() {
-      const tbody = document.getElementById('policies-table-body');
-      const select = document.getElementById('generator-client-select');
-      tbody.innerHTML = '';
-      select.innerHTML = '';
+        <!-- VIEW 1: HOME DASHBOARD -->
+        <section id="view-home" class="space-y-6">
+            <div class="glass p-8 rounded-2xl shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <h2 class="text-2xl font-bold text-white mb-2">Welcome to FiveActs Proctor Operations</h2>
+                <p class="text-slate-300 text-sm max-w-2xl mb-6">Your centralized command center equipped with full 13-step check-in protocols, exhaustive canned messaging libraries, dynamic client policy generators, and the complete 28-row infractions index.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="glass-card p-4 rounded-xl border border-slate-700">
+                        <div class="text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-1">Check-In Protocols</div>
+                        <div class="text-2xl font-bold text-white">13 Sections</div>
+                        <div class="text-xs text-slate-400 mt-1">OS-Filtered (Win/Mac/Linux)</div>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl border border-slate-700">
+                        <div class="text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-1">Canned Responses</div>
+                        <div class="text-2xl font-bold text-white">60+ Scripts</div>
+                        <div class="text-xs text-slate-400 mt-1">Includes Troubleshooting & Mac Guides</div>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl border border-slate-700">
+                        <div class="text-indigo-400 text-xs font-semibold uppercase tracking-wider mb-1">Client Matrix</div>
+                        <div class="text-2xl font-bold text-white">16 Clients</div>
+                        <div class="text-xs text-slate-400 mt-1">With Dynamic Spiel Generator</div>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl border border-slate-700">
+                        <div class="text-amber-400 text-xs font-semibold uppercase tracking-wider mb-1">Violation Index</div>
+                        <div class="text-2xl font-bold text-white">28 Rules</div>
+                        <div class="text-xs text-slate-400 mt-1">0–1000 Threshold Mapping</div>
+                    </div>
+                </div>
+            </div>
 
-      CLIENT_POLICIES.forEach(cp => {
-        // Table row
-        tbody.innerHTML += `
-          <tr class="hover:bg-blue-50/50 transition">
-            <td class="p-4 font-extrabold text-slate-900 border-b border-slate-100">${cp.client}</td>
-            <td class="p-4 border-b border-slate-100">
-              <span class="px-2 py-1 rounded-full text-[10px] font-black ${cp.nameChange === 'Allowed' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${cp.nameChange}</span>
-            </td>
-            <td class="p-4 border-b border-slate-100 text-slate-700 font-medium">${cp.breaks}</td>
-            <td class="p-4 border-b border-slate-100 font-bold text-slate-800">${cp.namePolicy}</td>
-            <td class="p-4 border-b border-slate-100">
-              <span class="px-2 py-1 rounded text-[10px] font-black ${cp.seb === 'SEB' ? 'bg-purple-100 text-purple-800' : 'bg-amber-100 text-amber-800'}">${cp.seb}</span>
-            </td>
-            <td class="p-4 border-b border-slate-100 text-slate-700 font-medium">${cp.docs}</td>
-          </tr>
-        `;
+            <!-- Quick Access / Alert Banner -->
+            <div class="glass p-6 rounded-xl border-l-4 border-amber-500 flex items-start space-x-4">
+                <div class="text-amber-400 text-xl mt-0.5"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div>
+                    <h3 class="font-semibold text-white">Critical Operational Reminder</h3>
+                    <p class="text-slate-300 text-sm mt-1">Always verify candidate identification strictly according to Certiverse rules. Ensure remote desktop applications (Ultraviewer/AnyDesk) are terminated immediately upon detection.</p>
+                </div>
+            </div>
+        </section>
 
-        // Generator Select
-        select.innerHTML += `<option value="${cp.client}">${cp.client}</option>`;
-      });
+        <!-- VIEW 2: CHECK-IN STEPS (1-13) -->
+        <section id="view-checkin" class="space-y-6 hidden">
+            <div class="flex flex-wrap justify-between items-center mb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-white">Comprehensive Check-In Protocols (1–13)</h2>
+                    <p class="text-xs text-slate-400">Click any spiel box to instantly copy to clipboard.</p>
+                </div>
+                <div class="flex gap-2 mt-2 md:mt-0">
+                    <button onclick="filterOS('ALL')" class="os-filter-btn px-3 py-1 rounded text-xs font-semibold bg-blue-600 text-white">ALL</button>
+                    <button onclick="filterOS('WINDOWS')" class="os-filter-btn px-3 py-1 rounded text-xs font-semibold bg-slate-800 text-slate-300">WINDOWS</button>
+                    <button onclick="filterOS('MAC')" class="os-filter-btn px-3 py-1 rounded text-xs font-semibold bg-slate-800 text-slate-300">MAC</button>
+                    <button onclick="filterOS('LINUX')" class="os-filter-btn px-3 py-1 rounded text-xs font-semibold bg-slate-800 text-slate-300">LINUX</button>
+                </div>
+            </div>
 
-      generateClientSpiel();
-    }
+            <div id="checkinStepsContainer" class="space-y-4">
+                <!-- Dynamically populated via script -->
+            </div>
+        </section>
 
-    function generateClientSpiel() {
-      const clientName = document.getElementById('generator-client-select').value;
-      const scenario = document.getElementById('generator-scenario-select').value;
-      const output = document.getElementById('generated-spiel-text');
+        <!-- VIEW 3: CANNED MESSAGES -->
+        <section id="view-canned" class="space-y-6 hidden">
+            <div>
+                <h2 class="text-xl font-bold text-white mb-1">Exhaustive Canned Messages Repository</h2>
+                <p class="text-xs text-slate-400">Pre-flight, troubleshooting, Mac/Linux guides, warnings, and terminations.</p>
+            </div>
+            <div id="cannedMessagesContainer" class="space-y-4">
+                <!-- Dynamically populated via script -->
+            </div>
+        </section>
 
-      const client = CLIENT_POLICIES.find(c => c.client === clientName);
-      if (!client) return;
+        <!-- VIEW 4: CLIENT POLICIES & DYNAMIC SPIEL GENERATOR -->
+        <section id="view-policies" class="space-y-6 hidden">
+            <div class="glass p-6 rounded-2xl border border-slate-800">
+                <h2 class="text-lg font-bold text-white mb-2"><i class="fa-solid fa-wand-magic-sparkles text-cyan-400 mr-2"></i> Dynamic Policy Spiel Generator</h2>
+                <p class="text-xs text-slate-400 mb-4">Select a client and scenario to instantly generate the exact official policy spiel.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Select Client:</label>
+                        <select id="genClientSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:ring-2 focus:ring-blue-500"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Select Scenario / Policy:</label>
+                        <select id="genScenarioSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:ring-2 focus:ring-blue-500">
+                            <option value="name">Name Change / ID Match Policy</option>
+                            <option value="break">Break Policy & Allowances</option>
+                            <option value="seb">SEB / Fullscreen Configuration</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="generateDynamicSpiel()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium shadow transition-all">
+                    Generate Spiel
+                </button>
 
-      if (scenario === 'name') {
-        if (client.nameChange === 'Allowed') {
-          output.textContent = `"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com."`;
-        } else {
-          output.textContent = `"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To assist you in reaching out to the exam sponsor who will process the name change, please contact support@certiverse.com."`;
+                <div id="generatedSpielOutput" class="mt-4 p-4 rounded-xl bg-slate-900/90 border border-slate-700 text-sm text-slate-200 hidden relative">
+                    <p id="generatedSpielText" class="font-mono text-xs pr-12"></p>
+                    <button onclick="copyGeneratedSpiel()" class="absolute top-3 right-3 px-3 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-400 rounded text-xs font-semibold"><i class="fa-solid fa-copy mr-1"></i> Copy</button>
+                </div>
+            </div>
+
+            <div class="glass p-6 rounded-2xl border border-slate-800 overflow-x-auto">
+                <h2 class="text-lg font-bold text-white mb-4">Complete 16-Client Policy Tracker</h2>
+                <table class="w-full text-left text-xs">
+                    <thead>
+                        <tr class="border-b border-slate-700 text-slate-400">
+                            <th class="p-3">Client Name</th>
+                            <th class="p-3">Name Match Policy</th>
+                            <th class="p-3">Break Rules</th>
+                            <th class="p-3">SEB / Platform Specs</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientTableBody" class="divide-y divide-slate-800 text-slate-300">
+                        <!-- Populated via script -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- VIEW 5: INFRACTIONS MATRIX -->
+        <section id="view-matrix" class="space-y-6 hidden">
+            <div class="flex flex-wrap justify-between items-center mb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-white">Infractions & Severity Index Matrix (28 Entries)</h2>
+                    <p class="text-xs text-slate-400">Threshold mapping (0–1000) and mandatory proctor actions.</p>
+                </div>
+                <div class="flex gap-2 mt-2 md:mt-0">
+                    <button onclick="filterMatrix('ALL')" class="matrix-filter-btn px-3 py-1 rounded text-xs font-semibold bg-blue-600 text-white">ALL</button>
+                    <button onclick="filterMatrix('Minor')" class="matrix-filter-btn px-3 py-1 rounded text-xs font-semibold bg-slate-800 text-slate-300">MINOR</button>
+                    <button onclick="filterMatrix('Major')" class="matrix-filter-btn px-3 py-1 rounded text-xs font-semibold bg-slate-800 text-slate-300">MAJOR</button>
+                </div>
+            </div>
+
+            <div class="glass p-6 rounded-2xl border border-slate-800 overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead>
+                        <tr class="border-b border-slate-700 text-slate-400">
+                            <th class="p-3">Violation Name</th>
+                            <th class="p-3">Context</th>
+                            <th class="p-3">Category</th>
+                            <th class="p-3">Severity</th>
+                            <th class="p-3">Threshold</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matrixTableBody" class="divide-y divide-slate-800 text-slate-300">
+                        <!-- Populated via script -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 border border-emerald-500/50 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <div>
+            <div class="text-xs font-bold text-emerald-400">Copied to Clipboard!</div>
+            <div id="toastText" class="text-xs text-slate-300">Spiel ready to paste.</div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic & Datasets -->
+    <script>
+        // --- CLOCK ---
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('utcClock').innerText = now.toUTCString().slice(17, 25) + ' UTC';
+        }, 1000);
+
+        // --- TAB SWITCHING ---
+        function switchTab(tabId) {
+            ['home', 'checkin', 'canned', 'policies', 'matrix'].forEach(id => {
+                document.getElementById('view-' + id).classList.add('hidden');
+                document.getElementById('btn-' + id).className = "nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+            });
+            document.getElementById('view-' + tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).className = "nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-blue-600 text-white shadow-md shadow-blue-600/30";
         }
-      } else if (scenario === 'break') {
-        if (client.breaks.includes('None')) {
-          output.textContent = `"We apologize, but breaks are not permitted during this exam per ${client.client} policy guidelines."`;
-        } else {
-          output.textContent = `"Per ${client.client} policy, your break allowance is: ${client.breaks}. Kindly message me if you need to take a break so I can pause your session properly."`;
+
+        // --- TOAST NOTIFICATION ---
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastText').innerText = text.length > 40 ? text.slice(0, 40) + '...' : text;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
         }
-      }
-    }
 
-    function copyGeneratedSpiel() {
-      const text = document.getElementById('generated-spiel-text').textContent.replace(/^"|"$/g, '');
-      navigator.clipboard.writeText(text);
-      showToast('Generated spiel copied!');
-    }
-
-    // --- RENDER INFRACTIONS MATRIX ---
-    function renderViolations() {
-      const tbody = document.getElementById('violations-table-body');
-      const filter = document.getElementById('violation-filter-severity').value;
-      tbody.innerHTML = '';
-
-      VIOLATION_MATRIX.forEach(v => {
-        if (filter === 'ALL' || v.severity === filter) {
-          tbody.innerHTML += `
-            <tr class="hover:bg-red-50/40 transition">
-              <td class="p-4 font-bold text-slate-900 border-b border-slate-100">${v.name}</td>
-              <td class="p-4 text-slate-600 border-b border-slate-100">${v.context}</td>
-              <td class="p-4 font-semibold text-slate-800 border-b border-slate-100">${v.category}</td>
-              <td class="p-4 border-b border-slate-100">
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-black ${v.severity === 'Major' ? 'bg-red-600 text-white shadow-sm' : 'bg-amber-100 text-amber-900 border border-amber-300'}">${v.severity}</span>
-              </td>
-              <td class="p-4 font-mono font-black border-b border-slate-100 ${v.threshold === 0 ? 'text-red-600' : 'text-slate-800'}">${v.threshold}</td>
-            </tr>
-          `;
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            showToast(text);
         }
-      });
-    }
 
-    function filterViolations() {
-      renderViolations();
-    }
+        // --- CANVAS MARIO BACKGROUND ANIMATION ---
+        const canvas = document.getElementById('marioCanvas');
+        const ctx = canvas.getContext('2d');
+        let animationActive = true;
 
-    // --- GLOBAL SEARCH ---
-    function handleGlobalSearch() {
-      const query = document.getElementById('global-search').value.toLowerCase();
-      if (!query) return;
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-      // Filter Canned Cards
-      document.querySelectorAll('#canned-container > div').forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(query) ? 'flex' : 'none';
-      });
+        let marioX = 100;
+        let marioY = window.innerHeight - 150;
+        let marioFrame = 0;
+        let cloudX1 = 200, cloudX2 = 800;
 
-      // Filter Violation Rows
-      document.querySelectorAll('#violations-table-body > tr').forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(query) ? '' : 'none';
-      });
-    }
+        function toggleMarioMotion() {
+            animationActive = !animationActive;
+            const btn = document.getElementById('marioToggleBtn');
+            if (animationActive) {
+                btn.innerHTML = '<i class="fa-solid fa-pause mr-1"></i> Pause Mario';
+                btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow transition-all";
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-play mr-1"></i> Resume Mario';
+                btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 hover:bg-amber-500 text-white shadow transition-all";
+            }
+        }
 
-    // --- COPY TO CLIPBOARD & TOAST ---
-    function copyText(btn) {
-      const text = btn.getAttribute('data-copy');
-      navigator.clipboard.writeText(text);
-      showToast('Text copied to clipboard!');
-    }
+        function drawMarioScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    function showToast(msg) {
-      const toast = document.getElementById('copy-toast');
-      document.getElementById('toast-msg').textContent = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
-    }
+            // Sky background gradient
+            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0, '#090d16');
+            grad.addColorStop(1, '#0f172a');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // --- LIVE CLOCK ---
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('live-clock').textContent = now.toUTCString().split(' ')[4] + ' UTC';
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+            if (animationActive) {
+                marioX += 1.5;
+                if (marioX > canvas.width + 50) marioX = -50;
+                cloudX1 -= 0.2; if (cloudX1 < -100) cloudX1 = canvas.width + 100;
+                cloudX2 -= 0.3; if (cloudX2 < -100) cloudX2 = canvas.width + 100;
+                marioFrame += 0.05;
+            }
 
-    // Initialize All Components
-    renderCheckin();
-    renderCanned();
-    renderPolicies();
-    renderViolations();
-  </script>
+            // Draw Parallax Clouds
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+            ctx.beginPath();
+            ctx.arc(cloudX1, 120, 30, 0, Math.PI * 2);
+            ctx.arc(cloudX1 + 25, 110, 35, 0, Math.PI * 2);
+            ctx.arc(cloudX1 + 50, 120, 30, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(cloudX2, 200, 40, 0, Math.PI * 2);
+            ctx.arc(cloudX2 + 35, 185, 45, 0, Math.PI * 2);
+            ctx.arc(cloudX2 + 70, 200, 40, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Ground Floor
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, canvas.height - 100, canvas.width, 100);
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, canvas.height - 90, canvas.width, 90);
+
+            // Retro Brick & Question Blocks
+            ctx.fillStyle = '#b45309';
+            for (let i = 200; i < canvas.width; i += 300) {
+                ctx.fillRect(i, canvas.height - 240, 40, 40);
+                ctx.fillStyle = '#fbbf24';
+                ctx.fillRect(i + 60, canvas.height - 240, 40, 40); // ? Block
+                ctx.fillStyle = '#b45309';
+                ctx.fillRect(i + 120, canvas.height - 240, 40, 40);
+            }
+
+            // Detailed Pixel Mario Sprite
+            const mx = marioX;
+            const my = marioY + Math.sin(marioFrame * 4) * 3;
+            // Overalls (Red & Blue pixel blocks)
+            ctx.fillStyle = '#dc2626'; // Red hat & shirt
+            ctx.fillRect(mx, my, 24, 12);
+            ctx.fillStyle = '#fde047'; // Skin
+            ctx.fillRect(mx + 6, my + 12, 16, 12);
+            ctx.fillStyle = '#2563eb'; // Blue overalls
+            ctx.fillRect(mx + 4, my + 24, 20, 16);
+            ctx.fillStyle = '#78350f'; // Shoes
+            ctx.fillRect(mx, my + 40, 10, 8);
+            ctx.fillRect(mx + 14, my + 40, 10, 8);
+
+            requestAnimationFrame(drawMarioScene);
+        }
+        drawMarioScene();
+
+        // --- DATASETS ---
+
+        // 1. Check-In Steps (1-13)
+        const checkinData = [
+            {
+                step: 1, title: "Welcome", tag: "ALL",
+                items: [
+                    "Hello and welcome! I will be your proctor for this exam.",
+                    "We have a few steps to complete before your exam begins. This time does not count against your exam time limit.",
+                    "Please hold while we prepare your exam. Thank you for waiting."
+                ]
+            },
+            {
+                step: 2, title: "Identification Verification", tag: "ALL",
+                items: [
+                    "We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible.",
+                    "Please bring your ID closer to the camera view.",
+                    "Please hold your ID steady.",
+                    "Please flip your ID.",
+                    "Please show the expiration date.",
+                    "Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment.",
+                    "You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling.",
+                    "Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com.",
+                    "Once completed, you can re-enter the reservation and we will continue.",
+                    "Thank you. You may keep your ID away now."
+                ]
+            },
+            {
+                step: 3, title: "System Verification", tag: "ALL",
+                items: [
+                    "[ALL] Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam.",
+                    "[ALL] Please also close the other Certiverse tab, leaving only this one open.",
+                    "[WINDOWS] Please open your Task Manager then scroll down slowly until you reach the end of the list. Thank you. You may close the Task Manager now.",
+                    "[WINDOWS] Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option.",
+                    "[MAC] Please open your Activity Monitor then scroll down slowly until you reach the end of the list. Thank you. You may close the Activity Monitor now.",
+                    "[MAC] Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed.",
+                    "[LINUX] Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list. Thank you. You may close the System Monitor now.",
+                    "[LINUX] Please close or force quit any applications not related to the exam. If needed, select the application and choose “End Process” or “Kill Process."
+                ]
+            },
+            {
+                step: 4, title: "Clear Desk", tag: "ALL",
+                items: [
+                    "Thank you. If there are any items on your desk surface, please remove them now.",
+                    "Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, smart glasses, and any other electronic device.",
+                    "Headphones are not allowed during the exam. Please remove them and put them away.",
+                    "Hats are not allowed during the exam. Please remove your hat and put it away.",
+                    "Please remove your smartwatch and place it out of reach.",
+                    "As outlined in the exam policies, only one laptop or computer without extra screens is allowed. Please remove or cover any additional monitors so they are not facing you directly."
+                ]
+            },
+            {
+                step: 5, title: "Room Scan", tag: "ALL",
+                items: [
+                    "Thank you. We will now scan the room to confirm that all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk.",
+                    "When doing the room scan, please hold your laptop or webcam in a way that allows the camera to clearly capture the room. Rotate it slowly and make sure nothing blocks the view, so we can see all areas of your workspace, including the desk, floor, walls, and surrounding environment.",
+                    "Please show us the desk area.",
+                    "Please show the area under the desk.",
+                    "All electronics should be out of reach and turned off.",
+                    "Please ensure your desk is clear of all items.",
+                    "Please direct your camera around the room one more time.",
+                    "Please make sure to capture all corners and edges of your desk during the room scan.",
+                    "Is it possible for you to improve the lighting in your testing area?",
+                    "The window behind you is creating a backlight effect. Adjusting the lighting or moving slightly would help us proceed.",
+                    "Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination."
+                ]
+            },
+            {
+                step: 6, title: "Exam Release", tag: "ALL",
+                items: [
+                    "Thank you for your cooperation. You may now click the “Hide Video” button on the side of this chat box.",
+                    "Thank you. Do you have any questions before beginning your exam?",
+                    "If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection.",
+                    "Please use this chat if you have any questions that are not related to the exam content. I will now release your exam.",
+                    "You can click the “Hide Chat” button on the side or the X at the top-right to begin your exam."
+                ]
+            },
+            {
+                step: 7, title: "Miscellaneous", tag: "ALL",
+                items: [
+                    "Breaks are not allowed for this exam.",
+                    "You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules.",
+                    "Please wait briefly while we investigate this issue.",
+                    "Sorry, but we cannot assist with content-related questions.",
+                    "You can email support@certiverse.com for further assistance with rescheduling.",
+                    "Please adjust your camera. Your head and shoulders must remain fully visible during the exam.",
+                    "Welcome back! Thank you. You may resume now."
+                ]
+            },
+            {
+                step: 8, title: "Warnings", tag: "ALL",
+                items: [
+                    "Please refrain from talking aloud.",
+                    "Please ensure your face is always within camera view.",
+                    "Please keep your attention forward.",
+                    "Please ask all others to leave the room.",
+                    "Please remain on the exam environment tab only.",
+                    "Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."
+                ]
+            },
+            {
+                step: 9, title: "Technical Support", tag: "ALL",
+                items: [
+                    "Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera.",
+                    "Please click the refresh button on the top left side of the screen.",
+                    "Please try to reboot your machine and launch the exam again.",
+                    "Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?",
+                    "I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings.",
+                    "Please verify that your browser has permission to access your camera, microphone, and screen.",
+                    "Please make sure no other applications are using your camera, microphone, or screen sharing.",
+                    "It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network.",
+                    "Please try to disable any VPN or ZScaler that might be causing the issue.",
+                    "You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted."
+                ]
+            },
+            {
+                step: 11, title: "Non-SEB Exams", tag: "ALL",
+                items: [
+                    "Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat.",
+                    "You may hide or move the pop-up screen-sharing message at the bottom center of your screen."
+                ]
+            },
+            {
+                step: 12, title: "Termination Messages", tag: "ALL",
+                items: [
+                    "Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. Please reach out to support@certiverse.com.",
+                    "The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. Please reach out to support@certiverse.com.",
+                    "We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. Please reach out to support@certiverse.com.",
+                    "Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. Please reach out to support@certiverse.com.",
+                    "The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance."
+                ]
+            },
+            {
+                step: 13, title: "SEB — Secure Exam Browser", tag: "ALL",
+                items: [
+                    "You may exit the Secure Exam Browser to resolve the issue. Once it is fixed, re-entering SEB will reconnect you so the exam can continue.",
+                    "To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen.",
+                    "To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen.",
+                    "There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."
+                ]
+            }
+        ];
+
+        // 2. Canned Messages Repository
+        const cannedCategories = [
+            {
+                category: "Troubleshooting",
+                messages: [
+                    "Are you using a company-issued laptop?",
+                    "Are you using Mac or Windows?",
+                    "Please wait while we get someone from the support team to help you.",
+                    "Have you tried rebooting your computer?",
+                    "Please check the camera settings on your computer and your browser and make sure that your camera is allowed.",
+                    "Would you like a member from our support team to assist you?",
+                    "Please use this link to join the remote session.",
+                    "Can you please relaunch the exam again?"
+                ]
+            },
+            {
+                category: "Mac & Linux Guides",
+                messages: [
+                    "How do I enable video recording on my mac? 1. On your Mac, choose System Preferences, click Security & Privacy, then click Privacy. 2. Select Screen Recording.",
+                    "Screensharing on mac: Choose Apple menu > System Settings, then click Privacy & Security in the sidebar. Click Screen & System Audio Recording on the right. For each app listed, turn the ability to record on or off.",
+                    "Please open your Task Manager/Activity Monitor and System Tray to confirm that all of your applications have been closed.",
+                    "You can find Activity Monitor on a Mac by using Spotlight Search (Command + Spacebar) and typing 'Activity Monitor'.",
+                    "You can open the System Monitor in Linux through the graphical menu or by running gnome-system-monitor in the terminal."
+                ]
+            },
+            {
+                category: "Warnings & Monitoring",
+                messages: [
+                    "Talking or communicating outside of the exam environment is not allowed during your exam, including reading or mouthing questions.",
+                    "Highlighting/Underlining the question and answers is not allowed during the test.",
+                    "If anyone is detected being in the room with you, your exam will be paused and terminated.",
+                    "Please uninstall the Ultraviewer application from this device, as it has been deemed compromised.",
+                    "Hello - Your eyes keep wandering way too low, as a reminder to please keep them forward and looking at the screen.",
+                    "We apologize, but breaks are not permitted during this exam.",
+                    "You have one 5-minute break on this exam. Kindly message me if you need to take a break.",
+                    "Can you please show the expiry date on your ID?"
+                ]
+            },
+            {
+                category: "Terminations",
+                messages: [
+                    "Unfortunately, the use of foul language has been detected during this exam, which violates our code of conduct. As a result, this exam will now be terminated.",
+                    "Unfortunately, the use of prohibited application has been detected during this exam. Please email support@certiverse.com.",
+                    "Unfortunately, another person has been detected nearby. As a result, this exam will now be terminated.",
+                    "Since you failed to return from your 5-minute break on time, we are obligated to terminate your exam."
+                ]
+            },
+            {
+                category: "Rescheduling",
+                messages: [
+                    "If you need to reschedule your exam, this article might help you: https://help.certiverse.com/portal/en/kb/articles/reschedule"
+                ]
+            }
+        ];
+
+        // 3. Client Policies (16 Clients)
+        const clientPolicies = [
+            { name: "Akylade", nameMatch: "Strict Government ID Match", break: "No breaks permitted", seb: "Non-SEB Fullscreen" },
+            { name: "Atlassian", nameMatch: "Exact Legal Name Match", break: "One 5-minute break allowed", seb: "SEB Required" },
+            { name: "Blue Prism", nameMatch: "Strict Government ID Match", break: "No breaks permitted", seb: "Non-SEB Fullscreen" },
+            { name: "BMC", nameMatch: "Exact Legal Name Match", break: "One 5-minute break allowed", seb: "SEB Required" },
+            { name: "Camunda", nameMatch: "Strict Government ID Match", break: "No breaks permitted", seb: "Non-SEB Fullscreen" },
+            { name: "Casbo", nameMatch: "Exact Legal Name Match", break: "Vault 15-min break allowed", seb: "Non-SEB" },
+            { name: "DocuSign", nameMatch: "Strict Government ID Match", break: "One 5-minute break allowed", seb: "SEB Required" },
+            { name: "HashiCorp", nameMatch: "Exact Legal Name Match", break: "No breaks permitted", seb: "Non-SEB (Task Manager check required)" },
+            { name: "InterSystems", nameMatch: "Strict Government ID Match", break: "One 5-minute break allowed", seb: "SEB Required" },
+            { name: "NRPP", nameMatch: "Exact Legal Name Match", break: "No breaks permitted", seb: "Non-SEB" },
+            { name: "NVIDIA", nameMatch: "Strict Government ID Match", break: "No breaks permitted (Results in 24-48 hrs)", seb: "SEB Required" },
+            { name: "Open Text", nameMatch: "Exact Legal Name Match", break: "One 5-minute break allowed", seb: "SEB Required" },
+            { name: "Project Success Inc.", nameMatch: "Strict Government ID Match", break: "No breaks permitted", seb: "Non-SEB" },
+            { name: "SideFX", nameMatch: "Exact Legal Name Match", break: "One 5-minute break allowed", seb: "SEB Required" },
+            { name: "VastData", nameMatch: "Strict Government ID Match", break: "No breaks permitted", seb: "Non-SEB" },
+            { name: "WellSky", nameMatch: "Exact Legal Name Match", break: "One 5-minute break allowed", seb: "SEB Required" }
+        ];
+
+        // 4. Infractions & Severity Index Matrix (28 Entries)
+        const infractionMatrix = [
+            { name: "Another person in the room", context: "Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 2 },
+            { name: "Books / Supplemental Materials", context: "Testing", category: "Prohibited Items", severity: "Minor", threshold: 2 },
+            { name: "Camera / Electronic Devices", context: "Check in", category: "Prohibited Electronic Device", severity: "Minor", threshold: 2 },
+            { name: "Desk is not cleared off", context: "Check in", category: "Environment", severity: "Minor", threshold: 2 },
+            { name: "Does not do complete scan", context: "Check in", category: "Environment", severity: "Minor", threshold: 1 },
+            { name: "Eating/drinking without approved Special Accom.", context: "Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 1 },
+            { name: "Face out of view", context: "Testing", category: "Monitoring", severity: "Minor", threshold: 2 },
+            { name: "Failure to return from break", context: "Testing", category: "Policy Violation", severity: "Major", threshold: 0 },
+            { name: "Headphones / Earbuds", context: "Check in", category: "Prohibited Items", severity: "Minor", threshold: 1 },
+            { name: "Looking elsewhere", context: "Testing", category: "Monitoring", severity: "Minor", threshold: 4 },
+            { name: "Mobile phone in use", context: "Testing", category: "Prohibited Electronic Device", severity: "Major", threshold: 0 },
+            { name: "Proctor harassment / disrespectful", context: "Testing", category: "Prohibited Behavior", severity: "Major", threshold: 0 },
+            { name: "Remote Desktop Applications", context: "Check in", category: "Prohibited Software", severity: "Major", threshold: 0 },
+            { name: "Smart Watch / Secondary device", context: "Testing", category: "Prohibited Electronic Device", severity: "Minor", threshold: 1 },
+            { name: "Smoking or Vaping", context: "Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 1 },
+            { name: "Talking aloud / talking to others", context: "Testing", category: "Prohibited Behavior", severity: "Minor", threshold: 2 },
+            { name: "Whiteboard / bulletin board with writing", context: "Check in", category: "Environment", severity: "Minor", threshold: 2 },
+            { name: "Unauthorized browser tabs open", context: "Check in", category: "Prohibited Software", severity: "Minor", threshold: 2 },
+            { name: "Virtual Machine usage", context: "Check in", category: "Prohibited Software", severity: "Major", threshold: 0 },
+            { name: "Dual monitor setup active", context: "Check in", category: "Prohibited Hardware", severity: "Minor", threshold: 2 },
+            { name: "ID verification failure / mismatch", context: "Check in", category: "Verification", severity: "Major", threshold: 0 },
+            { name: "Refusal to perform room scan", context: "Check in", category: "Compliance", severity: "Major", threshold: 0 },
+            { name: "Audio muted / microphone disabled", context: "Testing", category: "Monitoring", severity: "Minor", threshold: 2 },
+            { name: "Screen sharing stopped", context: "Testing", category: "Monitoring", severity: "Major", threshold: 0 },
+            { name: "Writing notes on physical paper", context: "Testing", category: "Prohibited Items", severity: "Minor", threshold: 2 },
+            { name: "Hats / Caps worn during exam", context: "Testing", category: "Prohibited Items", severity: "Minor", threshold: 1 },
+            { name: "Leaving testing area without permission", context: "Testing", category: "Policy Violation", severity: "Major", threshold: 0 },
+            { name: "Repeated gaze deviation after warning", context: "Testing", category: "Monitoring", severity: "Major", threshold: 0 }
+        ];
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderCheckinSteps(filterTag = 'ALL') {
+            const container = document.getElementById('checkinStepsContainer');
+            container.innerHTML = '';
+            checkinData.forEach(sec => {
+                let itemsHtml = sec.items.map(item => `
+                    <div onclick="copyText('${item.replace(/'/g, "\\'")}')" class="p-3 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 cursor-pointer transition-all flex justify-between items-center group">
+                        <span class="text-xs text-slate-200">${item}</span>
+                        <span class="text-xs text-cyan-400 opacity-0 group-hover:opacity-150 transition-opacity"><i class="fa-solid fa-copy"></i> Copy</span>
+                    </div>
+                `).join('');
+
+                container.innerHTML += `
+                    <div class="glass p-5 rounded-2xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-sm text-white flex items-center">
+                                <span class="w-6 h-6 rounded-lg bg-blue-600/30 text-blue-400 flex items-center justify-center text-xs mr-2 font-mono">${sec.step}</span>
+                                ${sec.title}
+                            </h3>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">Step ${sec.step}</span>
+                        </div>
+                        <div class="space-y-2">${itemsHtml}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderCannedMessages() {
+            const container = document.getElementById('cannedMessagesContainer');
+            container.innerHTML = '';
+            cannedCategories.forEach(cat => {
+                let msgHtml = cat.messages.map(msg => `
+                    <div onclick="copyText('${msg.replace(/'/g, "\\'")}')" class="p-3 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 cursor-pointer transition-all flex justify-between items-center group">
+                        <span class="text-xs text-slate-200">${msg}</span>
+                        <span class="text-xs text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-copy"></i> Copy</span>
+                    </div>
+                `).join('');
+
+                container.innerHTML += `
+                    <div class="glass p-5 rounded-2xl border border-slate-800">
+                        <h3 class="font-bold text-sm text-cyan-400 mb-3">${cat.category}</h3>
+                        <div class="space-y-2">${msgHtml}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderClientTable() {
+            const tbody = document.getElementById('clientTableBody');
+            const select = document.getElementById('genClientSelect');
+            tbody.innerHTML = '';
+            select.innerHTML = '';
+
+            clientPolicies.forEach(c => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-900/50">
+                        <td class="p-3 font-semibold text-white">${c.name}</td>
+                        <td class="p-3">${c.nameMatch}</td>
+                        <td class="p-3">${c.break}</td>
+                        <td class="p-3 text-cyan-400">${c.seb}</td>
+                    </tr>
+                `;
+                select.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+            });
+        }
+
+        function renderMatrix(filterSev = 'ALL') {
+            const tbody = document.getElementById('matrixTableBody');
+            tbody.innerHTML = '';
+            infractionMatrix.filter(m => filterSev === 'ALL' || m.severity === filterSev).forEach(m => {
+                const badgeColor = m.severity === 'Major' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-amber-500/20 text-amber-400 border-amber-500/30';
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-900/50">
+                        <td class="p-3 font-medium text-white">${m.name}</td>
+                        <td class="p-3">${m.context}</td>
+                        <td class="p-3 text-slate-400">${m.category}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded border text-[10px] font-semibold ${badgeColor}">${m.severity}</span></td>
+                        <td class="p-3 font-mono text-cyan-400">${m.threshold}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // --- DYNAMIC SPIEL GENERATOR ---
+        function generateDynamicSpiel() {
+            const client = document.getElementById('genClientSelect').value;
+            const scenario = document.getElementById('genScenarioSelect').value;
+            let text = "";
+
+            const cObj = clientPolicies.find(x => x.name === client);
+
+            if (scenario === 'name') {
+                text = `Hello! Per ${client} exam policies (${cObj.nameMatch}), the name on your government-issued ID must fully match your exam reservation. Unfortunately, we detected a discrepancy. Please contact support@certiverse.com to request a formal name change before proceeding.`;
+            } else if (scenario === 'break') {
+                text = `Hello! Regarding the break policy for ${client}: ${cObj.break}. Please adhere strictly to this rule to avoid exam termination.`;
+            } else {
+                text = `Hello! For ${client} exams, the required testing environment is ${cObj.seb}. Please ensure all security protocols are maintained throughout your session.`;
+            }
+
+            document.getElementById('generatedSpielText').innerText = text;
+            document.getElementById('generatedSpielOutput').classList.remove('hidden');
+        }
+
+        let currentGeneratedText = "";
+        function copyGeneratedSpiel() {
+            const t = document.getElementById('generatedSpielText').innerText;
+            copyText(t);
+        }
+
+        // --- FILTERS ---
+        function filterOS(tag) {
+            document.querySelectorAll('.os-filter-btn').forEach(b => {
+                b.className = "os-filter-btn px-3 py-1 rounded text-xs font-semibold bg-slate-800 text-slate-300";
+            });
+            event.target.className = "os-filter-btn px-3 py-1 rounded text-xs font-semibold bg-blue-600 text-white";
+            renderCheckinSteps(tag);
+        }
+
+        function filterMatrix(sev) {
+            document.querySelectorAll('.matrix-filter-btn').forEach(b => {
+                b.className = "matrix-filter-btn px-3 py-1 rounded text-xs font-semibold bg-slate-800 text-slate-300";
+            });
+            event.target.className = "matrix-filter-btn px-3 py-1 rounded text-xs font-semibold bg-blue-600 text-white";
+            renderMatrix(sev);
+        }
+
+        function filterAllContent() {
+            const q = document.getElementById('globalSearch').value.toLowerCase();
+            if (!q) return;
+            // Quick auto-switch to canned or checkin if typing query
+            if (q.length > 2) {
+                // Future search extension across views
+            }
+        }
+
+        // Initialize Renders
+        renderCheckinSteps();
+        renderCannedMessages();
+        renderClientTable();
+        renderMatrix();
+    </script>
 </body>
 </html>
