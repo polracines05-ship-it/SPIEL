@@ -6,72 +6,80 @@
 <title>FiveActs Proctor Dojo Command Center</title>
 <style>
   :root {
-    --bg-deep: #09090b;
-    --bg-surface: #121216;
-    --bg-card: #18181c;
-    --bg-card-hover: #1f1f26;
-    --border-subtle: #27272f;
+    --bg-deep: #141419;
+    --bg-surface: #1e1e26;
+    --bg-card: #262630;
+    --bg-card-hover: #2e2e3a;
+    --border-subtle: #363645;
     --border-accent: #8b5cf6;
     --text-main: #f4f4f5;
-    --text-muted: #a1a1aa;
-    --accent-gold: #d97706;
-    --accent-gold-glow: rgba(217, 119, 6, 0.2);
-    --accent-crimson: #dc2626;
+    --text-muted: #c2c2ce;
+    --accent-gold: #fbbf24;
+    --accent-gold-glow: rgba(251, 191, 36, 0.25);
+    --accent-crimson: #ef4444;
     --accent-indigo: #6366f1;
-    --accent-emerald: #059669;
+    --accent-emerald: #10b981;
     --sidebar-width: 280px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
   html, body { height: 100vh; overflow: hidden; background-color: var(--bg-deep); color: var(--text-main); }
 
-  /* Atmosphere Overlay (Sakura / Bamboo hints via subtle gradients) */
   .dojo-atmosphere {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0;
-    background: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.04) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(217, 119, 6, 0.03) 0%, transparent 40%);
+    background: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(251, 191, 36, 0.06) 0%, transparent 40%);
   }
 
   .app-container { display: flex; height: 100vh; width: 100vw; position: relative; z-index: 1; }
 
-  /* ---------- SIDEBAR (Clan Records Navigation) ---------- */
+  /* SIDEBAR */
   .sidebar {
     width: var(--sidebar-width); background-color: var(--bg-surface); border-right: 1px solid var(--border-subtle);
-    display: flex; flex-direction: column; flex-shrink: 0; z-index: 10;
+    display: flex; flex-direction: column; flex-shrink: 0; z-index: 10; box-shadow: 4px 0 24px rgba(0,0,0,0.4);
   }
-  .sidebar-header { padding: 24px 20px 18px; border-bottom: 1px solid var(--border-subtle); background: linear-gradient(to bottom, #16161c, var(--bg-surface)); }
-  .clan-seal { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent-gold); font-weight: 700; margin-bottom: 4px; }
-  .dojo-title { font-size: 1.1rem; font-weight: 800; letter-spacing: 0.05em; color: #fff; }
-  .dojo-subtitle { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+  .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-subtle); background: linear-gradient(to bottom, #22222d, var(--bg-surface)); display: flex; align-items: center; gap: 14px; }
+  
+  .five-acts-logo {
+    width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, var(--accent-gold), #d97706);
+    display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: #141419;
+    box-shadow: 0 4px 12px var(--accent-gold-glow); flex-shrink: 0; position: relative; overflow: hidden;
+  }
+  .five-acts-logo::after { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shine 3s infinite; }
+  @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
+
+  .clan-seal { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent-gold); font-weight: 700; margin-bottom: 2px; }
+  .dojo-title { font-size: 1rem; font-weight: 800; letter-spacing: 0.05em; color: #fff; }
+  .dojo-subtitle { font-size: 0.68rem; color: var(--text-muted); }
 
   .nav-scroll { flex-grow: 1; overflow-y: auto; padding: 16px 12px; }
-  .nav-group-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: #52525b; margin: 16px 8px 8px; font-weight: 700; }
+  .nav-group-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: #828294; margin: 16px 8px 8px; font-weight: 700; }
   
   .nav-item {
     display: flex; align-items: center; justify-content: space-between; padding: 11px 14px;
-    color: var(--text-muted); text-decoration: none; border-radius: 8px; font-size: 0.85xl; font-weight: 600;
+    color: var(--text-muted); text-decoration: none; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
     margin-bottom: 4px; transition: all 0.2s ease; border: 1px solid transparent; cursor: pointer;
   }
   .nav-item:hover { background-color: var(--bg-card); color: var(--text-main); border-color: var(--border-subtle); }
-  .nav-item.active { background-color: var(--bg-card); color: var(--accent-gold); border-color: rgba(217, 119, 6, 0.3); box-shadow: 0 0 15px var(--accent-gold-glow); }
-  .nav-badge { font-size: 0.65rem; background: var(--border-subtle); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); }
+  .nav-item.active { background-color: var(--bg-card); color: var(--accent-gold); border-color: rgba(251, 191, 36, 0.4); box-shadow: 0 0 15px var(--accent-gold-glow); }
+  .nav-badge { font-size: 0.65rem; background: var(--border-subtle); padding: 2px 6px; border-radius: 4px; color: var(--text-main); }
 
-  .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border-subtle); font-size: 0.7rem; color: #52525b; display: flex; justify-content: space-between; align-items: center; }
+  .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border-subtle); font-size: 0.7rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); }
 
-  /* ---------- MAIN VIEWPORT ---------- */
+  /* MAIN VIEWPORT */
   .main-viewport { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; background-color: var(--bg-deep); }
   
   .top-command-bar {
     padding: 16px 32px; background-color: var(--bg-surface); border-bottom: 1px solid var(--border-subtle);
-    display: flex; justify-content: space-between; align-items: center; min-height: 72px; flex-shrink: 0;
+    display: flex; justify-content: space-between; align-items: center; min-height: 76px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
   .page-indicator h2 { font-size: 1.25rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
-  .page-indicator p { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  .page-indicator p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
   
-  .utc-clock-badge {
+  .clock-badge {
     background: var(--bg-card); border: 1px solid var(--border-subtle); padding: 8px 16px; border-radius: 8px;
     font-family: monospace; font-size: 0.9rem; font-weight: 700; color: var(--accent-gold); letter-spacing: 0.05em;
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
   }
 
   .content-area { flex-grow: 1; overflow-y: auto; padding: 32px; position: relative; }
@@ -80,132 +88,123 @@
 
   @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* ---------- SHARED COMPONENTS ---------- */
+  /* SHARED COMPONENTS */
   .search-box-container { position: relative; margin-bottom: 24px; }
   .global-search-input {
     width: 100%; padding: 14px 20px 14px 44px; background-color: var(--bg-surface); border: 1px solid var(--border-subtle);
-    border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; transition: all 0.2s;
+    border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; transition: all 0.2s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
   }
-  .global-search-input:focus { border-color: var(--accent-gold); box-shadow: 0 0 0 3px var(--accent-gold-glow); }
+  .global-search-input:focus { border-color: var(--accent-gold); box-shadow: 0 0 0 3px var(--accent-gold-glow), inset 0 2px 4px rgba(0,0,0,0.2); }
   .search-icon-abs { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
 
   .filter-pills { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
   .filter-pill {
-    background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 6px 14px; border-radius: 20px;
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 7px 14px; border-radius: 20px;
     font-size: 0.75rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.15s;
   }
   .filter-pill:hover { border-color: var(--text-muted); color: #fff; }
-  .filter-pill.active { background: var(--accent-gold); color: #000; border-color: var(--accent-gold); font-weight: 700; }
+  .filter-pill.active { background: var(--accent-gold); color: #141419; border-color: var(--accent-gold); font-weight: 700; box-shadow: 0 0 10px var(--accent-gold-glow); }
 
   .dojo-card {
     background-color: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px;
     padding: 20px; margin-bottom: 14px; transition: border-color 0.15s, box-shadow 0.15s; position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
-  .dojo-card:hover { border-color: #3f3f46; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+  .dojo-card:hover { border-color: #525266; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
 
   .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; }
   .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
   .tag { font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(--border-subtle); color: var(--text-main); text-transform: uppercase; }
-  .tag.minor { background: rgba(217, 119, 6, 0.15); color: #fcd34d; border: 1px solid rgba(217, 119, 6, 0.3); }
-  .tag.major { background: rgba(220, 38, 38, 0.15); color: #fca5a5; border: 1px solid rgba(220, 38, 38, 0.3); }
-  .tag.critical { background: rgba(185, 28, 28, 0.25); color: #f87171; border: 1px solid #ef4444; }
+  .tag.minor { background: rgba(251, 191, 36, 0.15); color: #fde68a; border: 1px solid rgba(251, 191, 36, 0.3); }
+  .tag.major { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
 
   .action-btn {
-    background-color: var(--accent-gold); color: #000; border: none; padding: 8px 16px; border-radius: 6px;
+    background-color: var(--accent-gold); color: #141419; border: none; padding: 8px 16px; border-radius: 6px;
     font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
-    flex-shrink: 0;
+    flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   }
-  .action-btn:hover { background-color: #f59e0b; transform: translateY(-1px); }
-  .action-btn.copied { background-color: #059669; color: #fff; }
+  .action-btn:hover { background-color: #fcd34d; transform: translateY(-1px); box-shadow: 0 4px 12px var(--accent-gold-glow); }
+  .action-btn.copied { background-color: var(--accent-emerald); color: #fff; }
 
-  .star-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; padding: 4px; transition: color 0.15s; }
-  .star-btn.starred { color: #f59e0b; }
-
-  /* ---------- PAGE 1: HOME / COMMAND CENTER ---------- */
+  /* HOME VIEW */
   .home-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
   @media(max-width: 1100px) { .home-grid { grid-template-columns: 1fr; } }
 
   .welcome-banner {
-    background: linear-gradient(135deg, #18181c 0%, #121216 100%); border: 1px solid var(--border-subtle);
-    border-radius: 12px; padding: 28px; margin-bottom: 24px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-surface) 100%); border: 1px solid var(--border-subtle);
+    border-radius: 12px; padding: 28px; margin-bottom: 24px; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
   }
-  .welcome-banner::after { content: "道場"; position: absolute; right: 20px; bottom: -20px; font-size: 8rem; color: rgba(255,255,255,0.015); font-weight: 900; pointer-events: none; }
-  .welcome-banner h3 { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 8px; }
-  .welcome-banner p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; max-width: 600px; }
+  .welcome-banner::after { content: "5A"; position: absolute; right: 20px; bottom: -20px; font-size: 8rem; color: rgba(255,255,255,0.02); font-weight: 900; pointer-events: none; }
+  .welcome-banner h3 { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+  .welcome-banner p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; max-width: 650px; }
 
   .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-  .stat-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 18px; text-align: center; }
+  .stat-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 18px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
   .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--accent-gold); margin-bottom: 4px; font-family: monospace; }
   .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
 
-  .quick-actions-panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; }
+  .quick-actions-panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
   .section-heading { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
 
   .quick-links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .quick-link-tile {
     background: var(--bg-card); border: 1px solid var(--border-subtle); padding: 16px; border-radius: 8px;
     text-align: left; cursor: pointer; transition: all 0.2s; color: var(--text-main); display: block; text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
-  .quick-link-tile:hover { border-color: var(--accent-gold); background: #1a1a20; transform: translateY(-2px); }
+  .quick-link-tile:hover { border-color: var(--accent-gold); background: var(--bg-card-hover); transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
   .quick-link-tile h4 { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
-  .quick-link-tile p { font-size: 0.75rem; color: var(--text-muted); }
+  .quick-link-tile p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
 
-  /* ---------- PAGE 2: CHECK-IN STEPS ---------- */
-  .accordion-section { margin-bottom: 16px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-surface); overflow: hidden; }
+  /* ACCORDIONS */
+  .accordion-section { margin-bottom: 16px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-surface); overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
   .accordion-header {
     padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
     background: var(--bg-surface); transition: background 0.15s; user-select: none;
   }
   .accordion-header:hover { background: var(--bg-card); }
-  .accordion-title { font-size: 1rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
+  .accordion-title { font-size: 1rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .accordion-content { padding: 20px; border-top: 1px solid var(--border-subtle); background: var(--bg-deep); display: none; }
   .accordion-section.expanded .accordion-content { display: block; }
   .chevron { transition: transform 0.2s; font-size: 0.8rem; color: var(--text-muted); }
   .accordion-section.expanded .chevron { transform: rotate(180deg); }
 
-  /* ---------- PAGE 4: INFRACTION TACTICAL CENTER ---------- */
-  .tactical-selector-box { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
-  .tactical-flow { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
-  .flow-step-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; position: relative; }
-  .flow-step-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-gold); font-weight: 700; margin-bottom: 6px; }
+  .spiel-item {
+    background: var(--bg-card); border: 1px solid var(--border-subtle); padding: 14px 16px; border-radius: 8px;
+    margin-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+  }
+  .spiel-text { font-size: 0.88rem; line-height: 1.5; color: #e4e4e7; flex-grow: 1; }
 
-  /* ---------- PAGE 5: CLIENT POLICY LIBRARY ---------- */
+  /* TACTICAL SIMULATOR */
+  .tactical-selector-box { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+
+  /* CLIENT LIBRARY */
   .client-grid-layout { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
   @media(max-width: 900px) { .client-grid-layout { grid-template-columns: 1fr; } }
   
-  .client-list-sidebar { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; max-height: 600px; overflow-y: auto; padding: 12px; }
+  .client-list-sidebar { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; max-height: 600px; overflow-y: auto; padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
   .client-item { padding: 12px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; transition: all 0.15s; }
   .client-item:hover { background: var(--bg-card); color: #fff; }
-  .client-item.active { background: var(--accent-gold); color: #000; font-weight: 700; }
+  .client-item.active { background: var(--accent-gold); color: #141419; font-weight: 700; box-shadow: 0 0 10px var(--accent-gold-glow); }
 
-  .client-details-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px; }
+  .client-details-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
   .policy-property-row { display: grid; grid-template-columns: 180px 1fr; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); font-size: 0.85rem; }
   .policy-property-row:last-child { border-bottom: none; }
   .property-key { color: var(--text-muted); font-weight: 600; }
   .property-val { color: #fff; font-weight: 600; }
 
-  /* ---------- TABLES ---------- */
-  .dojo-table-wrapper { width: 100%; overflow-x: auto; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; }
+  /* TABLES */
+  .dojo-table-wrapper { width: 100%; overflow-x: auto; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
   .dojo-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
-  .dojo-table th { background: #16161c; padding: 14px 16px; color: var(--text-muted); font-weight: 700; border-bottom: 1px solid var(--border-subtle); white-space: nowrap; }
+  .dojo-table th { background: #22222d; padding: 14px 16px; color: var(--text-muted); font-weight: 700; border-bottom: 1px solid var(--border-subtle); white-space: nowrap; }
   .dojo-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: #e4e4e7; }
   .dojo-table tbody tr:hover td { background: var(--bg-card); }
   .dojo-table tbody tr:last-child td { border-bottom: none; }
 
-  /* Utilities */
-  .text-muted { color: var(--text-muted); }
-  .mt-4 { margin-top: 16px; }
-  .mb-4 { margin-bottom: 16px; }
-  .flex { display: flex; }
-  .justify-between { justify-content: space-between; }
-  .items-center { align-items: center; }
-  .gap-2 { gap: 8px; }
-
-  /* Custom Scrollbar */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+  ::-webkit-scrollbar-thumb:hover { background: #525266; }
 </style>
 </head>
 <body>
@@ -214,12 +213,13 @@
 
 <div class="app-container">
   
-  <!-- SIDEBAR NAVIGATION -->
   <aside class="sidebar">
     <div class="sidebar-header">
-      <div class="clan-seal">FiveActs Dojo</div>
-      <div class="dojo-title">Proctor Command</div>
-      <div class="dojo-subtitle">Meiji Era Security Archive</div>
+      <div class="five-acts-logo">5A</div>
+      <div>
+        <div class="clan-seal">FiveActs Dojo</div>
+        <div class="dojo-title">Proctor Command</div>
+      </div>
     </div>
 
     <div class="nav-scroll">
@@ -231,11 +231,11 @@
       <div class="nav-group-title">Training Scrolls</div>
       <div class="nav-item" onclick="switchPage('checkin', this)">
         <span>📜 Check-In Steps</span>
-        <span class="nav-badge" id="count-checkin">13</span>
+        <span class="nav-badge" id="count-checkin">12</span>
       </div>
       <div class="nav-item" onclick="switchPage('canned', this)">
         <span>💬 Canned Messages</span>
-        <span class="nav-badge" id="count-canned">12</span>
+        <span class="nav-badge" id="count-canned">8</span>
       </div>
 
       <div class="nav-group-title">Clan Records</div>
@@ -254,12 +254,11 @@
     </div>
 
     <div class="sidebar-footer">
-      <span>Secure Proctor Hub</span>
-      <span>v3.0</span>
+      <span>FiveActs Secure Hub</span>
+      <span>v3.5</span>
     </div>
   </aside>
 
-  <!-- MAIN VIEWPORT -->
   <main class="main-viewport">
     
     <header class="top-command-bar">
@@ -267,23 +266,25 @@
         <h2 id="current-page-title">🏯 Home / Command Center</h2>
         <p id="current-page-desc">Operational dashboard and real-time proctoring metrics.</p>
       </div>
-      <div class="utc-clock-badge" id="utc-clock">
-        <span>🕒 UTC --:--:--</span>
+      <div class="clock-badge" id="ph-clock">
+        <span>🕒 PHT --:--:--</span>
       </div>
     </header>
 
     <div class="content-area">
 
-      <!-- ================= PAGE 1: HOME ================= -->
       <div id="page-home" class="page-view active">
         <div class="welcome-banner">
-          <h3>Welcome to the FiveActs Proctor Dojo</h3>
-          <p>Discipline, precision, and uncompromised security. Access complete training scrolls, instant canned message libraries, client clan policies, and infraction triage matrices instantly.</p>
+          <h3>
+            <div class="five-acts-logo" style="width:36px; height:36px; font-size:1rem;">5A</div>
+            Welcome to the FiveActs Proctor Dojo
+          </h3>
+          <p>Discipline, precision, and uncompromised security. Access complete training scrolls, exact check-in spiels, client clan policies, and infraction triage matrices instantly under Standard Philippine Time.</p>
         </div>
 
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-value" id="stat-checkin-count">13</div>
+            <div class="stat-value" id="stat-checkin-count">12</div>
             <div class="stat-label">Check-In Protocols</div>
           </div>
           <div class="stat-card">
@@ -304,11 +305,11 @@
             <div class="quick-links-grid">
               <div class="quick-link-tile" onclick="switchPage('checkin', document.querySelectorAll('.nav-item')[1])">
                 <h4>📜 Check-In Steps</h4>
-                <p>OS specific verification, room scan, and exam release spiels.</p>
+                <p>Exact proctor verification spiels and OS instructions.</p>
               </div>
               <div class="quick-link-tile" onclick="switchPage('canned', document.querySelectorAll('.nav-item')[2])">
                 <h4>💬 Canned Messages</h4>
-                <p>Instant command palette for warnings, IDs, and support.</p>
+                <p>Instant command palette for warnings and support.</p>
               </div>
               <div class="quick-link-tile" onclick="switchPage('infractions', document.querySelectorAll('.nav-item')[3])">
                 <h4>⚖ Infraction Triage</h4>
@@ -327,7 +328,7 @@
             </div>
             <div style="display:flex; flex-direction:column; gap:10px;">
               <button class="action-btn" style="width:100%; justify-content:center; padding:12px;" onclick="copyEmergencySpiel('support')">
-                📋 Copy Emergency Support Email Spiel
+                📋 Copy Tech Support Email Spiel
               </button>
               <button class="action-btn" style="width:100%; justify-content:center; padding:12px; background:var(--accent-crimson); color:#fff;" onclick="copyEmergencySpiel('terminate')">
                 ⚠️ Copy Immediate Termination Spiel
@@ -337,23 +338,18 @@
         </div>
       </div>
 
-      <!-- ================= PAGE 2: CHECK-IN STEPS ================= -->
       <div id="page-checkin" class="page-view">
         <div class="search-box-container">
           <span class="search-icon-abs">🔍</span>
-          <input type="text" class="global-search-input" placeholder="Search check-in scrolls (e.g. windows, room scan, ID)..." oninput="filterCheckin(this.value)">
+          <input type="text" class="global-search-input" placeholder="Search exact check-in spiels (e.g. ID, welcome, Windows, room scan)..." oninput="filterCheckin(this.value)">
         </div>
-
-        <div id="checkin-container">
-          <!-- Populated via JavaScript -->
-        </div>
+        <div id="checkin-container"></div>
       </div>
 
-      <!-- ================= PAGE 3: CANNED MESSAGES ================= -->
       <div id="page-canned" class="page-view">
         <div class="search-box-container">
           <span class="search-icon-abs">🔍</span>
-          <input type="text" id="canned-search-input" class="global-search-input" placeholder="Type 'camera', 'ID', 'phone', or search messages..." oninput="filterCannedMessages(this.value)">
+          <input type="text" id="canned-search-input" class="global-search-input" placeholder="Search canned messages..." oninput="filterCannedMessages(this.value)">
         </div>
 
         <div class="filter-pills" id="canned-filters">
@@ -363,15 +359,10 @@
           <div class="filter-pill" onclick="filterCannedCategory('termination', this)">Terminations</div>
         </div>
 
-        <div id="canned-messages-container">
-          <!-- Populated via JavaScript -->
-        </div>
+        <div id="canned-messages-container"></div>
       </div>
 
-      <!-- ================= PAGE 4: INFRACTION THRESHOLD CENTER ================= -->
       <div id="page-infractions" class="page-view">
-        
-        <!-- Tactical Decision Simulator -->
         <div class="tactical-selector-box">
           <div class="section-heading">
             <span>⚡ Tactical Response Simulator (Quick Triage)</span>
@@ -379,9 +370,7 @@
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
             <div>
               <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; display:block; margin-bottom:6px;">Select Infraction:</label>
-              <select id="tactical-select" class="global-search-input" style="padding:10px 14px;" onchange="updateTacticalSimulation()">
-                <!-- Populated via JS -->
-              </select>
+              <select id="tactical-select" class="global-search-input" style="padding:10px 14px;" onchange="updateTacticalSimulation()"></select>
             </div>
             <div id="tactical-output-summary" style="display:flex; flex-direction:column; justify-content:center; background:var(--bg-card); padding:12px; border-radius:8px; border:1px solid var(--border-subtle);">
               <span style="font-size:0.75rem; color:var(--accent-gold); font-weight:700;">LIVE ACTION PATHWAY</span>
@@ -412,14 +401,11 @@
                 <th style="text-align:center;">Threshold</th>
               </tr>
             </thead>
-            <tbody id="infractions-tbody">
-              <!-- Populated via JS -->
-            </tbody>
+            <tbody id="infractions-tbody"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- ================= PAGE 5: CLIENT POLICY LIBRARY ================= -->
       <div id="page-policies" class="page-view">
         <div class="search-box-container">
           <span class="search-icon-abs">🔍</span>
@@ -427,21 +413,15 @@
         </div>
 
         <div class="client-grid-layout">
-          <div class="client-list-sidebar" id="client-sidebar-list">
-            <!-- Populated via JS -->
-          </div>
-
-          <div class="client-details-card" id="client-details-pane">
-            <!-- Populated via JS -->
-          </div>
+          <div class="client-list-sidebar" id="client-sidebar-list"></div>
+          <div class="client-details-card" id="client-details-pane"></div>
         </div>
       </div>
 
-      <!-- ================= PAGE 6: FAQ KNOWLEDGE CENTER ================= -->
       <div id="page-faq" class="page-view">
         <div class="search-box-container">
           <span class="search-icon-abs">🔍</span>
-          <input type="text" class="global-search-input" placeholder="Search knowledge base (e.g. ID verification, room scan, SEB)..." oninput="filterFaq(this.value)">
+          <input type="text" class="global-search-input" placeholder="Search knowledge base..." oninput="filterFaq(this.value)">
         </div>
 
         <div class="filter-pills" id="faq-filters">
@@ -449,13 +429,10 @@
           <div class="filter-pill" onclick="filterFaqCategory('ID Verification', this)">ID Verification</div>
           <div class="filter-pill" onclick="filterFaqCategory('Room Scans', this)">Room Scans</div>
           <div class="filter-pill" onclick="filterFaqCategory('Technical Issues', this)">Technical Issues</div>
-          <div class="filter-pill" onclick="filterFaqCategory('Break Policies', this)">Break Policies</div>
           <div class="filter-pill" onclick="filterFaqCategory('SEB', this)">SEB</div>
         </div>
 
-        <div id="faq-container">
-          <!-- Populated via JS -->
-        </div>
+        <div id="faq-container"></div>
       </div>
 
     </div>
@@ -463,34 +440,178 @@
 </div>
 
 <script>
-  /* ================= DATA REPOSITORY ================= */
-  
   const checkinData = [
-    { title: "1. Welcome", category: "Welcome", spiel: "Welcome to your certification exam today! My name is your proctor. Before we begin, I will guide you through our standard security verification process." },
-    { title: "2. Identification Verification", category: "Identification", spiel: "We will need to verify your identity. Please hold your valid government-issued ID up to the camera so I can inspect and record your credentials." },
-    { title: "3. System Verification (Windows)", category: "System", spiel: "Please open your Task Manager (Press Ctrl + Shift + Esc) then scroll down slowly until you reach the end of the list to ensure all background applications are closed.", tag: "win" },
-    { title: "3. System Verification (Mac)", category: "System", spiel: "Please go to Apple menu > System Settings > Privacy & Security > Screen & System Audio Recording, and ensure your browser or exam application is toggled on. Please also close all open background apps via Command + Tab.", tag: "mac" },
-    { title: "3. System Verification (Linux)", category: "System", spiel: "Please open your system monitor or terminal to close any unauthorized background processes or applications before we proceed with your exam release.", tag: "linux" },
-    { title: "4. Clear Desk", category: "Desk", spiel: "Please ensure your desk and surrounding area are completely clear of all unauthorized items, papers, notes, and electronic devices." },
-    { title: "5. Room Scan", category: "Room", spiel: "Please perform a slow 360-degree room scan with your camera, including your desk surface, chair, and the floor underneath." },
-    { title: "6. Exam Release", category: "Release", spiel: "All checks are complete. I am now releasing your examination. You may begin. Good luck!" },
-    { title: "7. Miscellaneous", category: "Misc", spiel: "Please ensure you remain focused on your monitor and maintain proper posture throughout the testing session." },
-    { title: "8. Warnings", category: "Warnings", spiel: "Talking or communicating outside of the exam environment is not allowed during your exam, including reading or mouthing questions. Please do not read questions and answers aloud." },
-    { title: "9. Technical Support", category: "Support", spiel: "If you encounter persistent technical difficulties or disconnects, please email support@certiverse.com for further assistance." },
-    { title: "11. Non-SEB Exams", category: "Browser", spiel: "For this non-SEB examination, please ensure you do not open secondary browser windows or external tabs outside the approved testing interface." },
-    { title: "12. Termination Messages", category: "Termination", spiel: "Unfortunately, the use of prohibited applications/behavior has been detected, which violates our code of conduct. As a result, this exam will now be terminated. Please email support@certiverse.com for escalation." },
-    { title: "13. SEB — Secure Exam Browser", category: "SEB", spiel: "You are currently running in Secure Exam Browser mode. All system shortcuts and unauthorized applications are locked." }
+    {
+      title: "1. Welcome",
+      category: "Welcome",
+      spiels: [
+        "Hello and welcome! I will be your proctor for this exam.",
+        "We have a few steps to complete before your exam begins. This time does not count against your exam time limit.",
+        "Please hold while we prepare your exam. Thank you for waiting."
+      ]
+    },
+    {
+      title: "2. Identification Verification",
+      category: "Identification",
+      spiels: [
+        "We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible.",
+        "Please bring your ID closer to the camera view.",
+        "Please hold your ID steady.",
+        "Please flip your ID.",
+        "Please show the expiration date.",
+        "Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment.",
+        "You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling.",
+        "Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com.",
+        "Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To assist you in reaching out to the exam sponsor who will process the name change, please contact support@certiverse.com.",
+        "Once completed, you can re-enter the reservation and we will continue.",
+        "Thank you. You may keep your ID away now."
+      ]
+    },
+    {
+      title: "3. System Verification",
+      category: "System",
+      spiels: [
+        "[ALL] Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam.",
+        "[ALL] Please also close the other Certiverse tab, leaving only this one open.",
+        "[WINDOWS] Please open your Task Manager then scroll down slowly until you reach the end of the list.",
+        "Thank you. You may close the Task Manager now.",
+        "[WINDOWS] Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option.",
+        "[MAC] Please open your Activity Monitor then scroll down slowly until you reach the end of the list.",
+        "Thank you. You may close the Activity Monitor now.",
+        "[MAC] Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed.",
+        "[LINUX] Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list.",
+        "Thank you. You may close the System Monitor now.",
+        "[LINUX] Please close or force quit any applications not related to the exam. If needed, select the application and choose “End Process” or “Kill Process."
+      ]
+    },
+    {
+      title: "4. Clear Desk",
+      category: "Desk",
+      spiels: [
+        "Thank you. If there are any items on your desk surface, please remove them now.",
+        "Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, smart glasses, and any other electronic device.",
+        "Headphones are not allowed during the exam. Please remove them and put them away.",
+        "Hats are not allowed during the exam. Please remove your hat and put it away.",
+        "Please remove your smartwatch and place it out of reach.",
+        "As outlined in the exam policies, only one laptop or computer without extra screens is allowed. Please remove or cover any additional monitors so they are not facing you directly."
+      ]
+    },
+    {
+      title: "5. Room Scan",
+      category: "Room",
+      spiels: [
+        "Thank you. We will now scan the room to confirm that all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk.",
+        "When doing the room scan, please hold your laptop or webcam in a way that allows the camera to clearly capture the room. Rotate it slowly and make sure nothing blocks the view, so we can see all areas of your workspace, including the desk, floor, walls, and surrounding environment.",
+        "Please show us the desk area.",
+        "Please show the area under the desk.",
+        "All electronics should be out of reach and turned off.",
+        "Please ensure your desk is clear of all items.",
+        "Please direct your camera around the room one more time.",
+        "Please make sure to capture all corners and edges of your desk during the room scan.",
+        "Is it possible for you to improve the lighting in your testing area?",
+        "The window behind you is creating a backlight effect. Adjusting the lighting or moving slightly would help us proceed.",
+        "Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination."
+      ]
+    },
+    {
+      title: "6. Exam Release",
+      category: "Release",
+      spiels: [
+        "Thank you for your cooperation. You may now click the “Hide Video” button on the side of this chat box.",
+        "Thank you. Do you have any questions before beginning your exam?",
+        "If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection.",
+        "Please use this chat if you have any questions that are not related to the exam content. I will now release your exam.",
+        "You can click the “Hide Chat” button on the side or the X at the top-right to begin your exam."
+      ]
+    },
+    {
+      title: "7. Miscellaneous",
+      category: "Misc",
+      spiels: [
+        "Breaks are not allowed for this exam.",
+        "You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules.",
+        "Please wait briefly while we investigate this issue.",
+        "Sorry, but we cannot assist with content-related questions.",
+        "You can email support@certiverse.com for further assistance with rescheduling.",
+        "Please adjust your camera. Your head and shoulders must remain fully visible during the exam.",
+        "Welcome back!",
+        "Thank you. You may resume now."
+      ]
+    },
+    {
+      title: "8. Warnings",
+      category: "Warnings",
+      spiels: [
+        "Please refrain from talking aloud.",
+        "Please ensure your face is always within camera view.",
+        "Please keep your attention forward.",
+        "Please ask all others to leave the room.",
+        "Please remain on the exam environment tab only.",
+        "Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."
+      ]
+    },
+    {
+      title: "9. Technical Support",
+      category: "Support",
+      spiels: [
+        "Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open.",
+        "Please click the refresh button on the top left side of the screen.",
+        "Please try to reboot your machine and launch the exam again.",
+        "Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?",
+        "I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared.",
+        "Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser.",
+        "Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs.",
+        "It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network.",
+        "I understand. Are you currently on a company network?",
+        "Are you currently using a docking station?",
+        "Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled.",
+        "It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.",
+        "You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed.",
+        "Please check the following before starting the exam: Use the latest version of Google Chrome or Microsoft Edge. Ensure you have a stable internet connection. Disable any browser extensions or add-ons. Clear your browser cache. Make sure any VPN or proxy connection is turned off. Disconnect any external or extended monitors and use only one screen. Verify that the exam application is allowed in both your system and browser settings, and that all required permissions are enabled (such as camera, microphone, and screen sharing).",
+        "If the issue persists after checking the following, please restart your device and relaunch the exam."
+      ]
+    },
+    {
+      title: "11. Non-SEB Exams",
+      category: "Browser",
+      spiels: [
+        "Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat.",
+        "You may hide or move the pop-up screen-sharing message at the bottom center of your screen."
+      ]
+    },
+    {
+      title: "12. Termination Messages",
+      category: "Termination",
+      spiels: [
+        "Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
+        "The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
+        "We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
+        "Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
+        "The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance."
+      ]
+    },
+    {
+      title: "13. SEB — Secure Exam Browser",
+      category: "SEB",
+      spiels: [
+        "You may exit the Secure Exam Browser to resolve the issue. Once it is fixed, re-entering SEB will reconnect you so the exam can continue.",
+        "To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen.",
+        "To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen.",
+        "Please try to refresh the SEB and choose a different audio/video input.",
+        "There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."
+      ]
+    }
   ];
 
   const cannedMessagesData = [
-    { category: "warning", tags: ["camera", "face"], text: "Please ensure your face remains fully within camera view at all times throughout the examination session." },
-    { category: "warning", tags: ["talking", "audio"], text: "Talking or communicating outside of the exam environment is not allowed during your exam, including reading or mouthing questions." },
-    { category: "warning", tags: ["phone", "device"], text: "Mobile phones and electronic devices are strictly prohibited. Please put your phone away out of arm's reach immediately." },
-    { category: "support", tags: ["email", "help"], text: "If you encounter persistent technical difficulties, please email support@certiverse.com for further assistance." },
-    { category: "termination", tags: ["violation", "code"], text: "Unfortunately, the use of prohibited applications/behavior has been detected, which violates our code of conduct. As a result, this exam will now be terminated." },
-    { category: "warning", tags: ["eyes", "focus"], text: "Please keep your eyes focused on the exam monitor. Looking away repeatedly is flagged by our security protocols." },
-    { category: "support", tags: ["connection", "reconnect"], text: "We noticed a temporary disconnection. Please remain calm while we attempt to re-establish your secure connection." },
-    { category: "warning", tags: ["desk", "items"], text: "Please clear all loose papers, books, and writing utensils from your immediate desk workspace." }
+    { category: "warning", tags: ["face", "camera"], text: "Please ensure your face is always within camera view." },
+    { category: "warning", tags: ["talking", "audio"], text: "Please refrain from talking aloud." },
+    { category: "warning", tags: ["phone", "device"], text: "The use of mobile phones is prohibited. Please put your phone away out of arm's reach immediately." },
+    { category: "support", tags: ["email", "help"], text: "You can email support@certiverse.com for further assistance with rescheduling." },
+    { category: "termination", tags: ["violation", "code"], text: "The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance." },
+    { category: "warning", tags: ["eyes", "focus"], text: "Please keep your attention forward." },
+    { category: "support", tags: ["connection", "reconnect"], text: "You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted." },
+    { category: "warning", tags: ["tab", "browser"], text: "Please remain on the exam environment tab only." }
   ];
 
   const infractionsData = [
@@ -542,13 +663,10 @@
     { category: "ID Verification", question: "What forms of ID are accepted during check-in?", answer: "A valid government-issued photo ID (Passport, Driver's License, or National ID) that clearly displays your full legal name matching your exam reservation." },
     { category: "Room Scans", question: "How should a candidate conduct a 360-degree room scan?", answer: "The candidate must slowly pan their webcam or laptop around the entire room, showing all four walls, the desk surface, underneath the desk, and chair." },
     { category: "Technical Issues", question: "What should I do if a candidate experiences severe technical disconnection?", answer: "Candidates who miss their appointment or face unresolvable drop-offs must contact support@certiverse.com to request rescheduling or ticket review." },
-    { category: "Break Policies", question: "Are unscheduled breaks permitted during exams?", answer: "Unscheduled breaks are generally not permitted unless explicitly authorized by client policy or approved special accommodations." },
     { category: "SEB", question: "What is Secure Exam Browser (SEB) mode?", answer: "SEB is a hardened browser environment that locks down the candidate workstation, preventing access to unauthorized websites, files, and system shortcuts." },
     { category: "Technical Issues", question: "What are the minimum system requirements?", answer: "A working webcam, microphone, stable high-speed internet connection, and a compatible modern web browser or Secure Exam Browser." },
-    { category: "ID Verification", question: "What if the candidate's name on ID differs slightly?", answer: "Check the client policy library. Some clients allow nicknames while others strictly require an exact government ID match." }
+    { category: "ID Verification", question: "What if the candidate's name on ID differs slightly?", answer: "Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com." }
   ];
-
-  /* ================= APP INITIALIZATION ================= */
 
   window.addEventListener('DOMContentLoaded', () => {
     initClock();
@@ -563,8 +681,9 @@
   function initClock() {
     setInterval(() => {
       const now = new Date();
-      const utcString = now.toUTCString().split(' ')[4] + ' UTC';
-      document.getElementById('utc-clock').innerHTML = `<span>🕒 ${utcString}</span>`;
+      const options = { timeZone: 'Asia/Manila', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      const phtString = new Intl.DateTimeFormat('en-GB', options).format(now) + ' PHT';
+      document.getElementById('ph-clock').innerHTML = `<span>🕒 ${phtString}</span>`;
     }, 1000);
   }
 
@@ -577,7 +696,7 @@
 
     const titles = {
       home: ["🏯 Home / Command Center", "Operational dashboard and real-time proctoring metrics."],
-      checkin: ["📜 Check-In Steps", "Step-by-step verification scrolls and OS specific instructions."],
+      checkin: ["📜 Check-In Steps", "Exact proctor verification spiels and OS specific instructions."],
       canned: ["💬 Canned Messages", "Universal message repository for fast proctor communication."],
       infractions: ["⚖ Infraction Threshold Center", "Tactical decision matrix for violations and threshold monitoring."],
       policies: ["🏛 Client Policy Library", "Source of truth for client name match, breaks, and SEB requirements."],
@@ -588,8 +707,6 @@
     document.getElementById('current-page-desc').innerText = titles[pageId][1];
   }
 
-  /* ================= RENDER & INTERACTION FUNCTIONS ================= */
-
   function renderCheckin(data) {
     const container = document.getElementById('checkin-container');
     container.innerHTML = data.map((item, index) => `
@@ -597,15 +714,17 @@
         <div class="accordion-header" onclick="toggleAccordion('checkin-sec-${index}')">
           <div class="accordion-title">
             <span>${item.title}</span>
-            ${item.tag ? `<span class="tag">${item.tag}</span>` : ''}
+            <span class="tag" style="background:#363645;">${item.category}</span>
           </div>
           <span class="chevron">▼</span>
         </div>
         <div class="accordion-content">
-          <p style="font-size:0.9rem; line-height:1.6; color:#e4e4e7; margin-bottom:14px;">${item.spiel}</p>
-          <button class="action-btn" onclick="copyText(this, \`${item.spiel}\`)">
-            <span>📋 Copy Spiel</span>
-          </button>
+          ${item.spiels.map(spiel => `
+            <div class="spiel-item">
+              <div class="spiel-text">${spiel}</div>
+              <button class="action-btn" onclick="copyText(this, \`${spiel}\`)">📋 Copy</button>
+            </div>
+          `).join('')}
         </div>
       </div>
     `).join('');
@@ -617,8 +736,18 @@
   }
 
   function filterCheckin(query) {
-    const filtered = checkinData.filter(i => (i.title + " " + i.spiel + " " + i.category).toLowerCase().includes(query.toLowerCase()));
-    renderCheckin(filtered);
+    const q = query.toLowerCase();
+    const filtered = checkinData.map(sec => {
+      const matchingSpiels = sec.spiels.filter(s => s.toLowerCase().includes(q));
+      if (sec.title.toLowerCase().includes(q) || matchingSpiels.length > 0) {
+        return {
+          ...sec,
+          spiels: sec.title.toLowerCase().includes(q) ? sec.spiels : matchingSpiels
+        };
+      }
+      return null;
+    }).filter(Boolean);
+    renderCheckin(filtered.length > 0 ? filtered : checkinData);
   }
 
   function renderCanned(data) {
@@ -628,7 +757,7 @@
         <div class="card-header-row">
           <div class="card-tags">
             <span class="tag">${item.category}</span>
-            ${item.tags.map(t => `<span class="tag" style="background:#27272f;">#${t}</span>`).join('')}
+            ${item.tags.map(t => `<span class="tag" style="background:#363645;">#${t}</span>`).join('')}
           </div>
           <button class="action-btn" onclick="copyText(this, \`${item.text}\`)">📋 Copy Spiel</button>
         </div>
@@ -692,7 +821,7 @@
     const idx = document.getElementById('tactical-select').value;
     const item = infractionsData[idx];
     const summaryText = document.getElementById('tactical-summary-text');
-    summaryText.innerHTML = `Violation: <strong>${item.name}</strong> | Severity: <span style="color:${item.severity === 'major' ? '#fca5a5' : '#fcd34d'}">${item.severity.toUpperCase()}</span> | Threshold: ${item.threshold} | Action: ${item.threshold === 0 ? 'Immediate Escalation / Termination' : 'Issue Warning & Track Count'}`;
+    summaryText.innerHTML = `Violation: <strong>${item.name}</strong> | Severity: <span style="color:${item.severity === 'major' ? '#fca5a5' : '#fde68a'}">${item.severity.toUpperCase()}</span> | Threshold: ${item.threshold} | Action: ${item.threshold === 0 ? 'Immediate Escalation / Termination' : 'Issue Warning & Track Count'}`;
   }
 
   function renderClients() {
@@ -793,8 +922,8 @@
 
   function copyEmergencySpiel(type) {
     const spiel = type === 'support' 
-      ? "If you encounter persistent technical difficulties or disconnects, please email support@certiverse.com for further assistance."
-      : "Unfortunately, the use of prohibited applications/behavior has been detected, which violates our code of conduct. As a result, this exam will now be terminated. Please email support@certiverse.com for escalation.";
+      ? "You can email support@certiverse.com for further assistance with rescheduling."
+      : "The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance.";
     navigator.clipboard.writeText(spiel);
     alert("Emergency Spiel Copied to Clipboard.");
   }
