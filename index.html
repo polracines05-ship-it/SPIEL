@@ -1,1235 +1,906 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPOCA // Tactical Proctor Command Center</title>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-dark: #0b0f19;
-      --panel-bg: rgba(15, 23, 42, 0.92);
-      --border-color: rgba(59, 130, 246, 0.3);
-      --border-glow: rgba(59, 130, 246, 0.6);
-      --tactical-green: #10b981;
-      --tactical-amber: #f59e0b;
-      --tactical-red: #ef4444;
-      --tactical-blue: #38bdf8;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --font-mono: 'Share Tech Mono', monospace;
-      --font-sans: 'Rajdhani', sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      font-family: var(--font-sans);
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    /* CRT Scanlines & Vignette */
-    .scanlines {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-      background-size: 100% 4px;
-      z-index: 999;
-      pointer-events: none;
-      opacity: 0.6;
-    }
-
-    .vignette {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
-      z-index: 998;
-      pointer-events: none;
-    }
-
-    /* Tactical Background Canvas */
-    .tactical-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      background: linear-gradient(to bottom, #111827 0%, #030712 100%);
-    }
-
-    /* Command Container */
-    .command-container {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 16px;
-      position: relative;
-      z-index: 2;
-    }
-
-    /* Header */
-    .command-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--panel-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 12px 20px;
-      backdrop-filter: blur(12px);
-      margin-bottom: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .status-indicator {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--tactical-green);
-      box-shadow: 0 0 8px var(--tactical-green);
-    }
-    .status-indicator.live { animation: pulseGlow 2s infinite; }
-
-    @keyframes pulseGlow {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 12px var(--tactical-green); }
-      100% { transform: scale(0.95); opacity: 0.8; }
-    }
-
-    .command-header h1 {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      color: var(--tactical-blue);
-      font-family: var(--font-mono);
-    }
-
-    .secure-badge {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid var(--tactical-green);
-      color: var(--tactical-green);
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-family: var(--font-mono);
-    }
-
-    .global-search-wrapper {
-      position: relative;
-      width: 400px;
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 14px;
-    }
-
-    .global-search-wrapper input {
-      width: 100%;
-      background: rgba(3, 7, 18, 0.8);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 8px 12px 8px 36px;
-      color: var(--text-main);
-      font-family: var(--font-sans);
-      font-size: 14px;
-      transition: all 0.2s ease;
-    }
-
-    .global-search-wrapper input:focus {
-      outline: none;
-      border-color: var(--tactical-blue);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .sys-clock {
-      font-family: var(--font-mono);
-      font-size: 14px;
-      color: var(--tactical-amber);
-      background: rgba(0,0,0,0.4);
-      padding: 6px 10px;
-      border-radius: 4px;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-
-    .sys-btn {
-      background: rgba(59, 130, 246, 0.2);
-      border: 1px solid var(--tactical-blue);
-      color: var(--tactical-blue);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .sys-btn:hover {
-      background: var(--tactical-blue);
-      color: #000;
-    }
-
-    /* Navigation Tabs */
-    .tactical-nav {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 16px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-    }
-
-    .nav-tab {
-      background: var(--panel-bg);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      padding: 10px 16px;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(8px);
-    }
-
-    .nav-tab:hover {
-      border-color: var(--tactical-blue);
-      color: var(--text-main);
-    }
-
-    .nav-tab.active {
-      background: rgba(56, 189, 248, 0.15);
-      border-color: var(--tactical-blue);
-      color: var(--tactical-blue);
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
-    }
-
-    /* Content Panels */
-    .content-panel {
-      display: none;
-    }
-    .content-panel.active {
-      display: block;
-    }
-
-    /* Tactical Card */
-    .tactical-card {
-      background: var(--panel-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 16px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    }
-
-    .tactical-card h3 {
-      font-size: 16px;
-      font-family: var(--font-mono);
-      color: var(--tactical-blue);
-      margin-bottom: 12px;
-      letter-spacing: 1px;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 8px;
-    }
-
-    .triage-header-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 8px;
-      margin-bottom: 12px;
-    }
-    .triage-header-inner h3 {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-    .triage-hint {
-      color: var(--text-muted);
-      font-size: 11px;
-      font-family: var(--font-mono);
-    }
-
-    .card-subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    /* Grid Layouts */
-    .panel-grid-top {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 16px;
-    }
-
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .metric-item {
-      background: rgba(3, 7, 18, 0.6);
-      border: 1px solid var(--border-color);
-      padding: 12px;
-      border-radius: 6px;
-      text-align: center;
-    }
-    .metric-item.warning { border-color: var(--tactical-amber); }
-    .metric-item.success { border-color: var(--tactical-green); }
-
-    .metric-val {
-      display: block;
-      font-size: 22px;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      color: var(--text-main);
-    }
-    .metric-lbl {
-      font-size: 11px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-
-    /* Triage Grid & Output Drawer */
-    .triage-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .triage-btn {
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 12px;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.2s;
-    }
-
-    .triage-btn:hover {
-      background: rgba(56, 189, 248, 0.2);
-      border-color: var(--tactical-blue);
-      transform: translateY(-2px);
-    }
-
-    .triage-btn .key {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid var(--border-color);
-      color: var(--tactical-blue);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-    }
-
-    .triage-output {
-      margin-top: 16px;
-      background: rgba(9, 13, 22, 0.95);
-      border: 1px solid var(--tactical-blue);
-      border-radius: 6px;
-      padding: 14px;
-      box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.1);
-    }
-    .triage-output.hidden { display: none; }
-
-    .triage-output-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: var(--tactical-blue);
-      font-weight: 600;
-      font-size: 13px;
-      font-family: var(--font-mono);
-      margin-bottom: 8px;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 6px;
-    }
-
-    .triage-output-header button {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .triage-content p {
-      color: var(--text-main);
-      font-size: 13px;
-      margin: 6px 0;
-    }
-
-    /* Tables */
-    .table-container {
-      overflow-x: auto;
-    }
-
-    .tactical-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-
-    .tactical-table th, .tactical-table td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-    }
-
-    .tactical-table th {
-      background: rgba(3, 7, 18, 0.5);
-      color: var(--tactical-blue);
-      font-family: var(--font-mono);
-      font-weight: 600;
-    }
-
-    .tactical-table tr:hover {
-      background: rgba(59, 130, 246, 0.05);
-    }
-
-    /* Status Tags */
-    .status-tag {
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-family: var(--font-mono);
-      font-weight: 600;
-    }
-    .status-tag.warning { background: rgba(245, 158, 11, 0.2); color: var(--tactical-amber); border: 1px solid var(--tactical-amber); }
-    .status-tag.success { background: rgba(16, 185, 129, 0.2); color: var(--tactical-green); border: 1px solid var(--tactical-green); }
-    .status-tag.danger { background: rgba(239, 68, 68, 0.2); color: var(--tactical-red); border: 1px solid var(--tactical-red); }
-    .status-tag.critical { background: rgba(220, 38, 38, 0.3); color: #fecaca; border: 1px solid var(--tactical-red); animation: blinkAlert 1s infinite; }
-
-    @keyframes blinkAlert { 50% { opacity: 0.5; } }
-
-    /* Check-in Pipeline */
-    .steps-container {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-
-    .step-card {
-      background: rgba(3, 7, 18, 0.6);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 16px;
-      position: relative;
-    }
-    .step-card.active { border-color: var(--tactical-blue); box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
-
-    .step-num {
-      font-family: var(--font-mono);
-      font-size: 20px;
-      color: var(--tactical-blue);
-      font-weight: 700;
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .step-card h4 { margin-bottom: 6px; font-size: 15px; }
-    .step-card p { font-size: 13px; color: var(--text-muted); }
-
-    /* Canned Messages */
-    .filter-bar {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .filter-pill {
-      background: rgba(3, 7, 18, 0.5);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    .filter-pill.active { background: var(--tactical-blue); color: #000; font-weight: 600; border-color: var(--tactical-blue); }
-
-    .canned-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .canned-card {
-      background: rgba(3, 7, 18, 0.6);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .canned-card h4 { color: var(--tactical-blue); margin-bottom: 8px; font-size: 14px; }
-    .canned-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
-
-    .copy-btn {
-      background: rgba(56, 189, 248, 0.15);
-      border: 1px solid var(--tactical-blue);
-      color: var(--tactical-blue);
-      padding: 6px 10px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .copy-btn:hover { background: var(--tactical-blue); color: #000; }
-
-    /* Policy Generator */
-    .generator-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 12px;
-      font-family: var(--font-mono);
-      color: var(--tactical-blue);
-      margin-bottom: 6px;
-    }
-
-    .form-group select, .form-group textarea {
-      width: 100%;
-      background: rgba(3, 7, 18, 0.8);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 10px;
-      color: var(--text-main);
-      font-family: var(--font-sans);
-      font-size: 14px;
-    }
-
-    .tactical-action-btn {
-      margin-top: 16px;
-      background: var(--tactical-green);
-      border: none;
-      color: #000;
-      font-weight: 700;
-      padding: 12px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: var(--font-mono);
-      font-size: 14px;
-      transition: all 0.2s;
-    }
-    .tactical-action-btn:hover { filter: brightness(1.2); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
-
-    .output-box {
-      margin-top: 16px;
-      background: rgba(3, 7, 18, 0.9);
-      border: 1px solid var(--tactical-green);
-      padding: 16px;
-      border-radius: 6px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--tactical-green);
-    }
-    .output-box.hidden { display: none; }
-
-    /* Knowledge Base Grid */
-    .kb-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .kb-card {
-      background: rgba(3, 7, 18, 0.6);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .kb-card:hover { border-color: var(--tactical-blue); transform: translateY(-2px); }
-    .kb-card h4 { color: var(--tactical-blue); margin-bottom: 6px; font-size: 15px; }
-    .kb-card p { font-size: 13px; color: var(--text-muted); }
-
-    /* Modals & Toasts */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(5px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .modal-overlay.hidden { display: none; }
-
-    .modal-card {
-      background: #0f172a;
-      border: 1px solid var(--tactical-blue);
-      border-radius: 8px;
-      width: 500px;
-      padding: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 10px;
-      margin-bottom: 12px;
-    }
-    .modal-header h3 { color: var(--tactical-blue); font-family: var(--font-mono); }
-    .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; }
-
-    .toast-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 1001;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .toast {
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid var(--tactical-green);
-      color: var(--text-main);
-      padding: 12px 20px;
-      border-radius: 6px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-      animation: slideIn 0.3s ease;
-    }
-    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-    @media(max-width: 1024px) {
-      .panel-grid-top, .steps-container, .canned-grid, .kb-grid, .generator-grid, .triage-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FiveActs Tactical Operations Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --metal-gunmetal: #1a1e24;
+            --metal-steel-blue: #2c3e50;
+            --tactical-green: #27ae60;
+            --tactical-green-dark: #1e8449;
+            --military-orange: #d35400;
+            --amber-glow: #f39c12;
+            --sand-tone: #d4ac0d;
+            --sand-light: #f9e79f;
+            --warning-yellow: #f1c40f;
+            --alert-red: #c0392b;
+            --hud-bg: rgba(15, 20, 25, 0.88);
+            --hud-border: #4a5568;
+            --text-main: #ecf0f1;
+            --text-dim: #95a5a6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b0e14;
+            color: var(--text-main);
+            font-family: 'Share Tech Mono', monospace;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Metal Slug Tactical Background Canvas / Animation */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: linear-gradient(180deg, #1b1408 0%, #3a2511 40%, #5e3a18 70%, #2e1d0c 100%);
+        }
+
+        /* Scanline Overlay */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 6px 100%;
+            z-index: 999;
+        }
+
+        /* Header Styling */
+        header {
+            background: rgba(26, 30, 36, 0.95);
+            border-bottom: 3px solid var(--amber-glow);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-badge {
+            background: var(--military-orange);
+            color: #fff;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            padding: 8px 12px;
+            border: 2px solid var(--amber-glow);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+        }
+
+        .brand-title h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: 2px;
+            color: var(--sand-light);
+            text-transform: uppercase;
+            text-shadow: 2px 2px #000;
+        }
+
+        .brand-title p {
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        .global-search {
+            position: relative;
+            width: 320px;
+        }
+
+        .global-search input {
+            width: 100%;
+            background: rgba(11, 14, 20, 0.9);
+            border: 2px solid var(--tactical-green);
+            color: var(--text-main);
+            padding: 8px 12px 8px 35px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .global-search input:focus {
+            border-color: var(--amber-glow);
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.4);
+        }
+
+        .global-search::before {
+            content: "🔍";
+            position: absolute;
+            left: 10px;
+            top: 8px;
+            font-size: 12px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background: rgba(20, 25, 32, 0.9);
+            border-bottom: 2px solid var(--metal-steel-blue);
+            display: flex;
+            overflow-x: auto;
+            padding: 0 15px;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            padding: 12px 18px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            color: var(--sand-light);
+            background: rgba(255,255,255,0.03);
+        }
+
+        .nav-btn.active {
+            color: var(--amber-glow);
+            border-bottom-color: var(--amber-glow);
+            background: rgba(243, 156, 18, 0.08);
+        }
+
+        /* Main Workspace Layout */
+        .main-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            z-index: 5;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* HUD Panels */
+        .hud-panel {
+            background: var(--hud-bg);
+            border: 2px solid var(--hud-border);
+            border-left: 5px solid var(--tactical-green);
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .hud-panel::after {
+            content: "";
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 15px; height: 15px;
+            border-right: 3px solid var(--amber-glow);
+            border-bottom: 3px solid var(--amber-glow);
+        }
+
+        .hud-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--amber-glow);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(255,255,255,0.2);
+            padding-bottom: 8px;
+        }
+
+        /* Buttons & Actions */
+        .tactical-btn {
+            background: linear-gradient(135deg, var(--tactical-green), var(--tactical-green-dark));
+            border: 1px solid var(--amber-glow);
+            color: #fff;
+            padding: 8px 14px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 13px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .tactical-btn:hover {
+            background: linear-gradient(135deg, var(--amber-glow), var(--military-orange));
+            color: #000;
+            font-weight: bold;
+            box-shadow: 0 0 12px var(--amber-glow);
+        }
+
+        .tactical-btn.secondary {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border-color: var(--text-dim);
+        }
+
+        /* Tables for Policies & Infractions */
+        .tactical-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .tactical-table th, .tactical-table td {
+            border: 1px solid #4a5568;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .tactical-table th {
+            background: rgba(44, 62, 80, 0.9);
+            color: var(--sand-light);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .tactical-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tactical-table tr:hover {
+            background: rgba(243, 156, 18, 0.08);
+        }
+
+        /* Instant Triage & Spiel Cards */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .spiel-card {
+            background: rgba(11, 14, 20, 0.6);
+            border: 1px solid #4a5568;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .spiel-text {
+            font-size: 13px;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .badge-tag {
+            background: var(--metal-steel-blue);
+            color: var(--sand-light);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 2px;
+            align-self: flex-start;
+            text-transform: uppercase;
+        }
+
+        /* Guided Check-in Steps Accordion */
+        .step-item {
+            border: 1px solid #4a5568;
+            margin-bottom: 8px;
+            background: rgba(20, 25, 32, 0.7);
+        }
+
+        .step-header {
+            padding: 12px 15px;
+            cursor: pointer;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--sand-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(44, 62, 80, 0.4);
+        }
+
+        .step-header:hover {
+            background: rgba(44, 62, 80, 0.8);
+        }
+
+        .step-body {
+            padding: 15px;
+            border-top: 1px solid #4a5568;
+            display: none;
+        }
+
+        .step-body.open {
+            display: block;
+        }
+
+        /* Toast Notifications */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--hud-bg);
+            border-left: 4px solid var(--amber-glow);
+            color: var(--text-main);
+            padding: 12px 20px;
+            font-size: 13px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease forwards;
+            min-width: 250px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Quick Command Sidebar Widget */
+        .sidebar-widget {
+            width: 320px;
+            background: var(--hud-bg);
+            border-left: 2px solid var(--hud-border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        .shortcut-badge {
+            background: #111;
+            border: 1px solid var(--amber-glow);
+            color: var(--amber-glow);
+            padding: 2px 6px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            float: right;
+        }
+    </style>
 </head>
 <body>
-  <!-- CRT Scanline & Vignette Overlay -->
-  <div class="scanlines"></div>
-  <div class="vignette"></div>
 
-  <!-- Metal Slug Inspired Parallax Desert Canvas -->
-  <canvas id="metal-slug-bg" class="tactical-bg"></canvas>
+    <div class="scanlines"></div>
+    <canvas id="bg-canvas"></canvas>
 
-  <!-- Main Command Center Shell -->
-  <div class="command-container">
-    
-    <!-- Top Tactical Header -->
-    <header class="command-header">
-      <div class="header-left">
-        <div class="status-indicator live"></div>
-        <h1>SPOCA // OPS COMMAND</h1>
-        <span class="secure-badge">SECURE TACTICAL NET</span>
-      </div>
-      <div class="header-center">
-        <div class="global-search-wrapper">
-          <span class="search-icon">🔍</span>
-          <input type="text" id="global-search" placeholder="Search policies, infractions, canned messages (Press '/' to focus)..." oninput="handleSearch(this.value)">
+    <!-- Top Header -->
+    <header>
+        <div class="brand">
+            <div class="brand-badge">MK-01</div>
+            <div class="brand-title">
+                <h1>FiveActs Tactical Ops</h1>
+                <p>Proctoring Command Center // Metal Slug Protocol</p>
+            </div>
         </div>
-      </div>
-      <div class="header-right">
-        <div class="sys-clock" id="sys-clock">00:00:00 UTC</div>
-        <button class="sys-btn" onclick="showToast('Tactical HUD Mode Active')">⚡ TACTICAL HUD</button>
-      </div>
+        <div class="global-search">
+            <input type="text" id="globalSearchInput" placeholder="Search policies, spiels, infractions..." onkeyup="filterAllData()">
+        </div>
     </header>
 
-    <!-- Main Navigation Bar -->
-    <nav class="tactical-nav">
-      <button class="nav-tab active" onclick="switchTab('dashboard', event)">📊 Home Dashboard</button>
-      <button class="nav-tab" onclick="switchTab('checkin', event)">🛂 Check-In Steps</button>
-      <button class="nav-tab" onclick="switchTab('canned', event)">💬 Canned Messages</button>
-      <button class="nav-tab" onclick="switchTab('policy-gen', event)">⚖️ Policy Generator</button>
-      <button class="nav-tab" onclick="switchTab('client-db', event)">🗄️ Client Database</button>
-      <button class="nav-tab" onclick="switchTab('infractions', event)">🚨 Infractions Matrix</button>
-      <button class="nav-tab" onclick="switchTab('knowledge', event)">📚 Knowledge Base</button>
+    <!-- Navigation Bar -->
+    <nav>
+        <button class="nav-btn active" onclick="switchTab('dashboard', event)">Home Dashboard</button>
+        <button class="nav-btn" onclick="switchTab('triage', event)">Instant Triage</button>
+        <button class="nav-btn" onclick="switchTab('checkin', event)">Check-In Steps</button>
+        <button class="nav-btn" onclick="switchTab('spiels', event)">Canned Messages</button>
+        <button class="nav-btn" onclick="switchTab('policies', event)">Client Policies</button>
+        <button class="nav-btn" onclick="switchTab('infractions', event)">Infractions Matrix</button>
+        <button class="nav-btn" onclick="switchTab('faq', event)">FAQ Search</button>
     </nav>
 
-    <!-- Operational Content Panels -->
-    <main class="tactical-main">
+    <!-- Main Workspace -->
+    <div class="main-container">
+        <div class="content-area">
 
-      <!-- 1. HOME DASHBOARD PANEL -->
-      <section id="panel-dashboard" class="content-panel active">
-        <div class="panel-grid-top">
-          <!-- Quick Status Card -->
-          <div class="tactical-card">
-            <h3>ACTIVE SESSION TELEMETRY</h3>
-            <div class="metric-grid">
-              <div class="metric-item">
-                <span class="metric-val" id="stat-active">24</span>
-                <span class="metric-lbl">Active Proctors</span>
-              </div>
-              <div class="metric-item warning">
-                <span class="metric-val" id="stat-alerts">3</span>
-                <span class="metric-lbl">Pending Escalations</span>
-              </div>
-              <div class="metric-item success">
-                <span class="metric-val">99.4%</span>
-                <span class="metric-lbl">Net Compliance</span>
-              </div>
-            </div>
-          </div>
+            <!-- HOME DASHBOARD TAB -->
+            <div id="dashboard" class="tab-content active">
+                <div class="hud-panel">
+                    <div class="hud-title">Operational Status // Live Sector Overview</div>
+                    <p style="margin-bottom: 15px; color: var(--text-dim);">Welcome to the Tactical Command Center. System integrity optimal. Select modules via navigation or use instant triage for rapid ticket processing during live proctoring.</p>
+                    <div class="grid-2">
+                        <div style="background: rgba(0,0,0,0.4); padding: 15px; border: 1px solid #4a5568;">
+                            <h3 style="color: var(--sand-light); margin-bottom: 8px; font-family: 'Rajdhani', sans-serif;">⚡ Quick Shortcuts</h3>
+                            <ul style="list-style-type: none; font-size: 13px; display: flex; flex-direction: column; gap: 6px;">
+                                <li><code>[Alt + 1]</code> Home Dashboard</li>
+                                <li><code>[Alt + 2]</code> Instant Infraction Triage</li>
+                                <li><code>[Alt + 3]</code> Guided Check-In Mode</li>
+                                <li><code>[Alt + C]</code> Copy Warning Spiel</li>
+                            </ul>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.4); padding: 15px; border: 1px solid #4a5568;">
+                            <h3 style="color: var(--sand-light); margin-bottom: 8px; font-family: 'Rajdhani', sans-serif;">🛡️ Active Directives</h3>
+                            <p style="font-size: 12px; line-height: 1.4;">Ensure all SEB and non-SEB client verification steps are strictly enforced. Refer to the Client Policies module for exception rules.</p>
+                        </div>
+                    </div>
+                </div>
 
-          <!-- Integrated Instant Infraction Triage Widget with Interactive Output Panel -->
-          <div class="tactical-card span-2">
-            <div class="triage-header-inner">
-              <h3>⚡ INSTANT INFRACTION TRIAGE (5-SEC PROTOCOL)</h3>
-              <span class="triage-hint">Press keys 1-6 for instant response</span>
+                <div class="hud-panel">
+                    <div class="hud-title">Quick Action Command Center</div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="tactical-btn" onclick="copySpiel('Please refrain from talking aloud.')">Copy Talking Warning</button>
+                        <button class="tactical-btn" onclick="copySpiel('Please ensure your face is always within camera view.')">Copy Face View Warning</button>
+                        <button class="tactical-btn" onclick="copySpiel('Please keep your attention forward.')">Copy Attention Warning</button>
+                        <button class="tactical-btn" onclick="copySpiel('Please verify that your browser has permission to access your camera, microphone, and screen.')">Copy Permissions Spiel</button>
+                        <button class="tactical-btn secondary" onclick="copySpiel('Please email support@certiverse.com for further assistance.')">Copy Support Escalation</button>
+                    </div>
+                </div>
             </div>
-            <p class="card-subtitle">Select an infraction to instantly dispatch protocol, view policy match, and copy canned warning:</p>
-            <div class="triage-grid">
-              <button class="triage-btn" onclick="triggerTriage('blurry-id')"><span class="key">1</span> Blurry ID</button>
-              <button class="triage-btn" onclick="triggerTriage('name-mismatch')"><span class="key">2</span> Name Mismatch</button>
-              <button class="triage-btn" onclick="triggerTriage('phone-detected')"><span class="key">3</span> Phone Detected</button>
-              <button class="triage-btn" onclick="triggerTriage('looking-away')"><span class="key">4</span> Gaze Deviation</button>
-              <button class="triage-btn" onclick="triggerTriage('break-violation')"><span class="key">5</span> Unauth. Break</button>
-              <button class="triage-btn" onclick="triggerTriage('remote-desktop')"><span class="key">6</span> Remote Software</button>
+
+            <!-- INSTANT TRIAGE TAB -->
+            <div id="triage" class="tab-content">
+                <div class="hud-panel">
+                    <div class="hud-title">Instant Infraction Triage</div>
+                    <p style="margin-bottom: 15px; color: var(--text-dim);">Select candidate violation to instantly determine severity, standard policy, required action, and pre-approved spiel.</p>
+                    
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                        <button class="tactical-btn" onclick="runTriage('blurry')">Blurry ID</button>
+                        <button class="tactical-btn" onclick="runTriage('name')">Name Mismatch</button>
+                        <button class="tactical-btn" onclick="runTriage('phone')">Phone Detected</button>
+                        <button class="tactical-btn" onclick="runTriage('looking')">Looking Away</button>
+                        <button class="tactical-btn" onclick="runTriage('break')">Break Violation</button>
+                        <button class="tactical-btn" onclick="runTriage('rdp')">Remote Desktop</button>
+                    </div>
+
+                    <div id="triageResult" style="background: rgba(0,0,0,0.6); border: 1px solid var(--amber-glow); padding: 20px; display: none;">
+                        <h3 id="triageTitle" style="color: var(--amber-glow); font-family: 'Rajdhani', sans-serif; font-size: 18px; margin-bottom: 10px;"></h3>
+                        <div id="triageDetails" style="font-size: 13px; line-height: 1.5; display: flex; flex-direction: column; gap: 8px;"></div>
+                    </div>
+                </div>
             </div>
-            
-            <!-- Dynamic Triage Output Drawer -->
-            <div id="triage-output-panel" class="triage-output hidden">
-              <div class="triage-output-header">
-                <span id="triage-action-title">Action Protocol</span>
-                <button onclick="closeTriageOutput()">✕</button>
-              </div>
-              <div class="triage-content">
-                <p><strong>Canned Message:</strong> <span id="triage-msg"></span></p>
-                <p><strong>Policy Rule:</strong> <span id="triage-policy"></span></p>
-                <button class="copy-btn" onclick="copyTriageMessage()" style="margin-top: 8px;">📋 Copy Message</button>
-              </div>
+
+            <!-- CHECK-IN STEPS TAB -->
+            <div id="checkin" class="tab-content">
+                <div class="hud-panel">
+                    <div class="hud-title">Guided Check-In Mode // Standard Operating Procedures</div>
+                    
+                    <div class="step-item">
+                        <div class="step-header" onclick="toggleStep(this)">1. Welcome <span>▼</span></div>
+                        <div class="step-body">
+                            <div class="spiel-card">
+                                <span class="badge-tag">Welcome Spiel</span>
+                                <div class="spiel-text">Hello and welcome! I will be your proctor for this exam. We have a few steps to complete before your exam begins. This time does not count against your exam time limit. Please hold while we prepare your exam. Thank you for waiting.</div>
+                                <button class="tactical-btn" style="align-self: flex-end;" onclick="copySpiel(this.previousElementSibling.innerText)">Copy Spiel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-header" onclick="toggleStep(this)">2. Identification Verification <span>▼</span></div>
+                        <div class="step-body">
+                            <div class="spiel-card">
+                                <span class="badge-tag">ID Verification</span>
+                                <div class="spiel-text">We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible.</div>
+                                <button class="tactical-btn" style="align-self: flex-end;" onclick="copySpiel(this.previousElementSibling.innerText)">Copy Spiel</button>
+                            </div>
+                            <div class="spiel-card">
+                                <span class="badge-tag">Blurry ID Spiel</span>
+                                <div class="spiel-text">Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment.</div>
+                                <button class="tactical-btn" style="align-self: flex-end;" onclick="copySpiel(this.previousElementSibling.innerText)">Copy Spiel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-header" onclick="toggleStep(this)">3. System Verification <span>▼</span></div>
+                        <div class="step-body">
+                            <div class="spiel-card">
+                                <span class="badge-tag">System Check</span>
+                                <div class="spiel-text">[ALL] Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam.<br>[WINDOWS] Please open your Task Manager then scroll down slowly until you reach the end of the list.</div>
+                                <button class="tactical-btn" style="align-self: flex-end;" onclick="copySpiel(this.previousElementSibling.innerText)">Copy Spiel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-header" onclick="toggleStep(this)">4. Clear Desk <span>▼</span></div>
+                        <div class="step-body">
+                            <div class="spiel-card">
+                                <span class="badge-tag">Desk Inspection</span>
+                                <div class="spiel-text">Thank you. If there are any items on your desk surface, please remove them now. Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, smart glasses, and any other electronic device.</div>
+                                <button class="tactical-btn" style="align-self: flex-end;" onclick="copySpiel(this.previousElementSibling.innerText)">Copy Spiel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-header" onclick="toggleStep(this)">5. Room Scan <span>▼</span></div>
+                        <div class="step-body">
+                            <div class="spiel-card">
+                                <span class="badge-tag">Room Scan Procedure</span>
+                                <div class="spiel-text">Thank you. We will now scan the room to confirm that all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk.</div>
+                                <button class="tactical-btn" style="align-self: flex-end;" onclick="copySpiel(this.previousElementSibling.innerText)">Copy Spiel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-header" onclick="toggleStep(this)">6. Exam Release <span>▼</span></div>
+                        <div class="step-body">
+                            <div class="spiel-card">
+                                <span class="badge-tag">Release Spiel</span>
+                                <div class="spiel-text">Thank you for your cooperation. You may now click the “Hide Video” button on the side of this chat box. Thank you. Do you have any questions before beginning your exam? I will now release your exam.</div>
+                                <button class="tactical-btn" style="align-self: flex-end;" onclick="copySpiel(this.previousElementSibling.innerText)">Copy Spiel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+
+            <!-- CANNED MESSAGES TAB -->
+            <div id="spiels" class="tab-content">
+                <div class="hud-panel">
+                    <div class="hud-title">Canned Messages & Tactical Spiels</div>
+                    <div style="margin-bottom: 15px;">
+                        <input type="text" id="spielSearch" placeholder="Filter spiels..." onkeyup="filterSpiels()" style="width: 100%; background: #111; border: 1px solid #4a5568; color: #fff; padding: 8px; font-family: 'Share Tech Mono';">
+                    </div>
+                    <div id="spielList" style="display: flex; flex-direction: column; gap: 10px;">
+                        <div class="spiel-card">
+                            <span class="badge-tag">Troubleshooting</span>
+                            <div class="spiel-text">Are you using a company-issued laptop? Are you using Mac or Windows? Please wait while we get someone from the support team to help you.</div>
+                            <button class="tactical-btn" style="align-self: flex-end;" onclick="copySpiel(this.previousElementSibling.innerText)">Copy Spiel</button>
+                        </div>
+                        <div class="spiel-card">
+                            <span class="badge-tag">Warnings</span>
+                            <div class="spiel-text">Talking or communicating outside of the exam environment is not allowed during your exam, including reading or mouthing questions. Please do not read the questions and answers aloud.</div>
+                            <button class="tactical-btn" style="align-self: flex-end;" onclick="copySpiel(this.previousElementSibling.innerText)">Copy Spiel</button>
+                        </div>
+                        <div class="spiel-card">
+                            <span class="badge-tag">Termination</span>
+                            <div class="spiel-text">Unfortunately, the use of prohibited application has been detected during this exam, which violates our code of conduct. As a result, this exam will now be terminated. Please email support@certiverse.com and they can escalate your issue.</div>
+                            <button class="tactical-btn" style="align-self: flex-end;" onclick="copySpiel(this.previousElementSibling.innerText)">Copy Spiel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CLIENT POLICIES TAB -->
+            <div id="policies" class="tab-content">
+                <div class="hud-panel">
+                    <div class="hud-title">Client Policy Database</div>
+                    <div style="overflow-x: auto;">
+                        <table class="tactical-table">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Name Change</th>
+                                    <th>Breaks Policy</th>
+                                    <th>Name Policy</th>
+                                    <th>SEB/Non-SEB</th>
+                                    <th>Documentation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>AKYLADE</strong></td><td>ALLOWED</td><td>ONE (1) FIVE (5) MINUTE BREAK</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                                <tr><td><strong>ATLASSIAN</strong></td><td>NOT ALLOWED</td><td>NONE</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                                <tr><td><strong>BLUE PRISM</strong></td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                                <tr><td><strong>BMC</strong></td><td>NOT ALLOWED</td><td>ONE (1) FIVE (5) MINUTE BREAK</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>ALLOWED</td></tr>
+                                <tr><td><strong>CAMUNDA</strong></td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                                <tr><td><strong>CASBO</strong></td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                                <tr><td><strong>DOCUSIGN</strong></td><td>NOT ALLOWED</td><td>NONE</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                                <tr><td><strong>HASHICORP</strong></td><td>NOT ALLOWED</td><td>NONE (VAULT PROF: ONE (1) FIFTEEN MIN BREAK)</td><td>NAME MUST MATCH GOVT. ID</td><td>NON-SEB</td><td>NOT ALLOWED</td></tr>
+                                <tr><td><strong>INTERSYSTEMS</strong></td><td>NOT ALLOWED</td><td>ONE (1) TEN (10) MINUTE BREAK</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>DEPENDS ON EXAM</td></tr>
+                                <tr><td><strong>NRPP</strong></td><td>ALLOWED</td><td>ONE (1) FIFTEEN (15) MINUTE BREAK</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>ALLOWED</td></tr>
+                                <tr><td><strong>NVIDIA</strong></td><td>ALLOWED</td><td>NONE (BETA 180: TWO 5-MIN BREAKS)</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                                <tr><td><strong>OPEN TEXT</strong></td><td>NOT ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>ALLOWED</td></tr>
+                                <tr><td><strong>PROJECT SUCCESS</strong></td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                                <tr><td><strong>SIDEFX</strong></td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>TEXTBOOKS ALLOWED</td></tr>
+                                <tr><td><strong>VASTDATA</strong></td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                                <tr><td><strong>WELLSKY</strong></td><td>ALLOWED</td><td>UNLIMITED BREAKS (10-20 MINS)</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>TEXTBOOKS ALLOWED</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INFRACTIONS MATRIX TAB -->
+            <div id="infractions" class="tab-content">
+                <div class="hud-panel">
+                    <div class="hud-title">Infractions Matrix & Violation Thresholds</div>
+                    <div style="overflow-x: auto;">
+                        <table class="tactical-table">
+                            <thead>
+                                <tr>
+                                    <th>Violation Name</th>
+                                    <th>Context</th>
+                                    <th>Category</th>
+                                    <th>Severity</th>
+                                    <th>Threshold</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Another person in the room</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td>Minor</td><td>2</td></tr>
+                                <tr><td>Books / Supplemental Materials</td><td>Check in, Testing</td><td>Prohibited Items</td><td>Minor</td><td>2</td></tr>
+                                <tr><td>Camera</td><td>Check in, Testing</td><td>Prohibited Electronic Device</td><td>Minor</td><td>2</td></tr>
+                                <tr><td>Desk is not cleared off</td><td>Check in, Testing</td><td>Check in</td><td>Minor</td><td>2</td></tr>
+                                <tr><td>Does not do complete scan (360, desk, under)</td><td>Check in</td><td>Check in</td><td>Minor</td><td>1</td></tr>
+                                <tr><td>Eating/drinking without approved Special Accom</td><td>Testing</td><td>Prohibited Behavior</td><td>Minor</td><td>1</td></tr>
+                                <tr><td>Environment or camera view too dark</td><td>Check in</td><td>Check in</td><td>Minor</td><td>2</td></tr>
+                                <tr><td>Face coverings</td><td>Check in</td><td>Check in</td><td>Minor</td><td>2</td></tr>
+                                <tr><td>Face out of view</td><td>Testing</td><td>Prohibited Behavior</td><td>Minor</td><td>2</td></tr>
+                                <tr><td>Failure to return from break</td><td>Testing</td><td>Prohibited Behavior</td><td>Major</td><td>0</td></tr>
+                                <tr><td>Headphones/Earbuds</td><td>Check in</td><td>Prohibited Electronic Device</td><td>Minor</td><td>1</td></tr>
+                                <tr><td>Headwear</td><td>Check in</td><td>Prohibited Items</td><td>Minor</td><td>1</td></tr>
+                                <tr><td>Internal environment too loud</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td>Minor</td><td>2</td></tr>
+                                <tr><td>Leaves testing area</td><td>Testing</td><td>Prohibited Behavior</td><td>Minor</td><td>1</td></tr>
+                                <tr><td>Looking elsewhere</td><td>Testing</td><td>Prohibited Behavior</td><td>Minor</td><td>4</td></tr>
+                                <tr><td>Mobile phone in use</td><td>Testing</td><td>Prohibited Electronic Device</td><td>Major</td><td>0</td></tr>
+                                <tr><td>Mobile phone visible</td><td>Check in</td><td>Prohibited Electronic Device</td><td>Minor</td><td>1</td></tr>
+                                <tr><td>Not following proctor instructions</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td>Minor</td><td>2</td></tr>
+                                <tr><td>Proctor harassment</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td>Major</td><td>0</td></tr>
+                                <tr><td>Remote Desktop Applications</td><td>Check in, Testing</td><td>Prohibited Electronic Device</td><td>Major</td><td>0</td></tr>
+                                <tr><td>Secondary device (computer, laptop)</td><td>Check in</td><td>Prohibited Electronic Device</td><td>Minor</td><td>1</td></tr>
+                                <tr><td>Smart Watch</td><td>Check in</td><td>Prohibited Electronic Device</td><td>Minor</td><td>1</td></tr>
+                                <tr><td>Talking aloud / to others</td><td>Testing</td><td>Prohibited Behavior</td><td>Minor</td><td>2</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ SEARCH TAB -->
+            <div id="faq" class="tab-content">
+                <div class="hud-panel">
+                    <div class="hud-title">Tactical FAQ & Knowledge Base Search</div>
+                    <input type="text" id="faqSearchInput" placeholder="Type keywords for instant FAQ lookup..." onkeyup="filterFAQ()" style="width: 100%; background: #111; border: 1px solid #4a5568; color: #fff; padding: 10px; margin-bottom: 15px; font-family: 'Share Tech Mono';">
+                    <div id="faqList" style="display: flex; flex-direction: column; gap: 10px;">
+                        <div class="spiel-card">
+                            <span class="badge-tag">FAQ // Rescheduling</span>
+                            <div class="spiel-text">If a candidate misses their exam or encounters unresolvable network drops, direct them to email support@certiverse.com or use the portal article: https://help.certiverse.com/portal/en/kb/articles/reschedule</div>
+                            <button class="tactical-btn" style="align-self: flex-end;" onclick="copySpiel(this.previousElementSibling.innerText)">Copy Link/Spiel</button>
+                        </div>
+                        <div class="spiel-card">
+                            <span class="badge-tag">FAQ // Mac Screen Recording</span>
+                            <div class="spiel-text">Choose Apple menu > System Settings > Privacy & Security > Screen & System Audio Recording. Toggle the required permissions on for browser/exam environment.</div>
+                            <button class="tactical-btn" style="align-self: flex-end;" onclick="copySpiel(this.previousElementSibling.innerText)">Copy Spiel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <!-- Live Activity Stream -->
-        <div class="tactical-card">
-          <h3>RECENT OPERATIONS FEED</h3>
-          <div class="table-container">
-            <table class="tactical-table">
-              <thead>
-                <tr>
-                  <th>Timestamp</th>
-                  <th>Candidate ID</th>
-                  <th>Event Type</th>
-                  <th>Action Taken</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="live-activity-body">
-                <tr>
-                  <td>13:42:01</td>
-                  <td>CAND-9941</td>
-                  <td>Phone Detected</td>
-                  <td>Warning Issued (Lvl 2)</td>
-                  <td><span class="status-tag warning">Pending Review</span></td>
-                </tr>
-                <tr>
-                  <td>13:40:15</td>
-                  <td>CAND-8820</td>
-                  <td>Blurry ID</td>
-                  <td>Re-upload Prompted</td>
-                  <td><span class="status-tag success">Resolved</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <!-- Quick Command Sidebar Widget -->
+        <div class="sidebar-widget">
+            <div class="hud-title" style="font-size: 14px;">Quick Actions</div>
+            <button class="tactical-btn" onclick="copySpiel('Please keep your attention forward.')">Copy Attention Warning <span class="shortcut-badge">ALT+C</span></button>
+            <button class="tactical-btn" onclick="copySpiel('Please check your camera settings and make sure that your camera is allowed.')">Copy Camera Check</button>
+            <button class="tactical-btn" onclick="copySpiel('We will now pause your session.')">Copy Pause Spiel</button>
+            <button class="tactical-btn" onclick="copySpiel('We will now resume your session.')">Copy Resume Spiel</button>
+            <hr style="border-color: #4a5568; margin: 10px 0;">
+            <div style="font-size: 11px; color: var(--text-dim); line-height: 1.4;">
+                <p style="color: var(--sand-light); margin-bottom: 5px;">TACTICAL TIP:</p>
+                Use Instant Triage during live video monitoring for one-click violation handling and zero friction.
+            </div>
         </div>
-      </section>
-
-      <!-- 2. CHECK-IN STEPS PANEL -->
-      <section id="panel-checkin" class="content-panel">
-        <div class="tactical-card">
-          <h3>🛂 MANDATORY VERIFICATION PIPELINE</h3>
-          <div class="steps-container">
-            <div class="step-card active">
-              <span class="step-num">01</span>
-              <h4>ID Validation</h4>
-              <p>Verify government ID clarity, holograms, and expiration status.</p>
-            </div>
-            <div class="step-card">
-              <span class="step-num">02</span>
-              <h4>Facial Match</h4>
-              <p>Confirm candidate live webcam capture matches ID document.</p>
-            </div>
-            <div class="step-card">
-              <span class="step-num">03</span>
-              <h4>Environment Scan</h4>
-              <p>Inspect 360-degree workspace for unauthorized materials or displays.</p>
-            </div>
-            <div class="step-card">
-              <span class="step-num">04</span>
-              <h4>System Lockdown</h4>
-              <p>Verify browser lockdown mode and termination of prohibited background apps.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 3. CANNED MESSAGES PANEL -->
-      <section id="panel-canned" class="content-panel">
-        <div class="tactical-card">
-          <h3>💬 RAPID DISPATCH CANNED MESSAGES</h3>
-          <div class="filter-bar">
-            <button class="filter-pill active" onclick="filterCanned('all', event)">All Messages</button>
-            <button class="filter-pill" onclick="filterCanned('id', event)">ID & Identity</button>
-            <button class="filter-pill" onclick="filterCanned('behavior', event)">Behavioral</button>
-            <button class="filter-pill" onclick="filterCanned('technical', event)">Technical</button>
-          </div>
-          <div class="canned-grid" id="canned-grid">
-            <div class="canned-card" data-category="id">
-              <h4>Blurry ID Notice</h4>
-              <p>Please hold your government-issued ID closer to the webcam and wipe the lens for clarity.</p>
-              <button class="copy-btn" onclick="copyText(this)">📋 Copy Message</button>
-            </div>
-            <div class="canned-card" data-category="behavior">
-              <h4>Gaze Warning</h4>
-              <p>Warning: Please maintain direct focus on the monitor. Looking away is prohibited during assessment.</p>
-              <button class="copy-btn" onclick="copyText(this)">📋 Copy Message</button>
-            </div>
-            <div class="canned-card" data-category="technical">
-              <h4>Remote Software Detected</h4>
-              <p>Active screen-sharing or remote desktop utilities detected. Close them immediately.</p>
-              <button class="copy-btn" onclick="copyText(this)">📋 Copy Message</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 4. POLICY GENERATOR PANEL -->
-      <section id="panel-policy-gen" class="content-panel">
-        <div class="tactical-card">
-          <h3>⚖️ DYNAMIC POLICY & INCIDENT REPORT GENERATOR</h3>
-          <div class="generator-grid">
-            <div class="form-group">
-              <label>Client / Enterprise Target</label>
-              <select id="gen-client">
-                <option>Wells Fargo Assessment Protocol</option>
-                <option>JPMorgan Chase Compliance Standard</option>
-                <option>Global Standard BPO Tier-1</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Infraction Classification</label>
-              <select id="gen-infraction">
-                <option>Level 1 - Minor Procedural Warning</option>
-                <option>Level 2 - Direct Workspace Violation</option>
-                <option>Level 3 - Critical Security Breach / Disqualification</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group" style="margin-top: 16px;">
-            <label>Custom Incident Notes</label>
-            <textarea id="gen-notes" rows="4" placeholder="Enter specific observations..."></textarea>
-          </div>
-          <button class="tactical-action-btn" onclick="generateIncidentReport()">Generate Official Incident Package</button>
-          <div id="gen-output" class="output-box hidden"></div>
-        </div>
-      </section>
-
-      <!-- 5. CLIENT POLICY DATABASE PANEL -->
-      <section id="panel-client-db" class="content-panel">
-        <div class="tactical-card">
-          <h3>🗄️ CLIENT POLICY DATABASE</h3>
-          <div class="table-container">
-            <table class="tactical-table">
-              <thead>
-                <tr>
-                  <th>Client Enterprise</th>
-                  <th>ID Strictness</th>
-                  <th>Allowed Break Time</th>
-                  <th>Secondary Device Rule</th>
-                  <th>Escalation SLA</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Wells Fargo</strong></td>
-                  <td>Strict (Government Only)</td>
-                  <td>0 Mins (Zero Tolerance)</td>
-                  <td>Strictly Prohibited</td>
-                  <td>30 Seconds</td>
-                </tr>
-                <tr>
-                  <td><strong>JPMorgan Chase</strong></td>
-                  <td>Standard (Secondary Accepted)</td>
-                  <td>5 Mins Max</td>
-                  <td>Prohibited (Reviewable)</td>
-                  <td>45 Seconds</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- 6. INFRACTIONS MATRIX PANEL -->
-      <section id="panel-infractions" class="content-panel">
-        <div class="tactical-card">
-          <h3>🚨 INFRACTIONS MATRIX & PENALTY SCALE</h3>
-          <div class="table-container">
-            <table class="tactical-table">
-              <thead>
-                <tr>
-                  <th>Code</th>
-                  <th>Infraction Description</th>
-                  <th>Severity Level</th>
-                  <th>Required Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>INF-01</td>
-                  <td>Blurry or Unreadable ID Document</td>
-                  <td><span class="status-tag warning">Level 1</span></td>
-                  <td>Prompt candidate for re-upload</td>
-                </tr>
-                <tr>
-                  <td>INF-02</td>
-                  <td>Extended Gaze Deviation (>15s)</td>
-                  <td><span class="status-tag warning">Level 1</span></td>
-                  <td>Issue audio warning and log event</td>
-                </tr>
-                <tr>
-                  <td>INF-03</td>
-                  <td>Mobile Device Visible in Workspace</td>
-                  <td><span class="status-tag danger">Level 3</span></td>
-                  <td>Immediate formal warning / Confiscation prompt</td>
-                </tr>
-                <tr>
-                  <td>INF-04</td>
-                  <td>Active Remote Desktop / VM Tool</td>
-                  <td><span class="status-tag critical">Level 4</span></td>
-                  <td>Instant Session Termination</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- 7. KNOWLEDGE BASE PANEL -->
-      <section id="panel-knowledge" class="content-panel">
-        <div class="tactical-card">
-          <h3>📚 PROCTOR KNOWLEDGE BASE & SOPs</h3>
-          <div class="kb-grid">
-            <div class="kb-card" onclick="openKbModal('Escalation Protocol', 'When an escalation occurs, immediately notify the senior duty officer via comms channel 2, lock candidate state, and archive telemetry snapshot.')">
-              <h4>📋 Standard Escalation SOP</h4>
-              <p>Step-by-step guidelines for handling high-priority security breaches.</p>
-            </div>
-            <div class="kb-card" onclick="openKbModal('Technical Failure Guide', 'If candidate loses connection, maintain session state for 180 seconds before flagging as abandoned.')">
-              <h4>⚙️ Technical Disconnect Protocol</h4>
-              <p>Recovery procedures for dropped video feeds or browser crashes.</p>
-            </div>
-            <div class="kb-card" onclick="openKbModal('ID Verification Standards', 'Verify holographic seal, expiration date, and exact character match against registration record.')">
-              <h4>🛂 ID Verification Manual</h4>
-              <p>Comprehensive visual reference for checking foreign and domestic IDs.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </main>
-  </div>
-
-  <!-- Toast Notifications Container -->
-  <div id="toast-container" class="toast-container"></div>
-
-  <!-- KB Modal Overlay -->
-  <div id="kb-modal" class="modal-overlay hidden" onclick="closeKbModal(event)">
-    <div class="modal-card" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h3 id="modal-title">Knowledge Base</h3>
-        <button class="modal-close" onclick="closeKbModalDirect()">✕</button>
-      </div>
-      <div class="modal-body" id="modal-content" style="color: var(--text-muted); font-size: 14px; line-height: 1.5;"></div>
     </div>
-  </div>
 
-  <script>
-    // Clock Engine
-    setInterval(() => {
-      const now = new Date();
-      document.getElementById('sys-clock').textContent = now.toUTCString().split(' ')[4] + ' UTC';
-    }, 1000);
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
 
-    // Tab Navigation Switcher
-    function switchTab(tabId, event) {
-      document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-      
-      document.getElementById(`panel-${tabId}`).classList.add('active');
-      if (event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
-      }
-    }
-
-    // Toast Notification System
-    function showToast(message) {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.textContent = `[CMD ALERT]: ${message}`;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-
-    // Copy Text Helper for Canned Cards
-    function copyText(btn) {
-      const card = btn.closest('.canned-card') || btn.closest('.tactical-card');
-      const text = card.querySelector('p').textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        showToast('Canned message copied to clipboard!');
-      });
-    }
-
-    // Instant Infraction Triage Data & Handlers
-    const triageData = {
-      'blurry-id': {
-        title: 'Blurry ID Protocol',
-        message: 'Please hold your valid government-issued photo ID closer to the webcam and ensure the camera lens is clean so your details are fully legible.',
-        policy: 'Infractions Matrix -> Section 3.1: Unclear Identification (Level 1)'
-      },
-      'name-mismatch': {
-        title: 'Name Mismatch Protocol',
-        message: 'The name on your submitted identification does not match the registration profile. Please provide secondary identification or confirmation of legal name change.',
-        policy: 'Infractions Matrix -> Section 3.2: Identity Discrepancy (Level 2)'
-      },
-      'phone-detected': {
-        title: 'Phone Detected Protocol',
-        message: 'Warning: A mobile device or electronic communication tool was detected within your workspace view. Please store it completely out of reach immediately.',
-        policy: 'Infractions Matrix -> Section 4.1: Prohibited Electronic Device (Level 3)'
-      },
-      'looking-away': {
-        title: 'Looking Away Protocol',
-        message: 'Please maintain your focus toward the testing screen. Looking away from the monitor for extended periods violates active session monitoring guidelines.',
-        policy: 'Infractions Matrix -> Section 2.4: Gaze Deviation Warning (Level 1)'
-      },
-      'break-violation': {
-        title: 'Break Violation Protocol',
-        message: 'Unscheduled breaks are not permitted during active examination blocks. Please return your focus to the screen or request formal approval.',
-        policy: 'Infractions Matrix -> Section 5.0: Unauthorized Departure (Level 2)'
-      },
-      'remote-desktop': {
-        title: 'Remote Desktop Protocol',
-        message: 'Active remote desktop control software or screen-sharing utilities have been identified on your machine. You must close them immediately to proceed.',
-        policy: 'Infractions Matrix -> Section 6.2: Virtual Machine / Remote Software (Level 4)'
-      }
-    };
-
-    function triggerTriage(key) {
-      const data = triageData[key];
-      if (!data) return;
-      document.getElementById('triage-action-title').textContent = data.title;
-      document.getElementById('triage-msg').textContent = data.message;
-      document.getElementById('triage-policy').textContent = data.policy;
-      document.getElementById('triage-output-panel').classList.remove('hidden');
-      showToast(`Executed 5-Sec Protocol: ${data.title}`);
-    }
-
-    function closeTriageOutput() {
-      document.getElementById('triage-output-panel').classList.add('hidden');
-    }
-
-    function copyTriageMessage() {
-      const text = document.getElementById('triage-msg').textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        showToast('Canned response copied to clipboard!');
-      });
-    }
-
-    // Canned Message Filtering
-    function filterCanned(category, event) {
-      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-      if (event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
-      }
-      
-      document.querySelectorAll('.canned-card').forEach(card => {
-        if (category === 'all' || card.getAttribute('data-category') === category) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
+    <script>
+        // Tab Switching Logic
+        function switchTab(tabId, event) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if(event) event.currentTarget.classList.add('active');
         }
-      });
-    }
 
-    // Dynamic Policy & Incident Report Generator
-    function generateIncidentReport() {
-      const client = document.getElementById('gen-client').value;
-      const infraction = document.getElementById('gen-infraction').value;
-      const notes = document.getElementById('gen-notes').value || 'No additional remarks.';
-      
-      const output = document.getElementById('gen-output');
-      output.classList.remove('hidden');
-      output.innerHTML = `<strong>[INCIDENT PACKAGE GENERATED]</strong><br>` +
-                         `Target Client: ${client}<br>` +
-                         `Classification: ${infraction}<br>` +
-                         `Observations: ${notes}<br>` +
-                         `Status: Signed & Logged to Secure Ledger.`;
-      showToast('Official incident package generated successfully.');
-    }
+        // Guided Check-In Accordion Toggle
+        function toggleStep(header) {
+            const body = header.nextElementSibling;
+            body.classList.toggle('open');
+            const span = header.querySelector('span');
+            span.textContent = body.classList.contains('open') ? '▲' : '▼';
+        }
 
-    // Knowledge Base Modal
-    function openKbModal(title, content) {
-      document.getElementById('modal-title').textContent = title;
-      document.getElementById('modal-content').textContent = content;
-      document.getElementById('kb-modal').classList.remove('hidden');
-    }
+        // Toast Notification System
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<span>⚡</span> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
 
-    function closeKbModalDirect() {
-      document.getElementById('kb-modal').classList.add('hidden');
-    }
+        // Copy Spiel Helper
+        function copySpiel(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("Spiel copied to clipboard!");
+            });
+        }
 
-    function closeKbModal(e) {
-      if (e.target.id === 'kb-modal') {
-        document.getElementById('kb-modal').classList.add('hidden');
-      }
-    }
+        // Instant Infraction Triage Database
+        const triageData = {
+            blurry: {
+                title: "Violation: Blurry ID (Severity: Minor | Threshold: 2)",
+                policy: "Candidate identification must be fully readable and verified before exam release.",
+                action: "Instruct candidate to improve lighting, place ID flat, or hold steady.",
+                spiel: "Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment."
+            },
+            name: {
+                title: "Violation: Name Mismatch on ID (Severity: Minor | Threshold: 2)",
+                policy: "Per Certiverse rules, the name on the government-issued ID must fully match the exam reservation.",
+                action: "Instruct candidate to contact support@certiverse.com for name change assistance.",
+                spiel: "Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com."
+            },
+            phone: {
+                title: "Violation: Mobile Phone Visible/In Use (Severity: Major | Threshold: 0)",
+                policy: "Mobile phones are strictly prohibited during exams. Immediate termination required upon confirmed use.",
+                action: "Issue termination spiel and terminate session.",
+                spiel: "The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."
+            },
+            looking: {
+                title: "Violation: Looking Elsewhere / Eyes Wandering (Severity: Minor | Threshold: 4)",
+                policy: "Candidates must keep attention focused on the exam environment.",
+                action: "Issue warning spiel to refocus candidate.",
+                spiel: "Hello - Your eyes keep wandering way too low / away from the screen. As a reminder to please keep them forward and looking at the screen. Thank you."
+            },
+            break: {
+                title: "Violation: Break Policy Exceeded (Severity: Major | Threshold: 0)",
+                policy: "Exceeding allotted 5-minute break time results in mandatory session termination.",
+                action: "Issue termination notice for failure to return from break.",
+                spiel: "We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. Please reach out to support@certiverse.com for further assistance."
+            },
+            rdp: {
+                title: "Violation: Remote Desktop Application Detected (Severity: Major | Threshold: 0)",
+                policy: "Remote desktop and screen-sharing utilities are strictly prohibited during proctored sessions.",
+                action: "Issue immediate termination spiel.",
+                spiel: "Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. Please reach out to support@certiverse.com."
+            }
+        };
 
-    // Global Search Filter
-    function handleSearch(query) {
-      const q = query.toLowerCase();
-      if (q.length < 2) return;
-      showToast(`Filtering active views for: "${query}"`);
-    }
+        function runTriage(key) {
+            const data = triageData[key];
+            if(!data) return;
+            const container = document.getElementById('triageResult');
+            const titleEl = document.getElementById('triageTitle');
+            const detailsEl = document.getElementById('triageDetails');
+            
+            titleEl.textContent = data.title;
+            detailsEl.innerHTML = `
+                <div><strong>Policy:</strong> ${data.policy}</div>
+                <div><strong>Required Action:</strong> ${data.action}</div>
+                <div style="background: rgba(0,0,0,0.4); padding: 10px; border-left: 3px solid var(--amber-glow); margin-top: 5px;">
+                    <strong>Approved Spiel:</strong> "${data.spiel}"
+                </div>
+                <button class="tactical-btn" style="margin-top: 10px; align-self: flex-start;" onclick="copySpiel('${data.spiel}')">Copy Approved Spiel</button>
+            `;
+            container.style.display = 'block';
+        }
 
-    // Metal Slug 1 Inspired Parallax Desert Background Animation Engine
-    const canvas = document.getElementById('metal-slug-bg');
-    const ctx = canvas.getContext('2d');
+        // Metal Slug Tactical Background Canvas Animation (Desert Dunes & Particles)
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-    let particles = Array.from({ length: 40 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      size: Math.random() * 2 + 1,
-      speed: Math.random() * 0.8 + 0.2
-    }));
+        for(let i=0; i<60; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 2 + 0.5,
+                speedX: Math.random() * 1.5 + 0.5,
+                speedY: (Math.random() - 0.5) * 0.2,
+                alpha: Math.random() * 0.5 + 0.2
+            });
+        }
 
-    let clouds = Array.from({ length: 5 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * (canvas.height * 0.4),
-      width: Math.random() * 150 + 80,
-      speed: Math.random() * 0.2 + 0.1
-    }));
+        function drawBackground() {
+            ctx.clearRect(0, 0, width, height);
 
-    function animateBackground() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw distant desert mountains (Metal Slug parallax style)
+            ctx.fillStyle = '#2b1b0c';
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            ctx.lineTo(0, height * 0.6);
+            ctx.lineTo(width * 0.25, height * 0.45);
+            ctx.lineTo(width * 0.5, height * 0.55);
+            ctx.lineTo(width * 0.75, height * 0.4);
+            ctx.lineTo(width, height * 0.52);
+            ctx.lineTo(width, height);
+            ctx.fill();
 
-      // Sunset Desert Sky Gradient
-      let skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      skyGrad.addColorStop(0, '#1e1b18');
-      skyGrad.addColorStop(0.5, '#432818');
-      skyGrad.addColorStop(1, '#6b3012');
-      ctx.fillStyle = skyGrad;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Midground dunes
+            ctx.fillStyle = '#4a2f13';
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            ctx.lineTo(0, height * 0.75);
+            ctx.lineTo(width * 0.35, height * 0.65);
+            ctx.lineTo(width * 0.7, height * 0.72);
+            ctx.lineTo(width, height * 0.68);
+            ctx.lineTo(width, height);
+            ctx.fill();
 
-      // Distant Parallax Mountains
-      ctx.fillStyle = '#2d1810';
-      ctx.beginPath();
-      ctx.moveTo(0, canvas.height * 0.6);
-      ctx.lineTo(canvas.width * 0.2, canvas.height * 0.45);
-      ctx.lineTo(canvas.width * 0.45, canvas.height * 0.55);
-      ctx.lineTo(canvas.width * 0.7, canvas.height * 0.4);
-      ctx.lineTo(canvas.width, canvas.height * 0.5);
-      ctx.lineTo(canvas.width, canvas.height);
-      ctx.lineTo(0, canvas.height);
-      ctx.fill();
+            // Floating dust / sand particles
+            ctx.fillStyle = '#f39c12';
+            particles.forEach(p => {
+                ctx.globalAlpha = p.alpha;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
 
-      // Foreground Dunes
-      ctx.fillStyle = '#170d08';
-      ctx.beginPath();
-      ctx.moveTo(0, canvas.height * 0.75);
-      ctx.quadraticCurveTo(canvas.width * 0.5, canvas.height * 0.65, canvas.width, canvas.height * 0.8);
-      ctx.lineTo(canvas.width, canvas.height);
-      ctx.lineTo(0, canvas.height);
-      ctx.fill();
+                p.x += p.speedX;
+                p.y += p.speedY;
 
-      // Drifting Clouds
-      ctx.fillStyle = 'rgba(217, 119, 6, 0.1)';
-      clouds.forEach(c => {
-        c.x -= c.speed;
-        if (c.x < -c.width) c.x = canvas.width + c.width;
-        ctx.fillRect(c.x, c.y, c.width, 25);
-      });
+                if (p.x > width) p.x = 0;
+                if (p.y > height) p.y = 0;
+                if (p.y < 0) p.y = height;
+            });
 
-      // Sand Particles & Heat Haze
-      ctx.fillStyle = 'rgba(245, 158, 11, 0.4)';
-      particles.forEach(p => {
-        p.x -= p.speed;
-        p.y += Math.sin(p.x * 0.01) * 0.2;
-        if (p.x < 0) p.x = canvas.width;
-        ctx.fillRect(p.x, p.y, p.size, p.size);
-      });
+            ctx.globalAlpha = 1.0;
+            requestAnimationFrame(drawBackground);
+        }
+        drawBackground();
 
-      requestAnimationFrame(animateBackground);
-    }
-
-    animateBackground();
-
-    // Keyboard Shortcuts (1-6 for Instant Triage & '/' for Search Focus)
-    document.addEventListener('keydown', (e) => {
-      if (['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) return;
-      if (e.key === '/') {
-        e.preventDefault();
-        document.getElementById('global-search').focus();
-      }
-      if (e.key >= '1' && e.key <= '6') {
-        const keys = ['blurry-id', 'name-mismatch', 'phone-detected', 'looking-away', 'break-violation', 'remote-desktop'];
-        triggerTriage(keys[parseInt(e.key) - 1]);
-      }
-    });
-  </script>
+        // Keyboard Shortcuts
+        window.addEventListener('keydown', (e) => {
+            if (e.altKey && e.key === '1') { switchTab('dashboard'); }
+            if (e.altKey && e.key === '2') { switchTab('triage'); }
+            if (e.altKey && e.key === '3') { switchTab('checkin'); }
+            if (e.altKey && e.key === 'c') { copySpiel('Please keep your attention forward.'); }
+        });
+    </script>
 </body>
 </html>
