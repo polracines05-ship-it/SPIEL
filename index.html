@@ -3,229 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proctoring Check-in Process | FiveActs</title>
+    <title>Proctoring Operations Dashboard | FiveActs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-black: #000000;
-            --header-bg: #0c0c0e;
-            --card-charcoal: #141417;
-            --border-gray: #24242a;
-            --text-main: #f0f0f5;
-            --text-muted: #8e8e9a;
-            --vibrant-green: #00c853;
-            --vibrant-green-hover: #00e676;
-            --glow-green: rgba(0, 200, 83, 0.35);
-            --alert-red: #ff3d00;
+            --mario-blue: #5c94fc;
+            --mario-pipe-green: #00a800;
+            --mario-brick: #b84418;
+            --mario-coin-gold: #f8b800;
+            --card-glass: rgba(15, 23, 42, 0.58);
+            --card-glass-hover: rgba(15, 23, 42, 0.72);
+            --header-glass: rgba(8, 11, 20, 0.75);
+            --border-glass: rgba(255, 255, 255, 0.18);
+            --vibrant-green: #10b981;
+            --vibrant-green-hover: #059669;
+            --glow-green: rgba(16, 185, 129, 0.4);
         }
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
-            background-color: var(--bg-black);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
+            background-color: var(--mario-blue);
+            color: #f3f4f6;
             min-height: 100vh;
-        }
-
-        /* Header Navigation */
-        .header {
-            background-color: var(--header-bg);
-            border-bottom: 1px solid var(--border-gray);
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .logo-container {
-            background-color: #ffffff;
-            padding: 6px 12px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            transition: transform 0.2s ease;
-        }
-
-        .logo-container:hover {
-            transform: scale(1.02);
-        }
-
-        .logo-svg {
-            height: 28px;
-            width: auto;
-        }
-
-        .page-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-main);
-            border-left: 1px solid var(--border-gray);
-            padding-left: 16px;
-        }
-
-        .top-nav {
-            display: flex;
-            gap: 10px;
-        }
-
-        .nav-btn {
-            background-color: var(--card-charcoal);
-            color: var(--text-muted);
-            border: 1px solid var(--border-gray);
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
             position: relative;
-            overflow: hidden;
         }
 
-        .nav-btn:hover {
-            color: var(--text-main);
-            border-color: var(--vibrant-green);
-            box-shadow: 0 0 12px var(--glow-green);
-            transform: translateY(-1px);
+        .font-pixel {
+            font-family: 'Press Start 2P', monospace;
         }
 
-        .nav-btn.active {
-            background-color: var(--vibrant-green);
-            color: var(--bg-black);
-            border-color: var(--vibrant-green);
-            font-weight: 700;
-            box-shadow: 0 0 15px var(--glow-green);
+        /* --- MARIO CANVAS BACKGROUND --- */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: auto;
         }
 
-        /* Search Bar Effects */
-        .search-container {
-            padding: 16px 24px 0 24px;
-            max-width: 1200px;
-            margin: 0 auto;
+        #mario-canvas {
             width: 100%;
-        }
-
-        .search-input {
-            width: 100%;
-            background-color: var(--card-charcoal);
-            border: 1px solid var(--border-gray);
-            color: var(--text-main);
-            padding: 12px 16px;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            border-color: var(--vibrant-green);
-            box-shadow: 0 0 16px var(--glow-green);
-            transform: scale(1.005);
-        }
-
-        /* Container Views */
-        .content-area {
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 20px 24px 40px 24px;
-        }
-
-        .view-section {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        .view-section.active {
+            height: 100%;
             display: block;
-            opacity: 1;
         }
 
-        /* Interactive Process Row Effects */
-        .process-category {
-            margin-bottom: 24px;
+        /* --- GLASSMORPHISM & TRANSPARENCY ENHANCEMENTS --- */
+        .glass-panel {
+            background: var(--card-glass);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .category-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--vibrant-green);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .glass-panel:hover {
+            border-color: rgba(255, 255, 255, 0.32);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6), 0 0 15px rgba(16, 185, 129, 0.2);
+            background: var(--card-glass-hover);
         }
 
-        .list-container {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .glass-header {
+            background-color: var(--header-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-glass);
         }
 
+        /* --- SPIEL ROW TRANSPARENCY & HOVER EFFECTS --- */
         .spiel-row {
-            background-color: var(--card-charcoal);
-            border: 1px solid var(--border-gray);
-            border-left: 3px solid transparent;
-            border-radius: 6px;
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-left: 4px solid rgba(16, 185, 129, 0.5);
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .spiel-row:hover {
             border-color: var(--vibrant-green);
-            border-left: 3px solid var(--vibrant-green);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 10px var(--glow-green);
-            transform: translateX(4px);
+            border-left: 4px solid var(--vibrant-green);
+            background-color: rgba(15, 23, 42, 0.78);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 14px var(--glow-green);
+            transform: translateX(3px) translateY(-1px);
         }
 
-        .spiel-text {
-            font-size: 13.5px;
-            line-height: 1.4;
-            color: var(--text-main);
+        .nav-btn {
+            background-color: rgba(15, 23, 42, 0.6);
+            color: #9ca3af;
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(6px);
+            transition: all 0.2s ease;
         }
 
-        /* Button Copy Glow & Press Effects */
+        .nav-btn:hover {
+            color: #ffffff;
+            border-color: var(--vibrant-green);
+            background-color: rgba(15, 23, 42, 0.85);
+            box-shadow: 0 0 12px var(--glow-green);
+        }
+
+        .nav-btn.active {
+            background-color: var(--vibrant-green);
+            color: #040508;
+            border-color: var(--vibrant-green);
+            font-weight: 800;
+            box-shadow: 0 0 18px var(--glow-green);
+        }
+
         .copy-btn {
             background-color: var(--vibrant-green);
-            color: var(--bg-black);
-            border: none;
-            padding: 6px 14px;
-            border-radius: 4px;
+            color: #040508;
             font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-            position: relative;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .copy-btn:hover {
             background-color: var(--vibrant-green-hover);
-            box-shadow: 0 0 10px var(--glow-green);
+            color: #ffffff;
+            box-shadow: 0 0 14px var(--glow-green);
             transform: scale(1.05);
         }
 
@@ -234,421 +138,1006 @@
         }
 
         .copy-btn.copied {
-            background-color: #ffffff;
-            color: var(--bg-black);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-            animation: pulseCopy 0.3s ease;
+            background-color: #ffffff !important;
+            color: #040508 !important;
+            box-shadow: 0 0 20px #ffffff !important;
         }
 
-        @keyframes pulseCopy {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
-        }
-
-        /* Tables & Badges */
-        .table-card {
-            background-color: var(--card-charcoal);
-            border: 1px solid var(--border-gray);
-            border-radius: 6px;
-            overflow-x: auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            text-align: left;
-        }
-
-        th {
-            background-color: var(--header-bg);
-            color: var(--vibrant-green);
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border-gray);
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        td {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border-gray);
-            color: var(--text-main);
+        /* ACCORDION */
+        .accordion-header {
+            cursor: pointer;
+            user-select: none;
             transition: background-color 0.2s ease;
         }
 
-        tr:last-child td {
-            border-bottom: none;
+        .accordion-header:hover {
+            background-color: rgba(255, 255, 255, 0.08);
         }
 
-        tr:hover td {
-            background-color: rgba(0, 200, 83, 0.05);
+        .accordion-content {
+            transition: max-height 0.3s ease-out;
         }
 
-        .badge-minor {
-            color: var(--vibrant-green);
-            background: rgba(0, 200, 83, 0.1);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-            border: 1px solid rgba(0, 200, 83, 0.2);
+        /* TOAST */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 9999;
         }
 
-        .badge-major {
-            color: var(--alert-red);
-            background: rgba(255, 61, 0, 0.1);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-            border: 1px solid rgba(255, 61, 0, 0.2);
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
         }
+
+        /* TABLE CUSTOM STYLING */
+        .glass-table th {
+            background-color: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+        }
+        .glass-table td {
+            background-color: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(4px);
+        }
+        .glass-table tr:hover td {
+            background-color: rgba(15, 23, 42, 0.75);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(8, 10, 16, 0.6); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.25); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--vibrant-green); }
     </style>
 </head>
-<body>
+<body class="flex flex-col min-h-screen select-none">
 
-    <!-- Header Navigation -->
-    <div class="header">
-        <div class="brand">
-            <div class="logo-container">
-                <svg class="logo-svg" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M 15,10 L 160,10 L 130,70 L 15,70 Z" fill="#00C853"/>
+    <!-- MARIO ANIMATED CANVAS -->
+    <div id="canvas-container">
+        <canvas id="mario-canvas"></canvas>
+    </div>
+
+    <!-- TOAST ALERT -->
+    <div id="toast" class="glass-panel px-5 py-3 border-2 border-[#10b981] flex items-center gap-3 bg-slate-900/95 text-white font-semibold text-sm shadow-2xl">
+        <span class="text-xl">✨</span>
+        <span id="toast-msg">Copied script to clipboard!</span>
+    </div>
+
+    <!-- HEADER -->
+    <header class="glass-header sticky top-0 z-50 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <div class="bg-white px-3 py-1.5 rounded-lg flex items-center shadow-md transform hover:scale-105 transition">
+                <svg class="h-7 w-auto" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 15,10 L 160,10 L 130,70 L 15,70 Z" fill="#10b981"/>
                     <text x="30" y="52" font-family="Arial, sans-serif" font-weight="900" font-size="38" fill="#FFFFFF">FIVE</text>
                     <text x="145" y="52" font-family="Arial, sans-serif" font-weight="900" font-size="38" fill="#000000">ACTS</text>
                 </svg>
             </div>
-            <span class="page-title">Proctoring Check-in Process</span>
+            <div class="h-6 w-px bg-white/20 hidden sm:block"></div>
+            <div class="flex flex-col">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-black tracking-wider text-gray-100 hidden sm:block">Proctoring Operations Center</span>
+                    <span class="font-pixel text-[10px] text-yellow-300 bg-red-600 px-2 py-0.5 rounded shadow border border-yellow-400 animate-pulse">WORLD 1-1</span>
+                </div>
+                <span class="text-[10px] text-[#10b981] font-mono tracking-widest uppercase hidden sm:block">Live Script & Protocol Matrix</span>
+            </div>
         </div>
-        <div class="top-nav">
-            <button class="nav-btn active" onclick="switchTab('checkin-view', this)">📋 Check-in Process</button>
-            <button class="nav-btn" onclick="switchTab('policies-view', this)">📄 Name Change Policy</button>
-            <button class="nav-btn" onclick="switchTab('severity-view', this)">🚨 Violation Threshold</button>
+
+        <!-- NAVIGATION TABS & CONTROLS -->
+        <div class="flex items-center gap-3">
+            <nav class="flex items-center gap-2 overflow-x-auto py-1 max-w-full">
+                <button class="nav-btn active px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-2" onclick="switchTab('checkin-view', this)">
+                    <span>📋</span> Check-in Steps
+                </button>
+                <button class="nav-btn px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-2" onclick="switchTab('canned-view', this)">
+                    <span>💬</span> Canned Messages
+                </button>
+                <button class="nav-btn px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-2" onclick="switchTab('policies-view', this)">
+                    <span>📄</span> Client Policies
+                </button>
+                <button class="nav-btn px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-2" onclick="switchTab('severity-view', this)">
+                    <span>🚨</span> Violations & Thresholds
+                </button>
+            </nav>
+
+            <!-- MARIO CONTROLS -->
+            <div class="flex items-center gap-1.5 bg-slate-900/80 p-1.5 rounded-lg border border-white/20 text-xs font-bold text-gray-200 shadow-md">
+                <button id="toggleAnimBtn" onclick="toggleMarioAnimation()" class="px-2.5 py-1 bg-yellow-500 hover:bg-yellow-400 text-black rounded font-mono transition flex items-center gap-1">
+                    <span id="animStatusIcon">⏸</span> <span id="animStatusText">Pause</span>
+                </button>
+                <div class="flex items-center gap-1 px-1.5">
+                    <span class="text-[10px] text-gray-400 font-mono">OPACITY:</span>
+                    <input type="range" id="opacitySlider" min="0.1" max="0.95" step="0.05" value="0.58" oninput="adjustGlassOpacity(this.value)" class="w-16 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-[#10b981]">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SEARCH & CONTROLS BAR -->
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-6 pt-5 flex flex-col md:flex-row gap-4 justify-between items-center">
+        <div class="relative w-full">
+            <input type="text" id="searchInput" oninput="filterAll()" 
+                placeholder="Search check-in workflows, canned messages, OS badges ([MAC], [WINDOWS]), policies or violations..." 
+                class="w-full bg-slate-900/70 backdrop-blur-md border border-white/25 text-gray-100 placeholder-gray-300 text-sm rounded-lg px-11 py-3 focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-[#10b981]/50 transition-all shadow-xl font-medium"
+            >
+            <svg class="absolute left-3.5 top-3.5 h-4 w-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+        </div>
+
+        <!-- OS FILTER TOGGLES FOR CHECK-IN STEPS -->
+        <div id="os-filter-bar" class="flex items-center gap-1.5 bg-slate-900/75 p-1.5 rounded-lg border border-white/20 shrink-0 shadow-lg">
+            <span class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider px-2 font-mono">OS Filter:</span>
+            <button onclick="setOsFilter('ALL')" class="os-btn active px-2.5 py-1 text-xs font-bold rounded bg-[#10b981] text-black">ALL</button>
+            <button onclick="setOsFilter('WINDOWS')" class="os-btn px-2.5 py-1 text-xs font-bold rounded bg-slate-800 text-gray-300 hover:text-white">WINDOWS</button>
+            <button onclick="setOsFilter('MAC')" class="os-btn px-2.5 py-1 text-xs font-bold rounded bg-slate-800 text-gray-300 hover:text-white">MAC</button>
+            <button onclick="setOsFilter('LINUX')" class="os-btn px-2.5 py-1 text-xs font-bold rounded bg-slate-800 text-gray-300 hover:text-white">LINUX</button>
         </div>
     </div>
 
-    <!-- Search Input -->
-    <div class="search-container">
-        <input type="text" id="searchInput" class="search-input" placeholder="Search check-in spiels, client policies, or violations..." oninput="filterAll()">
-    </div>
+    <!-- MAIN CONTENT AREA -->
+    <main class="relative z-10 w-full max-w-7xl mx-auto px-6 py-6 flex-grow">
 
-    <!-- Main Content Area -->
-    <div class="content-area">
+        <!-- ==================== TAB 1: CHECK-IN STEPS ==================== -->
+        <div id="checkin-view" class="view-section space-y-6">
 
-        <!-- VIEW 1: PROCTORING CHECK-IN PROCESS -->
-        <div id="checkin-view" class="view-section active">
-
-            <div class="process-category">
-                <div class="category-title">0. Pre-Flight Setup</div>
-                <div class="list-container">
-                    <div class="spiel-row"><span class="spiel-text">Hi, are you having issues with screensharing? Always remember that there are two steps for MAC screen sharing issues: 1. Allow screensharing in browser. 2. And then allow screen sharing in system preferences.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Hi, are you having issues with your camera? Please relaunch the exam and choose the correct camera on the pre-flight screen.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Hi, are you having issues with your microphone? Please relaunch the exam and choose the correct microphone on the pre-flight screen.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please finish the pre-flight and launch the exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Can you please switch to Google Chrome?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Hello, it seems like your screen is not being shared. Can you please refresh your browser?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+            <!-- 1. WELCOME -->
+            <div class="glass-panel overflow-hidden">
+                <div class="accordion-header p-4 bg-slate-900/60 flex items-center justify-between border-b border-white/10" onclick="toggleAccordion('checkin-acc-1')">
+                    <h2 class="text-xs font-black text-[#10b981] uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-pulse"></span> 1. Welcome
+                    </h2>
+                    <span class="text-xs font-bold bg-[#10b981]/20 text-[#10b981] px-2.5 py-0.5 rounded-full count-badge">3 Scripts</span>
+                </div>
+                <div id="checkin-acc-1" class="accordion-content p-4 space-y-2.5">
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Hello and welcome! I will be your proctor for this exam.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">We have a few steps to complete before your exam begins. This time does not count against your exam time limit.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Please hold while we prepare your exam. Thank you for waiting.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="process-category">
-                <div class="category-title">1. Welcome & Initial Application Checks</div>
-                <div class="list-container">
-                    <div class="spiel-row"><span class="spiel-text">Good Morning!</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Good Afternoon!</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Good Evening!</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Before we begin, please ensure that your surroundings are well-lit so that I can clearly see you and your environment.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Kindly ensure that all your applications or programs are closed and that you have logged out.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Kindly close any other programs currently open on your dock or taskbar.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">I apologize, but I still notice that there are some open applications on your dock or taskbar. Can you please close all of them?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please ensure that all applications are closed prior to the exam. Should any application appear or notification sound during the exam, it may result in termination of your examination session.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please close the other tabs on your browser except this tab.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Could you please open your System Tray?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Could you please open your Task Manager and click on Services?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Could you please open your Activity Monitor?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please wait momentarily while we prepare the exam for you.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please ensure that you are dressed appropriately during the exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please scroll down slowly until you reach the end of the list.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please make sure that all running applications are closed and shut down.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+            <!-- 2. IDENTIFICATION VERIFICATION -->
+            <div class="glass-panel overflow-hidden">
+                <div class="accordion-header p-4 bg-slate-900/60 flex items-center justify-between border-b border-white/10" onclick="toggleAccordion('checkin-acc-2')">
+                    <h2 class="text-xs font-black text-[#10b981] uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-pulse"></span> 2. Identification Verification
+                    </h2>
+                    <span class="text-xs font-bold bg-[#10b981]/20 text-[#10b981] px-2.5 py-0.5 rounded-full count-badge">10 Scripts</span>
+                </div>
+                <div id="checkin-acc-2" class="accordion-content p-4 space-y-2.5">
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Please bring your ID closer to the camera view.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Please hold your ID steady.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Please flip your ID to show the back.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Please show the expiration date clearly.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Thank you. You may keep your ID away now.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="process-category">
-                <div class="category-title">2. Identification Verification</div>
-                <div class="list-container">
-                    <div class="spiel-row"><span class="spiel-text">Can you please provide me your government issued ID?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">To proceed with the test, we kindly request that you provide a government-issued identification. Thank you!</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">It appears that the name on your ID does not match the name in our system.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Could you please provide proof of the validity of your identification?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">It looks like your name is not updated in the Certimetrics HashiCorp system. Please log in to https://cp.certmetrics.com/hashicorp/en/login and update your name. Make sure you're not logged into certiverse.com and then press the exam SSO button so that your name gets updated on the Certiverse platform.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Before you begin the exam, it is essential that you present a government-issued ID with a name that precisely matches our system.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">We fully respect religious attire and accommodations. However, we are required to verify identity using an unaltered, government-issued photo ID. Because the photo on your ID is obscured, we are unable to complete identity verification today. You may contact the exam sponsor to request an approved accommodation and reschedule.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Can you please show the expiry date on your ID?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Unfortunately, the name on your provided identification does not match the name registered on this reservation. Please contact support@certiverse.com to request a name modification. Once updated, you can re-enter your reservation so we can continue with your check-in.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Unfortunately, the name on your provided identification does not match the name registered on this reservation. To assist you with this, please contact support@certiverse.com to reach out to your exam sponsor, who will process the name change. Once completed, you can re-enter the reservation and we will continue.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+            <!-- 3. SYSTEM VERIFICATION (OS SPECIFIC) -->
+            <div class="glass-panel overflow-hidden border border-[#10b981]/40">
+                <div class="accordion-header p-4 bg-slate-900/80 flex items-center justify-between border-b border-white/10" onclick="toggleAccordion('checkin-acc-3')">
+                    <h2 class="text-xs font-black text-[#10b981] uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-ping"></span> 3. System Verification [PLATFORM SPECIFIC]
+                    </h2>
+                    <span class="text-xs font-bold bg-[#10b981]/20 text-[#10b981] px-2.5 py-0.5 rounded-full count-badge">11 Scripts</span>
+                </div>
+                <div id="checkin-acc-3" class="accordion-content p-4 space-y-2.5">
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4 os-card" data-os="ALL">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-gray-700 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-gray-500">ALL</span>
+                            <div class="text-sm text-gray-100 spiel-text font-medium">Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4 os-card" data-os="WINDOWS">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-blue-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-blue-400">WINDOWS</span>
+                            <div class="text-sm text-gray-100 spiel-text font-medium">Please open your Task Manager then scroll down slowly until you reach the end of the list.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4 os-card" data-os="WINDOWS">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-blue-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-blue-400">WINDOWS</span>
+                            <div class="text-sm text-gray-100 spiel-text font-medium">Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4 os-card" data-os="MAC">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-purple-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-purple-400">MAC</span>
+                            <div class="text-sm text-gray-100 spiel-text font-medium">Please open your Activity Monitor then scroll down slowly until you reach the end of the list.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4 os-card" data-os="MAC">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-purple-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-purple-400">MAC</span>
+                            <div class="text-sm text-gray-100 spiel-text font-medium">Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4 os-card" data-os="LINUX">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-amber-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-amber-400">LINUX</span>
+                            <div class="text-sm text-gray-100 spiel-text font-medium">Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="process-category">
-                <div class="category-title">3. Clear Desk & Environment</div>
-                <div class="list-container">
-                    <div class="spiel-row"><span class="spiel-text">Kindly ensure that your mobile phone is powered off and placed out of reach.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Kindly ensure that you are not wearing any listening devices in your ears.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Beverages are permitted only in transparent containers without any writing or labels. Kindly remove the label from your water bottle.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Kindly ensure that your desk is free of any clutter or unnecessary items.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Headphones/Earphones are not allowed during the exam. Is it possible for you to show us your ears just to make sure that this is followed?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+            <!-- 4. CLEAR DESK -->
+            <div class="glass-panel overflow-hidden">
+                <div class="accordion-header p-4 bg-slate-900/60 flex items-center justify-between border-b border-white/10" onclick="toggleAccordion('checkin-acc-4')">
+                    <h2 class="text-xs font-black text-[#10b981] uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-pulse"></span> 4. Clear Desk & Room Scan
+                    </h2>
+                    <span class="text-xs font-bold bg-[#10b981]/20 text-[#10b981] px-2.5 py-0.5 rounded-full count-badge">6 Scripts</span>
+                </div>
+                <div id="checkin-acc-4" class="accordion-content p-4 space-y-2.5">
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Thank you. If there are any items on your desk surface, please remove them now.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, and extra screens.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">We will now scan the room to confirm security policies. Please slowly direct your webcam around the room to show walls, floor, and desk surface.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="process-category">
-                <div class="category-title">4. Room & Desk Environment Scan</div>
-                <div class="list-container">
-                    <div class="spiel-row"><span class="spiel-text">Kindly adjust your camera angle downward and slowly move and direct your camera around the room.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please provide me a full view of your desk.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please ensure that your external monitor is powered off and disconnected.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">According to the exam guidelines, writing and other paper materials are prohibited during the test. Please ensure they are out of reach.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Could you please show the space where you intend to take your exam?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">No one else can be in the room (including pets). No one else is permitted to be in your testing area for the duration of your appointment to avoid termination of the exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please relocate to a different desk. Ensure that it is free of unnecessary items.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">As per exam rules, pens and other writing materials are not allowed during the test.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please make sure there is no one else in the room with you as we are closely monitoring the exam. Failure to comply may result in the termination of your exam session.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[WellSky Disconnection] Please ask the person assisting you to stay in the room with you until we have completed the room scan. We want to ensure you receive immediate assistance if you encounter any technical problems during the room scan.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+            <!-- 5. EXAM RELEASE -->
+            <div class="glass-panel overflow-hidden">
+                <div class="accordion-header p-4 bg-slate-900/60 flex items-center justify-between border-b border-white/10" onclick="toggleAccordion('checkin-acc-5')">
+                    <h2 class="text-xs font-black text-[#10b981] uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-pulse"></span> 5. Exam Release
+                    </h2>
+                    <span class="text-xs font-bold bg-[#10b981]/20 text-[#10b981] px-2.5 py-0.5 rounded-full count-badge">4 Scripts</span>
+                </div>
+                <div id="checkin-acc-5" class="accordion-content p-4 space-y-2.5">
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Thank you for your cooperation. Do you have any questions before beginning your exam?</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Please use this chat if you have any questions during the exam. I will now release your exam. Good luck!</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
                 </div>
             </div>
-
-            <div class="process-category">
-                <div class="category-title">5. Exam Release & Pre-Exam Setup</div>
-                <div class="list-container">
-                    <div class="spiel-row"><span class="spiel-text">Please click Enter Full Screen to start your exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Do you have any questions before you start your exam?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Unfortunately, we are not allowed to release the exam unless all requirements are met.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please adjust your camera a little lower. Your head and shoulders must remain fully visible during your entire exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please click the Hide Video button. We would like test takers to focus on the exam itself instead of looking at the video preview window repeatedly.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">It is the ^ icon next to the microphone icon at the bottom right-hand corner of your screen.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">You may hide/drag the screensharing bar at the bottom to see the Agree/Decline buttons.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">You may launch the exam to be able to see the camera preview window.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">If documentation or resources are permitted for the exam, they will be accessible during the exams and within the exam environment.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">For most NVIDIA exams, results are available within 24–48 hours after completion.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                </div>
-            </div>
-
-            <div class="process-category">
-                <div class="category-title">6. Warnings & In-Exam Reminders</div>
-                <div class="list-container">
-                    <div class="spiel-row"><span class="spiel-text">Talking or communicating outside of the exam environment is not allowed during your exam, including reading or mouthing questions.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please do not read the questions and answers aloud.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Highlighting / Underlining the question and answers is not allowed during the test.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">If anyone is detected being in the room with you, your exam will be paused and terminated.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Failure to comply to proctor's requests may result to termination of your exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please uninstall the UltraViewer application from this device, as it has been deemed compromised. We have detected the installation of UltraViewer prior to your exam, and this action is necessary to ensure the integrity of our systems.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">We don't want this exam to get flagged and the result get invalidated, so please make sure that all remote desktop apps have been uninstalled.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">We don't want this exam to get flagged and the result get invalidated, so please focus your attention on your screen.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Hello - Your eyes keep wandering way too low, as a reminder to please keep them forward and looking at the screen.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please keep your attention forward. Your exam might be terminated the next time you look away from the screen.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">This is a reminder that we will be monitoring this session closely. Please keep your attention on the exam screen at all times. Also, ensure that all electronic mobile devices are put away and out of reach to avoid any issues with the exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">You may take the exam today, but please note that your result could be invalidated because creating multiple accounts is not permitted.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">You can take the exam today, but please be reminded that your exam may be terminated if another person is detected during the exam, as you are required to be in a private testing area for the entire duration of the exam. Please confirm if you want to proceed.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                </div>
-            </div>
-
-            <div class="process-category">
-                <div class="category-title">7. Technical Troubleshooting & Breaks</div>
-                <div class="list-container">
-                    <div class="spiel-row"><span class="spiel-text">Are you using a company-issued laptop?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Are you using Mac or Windows?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please wait while we get someone from the support team to help you.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Have you tried rebooting your computer?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please check the camera settings on your computer and your browser and make sure that your camera is allowed.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Would you like a member from our support team to assist you?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please use this link to join the remote session.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Can you please relaunch the exam again?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[Mac Video Recording] 1. On your Mac, choose System Preferences, click Security & Privacy, then click Privacy. 2. Select Screen Recording.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[Mac Screensharing] Choose Apple menu > System Settings, then click Privacy & Security in the sidebar. Click Screen & System Audio Recording on the right. For each app listed, turn the ability to record on or off.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please reboot your system.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">We currently have multiple exams ongoing now and your session is the only one that's experiencing connection issues. We will investigate this issue. If it is an issue on our end then we would have had the same issue with the other test takers today.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">We apologize, but breaks are not permitted during this exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">We apologize for the issue you are experiencing. Please refresh your browser and relaunch your session. We are currently looking into the issue, please wait while we investigate.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">You have one 5-minute break on this exam. Kindly message me if you need to take a break.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">It's okay, You will have 5 minutes. If the break takes longer than the allotted 5 minutes, your exam will be terminated. I will pause your exam now.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">We apologize for the inconvenience. There was a temporary drop in the network. Glad you are back in the exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Can you please show me your system tray on the lower right part of your taskbar? It looks like this ^.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Can you please type the word REMOTE on the search bar on the top of your task manager?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please go to the services tab on the left side of your task manager.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Can you please check the main page of the vault exam? You can see the timer there.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">We noticed that your session keeps disconnecting, this is probably due to an unstable internet connection. You may continue testing if you choose to, or you can reach out to our support team to try and reschedule your session.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">We have observed that your screen sharing has stopped multiple times. Please be informed that if this happens again, we will need to end your exam. Maintaining the integrity of the exam is important to us.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Before we resume the exam, we will need to do a quick re-scan of the room and desk.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please let us know if you want to go to the restroom. Wait for us to acknowledge before leaving the exam area.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">If you experience a disconnection or technical issue during the exam, please contact support at support@certiverse.com immediately. You must relaunch your exam session within 20 minutes, or it will be considered complete and closed.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">It appears that we are currently unable to view either your video or your screen. Could you please check your connection or sharing settings?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Could you please open your Task Manager/Activity Monitor and System Tray? We want to confirm that all of your applications have been closed.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[Mac Activity Monitor] You can find Activity Monitor on a Mac by using Spotlight Search (Command + Spacebar) and typing "Activity Monitor," or by navigating to Applications > Utilities in Finder and double-clicking the app icon.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[Linux System Monitor] You can open the System Monitor in Linux through the graphical menu (search for "System Monitor" or "System Tools"), by running gnome-system-monitor in the terminal or Alt+F2 dialog, or by setting a custom keyboard shortcut (often Ctrl+Shift+Esc or Ctrl+Alt+Del) in your system's Keyboard settings.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[Ubuntu] The equivalent of the Windows Task Manager is called the System Monitor, which you can launch by searching for "System Monitor" in the Activities overview.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Please press the Command + Option + Esc keys at the same time.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[HashiCorp & Non-SEB Exams] If your session gets disconnected at any point during the exam, please be reminded that we will need to check your Task Manager/Activity Monitor again and quickly re-scan the room/desk before resuming your session.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                </div>
-            </div>
-
-            <div class="process-category">
-                <div class="category-title">8. Termination Messages</div>
-                <div class="list-container">
-                    <div class="spiel-row"><span class="spiel-text">Unfortunately, the use of foul language has been detected during this exam, which violates our code of conduct. As a result, this exam will now be terminated. We take the integrity of our testing environment seriously and expect all participants to adhere to respectful behavior. Thank you for your understanding.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Unfortunately, the use of prohibited application has been detected during this exam, which violates our code of conduct. As a result, this exam will now be terminated. Please email support@certiverse.com and they can escalate your issue.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Unfortunately, the use of a prohibited device has been detected during this exam, which violates our code of conduct. As a result, this exam will now be terminated. Please email support@certiverse.com and they can escalate your issue.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Unfortunately, another person has been detected nearby. As a result, this exam will now be terminated. Please email support@certiverse.com and they can escalate your issue.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Unfortunately, you failed to comply with the proctor's requests during this exam. As a result, this exam will now be terminated. Please email support@certiverse.com and they can escalate your issue.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">Since you failed to return from your 5-minute break on time, we are obligated to terminate your exam. If you have any questions regarding this, you can contact support@certiverse.com.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                </div>
-            </div>
-
-            <div class="process-category">
-                <div class="category-title">9. Client-Specific Support & Rescheduling</div>
-                <div class="list-container">
-                    <div class="spiel-row"><span class="spiel-text">If you need to reschedule your exam, this article might help you: https://help.certiverse.com/portal/en/kb/articles/reschedule</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[InterSystems Documentation Navigation] Use Alt + Tab (PC) or Option + Tab (Mac) to switch between the exam and the pop-up documentation window. To zoom in or out, you may use the zoom tool in the upper right-hand corner. Alternatively, you may use ctrl + or ctrl - (PC) or command + or command - (Mac).</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[InterSystems] Please exit full screen mode and select the tab containing the documentation to switch between tabs.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[Zscaler Support] Please send an email to training@zscaler.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[HashiCorp Support] Please send an email to support@certiverse.com to reschedule your exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[HashiCorp Name Change] Kindly send an email to certifications@hashicorp.com to request a name change.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[NRPP Support] Please send an email to exams@nrpp.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[WellSky Support] Please send an email to support@certiverse.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[Camunda Support] Please send an email to certification@camunda.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[InterSystems Support] Please send an email to certification@intersystems.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[NVIDIA Support] Please send an email to support@certiverse.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[Akylade Support] Please send an email to support@certiverse.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">[DocuSign Name Change] Please contact docusignuniversity@docusign.com in order to request a name change.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                </div>
-            </div>
-
-            <div class="process-category">
-                <div class="category-title">10. Proctor Shift Handover / Takeover</div>
-                <div class="list-container">
-                    <div class="spiel-row"><span class="spiel-text">We are taking over your ongoing sessions. Please hold while we launch them. We will notify you once they are ready.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                    <div class="spiel-row"><span class="spiel-text">We now have your ongoing sessions. You may close the sessions from your end. Are there any test-taker issues we should be aware of before you leave?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
-                </div>
-            </div>
-
         </div>
 
-        <!-- VIEW 2: NAME CHANGE POLICY -->
-        <div id="policies-view" class="view-section">
-            <div class="table-card">
-                <table>
+        <!-- ==================== TAB 2: CANNED MESSAGES ==================== -->
+        <div id="canned-view" class="view-section hidden space-y-6">
+
+            <!-- PRE-FLIGHT & QUICK MESSAGES -->
+            <div class="glass-panel overflow-hidden">
+                <div class="p-4 bg-slate-900/70 border-b border-white/10 flex justify-between items-center">
+                    <h2 class="text-xs font-black text-[#10b981] uppercase tracking-wider">⚡ Quick Pre-flight Responses</h2>
+                    <span class="text-xs text-gray-400 font-mono">Frequently Used</span>
+                </div>
+                <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">I am checking your information. Please give me a moment.</div>
+                        <button class="copy-btn text-xs px-3 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Please stay in view of the camera at all times during the exam.</div>
+                        <button class="copy-btn text-xs px-3 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Please refrain from reading questions aloud or mumbling.</div>
+                        <button class="copy-btn text-xs px-3 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4">
+                        <div class="text-sm text-gray-100 spiel-text font-medium">Please do not cover your mouth or face during the testing session.</div>
+                        <button class="copy-btn text-xs px-3 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TROUBLESHOOTING & WARNINGS -->
+            <div class="glass-panel overflow-hidden">
+                <div class="p-4 bg-slate-900/70 border-b border-white/10 flex justify-between items-center">
+                    <h2 class="text-xs font-black text-amber-400 uppercase tracking-wider">🚨 Troubleshooting & Violation Warnings</h2>
+                    <span class="text-xs text-amber-400 font-mono">Policy Enforcement</span>
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4 border-l-amber-500">
+                        <div class="text-sm text-gray-100 spiel-text font-medium"><strong class="text-amber-400">Warning:</strong> I noticed you are looking away from your screen repeatedly. Please keep your eyes focused on your exam screen.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4 border-l-amber-500">
+                        <div class="text-sm text-gray-100 spiel-text font-medium"><strong class="text-amber-400">Warning:</strong> Someone else was detected in your room. Per testing rules, you must be alone in the room at all times.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3 rounded-lg flex items-center justify-between gap-4 border-l-red-500">
+                        <div class="text-sm text-gray-100 spiel-text font-medium"><strong class="text-red-400">Termination Notice:</strong> Due to repeated policy violations despite warnings, your exam session has been terminated. Please contact support@certiverse.com.</div>
+                        <button class="copy-btn text-xs px-3.5 py-1.5 rounded shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 3: CLIENT POLICIES TRACKER ==================== -->
+        <div id="policies-view" class="view-section hidden space-y-4">
+            
+            <!-- POLICY FILTERS -->
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/70 p-3 rounded-xl border border-white/15 backdrop-blur-md">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-gray-300 font-mono">Filter Preset:</span>
+                    <button onclick="filterPolicyTable('ALL')" class="pol-btn active px-3 py-1 text-xs font-bold rounded-lg bg-[#10b981] text-black">All Clients</button>
+                    <button onclick="filterPolicyTable('SEB')" class="pol-btn px-3 py-1 text-xs font-bold rounded-lg bg-slate-800 text-gray-300 hover:text-white border border-white/10">SEB Required</button>
+                    <button onclick="filterPolicyTable('BREAK_YES')" class="pol-btn px-3 py-1 text-xs font-bold rounded-lg bg-slate-800 text-gray-300 hover:text-white border border-white/10">Breaks Allowed</button>
+                </div>
+                <span class="text-xs text-emerald-400 font-mono font-bold" id="policyCount">16 Active Sponsors</span>
+            </div>
+
+            <!-- POLICIES DATA TABLE -->
+            <div class="glass-panel overflow-x-auto rounded-xl">
+                <table class="w-full text-left border-collapse glass-table text-sm">
                     <thead>
-                        <tr>
-                            <th>Client</th>
-                            <th>Name Change</th>
-                            <th>Breaks Policy</th>
-                            <th>Name Policy</th>
-                            <th>SEB / Non-SEB</th>
-                            <th>Documentation</th>
+                        <tr class="text-xs font-black text-emerald-400 uppercase tracking-wider border-b border-white/20">
+                            <th class="p-3.5">Client / Sponsor</th>
+                            <th class="p-3.5">Name Change Policy</th>
+                            <th class="p-3.5">Breaks Policy</th>
+                            <th class="p-3.5">SEB / Non-SEB</th>
+                            <th class="p-3.5">Scratchpad / Notes</th>
+                            <th class="p-3.5 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr><td>AKYLADE</td><td>ALLOWED</td><td>ONE (1) FIVE (5) MINUTE BREAK</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
-                        <tr><td>ATLASSIAN</td><td>NOT ALLOWED</td><td>NONE</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>NOT ALLOWED</td></tr>
-                        <tr><td>BLUE PRISM</td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
-                        <tr><td>BMC</td><td>NOT ALLOWED</td><td>ONE (1) FIVE (5) MINUTE BREAK</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>ALLOWED</td></tr>
-                        <tr><td>CAMUNDA</td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
-                        <tr><td>CASBO</td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
-                        <tr><td>DOCUSIGN</td><td>NOT ALLOWED</td><td>NONE</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>NOT ALLOWED</td></tr>
-                        <tr><td>HASHICORP</td><td>NOT ALLOWED</td><td>NONE (VAULT PROP: ONE (1) FIFTEEN (15) MINUTE BREAK)</td><td>NAME MUST MATCH GOVT. ID</td><td>NON-SEB</td><td>NOT ALLOWED</td></tr>
-                        <tr><td>INTERSYSTEMS</td><td>NOT ALLOWED</td><td>ONE (1) TEN (10) MINUTE BREAK</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>DEPENDS ON THE EXAM</td></tr>
-                        <tr><td>NRPP</td><td>ALLOWED</td><td>ONE (1) FIFTEEN (15) MINUTE BREAK</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>ALLOWED</td></tr>
-                        <tr><td>NVIDIA</td><td>ALLOWED</td><td>NONE (BETA 180: TWO (2) FIVE (5) MINUTE BREAK)</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
-                        <tr><td>OPEN TEXT</td><td>NOT ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>ALLOWED</td></tr>
-                        <tr><td>PROJECT SUCCESS INCORPORATED</td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
-                        <tr><td>SIDEFX</td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>TEXTBOOKS ALLOWED</td></tr>
-                        <tr><td>VASTDATA</td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
-                        <tr><td>WELLSKY</td><td>ALLOWED</td><td>UNLIMITED BREAKS (10-20 MINUTES PER BREAK)</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>TEXTBOOKS ALLOWED</td></tr>
+                    <tbody id="policyTableBody" class="divide-y divide-white/10 font-medium text-gray-200">
+                        <tr class="policy-row" data-seb="SEB" data-break="NO">
+                            <td class="p-3.5 font-bold text-white flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Akylade
+                            </td>
+                            <td class="p-3.5 text-xs text-gray-300">Requires Support Approval</td>
+                            <td class="p-3.5"><span class="bg-red-500/20 text-red-300 px-2 py-0.5 rounded text-xs font-bold">No Breaks</span></td>
+                            <td class="p-3.5"><span class="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded text-xs font-bold">SEB Required</span></td>
+                            <td class="p-3.5 text-xs text-gray-400">Not Allowed</td>
+                            <td class="p-3.5 text-right"><button class="copy-btn text-xs px-2.5 py-1 rounded" onclick="copyText('Akylade exam requires SEB. No breaks allowed.')">Copy Quick Info</button></td>
+                        </tr>
+                        <tr class="policy-row" data-seb="NON-SEB" data-break="YES">
+                            <td class="p-3.5 font-bold text-white flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Atlassian
+                            </td>
+                            <td class="p-3.5 text-xs text-gray-300">Exact Match Required</td>
+                            <td class="p-3.5"><span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded text-xs font-bold">1 Unscheduled (5m)</span></td>
+                            <td class="p-3.5"><span class="bg-gray-500/20 text-gray-300 px-2 py-0.5 rounded text-xs font-bold">Non-SEB</span></td>
+                            <td class="p-3.5 text-xs text-gray-400">Built-in Whiteboard Allowed</td>
+                            <td class="p-3.5 text-right"><button class="copy-btn text-xs px-2.5 py-1 rounded" onclick="copyText('Atlassian: Non-SEB, 5min unscheduled break permitted.')">Copy Quick Info</button></td>
+                        </tr>
+                        <tr class="policy-row" data-seb="SEB" data-break="NO">
+                            <td class="p-3.5 font-bold text-white flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Blue Prism
+                            </td>
+                            <td class="p-3.5 text-xs text-gray-300">Government ID Match</td>
+                            <td class="p-3.5"><span class="bg-red-500/20 text-red-300 px-2 py-0.5 rounded text-xs font-bold">No Breaks</span></td>
+                            <td class="p-3.5"><span class="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded text-xs font-bold">SEB Required</span></td>
+                            <td class="p-3.5 text-xs text-gray-400">Physical Scratchpad Prohibited</td>
+                            <td class="p-3.5 text-right"><button class="copy-btn text-xs px-2.5 py-1 rounded" onclick="copyText('Blue Prism requires SEB. No breaks.')">Copy Quick Info</button></td>
+                        </tr>
+                        <tr class="policy-row" data-seb="NON-SEB" data-break="YES">
+                            <td class="p-3.5 font-bold text-white flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> NVIDIA
+                            </td>
+                            <td class="p-3.5 text-xs text-gray-300">Flexible Middle Name</td>
+                            <td class="p-3.5"><span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded text-xs font-bold">1 Scheduled Break</span></td>
+                            <td class="p-3.5"><span class="bg-gray-500/20 text-gray-300 px-2 py-0.5 rounded text-xs font-bold">Non-SEB</span></td>
+                            <td class="p-3.5 text-xs text-gray-400">Digital Notepad Only</td>
+                            <td class="p-3.5 text-right"><button class="copy-btn text-xs px-2.5 py-1 rounded" onclick="copyText('NVIDIA: Non-SEB. 1 Scheduled break permitted.')">Copy Quick Info</button></td>
+                        </tr>
+                        <tr class="policy-row" data-seb="SEB" data-break="NO">
+                            <td class="p-3.5 font-bold text-white flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> HashiCorp
+                            </td>
+                            <td class="p-3.5 text-xs text-gray-300">Exact Match Only</td>
+                            <td class="p-3.5"><span class="bg-red-500/20 text-red-300 px-2 py-0.5 rounded text-xs font-bold">No Breaks</span></td>
+                            <td class="p-3.5"><span class="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded text-xs font-bold">SEB Required</span></td>
+                            <td class="p-3.5 text-xs text-gray-400">No Scratchpad</td>
+                            <td class="p-3.5 text-right"><button class="copy-btn text-xs px-2.5 py-1 rounded" onclick="copyText('HashiCorp: SEB Required. Strict No Breaks.')">Copy Quick Info</button></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- VIEW 3: VIOLATION THRESHOLD -->
-        <div id="severity-view" class="view-section">
-            <div class="table-card">
-                <table>
+        <!-- ==================== TAB 4: INFRACTIONS & SEVERITY MATRIX ==================== -->
+        <div id="severity-view" class="view-section hidden space-y-4">
+            
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/70 p-3 rounded-xl border border-white/15 backdrop-blur-md">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-gray-300 font-mono">Severity Level:</span>
+                    <button onclick="filterSeverityTable('ALL')" class="sev-btn active px-3 py-1 text-xs font-bold rounded-lg bg-[#10b981] text-black">All Infractions</button>
+                    <button onclick="filterSeverityTable('MINOR')" class="sev-btn px-3 py-1 text-xs font-bold rounded-lg bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 hover:bg-yellow-500/30">Minor Violations</button>
+                    <button onclick="filterSeverityTable('MAJOR')" class="sev-btn px-3 py-1 text-xs font-bold rounded-lg bg-red-500/20 text-red-300 border border-red-500/40 hover:bg-red-500/30">Major / Instant Termination</button>
+                </div>
+            </div>
+
+            <div class="glass-panel overflow-x-auto rounded-xl">
+                <table class="w-full text-left border-collapse glass-table text-sm">
                     <thead>
-                        <tr>
-                            <th>Infraction Name</th>
-                            <th>Context</th>
-                            <th>Category</th>
-                            <th>Severity</th>
-                            <th>Threshold (0-1000)</th>
+                        <tr class="text-xs font-black text-emerald-400 uppercase tracking-wider border-b border-white/20">
+                            <th class="p-3.5">Infraction / Event</th>
+                            <th class="p-3.5">Category</th>
+                            <th class="p-3.5">Severity</th>
+                            <th class="p-3.5">Max Threshold</th>
+                            <th class="p-3.5">Required Action / Protocol</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr><td>Another person in the room</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Books / Supplemental Materials</td><td>Check in, Testing</td><td>Prohibited Items</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Camera</td><td>Check in, Testing</td><td>Prohibited Electronic Device</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Desk is not cleared off</td><td>Check in, Testing</td><td>Check in</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Desk is not cleared off (check-in only)</td><td>Check in</td><td>Check in</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Does not do complete scan</td><td>Check in</td><td>Check in</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
-                        <tr><td>Eating/drinking without approved Special Accom</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
-                        <tr><td>Environment or camera view too dark/candidate not visible</td><td>Check in</td><td>Check in</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Face coverings</td><td>Check in</td><td>Check in</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Face out of view</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Failure to return from break</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-major">Major</span></td><td>0</td></tr>
-                        <tr><td>Headphones/Earbuds</td><td>Check in</td><td>Prohibited Electronic Device</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
-                        <tr><td>Headwear (unless allowed via accommodation/religious exempt)</td><td>Check in</td><td>Prohibited Items</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
-                        <tr><td>Internal environment too loud</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Leaves testing area</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
-                        <tr><td>Looking elsewhere</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>4</td></tr>
-                        <tr><td>Mobile phone in use</td><td>Testing</td><td>Prohibited Electronic Device</td><td><span class="badge-major">Major</span></td><td>0</td></tr>
-                        <tr><td>Mobile phone visible</td><td>Check in</td><td>Prohibited Electronic Device</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
-                        <tr><td>Not following proctor instructions</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Proctor harassment (disrespectful, name calling)</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td><span class="badge-major">Major</span></td><td>0</td></tr>
-                        <tr><td>Proper clothing</td><td>Check in</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
-                        <tr><td>Remote Desktop Applications</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td><span class="badge-major">Major</span></td><td>0</td></tr>
-                        <tr><td>Secondary device (computer, laptop, calculator)</td><td>Check in</td><td>Prohibited Electronic Device</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
-                        <tr><td>Smart Watch</td><td>Check in</td><td>Prohibited Electronic Device</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
-                        <tr><td>Smoking or Vaping</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
-                        <tr><td>Suspicious behavior</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Talking aloud</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Talking to others</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
-                        <tr><td>Whiteboard/bulletin board with writing</td><td>Check in, Testing</td><td>Prohibited Items</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                    <tbody id="severityTableBody" class="divide-y divide-white/10 font-medium text-gray-200">
+                        <tr class="sev-row" data-sev="MINOR">
+                            <td class="p-3.5 font-bold text-white">Looking away from screen repeatedly</td>
+                            <td class="p-3.5 text-xs text-gray-300"><span class="bg-slate-800 px-2 py-0.5 rounded border border-white/10">Gaze/Focus</span></td>
+                            <td class="p-3.5"><span class="bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 px-2 py-0.5 rounded text-xs font-bold">MINOR</span></td>
+                            <td class="p-3.5 text-xs font-mono font-bold text-amber-300">2 Warnings</td>
+                            <td class="p-3.5 text-xs text-gray-300">Issue warning script. Terminate on 3rd occurrence.</td>
+                        </tr>
+                        <tr class="sev-row" data-sev="MINOR">
+                            <td class="p-3.5 font-bold text-white">Mumbling or reading questions aloud</td>
+                            <td class="p-3.5 text-xs text-gray-300"><span class="bg-slate-800 px-2 py-0.5 rounded border border-white/10">Audio</span></td>
+                            <td class="p-3.5"><span class="bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 px-2 py-0.5 rounded text-xs font-bold">MINOR</span></td>
+                            <td class="p-3.5 text-xs font-mono font-bold text-amber-300">2 Warnings</td>
+                            <td class="p-3.5 text-xs text-gray-300">Send "no reading aloud" canned response.</td>
+                        </tr>
+                        <tr class="sev-row" data-sev="MAJOR">
+                            <td class="p-3.5 font-bold text-white">Secondary person visible in camera view</td>
+                            <td class="p-3.5 text-xs text-gray-300"><span class="bg-slate-800 px-2 py-0.5 rounded border border-white/10">Environment</span></td>
+                            <td class="p-3.5"><span class="bg-red-500/20 text-red-300 border border-red-500/40 px-2 py-0.5 rounded text-xs font-bold">MAJOR</span></td>
+                            <td class="p-3.5 text-xs font-mono font-bold text-red-400">1 Warning / Instant</td>
+                            <td class="p-3.5 text-xs text-gray-300">Pause exam immediately. Perform room scan. Terminate if uncooperative.</td>
+                        </tr>
+                        <tr class="sev-row" data-sev="MAJOR">
+                            <td class="p-3.5 font-bold text-white">Unauthorized phone or smartwatch usage</td>
+                            <td class="p-3.5 text-xs text-gray-300"><span class="bg-slate-800 px-2 py-0.5 rounded border border-white/10">Devices</span></td>
+                            <td class="p-3.5"><span class="bg-red-500/20 text-red-300 border border-red-500/40 px-2 py-0.5 rounded text-xs font-bold">MAJOR</span></td>
+                            <td class="p-3.5 text-xs font-mono font-bold text-red-400">0 (Immediate)</td>
+                            <td class="p-3.5 text-xs text-gray-300">Immediate exam revocation & incident report escalation.</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-
-    </div>
+    </main>
 
     <script>
-        function switchTab(viewId, btn) {
-            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        /* --- SUPER MARIO WORLD 1-1 CANVAS ENGINE --- */
+        const canvas = document.getElementById('mario-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let isAnimating = true;
+        let animationFrameId;
+
+        // Resize Canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Game World Physics & Variables
+        let worldOffset = 0;
+        const groundHeight = 80;
+
+        // Clouds
+        const clouds = [
+            { x: 100, y: 80, scale: 1 },
+            { x: 450, y: 120, scale: 0.8 },
+            { x: 800, y: 60, scale: 1.2 },
+            { x: 1200, y: 100, scale: 0.9 },
+            { x: 1600, y: 70, scale: 1.1 }
+        ];
+
+        // Hills
+        const hills = [
+            { x: 50, width: 160, height: 70 },
+            { x: 600, width: 220, height: 100 },
+            { x: 1100, width: 180, height: 80 },
+            { x: 1700, width: 250, height: 110 }
+        ];
+
+        // Mario State
+        const mario = {
+            x: 180,
+            y: 0,
+            width: 32,
+            height: 38,
+            vy: 0,
+            gravity: 0.6,
+            jumpPower: -12,
+            isJumping: false,
+            frame: 0,
+            animTimer: 0
+        };
+
+        // Block Objects
+        const blocks = [
+            { x: 300, y: 0, type: 'question', hit: false, bounce: 0 },
+            { x: 332, y: 0, type: 'brick', hit: false, bounce: 0 },
+            { x: 364, y: 0, type: 'question', hit: false, bounce: 0 },
+            { x: 396, y: 0, type: 'brick', hit: false, bounce: 0 },
+            { x: 700, y: 0, type: 'question', hit: false, bounce: 0 },
+            { x: 732, y: 0, type: 'question', hit: false, bounce: 0 },
+            { x: 1100, y: 0, type: 'brick', hit: false, bounce: 0 },
+            { x: 1132, y: 0, type: 'question', hit: false, bounce: 0 },
+            { x: 1164, y: 0, type: 'brick', hit: false, bounce: 0 }
+        ];
+
+        // Pipes
+        const pipes = [
+            { x: 500, height: 70 },
+            { x: 900, height: 100 },
+            { x: 1400, height: 80 }
+        ];
+
+        // Goombas
+        const goombas = [
+            { x: 420, y: 0, vx: -1, frame: 0 },
+            { x: 820, y: 0, vx: -1.2, frame: 0 },
+            { x: 1300, y: 0, vx: -0.9, frame: 0 }
+        ];
+
+        // Particles (Coins)
+        const particles = [];
+
+        function spawnCoinParticle(x, y) {
+            particles.push({
+                x: x + 8,
+                y: y - 10,
+                vy: -7,
+                gravity: 0.4,
+                life: 25
+            });
+        }
+
+        // DRAW RETRO PIXEL CLOUD
+        function drawPixelCloud(x, y, scale) {
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(x, y, 20 * scale, 0, Math.PI * 2);
+            ctx.arc(x + 20 * scale, y - 10 * scale, 25 * scale, 0, Math.PI * 2);
+            ctx.arc(x + 45 * scale, y, 20 * scale, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // DRAW RETRO HILL
+        function drawHill(x, width, height, groundY) {
+            ctx.fillStyle = '#00a800';
+            ctx.beginPath();
+            ctx.ellipse(x + width / 2, groundY, width / 2, height, 0, Math.PI, 0);
+            ctx.fill();
+            ctx.strokeStyle = '#005800';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+        }
+
+        // DRAW PIPE
+        function drawPipe(pipe, groundY) {
+            const x = pipe.x - worldOffset;
+            const y = groundY - pipe.height;
             
-            const selectedView = document.getElementById(viewId);
-            selectedView.classList.add('active');
+            // Main Pipe
+            ctx.fillStyle = '#00a800';
+            ctx.fillRect(x, y, 50, pipe.height);
+            ctx.fillStyle = '#00e600';
+            ctx.fillRect(x + 4, y, 8, pipe.height); // highlight
+            ctx.strokeStyle = '#004000';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(x, y, 50, pipe.height);
+
+            // Pipe Top Rim
+            ctx.fillStyle = '#00a800';
+            ctx.fillRect(x - 4, y - 20, 58, 20);
+            ctx.fillStyle = '#00e600';
+            ctx.fillRect(x, y - 20, 8, 20);
+            ctx.strokeRect(x - 4, y - 20, 58, 20);
+        }
+
+        // DRAW BRICK OR QUESTION BLOCK
+        function drawBlock(b, groundY) {
+            const screenX = b.x - worldOffset;
+            const screenY = groundY - 140 - b.bounce;
+
+            if (b.type === 'question') {
+                ctx.fillStyle = b.hit ? '#b87018' : '#f8b800';
+                ctx.fillRect(screenX, screenY, 30, 30);
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(screenX, screenY, 30, 30);
+
+                if (!b.hit) {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 18px "Press Start 2P", monospace';
+                    ctx.fillText('?', screenX + 7, screenY + 22);
+                }
+            } else {
+                ctx.fillStyle = '#b84418';
+                ctx.fillRect(screenX, screenY, 30, 30);
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(screenX, screenY, 30, 30);
+                // Mortar lines
+                ctx.strokeStyle = '#000000';
+                ctx.beginPath();
+                ctx.moveTo(screenX, screenY + 15); ctx.lineTo(screenX + 30, screenY + 15);
+                ctx.moveTo(screenX + 15, screenY); ctx.lineTo(screenX + 15, screenY + 15);
+                ctx.stroke();
+            }
+        }
+
+        // DRAW PIXEL MARIO
+        function drawMario(groundY) {
+            const y = mario.y;
+
+            // Mario Overalls Red/Blue
+            ctx.fillStyle = '#e52521'; // Red Shirt/Cap
+            ctx.fillRect(mario.x + 6, y, 20, 10); // Cap
+            ctx.fillRect(mario.x + 4, y + 10, 24, 12); // Shirt
+
+            ctx.fillStyle = '#2038ec'; // Blue Overalls
+            ctx.fillRect(mario.x + 8, y + 20, 16, 14);
+
+            ctx.fillStyle = '#f8b800'; // Face/Hands
+            ctx.fillRect(mario.x + 10, y + 6, 12, 8);
+            ctx.fillRect(mario.x + 2, y + 16, 6, 6);
+            ctx.fillRect(mario.x + 24, y + 16, 6, 6);
+
+            // Shoes
+            ctx.fillStyle = '#704000';
+            ctx.fillRect(mario.x + 4, y + 32, 10, 6);
+            ctx.fillRect(mario.x + 18, y + 32, 10, 6);
+        }
+
+        // DRAW GOOMBA
+        function drawGoomba(g, groundY) {
+            const screenX = g.x - worldOffset;
+            const y = groundY - 26;
+
+            ctx.fillStyle = '#b84418'; // Head
+            ctx.beginPath();
+            ctx.arc(screenX + 13, y + 10, 13, Math.PI, 0);
+            ctx.fill();
+            ctx.fillRect(screenX + 2, y + 10, 22, 10);
+
+            // Feet
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(screenX + (g.frame === 0 ? 0 : 4), y + 18, 8, 8);
+            ctx.fillRect(screenX + (g.frame === 0 ? 16 : 12), y + 18, 8, 8);
+        }
+
+        // MAIN ANIMATION LOOP
+        function animate() {
+            if (!isAnimating) return;
+
+            const groundY = canvas.height - groundHeight;
+
+            // Clear Background (Mario Sky Blue)
+            ctx.fillStyle = '#5c94fc';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Scroll World
+            worldOffset += 2;
+
+            // 1. Draw Clouds
+            clouds.forEach(c => {
+                let screenX = (c.x - worldOffset * 0.3) % (canvas.width + 400);
+                if (screenX < -200) screenX += canvas.width + 400;
+                drawPixelCloud(screenX, c.y, c.scale);
+            });
+
+            // 2. Draw Hills
+            hills.forEach(h => {
+                let screenX = (h.x - worldOffset * 0.5) % (canvas.width + 600);
+                if (screenX < -300) screenX += canvas.width + 600;
+                drawHill(screenX, h.width, h.height, groundY);
+            });
+
+            // 3. Draw Pipes
+            pipes.forEach(p => drawPipe(p, groundY));
+
+            // 4. Draw Blocks & Physics Check
+            blocks.forEach(b => {
+                drawBlock(b, groundY);
+
+                // Mario Collision with Question Blocks
+                const blockScreenX = b.x - worldOffset;
+                const blockScreenY = groundY - 140;
+
+                if (
+                    mario.x + mario.width > blockScreenX &&
+                    mario.x < blockScreenX + 30 &&
+                    mario.y <= blockScreenY + 30 &&
+                    mario.y >= blockScreenY &&
+                    mario.vy < 0
+                ) {
+                    if (!b.hit) {
+                        b.hit = true;
+                        b.bounce = 12;
+                        spawnCoinParticle(blockScreenX, blockScreenY);
+                    }
+                }
+
+                if (b.bounce > 0) b.bounce -= 1;
+            });
+
+            // 5. Draw & Update Goombas
+            goombas.forEach(g => {
+                g.x += g.vx;
+                g.frame = Math.floor(worldOffset / 10) % 2;
+                if (g.x - worldOffset < -100) g.x += canvas.width + 500;
+                drawGoomba(g, groundY);
+            });
+
+            // 6. Mario Jump Logic
+            mario.vy += mario.gravity;
+            mario.y += mario.vy;
+
+            // Ground Collision
+            if (mario.y >= groundY - mario.height) {
+                mario.y = groundY - mario.height;
+                mario.vy = 0;
+                mario.isJumping = false;
+            }
+
+            // Auto-jump logic underneath blocks
+            blocks.forEach(b => {
+                const blockScreenX = b.x - worldOffset;
+                if (Math.abs(mario.x - blockScreenX) < 15 && !mario.isJumping) {
+                    mario.vy = mario.jumpPower;
+                    mario.isJumping = true;
+                }
+            });
+
+            drawMario(groundY);
+
+            // 7. Render Coin Particles
+            particles.forEach((p, idx) => {
+                p.y += p.vy;
+                p.vy += p.gravity;
+                p.life -= 1;
+
+                ctx.fillStyle = '#f8b800';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (p.life <= 0) particles.splice(idx, 1);
+            });
+
+            // 8. Draw Mario Ground Tiles
+            const tileSize = 32;
+            for (let x = 0; x < canvas.width + tileSize; x += tileSize) {
+                const tileOffset = (worldOffset % tileSize);
+                const drawX = x - tileOffset;
+
+                // Ground Pattern
+                ctx.fillStyle = '#e45c10';
+                ctx.fillRect(drawX, groundY, tileSize, groundHeight);
+                ctx.fillStyle = '#00a800'; // Green grass top line
+                ctx.fillRect(drawX, groundY, tileSize, 8);
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(drawX, groundY, tileSize, tileSize);
+            }
+
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        // START ANIMATION ON LOAD
+        window.onload = function() {
+            animate();
+        };
+
+        // ANIMATION CONTROLS
+        function toggleMarioAnimation() {
+            isAnimating = !isAnimating;
+            const btnText = document.getElementById('animStatusText');
+            const btnIcon = document.getElementById('animStatusIcon');
+            if (isAnimating) {
+                btnText.innerText = "Pause";
+                btnIcon.innerText = "⏸";
+                animate();
+            } else {
+                btnText.innerText = "Play";
+                btnIcon.innerText = "▶";
+                cancelAnimationFrame(animationFrameId);
+            }
+        }
+
+        // OPACITY SLIDER FOR GLASS PANELS
+        function adjustGlassOpacity(val) {
+            document.documentElement.style.setProperty('--card-glass', `rgba(15, 23, 42, ${val})`);
+            document.documentElement.style.setProperty('--card-glass-hover', `rgba(15, 23, 42, ${parseFloat(val) + 0.12})`);
+        }
+
+        /* --- DASHBOARD UI INTERACTION LOGIC --- */
+
+        // Tab Switcher
+        function switchTab(viewId, btn) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(viewId).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+
+            // Toggle OS Filter visibility based on tab
+            const osBar = document.getElementById('os-filter-bar');
+            if (viewId === 'checkin-view') {
+                osBar.classList.remove('hidden');
+            } else {
+                osBar.classList.add('hidden');
+            }
         }
 
+        // Accordion Toggle
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                content.style.maxHeight = '0px';
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
+        }
+
+        // Set initial heights for accordions
+        document.querySelectorAll('.accordion-content').forEach(acc => {
+            acc.style.maxHeight = acc.scrollHeight + 'px';
+        });
+
+        // Copy Text Spiel with Toast
         function copySpiel(btn) {
-            const row = btn.closest('.spiel-row');
-            const text = row.querySelector('.spiel-text').innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                btn.innerText = '✓ Copied!';
+            const spielText = btn.parentElement.querySelector('.spiel-text').innerText;
+            copyText(spielText, btn);
+        }
+
+        function copyText(text, btn = null) {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            // Toast Animation
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2200);
+
+            if (btn) {
                 btn.classList.add('copied');
+                btn.innerText = 'Copied!';
                 setTimeout(() => {
-                    btn.innerText = 'Copy';
                     btn.classList.remove('copied');
-                }, 1500);
+                    btn.innerText = 'Copy';
+                }, 1800);
+            }
+        }
+
+        // OS Filter for Check-in Steps
+        function setOsFilter(os) {
+            document.querySelectorAll('.os-btn').forEach(b => b.classList.remove('active', 'bg-[#10b981]', 'text-black'));
+            document.querySelectorAll('.os-btn').forEach(b => b.classList.add('bg-slate-800', 'text-gray-300'));
+            event.target.classList.add('active', 'bg-[#10b981]', 'text-black');
+
+            const cards = document.querySelectorAll('.os-card');
+            cards.forEach(card => {
+                const cardOs = card.getAttribute('data-os');
+                if (os === 'ALL' || cardOs === 'ALL' || cardOs === os) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
             });
         }
 
-        function filterAll() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        // Policy Filter
+        function filterPolicyTable(type) {
+            document.querySelectorAll('.pol-btn').forEach(b => b.classList.remove('active', 'bg-[#10b981]', 'text-black'));
+            event.target.classList.add('active', 'bg-[#10b981]', 'text-black');
 
+            const rows = document.querySelectorAll('.policy-row');
+            let count = 0;
+            rows.forEach(row => {
+                const isSeb = row.getAttribute('data-seb') === 'SEB';
+                const hasBreak = row.getAttribute('data-break') === 'YES';
+
+                if (type === 'ALL' || (type === 'SEB' && isSeb) || (type === 'BREAK_YES' && hasBreak)) {
+                    row.style.display = '';
+                    count++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            document.getElementById('policyCount').innerText = `${count} Active Sponsors`;
+        }
+
+        // Severity Filter
+        function filterSeverityTable(sev) {
+            document.querySelectorAll('.sev-btn').forEach(b => b.classList.remove('active', 'bg-[#10b981]', 'text-black'));
+            event.target.classList.add('active', 'bg-[#10b981]', 'text-black');
+
+            const rows = document.querySelectorAll('.sev-row');
+            rows.forEach(row => {
+                if (sev === 'ALL' || row.getAttribute('data-sev') === sev) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Global Search
+        function filterAll() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+
+            // Search Spiel Rows
             document.querySelectorAll('.spiel-row').forEach(row => {
-                const text = row.querySelector('.spiel-text').innerText.toLowerCase();
-                row.style.display = text.includes(query) ? 'flex' : 'none';
+                const text = row.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    row.style.display = 'flex';
+                } else {
+                    row.style.display = 'none';
+                }
             });
 
-            document.querySelectorAll('tbody tr').forEach(tr => {
-                const text = tr.innerText.toLowerCase();
-                tr.style.display = text.includes(query) ? '' : 'none';
+            // Search Table Rows
+            document.querySelectorAll('.policy-row, .sev-row').forEach(row => {
+                const text = row.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
             });
         }
     </script>
