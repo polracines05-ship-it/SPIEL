@@ -1,167 +1,495 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveActs Proctor Hub</title>
-<style>
-  :root {
-    --bg-primary: #000000;
-    --bg-secondary: #0c0c0e;
-    --bg-card: #141417;
-    --text-main: #ffffff;
-    --text-muted: #a1a1aa;
-    --accent: #00c853;
-    --accent-hover: #00963e;
-    --border: #27272a;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
-  html, body { height: 100%; overflow: hidden; background-color: var(--bg-primary); }
-  body { display: flex; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FiveActs Proctor Hub Dashboard</title>
+    <style>
+        :root {
+            --bg-black: #000000;
+            --sidebar-gray: #0c0c0e;
+            --card-charcoal: #141417;
+            --border-gray: #24242a;
+            --text-main: #f0f0f5;
+            --text-muted: #8e8e9a;
+            --vibrant-green: #00c853;
+            --vibrant-green-hover: #00e676;
+            --alert-red: #ff3d00;
+        }
 
-  /* ---------- Sidebar Navigation Panel ---------- */
-  .sidebar {
-    width: 280px;
-    background-color: var(--bg-secondary);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    padding: 20px 14px;
-    flex-shrink: 0;
-    height: 100vh;
-    overflow-y: auto;
-  }
-  .sidebar-header { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); text-align: center; }
-  .brand-logo-container {
-    width: 100%; background: #ffffff; padding: 12px; border-radius: 8px; margin-bottom: 12px;
-    display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 14px rgba(0, 200, 83, 0.2);
-  }
-  .brand-logo { max-width: 80%; height: auto; display: block; }
-  .sidebar-header h1 { font-size: 1rem; color: #fff; font-weight: 700; letter-spacing: .4px; }
-  
-  .view-selectors { border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 12px; display: flex; flex-direction: column; align-items: center; width: 100%; }
-  .view-btn {
-    width: 95%; background: none; border: 2px solid var(--border); color: var(--text-muted);
-    padding: 10px 12px; font-size: .84rem; font-weight: 600; border-radius: 50px; cursor: pointer;
-    margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: all .15s ease;
-  }
-  .view-btn:hover { background-color: var(--bg-card); color: #fff; border-color: var(--text-muted); }
-  .view-btn.active { background-color: var(--bg-card); color: var(--accent); border-color: var(--accent); }
-  .btn-icon { font-size: 1rem; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
 
-  .nav-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: #52525b; margin: 10px 6px 6px; font-weight: 700; }
-  .nav-links { list-style: none; }
-  .nav-links li { margin-bottom: 2px; }
-  .nav-links a { display: block; padding: 6px 10px; color: var(--text-muted); text-decoration: none; border-radius: 4px; font-size: .8rem; transition: all .12s; }
-  .nav-links a:hover { background-color: var(--bg-card); color: var(--accent); padding-left: 14px; }
-  .sidebar-footer { padding-top: 12px; border-top: 1px solid var(--border); font-size: .68rem; color: #52525b; text-align: center; margin-top: auto; }
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-  /* ---------- Main Workspace ---------- */
-  .main-content { flex-grow: 1; padding: 24px 28px 40px; min-width: 0; overflow-y: auto; height: 100vh; }
-  .search-wrapper { position: sticky; top: 0; background-color: var(--bg-primary); padding: 4px 0 18px; z-index: 100; }
-  .search-input {
-    width: 100%; padding: 12px 18px; font-size: .95rem; border-radius: 8px; border: 2px solid var(--border);
-    background-color: var(--bg-secondary); color: var(--text-main); outline: none; transition: border-color .15s;
-  }
-  .search-input:focus { border-color: var(--accent); }
-  .search-count { font-size: .75rem; color: var(--text-muted); margin-top: 8px; min-height: 1em; }
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-gray);
+            border-right: 1px solid var(--border-gray);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 16px;
+            gap: 24px;
+        }
 
-  .dashboard-view { display: none; }
-  .dashboard-view.active { display: block; }
-  .section-container { margin-bottom: 30px; scroll-margin-top: 90px; }
-  .section-title { font-size: 1.15rem; font-weight: 700; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 14px; color: #fff; display: flex; align-items: center; gap: 8px; }
-  .section-count { font-size: .72rem; font-weight: 600; color: var(--text-muted); background: var(--bg-card); border: 1px solid var(--border); padding: 2px 8px; border-radius: 10px; }
-  .empty-state { color: #52525b; font-size: .85rem; padding: 24px 0; text-align: center; display: none; }
+        .logo-container {
+            background-color: #ffffff;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-  /* ---------- Operational Interface Cards ---------- */
-  .card {
-    background-color: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;
-    padding: 14px 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 16px;
-  }
-  .card-body { flex-grow: 1; min-width: 0; }
-  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
-  .card-tags:empty { display: none; }
-  .card-tag { display: inline-block; font-size: .62rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; background-color: #27272a; color: #fff; }
-  .card-tag.win { background-color: #1e3a8a; }
-  .card-tag.mac { background-color: #581c87; }
-  .card-tag.linux { background-color: #14532d; }
-  .card-tag.term { background-color: #7f1d1d; color: #fca5a5; }
-  .card-tag.new { background-color: #b45309; }
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
+            max-height: 40px;
+        }
 
-  /* Robust Grid System for Data views */
-  .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
-  .data-card { background-color: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-  .data-header { font-size: 1.05rem; font-weight: 700; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-  .data-row { display: flex; justify-content: space-between; font-size: 0.85rem; line-height: 1.4; }
-  .data-label { color: var(--text-muted); font-weight: 600; }
-  .data-value { color: #e4e4e7; text-align: right; max-width: 60%; }
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-  .message-text { font-size: .94rem; line-height: 1.55; white-space: pre-line; color: #e4e4e7; }
-  .copy-btn {
-    background-color: var(--accent); color: #000; border: none; padding: 9px 14px; border-radius: 6px;
-    cursor: pointer; font-size: .8rem; font-weight: 700; white-space: nowrap; min-width: 118px; transition: background-color .15s; flex-shrink: 0;
-  }
-  .copy-btn:hover { background-color: var(--accent-hover); }
-  .copy-btn.copied { background-color: #ffffff; color: #000; border: 1px solid var(--accent); }
+        .nav-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            padding: 12px 16px;
+            border-radius: 6px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-  .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: .65rem; font-weight: 700; text-transform: uppercase; }
-  .badge-minor { background-color: #27272a; color: #f4f4f5; }
-  .badge-major { background-color: #7f1d1d; color: #fca5a5; }
+        .nav-btn:hover {
+            color: var(--text-main);
+            background-color: rgba(255, 255, 255, 0.04);
+        }
 
-  ::-webkit-scrollbar { width: 10px; height: 10px; }
-  ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 6px; }
-  ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
-</style>
+        .nav-btn.active {
+            background-color: var(--vibrant-green);
+            color: var(--bg-black);
+            font-weight: 700;
+        }
+
+        /* Main App Body */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 16px 24px;
+            background-color: var(--sidebar-gray);
+            border-bottom: 1px solid var(--border-gray);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: var(--bg-black);
+            border: 1px solid var(--border-gray);
+            color: var(--text-main);
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--vibrant-green);
+        }
+
+        .view-container {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .view-container.active {
+            display: block;
+        }
+
+        /* Cards & Section Headers */
+        .section-header {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            color: var(--vibrant-green);
+            border-bottom: 1px solid var(--border-gray);
+            padding-bottom: 6px;
+        }
+
+        .section-header:first-of-type {
+            margin-top: 0;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .script-card {
+            background-color: var(--card-charcoal);
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .script-text {
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--text-main);
+        }
+
+        .copy-btn {
+            background-color: var(--vibrant-green);
+            color: var(--bg-black);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background-color 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--vibrant-green-hover);
+        }
+
+        .copy-btn.copied {
+            background-color: #ffffff;
+            color: var(--bg-black);
+        }
+
+        /* Table Styling */
+        .data-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            background-color: var(--card-charcoal);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: var(--sidebar-gray);
+            color: var(--vibrant-green);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-gray);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-gray);
+            color: var(--text-main);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge-minor {
+            color: var(--vibrant-green);
+            background: rgba(0, 200, 83, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .badge-major {
+            color: var(--alert-red);
+            background: rgba(255, 61, 0, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- SIDEBAR CONTROL MODULE -->
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <div class="brand-logo-container">
-        <img src="FiveActs-Logo.png" alt="FiveActs Logo" class="brand-logo" onerror="this.parentElement.style.display='none';">
-      </div>
-      <h1>FiveActs</h1>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="FiveActs-Logo.png" alt="FiveActs Logo">
+        </div>
+        <div class="nav-menu">
+            <button class="nav-btn active" onclick="switchView('canned-view', this)">📋 Canned Messages</button>
+            <button class="nav-btn" onclick="switchView('policies-view', this)">🔍 Client Policies</button>
+            <button class="nav-btn" onclick="switchView('severity-view', this)">🚨 Severity Index</button>
+        </div>
     </div>
 
-    <div class="view-selectors">
-      <button class="view-btn active" onclick="switchView('canned-view')"><span class="btn-icon">📋</span> Canned Message</button>
-      <button class="view-btn" onclick="switchView('policies-view')"><span class="btn-icon">📁</span> Name Change policy</button>
-      <button class="view-btn" onclick="switchView('infractions-view')"><span class="btn-icon">🚨</span> Threshold</button>
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+        <div class="header">
+            <div class="search-box">
+                <input type="text" id="globalSearch" class="search-input" placeholder="Search canned spiels, policies, or infractions..." oninput="filterContent()">
+            </div>
+        </div>
+
+        <!-- VIEW 1: CANNED MESSAGES -->
+        <div id="canned-view" class="view-container active">
+            
+            <div class="section-header">1. Welcome</div>
+            <div class="card-grid">
+                <div class="script-card"><span class="script-text">Hello and welcome! I will be your proctor for this exam.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">We have a few steps to complete before your exam begins. This time does not count against your exam time limit.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+            </div>
+
+            <div class="section-header">2. Identification Verification</div>
+            <div class="card-grid">
+                <div class="script-card"><span class="script-text">We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">You may keep your ID away. If there are any items on your desk surface, please remove them now as well.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">Ensure all electronic devices are put away and out of reach. That includes phones, smartwatches, headphones, earbuds and other similar devices.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">Unfortunately, the name on your provided identification does not match the name registered on this reservation. Please contact support@certiverse.com to request a name modification. Once updated, you can re-enter your reservation so we can continue with your check-in.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">Unfortunately, the name on your provided identification does not match the name registered on this reservation. To assist you with this, please contact support@certiverse.com to reach out to your exam sponsor, who will process the name change. Once completed, you can re-enter the reservation and we will continue.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+            </div>
+
+            <div class="section-header">3. System Verification (Running Applications Check — Non-SEB)</div>
+            <div class="card-grid">
+                <div class="script-card"><span class="script-text">[WINDOWS] Could you please open your Task Manager and click on Services?</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">[WINDOWS] Please scroll down slowly until you reach the end of the list.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">[WINDOWS] Thank you. You may now close your Task Manager.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">[WINDOWS] Please click on "Details" and do the same.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">[WINDOWS] Could you please open your Task Manager and click on Details? Please go to "Memory".</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">[WINDOWS] Could you please open your System Tray?</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">[MAC] Could you please open your Activity Monitor?</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">[MAC] You can find Activity Monitor on a Mac by using Spotlight Search (Command + Spacebar) and typing "Activity Monitor," or by navigating to Applications > Utilities in Finder and double-clicking the app icon.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">[MAC] Please scroll down slowly until you reach the end of the list.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">[LINUX] Could you please open your System Monitor?</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">[LINUX] You can open the System Monitor in Linux through the graphical menu (search for "System Monitor" or "System Tools"), by running gnome-system-monitor in the terminal or Alt+F2 dialog, or by setting a custom keyboard shortcut (often Ctrl+Shift+Esc or Ctrl+Alt+Del) in your system's Keyboard settings.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+            </div>
+
+            <div class="section-header">4. Clear Desk & Environment Setup</div>
+            <div class="card-grid">
+                <div class="script-card"><span class="script-text">Thank you. Just to remind, all electronics should be out of reach and turned off except the device where you will take the exam.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">Since extended monitors are prohibited, we will need to make sure that the one that you have right now is inaccessible. Please cover the screen that is right in front of you. You may use blankets or shirts.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+            </div>
+
+            <div class="section-header">5. Room Scan</div>
+            <div class="card-grid">
+                <div class="script-card"><span class="script-text">Next, we will now scan the room to confirm all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+            </div>
+
+            <div class="section-header">6. Camera & Framing Adjustments</div>
+            <div class="card-grid">
+                <div class="script-card"><span class="script-text">One moment, please. Kindly lower the angle of your camera so that we can see your head down to your shoulders.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">One moment. Please adjust your camera angle or position so that your face and shoulders are centered and fully visible on the screen.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+            </div>
+
+            <div class="section-header">7. Exam Release & Pre-Flight Policies</div>
+            <div class="card-grid">
+                <div class="script-card"><span class="script-text">Thank you. Do you have any questions before beginning your exam?</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">Please be advised that if your session gets disconnected at any point during the exam, we will need to check your Task Manager/Activity Monitor/System Monitor again and quickly re-scan the room/desk before resuming your session.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">Please click the Hide Video button.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">Please use this chat if you have any questions that are not related to the exam content. I will now release your exam for you to begin. You are ready to start! You can click the Hide Chat button to close the chat and begin.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">Once the exam has been released, it can no longer be canceled for it to be rescheduled. In the event that the session is briefly disconnected, it will be paused. You may just relaunch the exam and you will be redirected to the question or page where you left off.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">Please note that there are no scheduled breaks for this course once the exam has been released. If you need to use the restroom, you may do so now before we begin.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+            </div>
+
+            <div class="section-header">8. Non-SEB Exams</div>
+            <div class="card-grid">
+                <div class="script-card"><span class="script-text">Click on the "Enter Full Screen" button that you will find in the bottom center of the screen after you hide this chat.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">You may hide or move the pop-up screen-sharing message at the bottom center of your screen.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+            </div>
+
+            <div class="section-header">9. Technical Support & Reconnection</div>
+            <div class="card-grid">
+                <div class="script-card"><span class="script-text">Please refresh your browser. After the refresh, open your Activity Monitor (Mac) or Task Manager (Windows) before continuing with the preflight process. Once opened, scroll down slowly until you reach the bottom of the list.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">We apologize for the inconvenience. There was a temporary drop in the network.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+            </div>
+
+            <div class="section-header">10. Termination Messages</div>
+            <div class="card-grid">
+                <div class="script-card"><span class="script-text">Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+                <div class="script-card"><span class="script-text">The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+            </div>
+
+        </div>
+
+        <!-- VIEW 2: CLIENT POLICIES -->
+        <div id="policies-view" class="view-container">
+            <div class="data-table-wrapper">
+                <table id="policies-table">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Name Change</th>
+                            <th>Breaks Policy</th>
+                            <th>Name Policy</th>
+                            <th>SEB / Non-SEB</th>
+                            <th>Documentation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>AKYLADE</td><td>ALLOWED</td><td>ONE (1) FIVE (5) MINUTE BREAK</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                        <tr><td>ATLASSIAN</td><td>NOT ALLOWED</td><td>NONE</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                        <tr><td>BLUE PRISM</td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                        <tr><td>BMC</td><td>NOT ALLOWED</td><td>ONE (1) FIVE (5) MINUTE BREAK</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>ALLOWED</td></tr>
+                        <tr><td>CAMUNDA</td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                        <tr><td>CASBO</td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                        <tr><td>DOCUSIGN</td><td>NOT ALLOWED</td><td>NONE</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                        <tr><td>HASHICORP</td><td>NOT ALLOWED</td><td>NONE (VAULT PROP: ONE (1) FIFTEEN (15) MINUTE BREAK)</td><td>NAME MUST MATCH GOVT. ID</td><td>NON-SEB</td><td>NOT ALLOWED</td></tr>
+                        <tr><td>INTERSYSTEMS</td><td>NOT ALLOWED</td><td>ONE (1) TEN (10) MINUTE BREAK</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>DEPENDS ON THE EXAM</td></tr>
+                        <tr><td>NRPP</td><td>ALLOWED</td><td>ONE (1) FIFTEEN (15) MINUTE BREAK</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>ALLOWED</td></tr>
+                        <tr><td>NVIDIA</td><td>ALLOWED</td><td>NONE (BETA 180: TWO (2) FIVE (5) MINUTE BREAK)</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                        <tr><td>OPEN TEXT</td><td>NOT ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>ALLOWED</td></tr>
+                        <tr><td>PROJECT SUCCESS INCORPORATED</td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                        <tr><td>SIDEFX</td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>TEXTBOOKS ALLOWED</td></tr>
+                        <tr><td>VASTDATA</td><td>ALLOWED</td><td>NONE</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>NOT ALLOWED</td></tr>
+                        <tr><td>WELLSKY</td><td>ALLOWED</td><td>UNLIMITED BREAKS (10-20 MINUTES PER BREAK)</td><td>NAME MUST MATCH GOVT. ID</td><td>SEB</td><td>TEXTBOOKS ALLOWED</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW 3: SEVERITY INDEX -->
+        <div id="severity-view" class="view-container">
+            <div class="data-table-wrapper">
+                <table id="severity-table">
+                    <thead>
+                        <tr>
+                            <th>Infraction Name</th>
+                            <th>Context</th>
+                            <th>Category</th>
+                            <th>Severity</th>
+                            <th>Threshold (0-1000)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Another person in the room</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Books / Supplemental Materials</td><td>Check in, Testing</td><td>Prohibited Items</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Camera</td><td>Check in, Testing</td><td>Prohibited Electronic Device</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Desk is not cleared off</td><td>Check in, Testing</td><td>Check in</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Desk is not cleared off (check-in only)</td><td>Check in</td><td>Check in</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Does not do complete scan</td><td>Check in</td><td>Check in</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
+                        <tr><td>Eating/drinking without approved Special Accom</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
+                        <tr><td>Environment or camera view too dark/candidate not visible</td><td>Check in</td><td>Check in</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Face coverings</td><td>Check in</td><td>Check in</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Face out of view</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Failure to return from break</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-major">Major</span></td><td>0</td></tr>
+                        <tr><td>Headphones/Earbuds</td><td>Check in</td><td>Prohibited Electronic Device</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
+                        <tr><td>Headwear (unless allowed via accommodation/religious exempt)</td><td>Check in</td><td>Prohibited Items</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
+                        <tr><td>Internal environment too loud</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Leaves testing area</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
+                        <tr><td>Looking elsewhere</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>4</td></tr>
+                        <tr><td>Mobile phone in use</td><td>Testing</td><td>Prohibited Electronic Device</td><td><span class="badge-major">Major</span></td><td>0</td></tr>
+                        <tr><td>Mobile phone visible</td><td>Check in</td><td>Prohibited Electronic Device</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
+                        <tr><td>Not following proctor instructions</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Proctor harassment (disrespectful, name calling)</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td><span class="badge-major">Major</span></td><td>0</td></tr>
+                        <tr><td>Proper clothing</td><td>Check in</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
+                        <tr><td>Remote Desktop Applications</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td><span class="badge-major">Major</span></td><td>0</td></tr>
+                        <tr><td>Secondary device (computer, laptop, calculator)</td><td>Check in</td><td>Prohibited Electronic Device</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
+                        <tr><td>Smart Watch</td><td>Check in</td><td>Prohibited Electronic Device</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
+                        <tr><td>Smoking or Vaping</td><td>Check in, Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>1</td></tr>
+                        <tr><td>Suspicious behavior</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Talking aloud</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Talking to others</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                        <tr><td>Whiteboard/bulletin board with writing</td><td>Check in, Testing</td><td>Prohibited Items</td><td><span class="badge-minor">Minor</span></td><td>2</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
-    <div id="sidebar-anchors">
-      <div class="nav-label">Navigation Links</div>
-      <ul class="nav-links">
-        <li><a href="#preflight">Pre-flight Checks</a></li>
-        <li><a href="#welcome">1. Welcome Scripts</a></li>
-        <li><a href="#id-verification">2. ID Verification</a></li>
-        <li><a href="#clear-desk">3. Clear Desk Policy</a></li>
-        <li><a href="#room-scan">4. Room Scan Guidelines</a></li>
-        <li><a href="#exam-release">5. Exam Release</a></li>
-        <li><a href="#troubleshooting">6. Troubleshooting</a></li>
-        <li><a href="#warnings">7. System Warnings</a></li>
-        <li><a href="#miscellaneous">8. Status & Misc</a></li>
-        <li><a href="#termination">9. Termination</a></li>
-      </ul>
-    </div>
-    <div class="sidebar-footer">v. May 25, 2026</div>
-  </div>
+    <script>
+        // Tab Navigation
+        function switchView(viewId, btn) {
+            document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            btn.classList.add('active');
+        }
 
-  <!-- WORKSPACE CONTENT CONTAINER -->
-  <div class="main-content">
-    <div class="search-wrapper">
-      <input type="text" id="globalSearch" class="search-input" placeholder="🔍 Type keywords instantly to filter templates, protocols or tracker cards...">
-      <div class="search-count" id="searchCount"></div>
-    </div>
+        // Clipboard Action
+        function copyText(btn) {
+            const card = btn.closest('.script-card');
+            const text = card.querySelector('.script-text').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                btn.innerText = '✓ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerText = 'Copy';
+                    btn.classList.remove('copied');
+                }, 1500);
+            });
+        }
 
-    <div id="emptyState" class="empty-state">No matching dashboard entries found. Please refine your filter word.</div>
+        // Real-Time Global Filtering Engine
+        function filterContent() {
+            const query = document.getElementById('globalSearch').value.toLowerCase().trim();
 
-    <!-- TAB CONTAINER 1: SEGMENTED CANNED MESSAGES -->
-    <div id="canned-view" class="dashboard-view active">
-      <section id="preflight" class="section-container">
-        <div class="section-title">Pre-flight <span class="section-count"></span></div>
-        <div class="card"><div class="card-body"><p class="message-text">Hi, are you having issues with screensharing?</p></div><button class="copy-btn" onclick="copyText(this)">Copy Message</button></div>
-        <div class="card"><div class="card-body"><div class="card-tags"><span class="card-tag mac">MAC</span></div><p class="message-text">Always remember that there are two steps for MAC screen sharing issues:\n1. Allow screensharing in browser\n2. And then allow screen sharing in system preferences</p></div><button class="copy-btn" onclick="copyText(this)">Copy Message</button></div>
-        <div class="card"><div class="card-body"><p class="message-text">Hi, are you having issues with your camera?\nPlease relaunch the exam and choose the correct camera on the pre-flight screen.</p></div><button class="copy-btn" onclick="copyText(this)">Copy Message</button></div>
+            // Filter Canned Cards
+            document.querySelectorAll('.script-card').forEach(card => {
+                const text = card.querySelector('.script-text').innerText.toLowerCase();
+                card.style.display = text.includes(query) ? 'flex' : 'none';
+            });
+
+            // Filter Table Rows
+            document.querySelectorAll('tbody tr').forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
