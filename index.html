@@ -50,6 +50,7 @@
             text-align: center;
         }
 
+        /* FiveActs Corporate Header frame mapping */
         .brand-logo-container {
             width: 100%;
             background: #ffffff; 
@@ -76,6 +77,7 @@
             margin-top: 5px;
         }
 
+        /* Master View Switch Navigation links */
         .view-selectors {
             list-style: none;
             margin-bottom: 20px;
@@ -101,9 +103,18 @@
             transition: all 0.2s ease;
         }
 
-        .view-btn:hover { background-color: var(--bg-card); color: #fff; }
-        .view-btn.active { background-color: #1c1c21; border-color: var(--border); color: var(--accent); }
+        .view-btn:hover {
+            background-color: var(--bg-card);
+            color: #fff;
+        }
 
+        .view-btn.active {
+            background-color: #1c1c21;
+            border-color: var(--border);
+            color: var(--accent);
+        }
+
+        /* Section Anchor Sub-links Container mapping */
         .nav-links {
             list-style: none;
             overflow-y: auto;
@@ -112,6 +123,7 @@
         }
 
         .nav-links li { margin-bottom: 4px; }
+
         .nav-links a {
             display: block;
             padding: 8px 12px;
@@ -121,9 +133,14 @@
             font-size: 0.85rem;
             transition: all 0.15s ease;
         }
-        .nav-links a:hover { background-color: var(--bg-card); color: var(--accent); padding-left: 16px; }
 
-        /* Main Workspace Pane */
+        .nav-links a:hover {
+            background-color: var(--bg-card);
+            color: var(--accent);
+            padding-left: 16px;
+        }
+
+        /* Main Scroll Panel Area Layout mapping */
         .main-content {
             flex-grow: 1;
             padding: 30px;
@@ -132,6 +149,7 @@
             flex-direction: column;
         }
 
+        /* Sticky Filter Engine layout configuration */
         .search-wrapper {
             position: sticky;
             top: 0;
@@ -152,14 +170,35 @@
             transition: border-color 0.2s;
         }
 
-        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 12px rgba(0, 200, 83, 0.25); }
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(0, 200, 83, 0.25);
+        }
 
-        .dashboard-view { display: none; }
-        .dashboard-view.active { display: block; }
+        /* Primary Panel Display boundaries */
+        .dashboard-view {
+            display: none;
+        }
 
-        .section-container { margin-bottom: 40px; scroll-margin-top: 100px; }
-        .section-title { font-size: 1.3rem; font-weight: 700; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 20px; color: #fff; }
+        .dashboard-view.active {
+            display: block;
+        }
 
+        .section-container {
+            margin-bottom: 40px;
+            scroll-margin-top: 100px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        /* Text communication Cards structure config */
         .card {
             background-color: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -193,7 +232,12 @@
         .card-tag.linux { background-color: #14532d; }
         .card-tag.term { background-color: #7f1d1d; }
 
-        .message-text { font-size: 0.95rem; line-height: 1.5; white-space: pre-line; color: #e4e4e7; }
+        .message-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            white-space: pre-line;
+            color: #e4e4e7;
+        }
 
         .copy-btn {
             background-color: var(--accent);
@@ -208,23 +252,58 @@
             transition: background-color 0.2s;
             min-width: 120px;
         }
+
         .copy-btn:hover { background-color: var(--accent-hover); }
         .copy-btn.copied { background-color: #fff; color: #000; border: 1px solid var(--accent); }
 
-        /* Tables */
-        .table-responsive { width: 100%; overflow-x: auto; background-color: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-        th { background-color: #141417; color: #fff; font-weight: 600; padding: 14px 16px; border-bottom: 2px solid var(--border); }
-        td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: #e4e4e7; line-height: 1.4; }
+        /* Data Matrix Tables Style Grid configurations */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #141417;
+            color: #fff;
+            font-weight: 600;
+            padding: 14px 16px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: #e4e4e7;
+            line-height: 1.4;
+        }
+
         tr:hover td { background-color: #16161a; }
 
-        .severity-badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .severity-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
         .severity-minor { background-color: #27272a; color: #f4f4f5; }
         .severity-major { background-color: #7f1d1d; color: #fca5a5; }
     </style>
 </head>
 <body>
 
+    <!-- CONTROL PANEL SIDEBAR LINKS FRAMEWORK -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="brand-logo-container">
@@ -234,36 +313,15 @@
             <p style="font-size: 0.75rem; color: var(--accent); margin-top: 2px;">v. May 25, 2026</p>
         </div>
 
+        <!-- Master Global View Navigation Tabs -->
         <div class="view-selectors">
             <button class="view-btn active" onclick="switchView('canned-view')">📋 Canned Messages</button>
             <button class="view-btn" onclick="switchView('policies-view')">🔍 Client Policies</button>
             <button class="view-btn" onclick="switchView('infractions-view')">🚨 Severity Index</button>
         </div>
 
+        <!-- Section Navigation Anchor Mapping List -->
         <ul class="nav-links" id="sidebar-anchors">
             <li><a href="#preflight">Pre-flight Checks</a></li>
             <li><a href="#welcome">1. Welcome Scripts</a></li>
             <li><a href="#id-verification">2. ID Verification</a></li>
-            <li><a href="#clear-desk">3. Clear Desk Policy</a></li>
-            <li><a href="#room-scan">4. Room Scan Rules</a></li>
-            <li><a href="#exam-release">5. Exam Release</a></li>
-            <li><a href="#troubleshooting">6. Troubleshooting</a></li>
-            <li><a href="#warnings">7. System Warnings</a></li>
-            <li><a href="#miscellaneous">8. Status & Misc</a></li>
-            <li><a href="#termination">9. Termination</a></li>
-        </ul>
-    </div>
-
-    <div class="main-content">
-        <div class="search-wrapper">
-            <input type="text" id="globalSearch" class="search-input" placeholder="🔍 Type keywords instantly to filter templates, protocols or tracking files...">
-        </div>
-
-        <!-- VIEW 1: CANNED MESSAGES CONTENT PANEL -->
-        <div id="canned-view" class="dashboard-view active">
-            
-            <section id="preflight" class="section-container">
-                <h2 class="section-title">Pre-flight</h2>
-                <div class="card">
-                    <div class="card-body"><p class="message-text">Hi, are you having issues with screensharing?</p></div>
-                    <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
