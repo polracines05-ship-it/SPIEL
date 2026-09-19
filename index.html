@@ -3,456 +3,802 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Certiverse Proctor Hub - FiveActs</title>
+<title>FiveActs Proctor Dojo Command Center</title>
 <style>
-  :root{
-    --bg-primary:#000000;
-    --bg-secondary:#0c0c0e;
-    --bg-card:#141417;
-    --text-main:#ffffff;
-    --text-muted:#a1a1aa;
-    --accent:#00c853;
-    --accent-hover:#00963e;
-    --border:#27272a;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
-  html,body{height:100%;}
-  body{
-    background-color:var(--bg-primary);
-    color:var(--text-main);
-    display:flex;
-    min-height:100vh;
+  :root {
+    --bg-deep: #09090b;
+    --bg-surface: #121216;
+    --bg-card: #18181c;
+    --bg-card-hover: #1f1f26;
+    --border-subtle: #27272f;
+    --border-accent: #8b5cf6;
+    --text-main: #f4f4f5;
+    --text-muted: #a1a1aa;
+    --accent-gold: #d97706;
+    --accent-gold-glow: rgba(217, 119, 6, 0.2);
+    --accent-crimson: #dc2626;
+    --accent-indigo: #6366f1;
+    --accent-emerald: #059669;
+    --sidebar-width: 280px;
   }
 
-  /* ---------- Sidebar ---------- */
-  .sidebar{
-    width:280px;
-    background-color:var(--bg-secondary);
-    border-right:1px solid var(--border);
-    display:flex;
-    flex-direction:column;
-    padding:20px 14px;
-    flex-shrink:0;
-    height:100vh;
-    position:sticky;
-    top:0;
-    overflow-y:auto;
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
+  html, body { height: 100vh; overflow: hidden; background-color: var(--bg-deep); color: var(--text-main); }
+
+  /* Atmosphere Overlay (Sakura / Bamboo hints via subtle gradients) */
+  .dojo-atmosphere {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0;
+    background: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(217, 119, 6, 0.03) 0%, transparent 40%);
   }
-  .sidebar-header{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);text-align:center;}
-  .brand-logo-container{
-    width:100%;background:#ffffff;padding:12px;border-radius:8px;margin-bottom:12px;
-    display:flex;justify-content:center;align-items:center;
+
+  .app-container { display: flex; height: 100vh; width: 100vw; position: relative; z-index: 1; }
+
+  /* ---------- SIDEBAR (Clan Records Navigation) ---------- */
+  .sidebar {
+    width: var(--sidebar-width); background-color: var(--bg-surface); border-right: 1px solid var(--border-subtle);
+    display: flex; flex-direction: column; flex-shrink: 0; z-index: 10;
   }
-  .brand-logo{max-width:80%;height:auto;display:block;}
-  .sidebar-header h1{font-size:1rem;letter-spacing:.4px;color:#fff;font-weight:700;}
-  .sidebar-header p{font-size:.68rem;color:var(--accent);margin-top:4px;font-weight:600;}
+  .sidebar-header { padding: 24px 20px 18px; border-bottom: 1px solid var(--border-subtle); background: linear-gradient(to bottom, #16161c, var(--bg-surface)); }
+  .clan-seal { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent-gold); font-weight: 700; margin-bottom: 4px; }
+  .dojo-title { font-size: 1.1rem; font-weight: 800; letter-spacing: 0.05em; color: #fff; }
+  .dojo-subtitle { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
 
-  .view-selectors{border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:12px;}
-  .view-btn{
-    width:100%;background:none;border:1px solid transparent;color:var(--text-muted);
-    text-align:left;padding:10px 12px;font-size:.88rem;font-weight:600;border-radius:6px;
-    cursor:pointer;margin-bottom:6px;transition:background-color .15s,color .15s;
+  .nav-scroll { flex-grow: 1; overflow-y: auto; padding: 16px 12px; }
+  .nav-group-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: #52525b; margin: 16px 8px 8px; font-weight: 700; }
+  
+  .nav-item {
+    display: flex; align-items: center; justify-content: space-between; padding: 11px 14px;
+    color: var(--text-muted); text-decoration: none; border-radius: 8px; font-size: 0.85xl; font-weight: 600;
+    margin-bottom: 4px; transition: all 0.2s ease; border: 1px solid transparent; cursor: pointer;
   }
-  .view-btn:hover{background-color:var(--bg-card);color:#fff;}
-  .view-btn.active{background-color:var(--bg-card);color:var(--accent);border-color:var(--border);}
+  .nav-item:hover { background-color: var(--bg-card); color: var(--text-main); border-color: var(--border-subtle); }
+  .nav-item.active { background-color: var(--bg-card); color: var(--accent-gold); border-color: rgba(217, 119, 6, 0.3); box-shadow: 0 0 15px var(--accent-gold-glow); }
+  .nav-badge { font-size: 0.65rem; background: var(--border-subtle); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); }
 
-  .nav-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:#52525b;margin:10px 6px 6px;font-weight:700;}
-  .nav-links{list-style:none;overflow-y:auto;flex-grow:1;}
-  .nav-links li{margin-bottom:2px;}
-  .nav-links a{display:block;padding:6px 10px;color:var(--text-muted);text-decoration:none;border-radius:4px;font-size:.8rem;transition:background-color .12s,color .12s,padding-left .12s;}
-  .nav-links a:hover{background-color:var(--bg-card);color:var(--accent);padding-left:14px;}
+  .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border-subtle); font-size: 0.7rem; color: #52525b; display: flex; justify-content: space-between; align-items: center; }
 
-  .sidebar-footer{padding-top:12px;border-top:1px solid var(--border);font-size:.68rem;color:#52525b;text-align:center;}
-
-  /* ---------- Main content ---------- */
-  .main-content{flex-grow:1;padding:24px 28px 40px;min-width:0;overflow-y:auto;}
-  .search-wrapper{position:sticky;top:0;background-color:var(--bg-primary);padding:4px 0 18px;z-index:100;}
-  .search-input{
-    width:100%;padding:12px 18px;font-size:.95rem;border-radius:8px;border:2px solid var(--border);
-    background-color:var(--bg-secondary);color:var(--text-main);outline:none;transition:border-color .15s;
+  /* ---------- MAIN VIEWPORT ---------- */
+  .main-viewport { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; background-color: var(--bg-deep); }
+  
+  .top-command-bar {
+    padding: 16px 32px; background-color: var(--bg-surface); border-bottom: 1px solid var(--border-subtle);
+    display: flex; justify-content: space-between; align-items: center; min-height: 72px; flex-shrink: 0;
   }
-  .search-input:focus{border-color:var(--accent);}
-  .search-count{font-size:.75rem;color:var(--text-muted);margin-top:8px;min-height:1em;}
-
-  .dashboard-view{display:none;}
-  .dashboard-view.active{display:block;}
-
-  .section-container{margin-bottom:30px;scroll-margin-top:90px;}
-  .section-title{
-    font-size:1.15rem;font-weight:700;border-bottom:2px solid var(--border);
-    padding-bottom:8px;margin-bottom:14px;color:#fff;display:flex;align-items:center;gap:8px;
+  .page-indicator h2 { font-size: 1.25rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
+  .page-indicator p { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  
+  .utc-clock-badge {
+    background: var(--bg-card); border: 1px solid var(--border-subtle); padding: 8px 16px; border-radius: 8px;
+    font-family: monospace; font-size: 0.9rem; font-weight: 700; color: var(--accent-gold); letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 8px;
   }
-  .section-count{font-size:.72rem;font-weight:600;color:var(--text-muted);background:var(--bg-card);border:1px solid var(--border);padding:2px 8px;border-radius:10px;}
 
-  .empty-state{color:#52525b;font-size:.85rem;padding:24px 0;text-align:center;display:none;}
+  .content-area { flex-grow: 1; overflow-y: auto; padding: 32px; position: relative; }
+  .page-view { display: none; }
+  .page-view.active { display: block; animation: fadeIn 0.25s ease-out; }
 
-  /* ---------- Cards ---------- */
-  .card{
-    background-color:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;
-    padding:14px 16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:16px;
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ---------- SHARED COMPONENTS ---------- */
+  .search-box-container { position: relative; margin-bottom: 24px; }
+  .global-search-input {
+    width: 100%; padding: 14px 20px 14px 44px; background-color: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; transition: all 0.2s;
   }
-  .card-body{flex-grow:1;min-width:0;}
-  .card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
-  .card-tag{
-    display:inline-block;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:4px;
-    background-color:#27272a;color:#fff;letter-spacing:.03em;
+  .global-search-input:focus { border-color: var(--accent-gold); box-shadow: 0 0 0 3px var(--accent-gold-glow); }
+  .search-icon-abs { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+
+  .filter-pills { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+  .filter-pill {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 6px 14px; border-radius: 20px;
+    font-size: 0.75rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.15s;
   }
-  .card-tag.win{background-color:#1e3a8a;}
-  .card-tag.mac{background-color:#581c87;}
-  .card-tag.linux{background-color:#14532d;}
-  .card-tag.critical{background-color:#7f1d1d;color:#fca5a5;}
-  .card-tag.term{background-color:#7f1d1d;color:#fca5a5;}
+  .filter-pill:hover { border-color: var(--text-muted); color: #fff; }
+  .filter-pill.active { background: var(--accent-gold); color: #000; border-color: var(--accent-gold); font-weight: 700; }
 
-  .message-text{font-size:.94rem;line-height:1.55;white-space:pre-line;color:#e4e4e7;}
-
-  .copy-btn{
-    background-color:var(--accent);color:#000;border:none;padding:9px 14px;border-radius:6px;
-    cursor:pointer;font-size:.8rem;font-weight:700;white-space:nowrap;min-width:118px;
-    transition:background-color .15s;flex-shrink:0;
+  .dojo-card {
+    background-color: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 20px; margin-bottom: 14px; transition: border-color 0.15s, box-shadow 0.15s; position: relative;
   }
-  .copy-btn:hover{background-color:var(--accent-hover);}
-  .copy-btn.copied{background-color:#ffffff;color:#000;border:1px solid var(--accent);}
-  .copy-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .dojo-card:hover { border-color: #3f3f46; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
 
-  /* ---------- Tables ---------- */
-  .table-responsive{width:100%;overflow-x:auto;background-color:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;}
-  table{width:100%;border-collapse:collapse;text-align:left;font-size:.83rem;min-width:760px;}
-  th{background-color:#141417;color:#fff;padding:12px;border-bottom:2px solid var(--border);white-space:nowrap;position:sticky;top:0;}
-  td{padding:10px 12px;border-bottom:1px solid var(--border);color:#e4e4e7;}
-  tbody tr:hover td{background-color:#16161a;}
-  tbody tr:last-child td{border-bottom:none;}
+  .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; }
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(--border-subtle); color: var(--text-main); text-transform: uppercase; }
+  .tag.minor { background: rgba(217, 119, 6, 0.15); color: #fcd34d; border: 1px solid rgba(217, 119, 6, 0.3); }
+  .tag.major { background: rgba(220, 38, 38, 0.15); color: #fca5a5; border: 1px solid rgba(220, 38, 38, 0.3); }
+  .tag.critical { background: rgba(185, 28, 28, 0.25); color: #f87171; border: 1px solid #ef4444; }
 
-  .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;}
-  .badge-minor{background-color:#27272a;color:#f4f4f5;}
-  .badge-major{background-color:#7f1d1d;color:#fca5a5;}
-
-  .num-cell{font-variant-numeric:tabular-nums;text-align:center;}
-
-  /* ---------- Scrollbars ---------- */
-  ::-webkit-scrollbar{width:10px;height:10px;}
-  ::-webkit-scrollbar-track{background:transparent;}
-  ::-webkit-scrollbar-thumb{background:#27272a;border-radius:6px;}
-  ::-webkit-scrollbar-thumb:hover{background:#3f3f46;}
-
-  @media (max-width:900px){
-    body{flex-direction:row;}
-    .sidebar{width:220px;height:100vh;position:sticky;}
+  .action-btn {
+    background-color: var(--accent-gold); color: #000; border: none; padding: 8px 16px; border-radius: 6px;
+    font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
+    flex-shrink: 0;
   }
-  @media (max-width:600px){
-    body{flex-direction:column;}
-    .sidebar{width:100%;height:auto;position:relative;}
-    .card{flex-direction:column;align-items:stretch;}
-    .copy-btn{width:100%;}
+  .action-btn:hover { background-color: #f59e0b; transform: translateY(-1px); }
+  .action-btn.copied { background-color: #059669; color: #fff; }
+
+  .star-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; padding: 4px; transition: color 0.15s; }
+  .star-btn.starred { color: #f59e0b; }
+
+  /* ---------- PAGE 1: HOME / COMMAND CENTER ---------- */
+  .home-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+  @media(max-width: 1100px) { .home-grid { grid-template-columns: 1fr; } }
+
+  .welcome-banner {
+    background: linear-gradient(135deg, #18181c 0%, #121216 100%); border: 1px solid var(--border-subtle);
+    border-radius: 12px; padding: 28px; margin-bottom: 24px; position: relative; overflow: hidden;
   }
+  .welcome-banner::after { content: "道場"; position: absolute; right: 20px; bottom: -20px; font-size: 8rem; color: rgba(255,255,255,0.015); font-weight: 900; pointer-events: none; }
+  .welcome-banner h3 { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 8px; }
+  .welcome-banner p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; max-width: 600px; }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 18px; text-align: center; }
+  .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--accent-gold); margin-bottom: 4px; font-family: monospace; }
+  .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+
+  .quick-actions-panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; }
+  .section-heading { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+
+  .quick-links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .quick-link-tile {
+    background: var(--bg-card); border: 1px solid var(--border-subtle); padding: 16px; border-radius: 8px;
+    text-align: left; cursor: pointer; transition: all 0.2s; color: var(--text-main); display: block; text-decoration: none;
+  }
+  .quick-link-tile:hover { border-color: var(--accent-gold); background: #1a1a20; transform: translateY(-2px); }
+  .quick-link-tile h4 { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .quick-link-tile p { font-size: 0.75rem; color: var(--text-muted); }
+
+  /* ---------- PAGE 2: CHECK-IN STEPS ---------- */
+  .accordion-section { margin-bottom: 16px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-surface); overflow: hidden; }
+  .accordion-header {
+    padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+    background: var(--bg-surface); transition: background 0.15s; user-select: none;
+  }
+  .accordion-header:hover { background: var(--bg-card); }
+  .accordion-title { font-size: 1rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
+  .accordion-content { padding: 20px; border-top: 1px solid var(--border-subtle); background: var(--bg-deep); display: none; }
+  .accordion-section.expanded .accordion-content { display: block; }
+  .chevron { transition: transform 0.2s; font-size: 0.8rem; color: var(--text-muted); }
+  .accordion-section.expanded .chevron { transform: rotate(180deg); }
+
+  /* ---------- PAGE 4: INFRACTION TACTICAL CENTER ---------- */
+  .tactical-selector-box { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .tactical-flow { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+  .flow-step-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; position: relative; }
+  .flow-step-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-gold); font-weight: 700; margin-bottom: 6px; }
+
+  /* ---------- PAGE 5: CLIENT POLICY LIBRARY ---------- */
+  .client-grid-layout { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
+  @media(max-width: 900px) { .client-grid-layout { grid-template-columns: 1fr; } }
+  
+  .client-list-sidebar { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; max-height: 600px; overflow-y: auto; padding: 12px; }
+  .client-item { padding: 12px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; transition: all 0.15s; }
+  .client-item:hover { background: var(--bg-card); color: #fff; }
+  .client-item.active { background: var(--accent-gold); color: #000; font-weight: 700; }
+
+  .client-details-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px; }
+  .policy-property-row { display: grid; grid-template-columns: 180px 1fr; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); font-size: 0.85rem; }
+  .policy-property-row:last-child { border-bottom: none; }
+  .property-key { color: var(--text-muted); font-weight: 600; }
+  .property-val { color: #fff; font-weight: 600; }
+
+  /* ---------- TABLES ---------- */
+  .dojo-table-wrapper { width: 100%; overflow-x: auto; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; }
+  .dojo-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+  .dojo-table th { background: #16161c; padding: 14px 16px; color: var(--text-muted); font-weight: 700; border-bottom: 1px solid var(--border-subtle); white-space: nowrap; }
+  .dojo-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: #e4e4e7; }
+  .dojo-table tbody tr:hover td { background: var(--bg-card); }
+  .dojo-table tbody tr:last-child td { border-bottom: none; }
+
+  /* Utilities */
+  .text-muted { color: var(--text-muted); }
+  .mt-4 { margin-top: 16px; }
+  .mb-4 { margin-bottom: 16px; }
+  .flex { display: flex; }
+  .justify-between { justify-content: space-between; }
+  .items-center { align-items: center; }
+  .gap-2 { gap: 8px; }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
 </style>
 </head>
 <body>
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
+<div class="dojo-atmosphere"></div>
+
+<div class="app-container">
+  
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar">
     <div class="sidebar-header">
-      <div class="brand-logo-container">
-        <span style="color:#000; font-weight:800; font-size:1.2rem; letter-spacing:1px;">FIVEACTS</span>
-      </div>
-      <h1>Certiverse Proctor Hub</h1>
-      <p>Operations Command Center</p>
+      <div class="clan-seal">FiveActs Dojo</div>
+      <div class="dojo-title">Proctor Command</div>
+      <div class="dojo-subtitle">Meiji Era Security Archive</div>
     </div>
 
-    <div class="view-selectors">
-      <button class="view-btn active" onclick="switchView('dashboard', this)">📋 All Modules View</button>
+    <div class="nav-scroll">
+      <div class="nav-group-title">Main Hall</div>
+      <div class="nav-item active" onclick="switchPage('home', this)">
+        <span>🏯 Home / Command Center</span>
+      </div>
+
+      <div class="nav-group-title">Training Scrolls</div>
+      <div class="nav-item" onclick="switchPage('checkin', this)">
+        <span>📜 Check-In Steps</span>
+        <span class="nav-badge" id="count-checkin">13</span>
+      </div>
+      <div class="nav-item" onclick="switchPage('canned', this)">
+        <span>💬 Canned Messages</span>
+        <span class="nav-badge" id="count-canned">12</span>
+      </div>
+
+      <div class="nav-group-title">Clan Records</div>
+      <div class="nav-item" onclick="switchPage('infractions', this)">
+        <span>⚖ Infraction Thresholds</span>
+        <span class="nav-badge" id="count-infractions">23</span>
+      </div>
+      <div class="nav-item" onclick="switchPage('policies', this)">
+        <span>🏛 Client Policy Library</span>
+        <span class="nav-badge" id="count-policies">16</span>
+      </div>
+      <div class="nav-item" onclick="switchPage('faq', this)">
+        <span>📖 Wisdom Library (FAQ)</span>
+        <span class="nav-badge" id="count-faq">7</span>
+      </div>
     </div>
 
-    <div class="nav-label">Quick Jump</div>
-    <ul class="nav-links">
-      <li><a href="#section-checkin" onclick="switchView('dashboard')">Check-In Steps (OS Spécific)</a></li>
-      <li><a href="#section-canned" onclick="switchView('dashboard')">Canned Messages</a></li>
-      <li><a href="#section-policies" onclick="switchView('dashboard')">Client Policies</a></li>
-      <li><a href="#section-infractions" onclick="switchView('dashboard')">Infraction Matrix</a></li>
-      <li><a href="#section-faq" onclick="switchView('dashboard')">Certiverse FAQ</a></li>
-    </ul>
-
-    <div class="sidebar-footer">FiveActs v2.6 &bull; Proctoring Hub</div>
-  </div>
-
-  <!-- MAIN CONTENT -->
-  <div class="main-content">
-    <div class="search-wrapper">
-      <input type="text" id="globalSearch" class="search-input" placeholder="Search across all spiels, policies, infractions, and FAQs..." onkeyup="filterContent()">
-      <div id="searchCount" class="search-count"></div>
+    <div class="sidebar-footer">
+      <span>Secure Proctor Hub</span>
+      <span>v3.0</span>
     </div>
+  </aside>
 
-    <!-- DASHBOARD / ALL MODULES VIEW -->
-    <div id="dashboardView" class="dashboard-view active">
+  <!-- MAIN VIEWPORT -->
+  <main class="main-viewport">
+    
+    <header class="top-command-bar">
+      <div class="page-indicator">
+        <h2 id="current-page-title">🏯 Home / Command Center</h2>
+        <p id="current-page-desc">Operational dashboard and real-time proctoring metrics.</p>
+      </div>
+      <div class="utc-clock-badge" id="utc-clock">
+        <span>🕒 UTC --:--:--</span>
+      </div>
+    </header>
 
-      <!-- 1. CHECK-IN STEPS (SEPARATED BY OS, NO DROPDOWNS) -->
-      <div id="section-checkin" class="section-container" data-category="checkin os windows mac linux setup">
-        <div class="section-title">
-          <span>System Verification & Check-In Steps</span>
-          <span class="section-count">OS Specific</span>
+    <div class="content-area">
+
+      <!-- ================= PAGE 1: HOME ================= -->
+      <div id="page-home" class="page-view active">
+        <div class="welcome-banner">
+          <h3>Welcome to the FiveActs Proctor Dojo</h3>
+          <p>Discipline, precision, and uncompromised security. Access complete training scrolls, instant canned message libraries, client clan policies, and infraction triage matrices instantly.</p>
         </div>
 
-        <div class="card" data-search="windows task manager background apps checkin">
-          <div class="card-body">
-            <div class="card-tags"><span class="card-tag win">Windows</span></div>
-            <div class="message-text">Please open your Task Manager (Press Ctrl + Shift + Esc) then scroll down slowly until you reach the end of the list to ensure all background applications are closed.</div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="stat-checkin-count">13</div>
+            <div class="stat-label">Check-In Protocols</div>
           </div>
-          <button class="copy-btn" onclick="copyText(this)">Copy Spiel</button>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-policy-count">16</div>
+            <div class="stat-label">Client Policy Vaults</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-infraction-count">23</div>
+            <div class="stat-label">Infraction Thresholds</div>
+          </div>
         </div>
 
-        <div class="card" data-search="mac macos system settings privacy screen audio recording checkin">
-          <div class="card-body">
-            <div class="card-tags"><span class="card-tag mac">Mac (macOS)</span></div>
-            <div class="message-text">Please go to Apple menu > System Settings > Privacy & Security > Screen & System Audio Recording, and ensure your browser or exam application is toggled on. Please also close all open background apps via Command + Tab.</div>
+        <div class="home-grid">
+          <div class="quick-actions-panel">
+            <div class="section-heading">
+              <span>Quick Operational Jump</span>
+            </div>
+            <div class="quick-links-grid">
+              <div class="quick-link-tile" onclick="switchPage('checkin', document.querySelectorAll('.nav-item')[1])">
+                <h4>📜 Check-In Steps</h4>
+                <p>OS specific verification, room scan, and exam release spiels.</p>
+              </div>
+              <div class="quick-link-tile" onclick="switchPage('canned', document.querySelectorAll('.nav-item')[2])">
+                <h4>💬 Canned Messages</h4>
+                <p>Instant command palette for warnings, IDs, and support.</p>
+              </div>
+              <div class="quick-link-tile" onclick="switchPage('infractions', document.querySelectorAll('.nav-item')[3])">
+                <h4>⚖ Infraction Triage</h4>
+                <p>Tactical decision matrix for violations and thresholds.</p>
+              </div>
+              <div class="quick-link-tile" onclick="switchPage('policies', document.querySelectorAll('.nav-item')[4])">
+                <h4>🏛 Client Policy Library</h4>
+                <p>Name match, break policies, and SEB requirements by client.</p>
+              </div>
+            </div>
           </div>
-          <button class="copy-btn" onclick="copyText(this)">Copy Spiel</button>
-        </div>
 
-        <div class="card" data-search="linux terminal system monitor processes checkin">
-          <div class="card-body">
-            <div class="card-tags"><span class="card-tag linux">Linux</span></div>
-            <div class="message-text">Please open your system monitor or terminal to close any unauthorized background processes or applications before we proceed with your exam release.</div>
+          <div class="quick-actions-panel">
+            <div class="section-heading">
+              <span>Emergency Operations Panel</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <button class="action-btn" style="width:100%; justify-content:center; padding:12px;" onclick="copyEmergencySpiel('support')">
+                📋 Copy Emergency Support Email Spiel
+              </button>
+              <button class="action-btn" style="width:100%; justify-content:center; padding:12px; background:var(--accent-crimson); color:#fff;" onclick="copyEmergencySpiel('terminate')">
+                ⚠️ Copy Immediate Termination Spiel
+              </button>
+            </div>
           </div>
-          <button class="copy-btn" onclick="copyText(this)">Copy Spiel</button>
-        </div>
-
-        <div class="card" data-search="id room scan government id verification checkin">
-          <div class="card-body">
-            <div class="card-tags"><span class="card-tag">General ID & Room Scan</span></div>
-            <div class="message-text">We will need to verify your identity. Please hold your valid government-issued ID up to the camera. Once verified, please perform a slow 360-degree room scan including your desk surface.</div>
-          </div>
-          <button class="copy-btn" onclick="copyText(this)">Copy Spiel</button>
         </div>
       </div>
 
-      <!-- 2. CANNED MESSAGES -->
-      <div id="section-canned" class="section-container" data-category="canned messages spiels warnings termination">
-        <div class="section-title">
-          <span>Canned Messages & Tactical Spiels</span>
-          <span class="section-count">Communications</span>
+      <!-- ================= PAGE 2: CHECK-IN STEPS ================= -->
+      <div id="page-checkin" class="page-view">
+        <div class="search-box-container">
+          <span class="search-icon-abs">🔍</span>
+          <input type="text" class="global-search-input" placeholder="Search check-in scrolls (e.g. windows, room scan, ID)..." oninput="filterCheckin(this.value)">
         </div>
 
-        <div class="card" data-search="talking reading aloud mouthing questions warning">
-          <div class="card-body">
-            <div class="card-tags"><span class="card-tag critical">Warning // Talking</span></div>
-            <div class="message-text">Talking or communicating outside of the exam environment is not allowed during your exam, including reading or mouthing questions. Please do not read questions and answers aloud.</div>
-          </div>
-          <button class="copy-btn" onclick="copyText(this)">Copy Spiel</button>
-        </div>
-
-        <div class="card" data-search="face view camera frame warning">
-          <div class="card-body">
-            <div class="card-tags"><span class="card-tag">Warning // Face View</span></div>
-            <div class="message-text">Please ensure your face remains fully within camera view at all times throughout the examination session.</div>
-          </div>
-          <button class="copy-btn" onclick="copyText(this)">Copy Spiel</button>
-        </div>
-
-        <div class="card" data-search="support technical difficulty email assistance">
-          <div class="card-body">
-            <div class="card-tags"><span class="card-tag">Escalation // Support</span></div>
-            <div class="message-text">If you encounter persistent technical difficulties, please email support@certiverse.com for further assistance.</div>
-          </div>
-          <button class="copy-btn" onclick="copyText(this)">Copy Spiel</button>
-        </div>
-
-        <div class="card" data-search="termination violation prohibited application code of conduct">
-          <div class="card-body">
-            <div class="card-tags"><span class="card-tag term">Termination // Violation</span></div>
-            <div class="message-text">Unfortunately, the use of prohibited applications/behavior has been detected, which violates our code of conduct. As a result, this exam will now be terminated. Please email support@certiverse.com for escalation.</div>
-          </div>
-          <button class="copy-btn" onclick="copyText(this)">Copy Spiel</button>
+        <div id="checkin-container">
+          <!-- Populated via JavaScript -->
         </div>
       </div>
 
-      <!-- 3. CLIENT POLICIES -->
-      <div id="section-policies" class="section-container" data-category="client policies rules akylade atlassian bmc hashicorp nvidia">
-        <div class="section-title">
-          <span>Client Policy Database</span>
-          <span class="section-count">Client Rules</span>
+      <!-- ================= PAGE 3: CANNED MESSAGES ================= -->
+      <div id="page-canned" class="page-view">
+        <div class="search-box-container">
+          <span class="search-icon-abs">🔍</span>
+          <input type="text" id="canned-search-input" class="global-search-input" placeholder="Type 'camera', 'ID', 'phone', or search messages..." oninput="filterCannedMessages(this.value)">
         </div>
-        <div class="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>Client</th>
-                <th>Name Change</th>
-                <th>Breaks Policy</th>
-                <th>Name Match</th>
-                <th>SEB Status</th>
-                <th>Documentation / Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>AKYLADE</strong></td><td>ALLOWED</td><td>ONE (1) 5-MIN BREAK</td><td>GOVT ID MATCH</td><td>SEB</td><td>Documentation Not Allowed</td></tr>
-              <tr><td><strong>ATLASSIAN</strong></td><td>NOT ALLOWED</td><td>NONE</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>Documentation Not Allowed</td></tr>
-              <tr><td><strong>BLUE PRISM</strong></td><td>ALLOWED</td><td>NONE</td><td>GOVT ID MATCH</td><td>SEB</td><td>Documentation Not Allowed</td></tr>
-              <tr><td><strong>BMC</strong></td><td>NOT ALLOWED</td><td>ONE (1) 5-MIN BREAK</td><td>GOVT ID MATCH</td><td>SEB</td><td>Documentation Allowed</td></tr>
-              <tr><td><strong>CAMUNDA</strong></td><td>ALLOWED</td><td>NONE</td><td>GOVT ID MATCH</td><td>SEB</td><td>Documentation Not Allowed</td></tr>
-              <tr><td><strong>CASBO</strong></td><td>ALLOWED</td><td>NONE</td><td>GOVT ID MATCH</td><td>SEB</td><td>Documentation Not Allowed</td></tr>
-              <tr><td><strong>DOCUSIGN</strong></td><td>NOT ALLOWED</td><td>NONE</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>Documentation Not Allowed</td></tr>
-              <tr><td><strong>HASHICORP</strong></td><td>NOT ALLOWED</td><td>NONE (Vault Prof: 1x 15-min break)</td><td>GOVT ID MATCH</td><td>NON-SEB</td><td>Documentation Not Allowed</td></tr>
-              <tr><td><strong>INTERSYSTEMS</strong></td><td>NOT ALLOWED</td><td>ONE (1) 10-MIN BREAK</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>Depends on Exam</td></tr>
-              <tr><td><strong>NRPP</strong></td><td>ALLOWED</td><td>ONE (1) 15-MIN BREAK</td><td>NICKNAMES ALLOWED</td><td>SEB</td><td>Documentation Allowed</td></tr>
-              <tr><td><strong>NVIDIA</strong></td><td>ALLOWED</td><td>NONE (Beta 180: Two 5-min breaks)</td><td>GOVT ID MATCH</td><td>SEB</td><td>Documentation Not Allowed</td></tr>
-              <tr><td><strong>OPEN TEXT</strong></td><td>NOT ALLOWED</td><td>NONE</td><td>GOVT ID MATCH</td><td>SEB</td><td>Documentation Allowed</td></tr>
-              <tr><td><strong>PROJECT SUCCESS</strong></td><td>ALLOWED</td><td>NONE</td><td>GOVT ID MATCH</td><td>SEB</td><td>Documentation Not Allowed</td></tr>
-              <tr><td><strong>SIDEFX</strong></td><td>ALLOWED</td><td>NONE</td><td>GOVT ID MATCH</td><td>SEB</td><td>Textbooks Allowed</td></tr>
-              <tr><td><strong>VASTDATA</strong></td><td>ALLOWED</td><td>NONE</td><td>GOVT ID MATCH</td><td>SEB</td><td>Documentation Not Allowed</td></tr>
-              <tr><td><strong>WELLSKY</strong></td><td>ALLOWED</td><td>UNLIMITED (10-20 MINS)</td><td>GOVT ID MATCH</td><td>SEB</td><td>Textbooks Allowed</td></tr>
-            </tbody>
-          </table>
+
+        <div class="filter-pills" id="canned-filters">
+          <div class="filter-pill active" onclick="filterCannedCategory('all', this)">All Messages</div>
+          <div class="filter-pill" onclick="filterCannedCategory('warning', this)">Warnings</div>
+          <div class="filter-pill" onclick="filterCannedCategory('support', this)">Technical Support</div>
+          <div class="filter-pill" onclick="filterCannedCategory('termination', this)">Terminations</div>
+        </div>
+
+        <div id="canned-messages-container">
+          <!-- Populated via JavaScript -->
         </div>
       </div>
 
-      <!-- 4. INFRACTION MATRIX -->
-      <div id="section-infractions" class="section-container" data-category="infractions matrix violations threshold severity">
-        <div class="section-title">
-          <span>Infractions Matrix & Thresholds</span>
-          <span class="section-count">Violations</span>
+      <!-- ================= PAGE 4: INFRACTION THRESHOLD CENTER ================= -->
+      <div id="page-infractions" class="page-view">
+        
+        <!-- Tactical Decision Simulator -->
+        <div class="tactical-selector-box">
+          <div class="section-heading">
+            <span>⚡ Tactical Response Simulator (Quick Triage)</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div>
+              <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; display:block; margin-bottom:6px;">Select Infraction:</label>
+              <select id="tactical-select" class="global-search-input" style="padding:10px 14px;" onchange="updateTacticalSimulation()">
+                <!-- Populated via JS -->
+              </select>
+            </div>
+            <div id="tactical-output-summary" style="display:flex; flex-direction:column; justify-content:center; background:var(--bg-card); padding:12px; border-radius:8px; border:1px solid var(--border-subtle);">
+              <span style="font-size:0.75rem; color:var(--accent-gold); font-weight:700;">LIVE ACTION PATHWAY</span>
+              <span id="tactical-summary-text" style="font-size:0.85rem; color:#fff; margin-top:4px;">Select an infraction on the left to generate the tactical protocol.</span>
+            </div>
+          </div>
         </div>
-        <div class="table-responsive">
-          <table>
+
+        <div class="search-box-container">
+          <span class="search-icon-abs">🔍</span>
+          <input type="text" class="global-search-input" placeholder="Search infractions by name or category..." oninput="filterInfractionsTable(this.value)">
+        </div>
+
+        <div class="filter-pills">
+          <div class="filter-pill active" onclick="filterInfractionSeverity('all', this)">All Severities</div>
+          <div class="filter-pill" onclick="filterInfractionSeverity('minor', this)">Minor</div>
+          <div class="filter-pill" onclick="filterInfractionSeverity('major', this)">Major</div>
+        </div>
+
+        <div class="dojo-table-wrapper">
+          <table class="dojo-table" id="infractions-table">
             <thead>
               <tr>
                 <th>Violation Name</th>
                 <th>Context</th>
                 <th>Category</th>
                 <th>Severity</th>
-                <th class="num-cell">Threshold</th>
+                <th style="text-align:center;">Threshold</th>
               </tr>
             </thead>
-            <tbody>
-              <tr><td>Another person in the room</td><td>Check-in, Testing</td><td>Prohibited Behavior</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">2</td></tr>
-              <tr><td>Books / Supplemental Materials</td><td>Check-in, Testing</td><td>Prohibited Items</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">2</td></tr>
-              <tr><td>Camera obstruction / issues</td><td>Check-in, Testing</td><td>Prohibited Electronic Device</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">2</td></tr>
-              <tr><td>Desk is not cleared off</td><td>Check-in, Testing</td><td>Check-in</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">2</td></tr>
-              <tr><td>Does not do complete scan (360, desk, under)</td><td>Check-in</td><td>Check-in</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">1</td></tr>
-              <tr><td>Eating/drinking without approved Special Accom</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">1</td></tr>
-              <tr><td>Environment or camera view too dark</td><td>Check-in</td><td>Check-in</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">2</td></tr>
-              <tr><td>Face coverings</td><td>Check-in</td><td>Check-in</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">2</td></tr>
-              <tr><td>Face out of view</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">2</td></tr>
-              <tr><td>Failure to return from break</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge badge-major">Major</span></td><td class="num-cell">0</td></tr>
-              <tr><td>Headphones/Earbuds</td><td>Check-in</td><td>Prohibited Electronic Device</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">1</td></tr>
-              <tr><td>Headwear</td><td>Check-in</td><td>Prohibited Items</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">1</td></tr>
-              <tr><td>Internal environment too loud</td><td>Check-in, Testing</td><td>Prohibited Behavior</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">2</td></tr>
-              <tr><td>Leaves testing area</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">1</td></tr>
-              <tr><td>Looking elsewhere / wandering eyes</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">4</td></tr>
-              <tr><td>Mobile phone in use</td><td>Testing</td><td>Prohibited Electronic Device</td><td><span class="badge badge-major">Major</span></td><td class="num-cell">0</td></tr>
-              <tr><td>Mobile phone visible</td><td>Check-in</td><td>Prohibited Electronic Device</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">1</td></tr>
-              <tr><td>Not following proctor instructions</td><td>Check-in, Testing</td><td>Prohibited Behavior</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">2</td></tr>
-              <tr><td>Proctor harassment</td><td>Check-in, Testing</td><td>Prohibited Behavior</td><td><span class="badge badge-major">Major</span></td><td class="num-cell">0</td></tr>
-              <tr><td>Remote Desktop Applications</td><td>Check-in, Testing</td><td>Prohibited Electronic Device</td><td><span class="badge badge-major">Major</span></td><td class="num-cell">0</td></tr>
-              <tr><td>Secondary device (computer, laptop)</td><td>Check-in</td><td>Prohibited Electronic Device</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">1</td></tr>
-              <tr><td>Smart Watch</td><td>Check-in</td><td>Prohibited Electronic Device</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">1</td></tr>
-              <tr><td>Talking aloud / to others</td><td>Testing</td><td>Prohibited Behavior</td><td><span class="badge badge-minor">Minor</span></td><td class="num-cell">2</td></tr>
+            <tbody id="infractions-tbody">
+              <!-- Populated via JS -->
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- 5. CERTIVERSE FAQ -->
-      <div id="section-faq" class="section-container" data-category="faq certiverse general questions help knowledge base">
-        <div class="section-title">
-          <span>Certiverse General FAQ Questions</span>
-          <span class="section-count"><a href="https://help.certiverse.com/portal/en/kb/certiverse" target="_blank" style="color:var(--accent); text-decoration:none;">Visit Portal ↗</a></span>
+      <!-- ================= PAGE 5: CLIENT POLICY LIBRARY ================= -->
+      <div id="page-policies" class="page-view">
+        <div class="search-box-container">
+          <span class="search-icon-abs">🔍</span>
+          <input type="text" class="global-search-input" placeholder="Search client policies..." oninput="filterClientList(this.value)">
         </div>
 
-        <div class="card" data-search="missed exam rescheduling technical disconnection support">
-          <div class="card-body">
-            <div class="card-tags"><span class="card-tag">FAQ // Rescheduling</span></div>
-            <div class="message-text"><strong>Q: What should I do if I miss my exam or experience severe technical disconnection?</strong><br>Candidates who miss their appointment or face unresolvable drop-offs must contact support@certiverse.com to request rescheduling or ticket review.</div>
+        <div class="client-grid-layout">
+          <div class="client-list-sidebar" id="client-sidebar-list">
+            <!-- Populated via JS -->
           </div>
-          <button class="copy-btn" onclick="copyText(this)">Copy FAQ</button>
-        </div>
 
-        <div class="card" data-search="system requirements webcam microphone internet browser seb">
-          <div class="card-body">
-            <div class="card-tags"><span class="card-tag">FAQ // System Requirements</span></div>
-            <div class="message-text"><strong>Q: What are the minimum system requirements for taking a Certiverse exam?</strong><br>A working webcam, microphone, stable high-speed internet connection, and a compatible modern web browser or Secure Exam Browser (SEB) depending on client policy.</div>
+          <div class="client-details-card" id="client-details-pane">
+            <!-- Populated via JS -->
           </div>
-          <button class="copy-btn" onclick="copyText(this)">Copy FAQ</button>
-        </div>
-
-        <div class="card" data-search="identification government photo id full legal name">
-          <div class="card-body">
-            <div class="card-tags"><span class="card-tag">FAQ // Identification</span></div>
-            <div class="message-text"><strong>Q: What forms of ID are accepted during check-in?</strong><br>A valid government-issued photo ID (Passport, Driver's License, or National ID) that clearly displays your full legal name matching your exam reservation.</div>
-          </div>
-          <button class="copy-btn" onclick="copyText(this)">Copy FAQ</button>
         </div>
       </div>
 
-      <div id="emptyState" class="empty-state">No matching items found.</div>
+      <!-- ================= PAGE 6: FAQ KNOWLEDGE CENTER ================= -->
+      <div id="page-faq" class="page-view">
+        <div class="search-box-container">
+          <span class="search-icon-abs">🔍</span>
+          <input type="text" class="global-search-input" placeholder="Search knowledge base (e.g. ID verification, room scan, SEB)..." oninput="filterFaq(this.value)">
+        </div>
+
+        <div class="filter-pills" id="faq-filters">
+          <div class="filter-pill active" onclick="filterFaqCategory('all', this)">All Articles</div>
+          <div class="filter-pill" onclick="filterFaqCategory('ID Verification', this)">ID Verification</div>
+          <div class="filter-pill" onclick="filterFaqCategory('Room Scans', this)">Room Scans</div>
+          <div class="filter-pill" onclick="filterFaqCategory('Technical Issues', this)">Technical Issues</div>
+          <div class="filter-pill" onclick="filterFaqCategory('Break Policies', this)">Break Policies</div>
+          <div class="filter-pill" onclick="filterFaqCategory('SEB', this)">SEB</div>
+        </div>
+
+        <div id="faq-container">
+          <!-- Populated via JS -->
+        </div>
+      </div>
 
     </div>
-  </div>
+  </main>
+</div>
 
-  <script>
-    function switchView(viewId, btn) {
-      // Single view mode handler kept compatible with sidebar
+<script>
+  /* ================= DATA REPOSITORY ================= */
+  
+  const checkinData = [
+    { title: "1. Welcome", category: "Welcome", spiel: "Welcome to your certification exam today! My name is your proctor. Before we begin, I will guide you through our standard security verification process." },
+    { title: "2. Identification Verification", category: "Identification", spiel: "We will need to verify your identity. Please hold your valid government-issued ID up to the camera so I can inspect and record your credentials." },
+    { title: "3. System Verification (Windows)", category: "System", spiel: "Please open your Task Manager (Press Ctrl + Shift + Esc) then scroll down slowly until you reach the end of the list to ensure all background applications are closed.", tag: "win" },
+    { title: "3. System Verification (Mac)", category: "System", spiel: "Please go to Apple menu > System Settings > Privacy & Security > Screen & System Audio Recording, and ensure your browser or exam application is toggled on. Please also close all open background apps via Command + Tab.", tag: "mac" },
+    { title: "3. System Verification (Linux)", category: "System", spiel: "Please open your system monitor or terminal to close any unauthorized background processes or applications before we proceed with your exam release.", tag: "linux" },
+    { title: "4. Clear Desk", category: "Desk", spiel: "Please ensure your desk and surrounding area are completely clear of all unauthorized items, papers, notes, and electronic devices." },
+    { title: "5. Room Scan", category: "Room", spiel: "Please perform a slow 360-degree room scan with your camera, including your desk surface, chair, and the floor underneath." },
+    { title: "6. Exam Release", category: "Release", spiel: "All checks are complete. I am now releasing your examination. You may begin. Good luck!" },
+    { title: "7. Miscellaneous", category: "Misc", spiel: "Please ensure you remain focused on your monitor and maintain proper posture throughout the testing session." },
+    { title: "8. Warnings", category: "Warnings", spiel: "Talking or communicating outside of the exam environment is not allowed during your exam, including reading or mouthing questions. Please do not read questions and answers aloud." },
+    { title: "9. Technical Support", category: "Support", spiel: "If you encounter persistent technical difficulties or disconnects, please email support@certiverse.com for further assistance." },
+    { title: "11. Non-SEB Exams", category: "Browser", spiel: "For this non-SEB examination, please ensure you do not open secondary browser windows or external tabs outside the approved testing interface." },
+    { title: "12. Termination Messages", category: "Termination", spiel: "Unfortunately, the use of prohibited applications/behavior has been detected, which violates our code of conduct. As a result, this exam will now be terminated. Please email support@certiverse.com for escalation." },
+    { title: "13. SEB — Secure Exam Browser", category: "SEB", spiel: "You are currently running in Secure Exam Browser mode. All system shortcuts and unauthorized applications are locked." }
+  ];
+
+  const cannedMessagesData = [
+    { category: "warning", tags: ["camera", "face"], text: "Please ensure your face remains fully within camera view at all times throughout the examination session." },
+    { category: "warning", tags: ["talking", "audio"], text: "Talking or communicating outside of the exam environment is not allowed during your exam, including reading or mouthing questions." },
+    { category: "warning", tags: ["phone", "device"], text: "Mobile phones and electronic devices are strictly prohibited. Please put your phone away out of arm's reach immediately." },
+    { category: "support", tags: ["email", "help"], text: "If you encounter persistent technical difficulties, please email support@certiverse.com for further assistance." },
+    { category: "termination", tags: ["violation", "code"], text: "Unfortunately, the use of prohibited applications/behavior has been detected, which violates our code of conduct. As a result, this exam will now be terminated." },
+    { category: "warning", tags: ["eyes", "focus"], text: "Please keep your eyes focused on the exam monitor. Looking away repeatedly is flagged by our security protocols." },
+    { category: "support", tags: ["connection", "reconnect"], text: "We noticed a temporary disconnection. Please remain calm while we attempt to re-establish your secure connection." },
+    { category: "warning", tags: ["desk", "items"], text: "Please clear all loose papers, books, and writing utensils from your immediate desk workspace." }
+  ];
+
+  const infractionsData = [
+    { name: "Another person in the room", context: "Check-in, Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 },
+    { name: "Books / Supplemental Materials", context: "Check-in, Testing", category: "Prohibited Items", severity: "minor", threshold: 2 },
+    { name: "Camera obstruction / issues", context: "Check-in, Testing", category: "Prohibited Device", severity: "minor", threshold: 2 },
+    { name: "Desk is not cleared off", context: "Check-in, Testing", category: "Check-in", severity: "minor", threshold: 2 },
+    { name: "Does not do complete scan (360, desk, under)", context: "Check-in", category: "Check-in", severity: "minor", threshold: 1 },
+    { name: "Eating/drinking without approved Special Accom", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 1 },
+    { name: "Environment or camera view too dark", context: "Check-in", category: "Check-in", severity: "minor", threshold: 2 },
+    { name: "Face coverings", context: "Check-in", category: "Check-in", severity: "minor", threshold: 2 },
+    { name: "Face out of view", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 },
+    { name: "Failure to return from break", context: "Testing", category: "Prohibited Behavior", severity: "major", threshold: 0 },
+    { name: "Headphones/Earbuds", context: "Check-in", category: "Prohibited Device", severity: "minor", threshold: 1 },
+    { name: "Headwear", context: "Check-in", category: "Prohibited Items", severity: "minor", threshold: 1 },
+    { name: "Internal environment too loud", context: "Check-in, Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 },
+    { name: "Leaves testing area", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 1 },
+    { name: "Looking elsewhere / wandering eyes", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 4 },
+    { name: "Mobile phone in use", context: "Testing", category: "Prohibited Device", severity: "major", threshold: 0 },
+    { name: "Mobile phone visible", context: "Check-in", category: "Prohibited Device", severity: "minor", threshold: 1 },
+    { name: "Not following proctor instructions", context: "Check-in, Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 },
+    { name: "Proctor harassment", context: "Check-in, Testing", category: "Prohibited Behavior", severity: "major", threshold: 0 },
+    { name: "Remote Desktop Applications", context: "Check-in, Testing", category: "Prohibited Device", severity: "major", threshold: 0 },
+    { name: "Secondary device (computer, laptop)", context: "Check-in", category: "Prohibited Device", severity: "minor", threshold: 1 },
+    { name: "Smart Watch", context: "Check-in", category: "Prohibited Device", severity: "minor", threshold: 1 },
+    { name: "Talking aloud / to others", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 }
+  ];
+
+  const clientPoliciesData = [
+    { name: "AKYLADE", nameMatch: "Govt ID Match", breakPolicy: "One (1) 5-min break", seb: "SEB Required", notes: "Documentation Not Allowed" },
+    { name: "ATLASSIAN", nameMatch: "Nicknames Allowed", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
+    { name: "BLUE PRISM", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
+    { name: "BMC", nameMatch: "Govt ID Match", breakPolicy: "One (1) 5-min break", seb: "SEB Required", notes: "Documentation Allowed" },
+    { name: "CAMUNDA", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
+    { name: "CASBO", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
+    { name: "DOCUSIGN", nameMatch: "Nicknames Allowed", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
+    { name: "HASHICORP", nameMatch: "Govt ID Match", breakPolicy: "None (Vault Prof: 1x 15-min break)", seb: "Non-SEB", notes: "Documentation Not Allowed" },
+    { name: "INTERSYSTEMS", nameMatch: "Nicknames Allowed", breakPolicy: "One (1) 10-min break", seb: "SEB Required", notes: "Depends on Exam" },
+    { name: "NRPP", nameMatch: "Nicknames Allowed", breakPolicy: "One (1) 15-min break", seb: "SEB Required", notes: "Documentation Allowed" },
+    { name: "NVIDIA", nameMatch: "Govt ID Match", breakPolicy: "None (Beta 180: Two 5-min breaks)", seb: "SEB Required", notes: "Documentation Not Allowed" },
+    { name: "OPEN TEXT", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Allowed" },
+    { name: "PROJECT SUCCESS", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
+    { name: "SIDEFX", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Textbooks Allowed" },
+    { name: "VASTDATA", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
+    { name: "WELLSKY", nameMatch: "Govt ID Match", breakPolicy: "Unlimited (10-20 mins)", seb: "SEB Required", notes: "Textbooks Allowed" }
+  ];
+
+  const faqData = [
+    { category: "ID Verification", question: "What forms of ID are accepted during check-in?", answer: "A valid government-issued photo ID (Passport, Driver's License, or National ID) that clearly displays your full legal name matching your exam reservation." },
+    { category: "Room Scans", question: "How should a candidate conduct a 360-degree room scan?", answer: "The candidate must slowly pan their webcam or laptop around the entire room, showing all four walls, the desk surface, underneath the desk, and chair." },
+    { category: "Technical Issues", question: "What should I do if a candidate experiences severe technical disconnection?", answer: "Candidates who miss their appointment or face unresolvable drop-offs must contact support@certiverse.com to request rescheduling or ticket review." },
+    { category: "Break Policies", question: "Are unscheduled breaks permitted during exams?", answer: "Unscheduled breaks are generally not permitted unless explicitly authorized by client policy or approved special accommodations." },
+    { category: "SEB", question: "What is Secure Exam Browser (SEB) mode?", answer: "SEB is a hardened browser environment that locks down the candidate workstation, preventing access to unauthorized websites, files, and system shortcuts." },
+    { category: "Technical Issues", question: "What are the minimum system requirements?", answer: "A working webcam, microphone, stable high-speed internet connection, and a compatible modern web browser or Secure Exam Browser." },
+    { category: "ID Verification", question: "What if the candidate's name on ID differs slightly?", answer: "Check the client policy library. Some clients allow nicknames while others strictly require an exact government ID match." }
+  ];
+
+  /* ================= APP INITIALIZATION ================= */
+
+  window.addEventListener('DOMContentLoaded', () => {
+    initClock();
+    renderCheckin(checkinData);
+    renderCanned(cannedMessagesData);
+    renderInfractions(infractionsData);
+    renderClients();
+    renderFaq(faqData);
+    populateTacticalSelect();
+  });
+
+  function initClock() {
+    setInterval(() => {
+      const now = new Date();
+      const utcString = now.toUTCString().split(' ')[4] + ' UTC';
+      document.getElementById('utc-clock').innerHTML = `<span>🕒 ${utcString}</span>`;
+    }, 1000);
+  }
+
+  function switchPage(pageId, navElement) {
+    document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    document.getElementById(`page-${pageId}`).classList.add('active');
+    if (navElement) navElement.classList.add('active');
+
+    const titles = {
+      home: ["🏯 Home / Command Center", "Operational dashboard and real-time proctoring metrics."],
+      checkin: ["📜 Check-In Steps", "Step-by-step verification scrolls and OS specific instructions."],
+      canned: ["💬 Canned Messages", "Universal message repository for fast proctor communication."],
+      infractions: ["⚖ Infraction Threshold Center", "Tactical decision matrix for violations and threshold monitoring."],
+      policies: ["🏛 Client Policy Library", "Source of truth for client name match, breaks, and SEB requirements."],
+      faq: ["📖 Wisdom Library (FAQ)", "Centralized Certiverse knowledge base and searchable archives."]
+    };
+
+    document.getElementById('current-page-title').innerText = titles[pageId][0];
+    document.getElementById('current-page-desc').innerText = titles[pageId][1];
+  }
+
+  /* ================= RENDER & INTERACTION FUNCTIONS ================= */
+
+  function renderCheckin(data) {
+    const container = document.getElementById('checkin-container');
+    container.innerHTML = data.map((item, index) => `
+      <div class="accordion-section ${index === 0 ? 'expanded' : ''}" id="checkin-sec-${index}">
+        <div class="accordion-header" onclick="toggleAccordion('checkin-sec-${index}')">
+          <div class="accordion-title">
+            <span>${item.title}</span>
+            ${item.tag ? `<span class="tag">${item.tag}</span>` : ''}
+          </div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p style="font-size:0.9rem; line-height:1.6; color:#e4e4e7; margin-bottom:14px;">${item.spiel}</p>
+          <button class="action-btn" onclick="copyText(this, \`${item.spiel}\`)">
+            <span>📋 Copy Spiel</span>
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function toggleAccordion(id) {
+    const sec = document.getElementById(id);
+    sec.classList.toggle('expanded');
+  }
+
+  function filterCheckin(query) {
+    const filtered = checkinData.filter(i => (i.title + " " + i.spiel + " " + i.category).toLowerCase().includes(query.toLowerCase()));
+    renderCheckin(filtered);
+  }
+
+  function renderCanned(data) {
+    const container = document.getElementById('canned-messages-container');
+    container.innerHTML = data.map(item => `
+      <div class="dojo-card">
+        <div class="card-header-row">
+          <div class="card-tags">
+            <span class="tag">${item.category}</span>
+            ${item.tags.map(t => `<span class="tag" style="background:#27272f;">#${t}</span>`).join('')}
+          </div>
+          <button class="action-btn" onclick="copyText(this, \`${item.text}\`)">📋 Copy Spiel</button>
+        </div>
+        <p style="font-size:0.9rem; line-height:1.6; color:#e4e4e7;">${item.text}</p>
+      </div>
+    `).join('');
+  }
+
+  function filterCannedMessages(query) {
+    const q = query.toLowerCase();
+    const filtered = cannedMessagesData.filter(i => i.text.toLowerCase().includes(q) || i.tags.some(t => t.includes(q)) || i.category.includes(q));
+    renderCanned(filtered);
+  }
+
+  function filterCannedCategory(category, el) {
+    document.querySelectorAll('#canned-filters .filter-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    if (category === 'all') {
+      renderCanned(cannedMessagesData);
+    } else {
+      renderCanned(cannedMessagesData.filter(i => i.category === category));
     }
+  }
 
-    function copyText(button) {
-      const card = button.closest('.card');
-      const text = card.querySelector('.message-text').innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        const originalText = button.innerText;
-        button.innerText = 'Copied!';
-        button.classList.add('copied');
-        setTimeout(() => {
-          button.innerText = originalText;
-          button.classList.remove('copied');
-        }, 1800);
-      });
+  function renderInfractions(data) {
+    const tbody = document.getElementById('infractions-tbody');
+    tbody.innerHTML = data.map(i => `
+      <tr>
+        <td><strong>${i.name}</strong></td>
+        <td>${i.context}</td>
+        <td>${i.category}</td>
+        <td><span class="tag ${i.severity}">${i.severity}</span></td>
+        <td style="text-align:center; font-family:monospace; font-weight:700;">${i.threshold}</td>
+      </tr>
+    `).join('');
+  }
+
+  function filterInfractionsTable(query) {
+    const q = query.toLowerCase();
+    const filtered = infractionsData.filter(i => i.name.toLowerCase().includes(q) || i.category.toLowerCase().includes(q));
+    renderInfractions(filtered);
+  }
+
+  function filterInfractionSeverity(severity, el) {
+    document.querySelectorAll('#page-infractions .filter-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    if (severity === 'all') {
+      renderInfractions(infractionsData);
+    } else {
+      renderInfractions(infractionsData.filter(i => i.severity === severity));
     }
+  }
 
-    function filterContent() {
-      const query = document.getElementById('globalSearch').value.toLowerCase().trim();
-      const sections = document.querySelectorAll('.section-container');
-      let totalVisible = 0;
+  function populateTacticalSelect() {
+    const select = document.getElementById('tactical-select');
+    select.innerHTML = infractionsData.map((i, index) => `<option value="${index}">${i.name} (${i.severity.toUpperCase()})</option>`).join('');
+    updateTacticalSimulation();
+  }
 
-      sections.forEach(section => {
-        let sectionHasMatch = false;
-        
-        // Filter cards
-        const cards = section.querySelectorAll('.card');
-        cards.forEach(card => {
-          const text = (card.innerText + " " + card.getAttribute('data-search')).toLowerCase();
-          if (text.includes(query) || query === '') {
-            card.style.display = 'flex';
-            sectionHasMatch = true;
-            totalVisible++;
-          } else {
-            card.style.display = 'none';
-          }
-        });
+  function updateTacticalSimulation() {
+    const idx = document.getElementById('tactical-select').value;
+    const item = infractionsData[idx];
+    const summaryText = document.getElementById('tactical-summary-text');
+    summaryText.innerHTML = `Violation: <strong>${item.name}</strong> | Severity: <span style="color:${item.severity === 'major' ? '#fca5a5' : '#fcd34d'}">${item.severity.toUpperCase()}</span> | Threshold: ${item.threshold} | Action: ${item.threshold === 0 ? 'Immediate Escalation / Termination' : 'Issue Warning & Track Count'}`;
+  }
 
-        // Filter table rows if table exists in section
-        const rows = section.querySelectorAll('tbody tr');
-        rows.forEach(row => {
-          const text = row.innerText.toLowerCase();
-          if (text.includes(query) || query === '') {
-            row.style.display = '';
-            sectionHasMatch = true;
-            totalVisible++;
-          } else {
-            row.style.display = 'none';
-          }
-        });
+  function renderClients() {
+    const sidebar = document.getElementById('client-sidebar-list');
+    sidebar.innerHTML = clientPoliciesData.map((c, index) => `
+      <div class="client-item ${index === 0 ? 'active' : ''}" onclick="selectClient(${index}, this)">${c.name}</div>
+    `).join('');
+    selectClient(0, sidebar.children[0]);
+  }
 
-        section.style.display = (sectionHasMatch || query === '') ? 'block' : 'none';
-      });
+  function selectClient(index, el) {
+    document.querySelectorAll('.client-item').forEach(i => i.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const client = clientPoliciesData[index];
+    const pane = document.getElementById('client-details-pane');
+    pane.innerHTML = `
+      <div class="section-heading" style="margin-bottom:20px;">
+        <span>🏛 Client Clan Record: ${client.name}</span>
+        <button class="action-btn" onclick="copyText(this, 'Client: ${client.name}\\nName Match: ${client.nameMatch}\\nBreak Policy: ${client.breakPolicy}\\nSEB: ${client.seb}\\nNotes: ${client.notes}')">📋 Copy Policy Record</button>
+      </div>
+      <div class="policy-property-row">
+        <div class="property-key">Client Name</div>
+        <div class="property-val">${client.name}</div>
+      </div>
+      <div class="policy-property-row">
+        <div class="property-key">Name Match Rules</div>
+        <div class="property-val">${client.nameMatch}</div>
+      </div>
+      <div class="policy-property-row">
+        <div class="property-key">Break Policy</div>
+        <div class="property-val">${client.breakPolicy}</div>
+      </div>
+      <div class="policy-property-row">
+        <div class="property-key">SEB Requirements</div>
+        <div class="property-val">${client.seb}</div>
+      </div>
+      <div class="policy-property-row">
+        <div class="property-key">Special Notes</div>
+        <div class="property-val">${client.notes}</div>
+      </div>
+    `;
+  }
 
-      const countEl = document.getElementById('searchCount');
-      const emptyEl = document.getElementById('emptyState');
-      if (query !== '') {
-        countEl.innerText = `Found ${totalVisible} matching items`;
-        emptyEl.style.display = totalVisible === 0 ? 'block' : 'none';
-      } else {
-        countEl.innerText = '';
-        emptyEl.style.display = 'none';
-      }
+  function filterClientList(query) {
+    const q = query.toLowerCase();
+    const filtered = clientPoliciesData.filter(c => c.name.toLowerCase().includes(q));
+    const sidebar = document.getElementById('client-sidebar-list');
+    sidebar.innerHTML = filtered.map((c) => `
+      <div class="client-item" onclick="selectClientByName('${c.name}', this)">${c.name}</div>
+    `).join('');
+  }
+
+  function selectClientByName(name, el) {
+    const idx = clientPoliciesData.findIndex(c => c.name === name);
+    selectClient(idx, el);
+  }
+
+  function renderFaq(data) {
+    const container = document.getElementById('faq-container');
+    container.innerHTML = data.map(item => `
+      <div class="dojo-card">
+        <div class="card-header-row">
+          <span class="tag">${item.category}</span>
+        </div>
+        <h4 style="font-size:1rem; font-weight:700; color:#fff; margin-bottom:8px;">${item.question}</h4>
+        <p style="font-size:0.85rem; line-height:1.6; color:var(--text-muted);">${item.answer}</p>
+      </div>
+    `).join('');
+  }
+
+  function filterFaq(query) {
+    const q = query.toLowerCase();
+    const filtered = faqData.filter(i => i.question.toLowerCase().includes(q) || i.answer.toLowerCase().includes(q) || i.category.toLowerCase().includes(q));
+    renderFaq(filtered);
+  }
+
+  function filterFaqCategory(cat, el) {
+    document.querySelectorAll('#faq-filters .filter-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    if (cat === 'all') {
+      renderFaq(faqData);
+    } else {
+      renderFaq(faqData.filter(i => i.category === cat));
     }
-  </script>
+  }
+
+  function copyText(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+
+  function copyEmergencySpiel(type) {
+    const spiel = type === 'support' 
+      ? "If you encounter persistent technical difficulties or disconnects, please email support@certiverse.com for further assistance."
+      : "Unfortunately, the use of prohibited applications/behavior has been detected, which violates our code of conduct. As a result, this exam will now be terminated. Please email support@certiverse.com for escalation.";
+    navigator.clipboard.writeText(spiel);
+    alert("Emergency Spiel Copied to Clipboard.");
+  }
+</script>
+
 </body>
 </html>
