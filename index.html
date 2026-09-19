@@ -1,15 +1,651 @@
-<!-- ================================================================= -->
-<!-- COMBINED SPOCA // TACTICAL PROCTOR COMMAND CENTER (METAL SLUG HUD) -->
-<!-- ================================================================= -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SPOCA // Tactical Proctor Command Center</title>
-  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0b0f19;
+      --panel-bg: rgba(15, 23, 42, 0.92);
+      --border-color: rgba(59, 130, 246, 0.3);
+      --border-glow: rgba(59, 130, 246, 0.6);
+      --tactical-green: #10b981;
+      --tactical-amber: #f59e0b;
+      --tactical-red: #ef4444;
+      --tactical-blue: #38bdf8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-mono: 'Share Tech Mono', monospace;
+      --font-sans: 'Rajdhani', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* CRT Scanlines & Vignette */
+    .scanlines {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      z-index: 999;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .vignette {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+      z-index: 998;
+      pointer-events: none;
+    }
+
+    /* Tactical Background Canvas */
+    .tactical-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(to bottom, #111827 0%, #030712 100%);
+    }
+
+    /* Command Container */
+    .command-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 16px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Header */
+    .command-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 20px;
+      backdrop-filter: blur(12px);
+      margin-bottom: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--tactical-green);
+      box-shadow: 0 0 8px var(--tactical-green);
+    }
+    .status-indicator.live { animation: pulseGlow 2s infinite; }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 12px var(--tactical-green); }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .command-header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--tactical-blue);
+      font-family: var(--font-mono);
+    }
+
+    .secure-badge {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--tactical-green);
+      color: var(--tactical-green);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+    }
+
+    .global-search-wrapper {
+      position: relative;
+      width: 400px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+    }
+
+    .global-search-wrapper input {
+      width: 100%;
+      background: rgba(3, 7, 18, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 12px 8px 36px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .global-search-wrapper input:focus {
+      outline: none;
+      border-color: var(--tactical-blue);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .sys-clock {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--tactical-amber);
+      background: rgba(0,0,0,0.4);
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .sys-btn {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid var(--tactical-blue);
+      color: var(--tactical-blue);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sys-btn:hover {
+      background: var(--tactical-blue);
+      color: #000;
+    }
+
+    /* Navigation Tabs */
+    .tactical-nav {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .nav-tab {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-tab:hover {
+      border-color: var(--tactical-blue);
+      color: var(--text-main);
+    }
+
+    .nav-tab.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--tactical-blue);
+      color: var(--tactical-blue);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+    }
+
+    /* Content Panels */
+    .content-panel {
+      display: none;
+    }
+    .content-panel.active {
+      display: block;
+    }
+
+    /* Tactical Card */
+    .tactical-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .tactical-card h3 {
+      font-size: 16px;
+      font-family: var(--font-mono);
+      color: var(--tactical-blue);
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .triage-header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+    .triage-header-inner h3 {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .triage-hint {
+      color: var(--text-muted);
+      font-size: 11px;
+      font-family: var(--font-mono);
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    /* Grid Layouts */
+    .panel-grid-top {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 16px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .metric-item {
+      background: rgba(3, 7, 18, 0.6);
+      border: 1px solid var(--border-color);
+      padding: 12px;
+      border-radius: 6px;
+      text-align: center;
+    }
+    .metric-item.warning { border-color: var(--tactical-amber); }
+    .metric-item.success { border-color: var(--tactical-green); }
+
+    .metric-val {
+      display: block;
+      font-size: 22px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--text-main);
+    }
+    .metric-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* Triage Grid & Output Drawer */
+    .triage-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .triage-btn {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+
+    .triage-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--tactical-blue);
+      transform: translateY(-2px);
+    }
+
+    .triage-btn .key {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--border-color);
+      color: var(--tactical-blue);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .triage-output {
+      margin-top: 16px;
+      background: rgba(9, 13, 22, 0.95);
+      border: 1px solid var(--tactical-blue);
+      border-radius: 6px;
+      padding: 14px;
+      box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.1);
+    }
+    .triage-output.hidden { display: none; }
+
+    .triage-output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--tactical-blue);
+      font-weight: 600;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 6px;
+    }
+
+    .triage-output-header button {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .triage-content p {
+      color: var(--text-main);
+      font-size: 13px;
+      margin: 6px 0;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    .tactical-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .tactical-table th, .tactical-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+    }
+
+    .tactical-table th {
+      background: rgba(3, 7, 18, 0.5);
+      color: var(--tactical-blue);
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .tactical-table tr:hover {
+      background: rgba(59, 130, 246, 0.05);
+    }
+
+    /* Status Tags */
+    .status-tag {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+    .status-tag.warning { background: rgba(245, 158, 11, 0.2); color: var(--tactical-amber); border: 1px solid var(--tactical-amber); }
+    .status-tag.success { background: rgba(16, 185, 129, 0.2); color: var(--tactical-green); border: 1px solid var(--tactical-green); }
+    .status-tag.danger { background: rgba(239, 68, 68, 0.2); color: var(--tactical-red); border: 1px solid var(--tactical-red); }
+    .status-tag.critical { background: rgba(220, 38, 38, 0.3); color: #fecaca; border: 1px solid var(--tactical-red); animation: blinkAlert 1s infinite; }
+
+    @keyframes blinkAlert { 50% { opacity: 0.5; } }
+
+    /* Check-in Pipeline */
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .step-card {
+      background: rgba(3, 7, 18, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 16px;
+      position: relative;
+    }
+    .step-card.active { border-color: var(--tactical-blue); box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      color: var(--tactical-blue);
+      font-weight: 700;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .step-card h4 { margin-bottom: 6px; font-size: 15px; }
+    .step-card p { font-size: 13px; color: var(--text-muted); }
+
+    /* Canned Messages */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .filter-pill {
+      background: rgba(3, 7, 18, 0.5);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .filter-pill.active { background: var(--tactical-blue); color: #000; font-weight: 600; border-color: var(--tactical-blue); }
+
+    .canned-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .canned-card {
+      background: rgba(3, 7, 18, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .canned-card h4 { color: var(--tactical-blue); margin-bottom: 8px; font-size: 14px; }
+    .canned-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+
+    .copy-btn {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid var(--tactical-blue);
+      color: var(--tactical-blue);
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: var(--tactical-blue); color: #000; }
+
+    /* Policy Generator */
+    .generator-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      color: var(--tactical-blue);
+      margin-bottom: 6px;
+    }
+
+    .form-group select, .form-group textarea {
+      width: 100%;
+      background: rgba(3, 7, 18, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 14px;
+    }
+
+    .tactical-action-btn {
+      margin-top: 16px;
+      background: var(--tactical-green);
+      border: none;
+      color: #000;
+      font-weight: 700;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .tactical-action-btn:hover { filter: brightness(1.2); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+
+    .output-box {
+      margin-top: 16px;
+      background: rgba(3, 7, 18, 0.9);
+      border: 1px solid var(--tactical-green);
+      padding: 16px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--tactical-green);
+    }
+    .output-box.hidden { display: none; }
+
+    /* Knowledge Base Grid */
+    .kb-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .kb-card {
+      background: rgba(3, 7, 18, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .kb-card:hover { border-color: var(--tactical-blue); transform: translateY(-2px); }
+    .kb-card h4 { color: var(--tactical-blue); margin-bottom: 6px; font-size: 15px; }
+    .kb-card p { font-size: 13px; color: var(--text-muted); }
+
+    /* Modals & Toasts */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-overlay.hidden { display: none; }
+
+    .modal-card {
+      background: #0f172a;
+      border: 1px solid var(--tactical-blue);
+      border-radius: 8px;
+      width: 500px;
+      padding: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .modal-header h3 { color: var(--tactical-blue); font-family: var(--font-mono); }
+    .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; }
+
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--tactical-green);
+      color: var(--text-main);
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    @media(max-width: 1024px) {
+      .panel-grid-top, .steps-container, .canned-grid, .kb-grid, .generator-grid, .triage-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- CRT Scanline & Vignette Overlay -->
@@ -37,7 +673,7 @@
       </div>
       <div class="header-right">
         <div class="sys-clock" id="sys-clock">00:00:00 UTC</div>
-        <button class="sys-btn" onclick="toggleThemeMode()">⚡ TACTICAL HUD</button>
+        <button class="sys-btn" onclick="showToast('Tactical HUD Mode Active')">⚡ TACTICAL HUD</button>
       </div>
     </header>
 
@@ -102,7 +738,7 @@
               <div class="triage-content">
                 <p><strong>Canned Message:</strong> <span id="triage-msg"></span></p>
                 <p><strong>Policy Rule:</strong> <span id="triage-policy"></span></p>
-                <button class="copy-btn" onclick="copyTriageMessage()">📋 Copy Message</button>
+                <button class="copy-btn" onclick="copyTriageMessage()" style="margin-top: 8px;">📋 Copy Message</button>
               </div>
             </div>
           </div>
@@ -348,10 +984,252 @@
         <h3 id="modal-title">Knowledge Base</h3>
         <button class="modal-close" onclick="closeKbModalDirect()">✕</button>
       </div>
-      <div class="modal-body" id="modal-content"></div>
+      <div class="modal-body" id="modal-content" style="color: var(--text-muted); font-size: 14px; line-height: 1.5;"></div>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // Clock Engine
+    setInterval(() => {
+      const now = new Date();
+      document.getElementById('sys-clock').textContent = now.toUTCString().split(' ')[4] + ' UTC';
+    }, 1000);
+
+    // Tab Navigation Switcher
+    function switchTab(tabId, event) {
+      document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      
+      document.getElementById(`panel-${tabId}`).classList.add('active');
+      if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+      }
+    }
+
+    // Toast Notification System
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = `[CMD ALERT]: ${message}`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Copy Text Helper for Canned Cards
+    function copyText(btn) {
+      const card = btn.closest('.canned-card') || btn.closest('.tactical-card');
+      const text = card.querySelector('p').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Canned message copied to clipboard!');
+      });
+    }
+
+    // Instant Infraction Triage Data & Handlers
+    const triageData = {
+      'blurry-id': {
+        title: 'Blurry ID Protocol',
+        message: 'Please hold your valid government-issued photo ID closer to the webcam and ensure the camera lens is clean so your details are fully legible.',
+        policy: 'Infractions Matrix -> Section 3.1: Unclear Identification (Level 1)'
+      },
+      'name-mismatch': {
+        title: 'Name Mismatch Protocol',
+        message: 'The name on your submitted identification does not match the registration profile. Please provide secondary identification or confirmation of legal name change.',
+        policy: 'Infractions Matrix -> Section 3.2: Identity Discrepancy (Level 2)'
+      },
+      'phone-detected': {
+        title: 'Phone Detected Protocol',
+        message: 'Warning: A mobile device or electronic communication tool was detected within your workspace view. Please store it completely out of reach immediately.',
+        policy: 'Infractions Matrix -> Section 4.1: Prohibited Electronic Device (Level 3)'
+      },
+      'looking-away': {
+        title: 'Looking Away Protocol',
+        message: 'Please maintain your focus toward the testing screen. Looking away from the monitor for extended periods violates active session monitoring guidelines.',
+        policy: 'Infractions Matrix -> Section 2.4: Gaze Deviation Warning (Level 1)'
+      },
+      'break-violation': {
+        title: 'Break Violation Protocol',
+        message: 'Unscheduled breaks are not permitted during active examination blocks. Please return your focus to the screen or request formal approval.',
+        policy: 'Infractions Matrix -> Section 5.0: Unauthorized Departure (Level 2)'
+      },
+      'remote-desktop': {
+        title: 'Remote Desktop Protocol',
+        message: 'Active remote desktop control software or screen-sharing utilities have been identified on your machine. You must close them immediately to proceed.',
+        policy: 'Infractions Matrix -> Section 6.2: Virtual Machine / Remote Software (Level 4)'
+      }
+    };
+
+    function triggerTriage(key) {
+      const data = triageData[key];
+      if (!data) return;
+      document.getElementById('triage-action-title').textContent = data.title;
+      document.getElementById('triage-msg').textContent = data.message;
+      document.getElementById('triage-policy').textContent = data.policy;
+      document.getElementById('triage-output-panel').classList.remove('hidden');
+      showToast(`Executed 5-Sec Protocol: ${data.title}`);
+    }
+
+    function closeTriageOutput() {
+      document.getElementById('triage-output-panel').classList.add('hidden');
+    }
+
+    function copyTriageMessage() {
+      const text = document.getElementById('triage-msg').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Canned response copied to clipboard!');
+      });
+    }
+
+    // Canned Message Filtering
+    function filterCanned(category, event) {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+      }
+      
+      document.querySelectorAll('.canned-card').forEach(card => {
+        if (category === 'all' || card.getAttribute('data-category') === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Dynamic Policy & Incident Report Generator
+    function generateIncidentReport() {
+      const client = document.getElementById('gen-client').value;
+      const infraction = document.getElementById('gen-infraction').value;
+      const notes = document.getElementById('gen-notes').value || 'No additional remarks.';
+      
+      const output = document.getElementById('gen-output');
+      output.classList.remove('hidden');
+      output.innerHTML = `<strong>[INCIDENT PACKAGE GENERATED]</strong><br>` +
+                         `Target Client: ${client}<br>` +
+                         `Classification: ${infraction}<br>` +
+                         `Observations: ${notes}<br>` +
+                         `Status: Signed & Logged to Secure Ledger.`;
+      showToast('Official incident package generated successfully.');
+    }
+
+    // Knowledge Base Modal
+    function openKbModal(title, content) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-content').textContent = content;
+      document.getElementById('kb-modal').classList.remove('hidden');
+    }
+
+    function closeKbModalDirect() {
+      document.getElementById('kb-modal').classList.add('hidden');
+    }
+
+    function closeKbModal(e) {
+      if (e.target.id === 'kb-modal') {
+        document.getElementById('kb-modal').classList.add('hidden');
+      }
+    }
+
+    // Global Search Filter
+    function handleSearch(query) {
+      const q = query.toLowerCase();
+      if (q.length < 2) return;
+      showToast(`Filtering active views for: "${query}"`);
+    }
+
+    // Metal Slug 1 Inspired Parallax Desert Background Animation Engine
+    const canvas = document.getElementById('metal-slug-bg');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    let particles = Array.from({ length: 40 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 2 + 1,
+      speed: Math.random() * 0.8 + 0.2
+    }));
+
+    let clouds = Array.from({ length: 5 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * (canvas.height * 0.4),
+      width: Math.random() * 150 + 80,
+      speed: Math.random() * 0.2 + 0.1
+    }));
+
+    function animateBackground() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Sunset Desert Sky Gradient
+      let skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      skyGrad.addColorStop(0, '#1e1b18');
+      skyGrad.addColorStop(0.5, '#432818');
+      skyGrad.addColorStop(1, '#6b3012');
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Distant Parallax Mountains
+      ctx.fillStyle = '#2d1810';
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height * 0.6);
+      ctx.lineTo(canvas.width * 0.2, canvas.height * 0.45);
+      ctx.lineTo(canvas.width * 0.45, canvas.height * 0.55);
+      ctx.lineTo(canvas.width * 0.7, canvas.height * 0.4);
+      ctx.lineTo(canvas.width, canvas.height * 0.5);
+      ctx.lineTo(canvas.width, canvas.height);
+      ctx.lineTo(0, canvas.height);
+      ctx.fill();
+
+      // Foreground Dunes
+      ctx.fillStyle = '#170d08';
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height * 0.75);
+      ctx.quadraticCurveTo(canvas.width * 0.5, canvas.height * 0.65, canvas.width, canvas.height * 0.8);
+      ctx.lineTo(canvas.width, canvas.height);
+      ctx.lineTo(0, canvas.height);
+      ctx.fill();
+
+      // Drifting Clouds
+      ctx.fillStyle = 'rgba(217, 119, 6, 0.1)';
+      clouds.forEach(c => {
+        c.x -= c.speed;
+        if (c.x < -c.width) c.x = canvas.width + c.width;
+        ctx.fillRect(c.x, c.y, c.width, 25);
+      });
+
+      // Sand Particles & Heat Haze
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.4)';
+      particles.forEach(p => {
+        p.x -= p.speed;
+        p.y += Math.sin(p.x * 0.01) * 0.2;
+        if (p.x < 0) p.x = canvas.width;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+      });
+
+      requestAnimationFrame(animateBackground);
+    }
+
+    animateBackground();
+
+    // Keyboard Shortcuts (1-6 for Instant Triage & '/' for Search Focus)
+    document.addEventListener('keydown', (e) => {
+      if (['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) return;
+      if (e.key === '/') {
+        e.preventDefault();
+        document.getElementById('global-search').focus();
+      }
+      if (e.key >= '1' && e.key <= '6') {
+        const keys = ['blurry-id', 'name-mismatch', 'phone-detected', 'looking-away', 'break-violation', 'remote-desktop'];
+        triggerTriage(keys[parseInt(e.key) - 1]);
+      }
+    });
+  </script>
 </body>
 </html>
