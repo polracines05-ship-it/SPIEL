@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certiverse Proctor Hub - Canned Messages</title>
+    <style>
+        :root {
+            --bg-primary: #121214;
+            --bg-secondary: #1a1a1e;
+            --bg-card: #26262b;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #10b981;
+            --border: #3f3f46;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+
+        .sidebar-header p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .nav-links {
+            list-style: none;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .nav-links li {
+            margin-bottom: 8px;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 10px 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+        }
+
+        /* Main Content Styling */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .section-container {
+            margin-bottom: 40px;
+            scroll-margin-top: 20px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        /* Message Cards */
+        .card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: #52525b;
+        }
+
+        .card-body {
+            flex-grow: 1;
+        }
+
+        .card-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            background-color: #3f3f46;
+            color: #fff;
+        }
+
+        .card-tag.new { background-color: #b45309; }
+        .card-tag.win { background-color: #1e3a8a; }
+        .card-tag.mac { background-color: #6b21a8; }
+        .card-tag.linux { background-color: #14532d; }
+
+        .message-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+
+        .copy-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: background-color 0.2s;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .copy-btn.copied {
+            background-color: var(--success);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>Certiverse Proctor Hub</h1>
+            <p>Consolidated Canned Messages</p>
+            <p style="font-size: 0.75rem; font-style: italic;">v. May 25, 2026</p>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#welcome">1. Welcome</a></li>
+            <li><a href="#id-verification">2. ID Verification</a></li>
+            <li><a href="#system-verification">3. System Verification</a></li>
+            <li><a href="#clear-desk">4. Clear Desk</a></li>
+            <li><a href="#room-scan">5. Room Scan</a></li>
+            <li><a href="#exam-release">6. Exam Release</a></li>
+            <li><a href="#miscellaneous">7. Miscellaneous</a></li>
+            <li><a href="#warnings">8. Warnings</a></li>
+            <li><a href="#tech-support">9. Technical Support</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Panel -->
+    <div class="main-content">
+
+        <!-- 1. Welcome -->
+        <div id="welcome" class="section-container">
+            <h2 class="section-title">1. Welcome</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p class="message-text">Hello and welcome! I will be your proctor for this exam.
+
+We have a few steps to complete before your exam begins. This time does not count against your exam time limit.
+
+Please hold while we prepare your exam. Thank you for waiting.</p>
+                </div>
+                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
+            </div>
+        </div>
+
+        <!-- 2. ID Verification -->
+        <div id="id-verification" class="section-container">
+            <h2 class="section-title">2. Identification Verification</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p class="message-text">We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible.</p>
+                </div>
+                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="message-text">Please bring your ID closer to the camera view.</p>
+                </div>
+                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="message-text">Please hold your ID steady.</p>
+                </div>
+                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="message-text">Please flip your ID.</p>
+                </div>
+                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="message-text">Please show the expiration date.</p>
+                </div>
+                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="message-text">Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment.</p>
+                </div>
+                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="message-text">You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling.</p>
+                </div>
+                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="message-text">Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com.</p>
+                </div>
+                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="message-text">Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To assist you in reaching out to the exam sponsor who will process the name change, please contact support@certiverse.com.
+
+Once completed, you can re-enter the reservation and we will continue.</p>
+                </div>
+                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
+            </div>
+            <div class="card">
+                <div class="card-body">
