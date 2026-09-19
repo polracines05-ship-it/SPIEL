@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FiveActs Proctor Hub - Canned Messages</title>
+    <title>FiveActs Proctor Hub - Platform Dashboard</title>
     <style>
         :root {
             --bg-primary: #000000;        /* True Black background */
-            --bg-secondary: #0c0c0e;      /* Deep dark matte sidebar & containers */
-            --bg-card: #141417;           /* Structured card layers */
+            --bg-secondary: #0c0c0e;      /* Deep dark matte sidebar & panels */
+            --bg-card: #141417;           /* Structured container grids */
             --text-main: #ffffff;         /* Sharp White message text */
-            --text-muted: #a1a1aa;        /* Muted grayscale secondary text */
-            --accent: #00c853;            /* FiveActs Corporate Green */
-            --accent-hover: #00963e;      /* Accent hover boundary state */
-            --border: #27272a;            /* Content grid line layout element */
+            --text-muted: #a1a1aa;        /* Grayscale descriptions */
+            --accent: #00c853;            /* FiveActs Brand Green */
+            --accent-hover: #00963e;      /* Interactive hover state */
+            --border: #27272a;            /* Content separator grid lines */
+            --success: #00c853;
         }
 
         * {
@@ -31,14 +32,14 @@
             overflow: hidden;
         }
 
-        /* Sidebar Styling */
+        /* Sidebar Styling Layout */
         .sidebar {
-            width: 290px;
+            width: 300px;
             background-color: var(--bg-secondary);
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            padding: 24px 20px;
+            padding: 24px 16px;
             flex-shrink: 0;
         }
 
@@ -49,7 +50,6 @@
             text-align: center;
         }
 
-        /* FiveActs Corporate Logo Frame */
         .brand-logo-container {
             width: 100%;
             background: #ffffff; 
@@ -69,55 +69,75 @@
         }
 
         .sidebar-header h1 {
-            font-size: 0.95rem;
+            font-size: 1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: #fff;
             margin-top: 5px;
         }
 
+        .view-selectors {
+            list-style: none;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        .view-btn {
+            width: 100%;
+            background: none;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            text-align: left;
+            padding: 12px 14px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .view-btn:hover { background-color: var(--bg-card); color: #fff; }
+        .view-btn.active { background-color: #1c1c21; border-color: var(--border); color: var(--accent); }
+
         .nav-links {
             list-style: none;
             overflow-y: auto;
             flex-grow: 1;
+            padding-top: 5px;
         }
 
-        .nav-links li {
-            margin-bottom: 6px;
-        }
-
+        .nav-links li { margin-bottom: 4px; }
         .nav-links a {
             display: block;
-            padding: 11px 14px;
+            padding: 8px 12px;
             color: var(--text-muted);
             text-decoration: none;
             border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            transition: all 0.15s ease;
         }
+        .nav-links a:hover { background-color: var(--bg-card); color: var(--accent); padding-left: 16px; }
 
-        .nav-links a:hover {
-            background-color: var(--bg-card);
-            color: var(--accent);
-            padding-left: 18px;
-        }
-
-        /* Main Workspace Section Panel */
+        /* Main Workspace Pane */
         .main-content {
             flex-grow: 1;
             padding: 30px;
             overflow-y: auto;
-            scroll-behavior: smooth;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Functional Filter Layout Element */
         .search-wrapper {
             position: sticky;
-            top: -30px;
+            top: 0;
             background-color: var(--bg-primary);
-            padding: 10px 0 25px 0;
-            z-index: 10;
+            padding: 0 0 25px 0;
+            z-index: 100;
         }
 
         .search-input {
@@ -132,100 +152,75 @@
             transition: border-color 0.2s;
         }
 
-        .search-input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 12px rgba(0, 200, 83, 0.25);
-        }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 12px rgba(0, 200, 83, 0.25); }
 
-        .section-container {
-            margin-bottom: 40px;
-            scroll-margin-top: 95px;
-        }
+        .dashboard-view { display: none; }
+        .dashboard-view.active { display: block; }
 
-        .section-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 8px;
-            margin-bottom: 20px;
-            color: #fff;
-        }
+        .section-container { margin-bottom: 40px; scroll-margin-top: 100px; }
+        .section-title { font-size: 1.3rem; font-weight: 700; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 20px; color: #fff; }
 
-        /* Message Card Components */
         .card {
             background-color: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 18px;
-            margin-bottom: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 20px;
-            transition: border-color 0.2s, transform 0.2s;
+            transition: border-color 0.2s;
         }
 
-        .card:hover {
-            border-color: #3f3f46;
-            transform: translateY(-1px);
-        }
-
-        .card-body {
-            flex-grow: 1;
-        }
+        .card:hover { border-color: #3f3f46; }
+        .card-body { flex-grow: 1; }
 
         .card-tag {
             display: inline-block;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 700;
-            padding: 3px 8px;
+            padding: 2px 6px;
             border-radius: 4px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             letter-spacing: 0.5px;
             background-color: #27272a;
             color: #fff;
         }
-
         .card-tag.new { background-color: #b45309; }
         .card-tag.win { background-color: #1e3a8a; }
         .card-tag.mac { background-color: #581c87; }
         .card-tag.linux { background-color: #14532d; }
+        .card-tag.term { background-color: #7f1d1d; }
 
-        .message-text {
-            font-size: 1rem;
-            line-height: 1.6;
-            white-space: pre-line;
-            color: #f4f4f5;
-        }
+        .message-text { font-size: 0.95rem; line-height: 1.5; white-space: pre-line; color: #e4e4e7; }
 
-        /* Clipboard Copy Trigger buttons */
         .copy-btn {
             background-color: var(--accent);
-            color: #000000;              
+            color: #000000;
             border: none;
-            padding: 10px 18px;
+            padding: 8px 16px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 700;
             white-space: nowrap;
-            transition: background-color 0.2s, transform 0.1s;
+            transition: background-color 0.2s;
             min-width: 120px;
         }
+        .copy-btn:hover { background-color: var(--accent-hover); }
+        .copy-btn.copied { background-color: #fff; color: #000; border: 1px solid var(--accent); }
 
-        .copy-btn:hover {
-            background-color: var(--accent-hover);
-        }
+        /* Tables */
+        .table-responsive { width: 100%; overflow-x: auto; background-color: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+        th { background-color: #141417; color: #fff; font-weight: 600; padding: 14px 16px; border-bottom: 2px solid var(--border); }
+        td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: #e4e4e7; line-height: 1.4; }
+        tr:hover td { background-color: #16161a; }
 
-        .copy-btn:active {
-            transform: scale(0.97);
-        }
-
-        .copy-btn.copied {
-            background-color: #ffffff;
-            color: #000000;
-            border: 1px solid var(--accent);
-        }
+        .severity-badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .severity-minor { background-color: #27272a; color: #f4f4f5; }
+        .severity-major { background-color: #7f1d1d; color: #fca5a5; }
     </style>
 </head>
 <body>
@@ -236,66 +231,39 @@
                 <img src="FiveActs-Logo.png" alt="FiveActs Logo" class="brand-logo" onerror="this.parentElement.style.display='none';">
             </div>
             <h1>Proctor Hub</h1>
-            <p style="font-size: 0.75rem; font-style: italic; color: var(--accent); margin-top: 4px;">v. May 25, 2026</p>
+            <p style="font-size: 0.75rem; color: var(--accent); margin-top: 2px;">v. May 25, 2026</p>
         </div>
-        <ul class="nav-links">
-            <li><a href="#welcome">1. Welcome</a></li>
+
+        <div class="view-selectors">
+            <button class="view-btn active" onclick="switchView('canned-view')">📋 Canned Messages</button>
+            <button class="view-btn" onclick="switchView('policies-view')">🔍 Client Policies</button>
+            <button class="view-btn" onclick="switchView('infractions-view')">🚨 Severity Index</button>
+        </div>
+
+        <ul class="nav-links" id="sidebar-anchors">
+            <li><a href="#preflight">Pre-flight Checks</a></li>
+            <li><a href="#welcome">1. Welcome Scripts</a></li>
             <li><a href="#id-verification">2. ID Verification</a></li>
-            <li><a href="#system-verification">3. System Verification</a></li>
-            <li><a href="#clear-desk">4. Clear Desk</a></li>
-            <li><a href="#room-scan">5. Room Scan</a></li>
-            <li><a href="#exam-release">6. Exam Release</a></li>
-            <li><a href="#miscellaneous">7. Miscellaneous</a></li>
-            <li><a href="#warnings">8. Warnings</a></li>
-            <li><a href="#tech-support">9. Technical Support</a></li>
+            <li><a href="#clear-desk">3. Clear Desk Policy</a></li>
+            <li><a href="#room-scan">4. Room Scan Rules</a></li>
+            <li><a href="#exam-release">5. Exam Release</a></li>
+            <li><a href="#troubleshooting">6. Troubleshooting</a></li>
+            <li><a href="#warnings">7. System Warnings</a></li>
+            <li><a href="#miscellaneous">8. Status & Misc</a></li>
+            <li><a href="#termination">9. Termination</a></li>
         </ul>
     </div>
 
     <div class="main-content">
         <div class="search-wrapper">
-            <input type="text" id="spielSearch" class="search-input" placeholder="🔍 Type keywords instantly to filter through proctor messages...">
+            <input type="text" id="globalSearch" class="search-input" placeholder="🔍 Type keywords instantly to filter templates, protocols or tracking files...">
         </div>
 
-        <!-- 1. Welcome -->
-        <div id="welcome" class="section-container">
-            <h2 class="section-title">1. Welcome</h2>
-            <div class="card">
-                <div class="card-body">
-                    <p class="message-text">Hello and welcome! I will be your proctor for this exam.
-
-We have a few steps to complete before your exam begins. This time does not count against your exam time limit.
-
-Please hold while we prepare your exam. Thank you for waiting.</p>
-                </div>
-                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
-            </div>
-        </div>
-
-        <!-- 2. ID Verification -->
-        <div id="id-verification" class="section-container">
-            <h2 class="section-title">2. Identification Verification</h2>
-            <div class="card">
-                <div class="card-body">
-                    <p class="message-text">We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible.</p>
-                </div>
-                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <p class="message-text">Please bring your ID closer to the camera view.</p>
-                </div>
-                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <p class="message-text">Please hold your ID steady.</p>
-                </div>
-                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <p class="message-text">Please flip your ID.</p>
-                </div>
-                <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
-            </div>
-            <div class="card">
+        <!-- VIEW 1: CANNED MESSAGES CONTENT PANEL -->
+        <div id="canned-view" class="dashboard-view active">
+            
+            <section id="preflight" class="section-container">
+                <h2 class="section-title">Pre-flight</h2>
+                <div class="card">
+                    <div class="card-body"><p class="message-text">Hi, are you having issues with screensharing?</p></div>
+                    <button class="copy-btn" onclick="copyText(this)">Copy Message</button>
