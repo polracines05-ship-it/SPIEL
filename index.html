@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FiveActs Proctor Hub Dashboard</title>
+    <title>Proctoring Check-in Process | FiveActs</title>
     <style>
         :root {
             --bg-black: #000000;
-            --sidebar-gray: #0c0c0e;
+            --header-bg: #0c0c0e;
             --card-charcoal: #141417;
             --border-gray: #24242a;
             --text-main: #f0f0f5;
@@ -28,155 +28,160 @@
             background-color: var(--bg-black);
             color: var(--text-main);
             display: flex;
-            height: 100vh;
-            overflow: hidden;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* Sidebar Navigation */
-        .sidebar {
-            width: 260px;
-            background-color: var(--sidebar-gray);
-            border-right: 1px solid var(--border-gray);
+        /* Header Navigation */
+        .header {
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-gray);
+            padding: 12px 24px;
             display: flex;
-            flex-direction: column;
-            padding: 20px 16px;
-            gap: 24px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
         .logo-container {
             background-color: #ffffff;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
-            justify-content: center;
         }
 
-        .logo-container img {
-            max-width: 100%;
-            height: auto;
-            max-height: 40px;
+        .logo-svg {
+            height: 28px;
+            width: auto;
         }
 
-        .nav-menu {
+        .page-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+            border-left: 1px solid var(--border-gray);
+            padding-left: 16px;
+        }
+
+        .top-nav {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .nav-btn {
-            background: transparent;
+            background-color: var(--card-charcoal);
             color: var(--text-muted);
-            border: 1px solid transparent;
-            padding: 12px 16px;
+            border: 1px solid var(--border-gray);
+            padding: 8px 16px;
             border-radius: 6px;
-            text-align: left;
+            font-size: 13px;
             font-weight: 600;
-            font-size: 14px;
             cursor: pointer;
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .nav-btn:hover {
             color: var(--text-main);
-            background-color: rgba(255, 255, 255, 0.04);
+            border-color: var(--vibrant-green);
         }
 
         .nav-btn.active {
             background-color: var(--vibrant-green);
             color: var(--bg-black);
+            border-color: var(--vibrant-green);
             font-weight: 700;
         }
 
-        /* Main App Body */
-        .main-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .header {
-            padding: 16px 24px;
-            background-color: var(--sidebar-gray);
-            border-bottom: 1px solid var(--border-gray);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .search-box {
-            position: relative;
-            flex: 1;
-            max-width: 600px;
+        /* Search Bar */
+        .search-container {
+            padding: 16px 24px 0 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         .search-input {
             width: 100%;
-            background-color: var(--bg-black);
+            background-color: var(--card-charcoal);
             border: 1px solid var(--border-gray);
             color: var(--text-main);
-            padding: 10px 16px;
+            padding: 12px 16px;
             border-radius: 6px;
             font-size: 14px;
             outline: none;
-            transition: border-color 0.2s ease;
         }
 
         .search-input:focus {
             border-color: var(--vibrant-green);
         }
 
-        .view-container {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
+        /* Container Views */
+        .content-area {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px 24px 40px 24px;
+        }
+
+        .view-section {
             display: none;
         }
 
-        .view-container.active {
+        .view-section.active {
             display: block;
         }
 
-        /* Cards & Section Headers */
-        .section-header {
-            font-size: 18px;
+        /* Check-in Process Layout */
+        .process-category {
+            margin-bottom: 24px;
+        }
+
+        .category-title {
+            font-size: 15px;
             font-weight: 700;
-            margin-top: 24px;
-            margin-bottom: 12px;
             color: var(--vibrant-green);
-            border-bottom: 1px solid var(--border-gray);
-            padding-bottom: 6px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .section-header:first-of-type {
-            margin-top: 0;
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .script-card {
+        .spiel-row {
             background-color: var(--card-charcoal);
             border: 1px solid var(--border-gray);
-            border-radius: 8px;
-            padding: 14px 16px;
+            border-radius: 6px;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
+            transition: border-color 0.2s ease;
         }
 
-        .script-text {
-            font-size: 13px;
+        .spiel-row:hover {
+            border-color: rgba(0, 200, 83, 0.4);
+        }
+
+        .spiel-text {
+            font-size: 13.5px;
             line-height: 1.4;
             color: var(--text-main);
         }
@@ -185,13 +190,13 @@
             background-color: var(--vibrant-green);
             color: var(--bg-black);
             border: none;
-            padding: 8px 12px;
+            padding: 6px 14px;
             border-radius: 4px;
             font-weight: 700;
             font-size: 12px;
             cursor: pointer;
             white-space: nowrap;
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
         }
 
         .copy-btn:hover {
@@ -203,24 +208,23 @@
             color: var(--bg-black);
         }
 
-        /* Table Styling */
-        .data-table-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            border: 1px solid var(--border-gray);
-            border-radius: 8px;
+        /* Tables */
+        .table-card {
             background-color: var(--card-charcoal);
+            border: 1px solid var(--border-gray);
+            border-radius: 6px;
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            text-align: left;
             font-size: 13px;
+            text-align: left;
         }
 
         th {
-            background-color: var(--sidebar-gray);
+            background-color: var(--header-bg);
             color: var(--vibrant-green);
             padding: 12px 16px;
             border-bottom: 1px solid var(--border-gray);
@@ -261,114 +265,232 @@
 </head>
 <body>
 
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="logo-container">
-            <img src="FiveActs-Logo.png" alt="FiveActs Logo">
+    <!-- Header Navigation -->
+    <div class="header">
+        <div class="brand">
+            <div class="logo-container">
+                <svg class="logo-svg" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 15,10 L 160,10 L 130,70 L 15,70 Z" fill="#00C853"/>
+                    <text x="30" y="52" font-family="Arial, sans-serif" font-weight="900" font-size="38" fill="#FFFFFF">FIVE</text>
+                    <text x="145" y="52" font-family="Arial, sans-serif" font-weight="900" font-size="38" fill="#000000">ACTS</text>
+                </svg>
+            </div>
+            <span class="page-title">Proctoring Check-in Process</span>
         </div>
-        <div class="nav-menu">
-            <button class="nav-btn active" onclick="switchView('canned-view', this)">📋 Canned Messages</button>
-            <button class="nav-btn" onclick="switchView('policies-view', this)">🔍 Client Policies</button>
-            <button class="nav-btn" onclick="switchView('severity-view', this)">🚨 Severity Index</button>
+        <div class="top-nav">
+            <button class="nav-btn active" onclick="switchTab('checkin-view', this)">📋 Check-in Process</button>
+            <button class="nav-btn" onclick="switchTab('policies-view', this)">📄 Name Change Policy</button>
+            <button class="nav-btn" onclick="switchTab('severity-view', this)">🚨 Violation Threshold</button>
         </div>
     </div>
 
+    <!-- Search Input -->
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search check-in spiels, client policies, or violations..." oninput="filterAll()">
+    </div>
+
     <!-- Main Content Area -->
-    <div class="main-wrapper">
-        <div class="header">
-            <div class="search-box">
-                <input type="text" id="globalSearch" class="search-input" placeholder="Search canned spiels, policies, or infractions..." oninput="filterContent()">
+    <div class="content-area">
+
+        <!-- VIEW 1: PROCTORING CHECK-IN PROCESS -->
+        <div id="checkin-view" class="view-section active">
+
+            <div class="process-category">
+                <div class="category-title">0. Pre-Flight Setup</div>
+                <div class="list-container">
+                    <div class="spiel-row"><span class="spiel-text">Hi, are you having issues with screensharing? Always remember that there are two steps for MAC screen sharing issues: 1. Allow screensharing in browser. 2. And then allow screen sharing in system preferences.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Hi, are you having issues with your camera? Please relaunch the exam and choose the correct camera on the pre-flight screen.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Hi, are you having issues with your microphone? Please relaunch the exam and choose the correct microphone on the pre-flight screen.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please finish the pre-flight and launch the exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Can you please switch to Google Chrome?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Hello, it seems like your screen is not being shared. Can you please refresh your browser?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                </div>
             </div>
+
+            <div class="process-category">
+                <div class="category-title">1. Welcome & Initial Application Checks</div>
+                <div class="list-container">
+                    <div class="spiel-row"><span class="spiel-text">Good Morning!</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Good Afternoon!</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Good Evening!</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Before we begin, please ensure that your surroundings are well-lit so that I can clearly see you and your environment.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Kindly ensure that all your applications or programs are closed and that you have logged out.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Kindly close any other programs currently open on your dock or taskbar.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">I apologize, but I still notice that there are some open applications on your dock or taskbar. Can you please close all of them?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please ensure that all applications are closed prior to the exam. Should any application appear or notification sound during the exam, it may result in termination of your examination session.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please close the other tabs on your browser except this tab.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Could you please open your System Tray?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Could you please open your Task Manager and click on Services?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Could you please open your Activity Monitor?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please wait momentarily while we prepare the exam for you.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please ensure that you are dressed appropriately during the exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please scroll down slowly until you reach the end of the list.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please make sure that all running applications are closed and shut down.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                </div>
+            </div>
+
+            <div class="process-category">
+                <div class="category-title">2. Identification Verification</div>
+                <div class="list-container">
+                    <div class="spiel-row"><span class="spiel-text">Can you please provide me your government issued ID?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">To proceed with the test, we kindly request that you provide a government-issued identification. Thank you!</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">It appears that the name on your ID does not match the name in our system.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Could you please provide proof of the validity of your identification?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">It looks like your name is not updated in the Certimetrics HashiCorp system. Please log in to https://cp.certmetrics.com/hashicorp/en/login and update your name. Make sure you're not logged into certiverse.com and then press the exam SSO button so that your name gets updated on the Certiverse platform.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Before you begin the exam, it is essential that you present a government-issued ID with a name that precisely matches our system.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">We fully respect religious attire and accommodations. However, we are required to verify identity using an unaltered, government-issued photo ID. Because the photo on your ID is obscured, we are unable to complete identity verification today. You may contact the exam sponsor to request an approved accommodation and reschedule.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Can you please show the expiry date on your ID?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Unfortunately, the name on your provided identification does not match the name registered on this reservation. Please contact support@certiverse.com to request a name modification. Once updated, you can re-enter your reservation so we can continue with your check-in.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Unfortunately, the name on your provided identification does not match the name registered on this reservation. To assist you with this, please contact support@certiverse.com to reach out to your exam sponsor, who will process the name change. Once completed, you can re-enter the reservation and we will continue.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                </div>
+            </div>
+
+            <div class="process-category">
+                <div class="category-title">3. Clear Desk & Environment</div>
+                <div class="list-container">
+                    <div class="spiel-row"><span class="spiel-text">Kindly ensure that your mobile phone is powered off and placed out of reach.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Kindly ensure that you are not wearing any listening devices in your ears.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Beverages are permitted only in transparent containers without any writing or labels. Kindly remove the label from your water bottle.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Kindly ensure that your desk is free of any clutter or unnecessary items.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Headphones/Earphones are not allowed during the exam. Is it possible for you to show us your ears just to make sure that this is followed?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                </div>
+            </div>
+
+            <div class="process-category">
+                <div class="category-title">4. Room & Desk Environment Scan</div>
+                <div class="list-container">
+                    <div class="spiel-row"><span class="spiel-text">Kindly adjust your camera angle downward and slowly move and direct your camera around the room.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please provide me a full view of your desk.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please ensure that your external monitor is powered off and disconnected.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">According to the exam guidelines, writing and other paper materials are prohibited during the test. Please ensure they are out of reach.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Could you please show the space where you intend to take your exam?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">No one else can be in the room (including pets). No one else is permitted to be in your testing area for the duration of your appointment to avoid termination of the exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please relocate to a different desk. Ensure that it is free of unnecessary items.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">As per exam rules, pens and other writing materials are not allowed during the test.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please make sure there is no one else in the room with you as we are closely monitoring the exam. Failure to comply may result in the termination of your exam session.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[WellSky Disconnection] Please ask the person assisting you to stay in the room with you until we have completed the room scan. We want to ensure you receive immediate assistance if you encounter any technical problems during the room scan.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                </div>
+            </div>
+
+            <div class="process-category">
+                <div class="category-title">5. Exam Release & Pre-Exam Setup</div>
+                <div class="list-container">
+                    <div class="spiel-row"><span class="spiel-text">Please click Enter Full Screen to start your exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Do you have any questions before you start your exam?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Unfortunately, we are not allowed to release the exam unless all requirements are met.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please adjust your camera a little lower. Your head and shoulders must remain fully visible during your entire exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please click the Hide Video button. We would like test takers to focus on the exam itself instead of looking at the video preview window repeatedly.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">It is the ^ icon next to the microphone icon at the bottom right-hand corner of your screen.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">You may hide/drag the screensharing bar at the bottom to see the Agree/Decline buttons.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">You may launch the exam to be able to see the camera preview window.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">If documentation or resources are permitted for the exam, they will be accessible during the exams and within the exam environment.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">For most NVIDIA exams, results are available within 24–48 hours after completion.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                </div>
+            </div>
+
+            <div class="process-category">
+                <div class="category-title">6. Warnings & In-Exam Reminders</div>
+                <div class="list-container">
+                    <div class="spiel-row"><span class="spiel-text">Talking or communicating outside of the exam environment is not allowed during your exam, including reading or mouthing questions.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please do not read the questions and answers aloud.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Highlighting / Underlining the question and answers is not allowed during the test.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">If anyone is detected being in the room with you, your exam will be paused and terminated.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Failure to comply to proctor's requests may result to termination of your exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please uninstall the UltraViewer application from this device, as it has been deemed compromised. We have detected the installation of UltraViewer prior to your exam, and this action is necessary to ensure the integrity of our systems.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">We don't want this exam to get flagged and the result get invalidated, so please make sure that all remote desktop apps have been uninstalled.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">We don't want this exam to get flagged and the result get invalidated, so please focus your attention on your screen.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Hello - Your eyes keep wandering way too low, as a reminder to please keep them forward and looking at the screen.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please keep your attention forward. Your exam might be terminated the next time you look away from the screen.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">This is a reminder that we will be monitoring this session closely. Please keep your attention on the exam screen at all times. Also, ensure that all electronic mobile devices are put away and out of reach to avoid any issues with the exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">You may take the exam today, but please note that your result could be invalidated because creating multiple accounts is not permitted.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">You can take the exam today, but please be reminded that your exam may be terminated if another person is detected during the exam, as you are required to be in a private testing area for the entire duration of the exam. Please confirm if you want to proceed.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                </div>
+            </div>
+
+            <div class="process-category">
+                <div class="category-title">7. Technical Troubleshooting & Breaks</div>
+                <div class="list-container">
+                    <div class="spiel-row"><span class="spiel-text">Are you using a company-issued laptop?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Are you using Mac or Windows?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please wait while we get someone from the support team to help you.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Have you tried rebooting your computer?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please check the camera settings on your computer and your browser and make sure that your camera is allowed.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Would you like a member from our support team to assist you?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please use this link to join the remote session.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Can you please relaunch the exam again?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[Mac Video Recording] 1. On your Mac, choose System Preferences, click Security & Privacy, then click Privacy. 2. Select Screen Recording.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[Mac Screensharing] Choose Apple menu > System Settings, then click Privacy & Security in the sidebar. Click Screen & System Audio Recording on the right. For each app listed, turn the ability to record on or off.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please reboot your system.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">We currently have multiple exams ongoing now and your session is the only one that's experiencing connection issues. We will investigate this issue. If it is an issue on our end then we would have had the same issue with the other test takers today.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">We apologize, but breaks are not permitted during this exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">We apologize for the issue you are experiencing. Please refresh your browser and relaunch your session. We are currently looking into the issue, please wait while we investigate.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">You have one 5-minute break on this exam. Kindly message me if you need to take a break.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">It's okay, You will have 5 minutes. If the break takes longer than the allotted 5 minutes, your exam will be terminated. I will pause your exam now.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">We apologize for the inconvenience. There was a temporary drop in the network. Glad you are back in the exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Can you please show me your system tray on the lower right part of your taskbar? It looks like this ^.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Can you please type the word REMOTE on the search bar on the top of your task manager?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please go to the services tab on the left side of your task manager.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Can you please check the main page of the vault exam? You can see the timer there.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">We noticed that your session keeps disconnecting, this is probably due to an unstable internet connection. You may continue testing if you choose to, or you can reach out to our support team to try and reschedule your session.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">We have observed that your screen sharing has stopped multiple times. Please be informed that if this happens again, we will need to end your exam. Maintaining the integrity of the exam is important to us.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Before we resume the exam, we will need to do a quick re-scan of the room and desk.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please let us know if you want to go to the restroom. Wait for us to acknowledge before leaving the exam area.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">If you experience a disconnection or technical issue during the exam, please contact support at support@certiverse.com immediately. You must relaunch your exam session within 20 minutes, or it will be considered complete and closed.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">It appears that we are currently unable to view either your video or your screen. Could you please check your connection or sharing settings?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Could you please open your Task Manager/Activity Monitor and System Tray? We want to confirm that all of your applications have been closed.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[Mac Activity Monitor] You can find Activity Monitor on a Mac by using Spotlight Search (Command + Spacebar) and typing "Activity Monitor," or by navigating to Applications > Utilities in Finder and double-clicking the app icon.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[Linux System Monitor] You can open the System Monitor in Linux through the graphical menu (search for "System Monitor" or "System Tools"), by running gnome-system-monitor in the terminal or Alt+F2 dialog, or by setting a custom keyboard shortcut (often Ctrl+Shift+Esc or Ctrl+Alt+Del) in your system's Keyboard settings.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[Ubuntu] The equivalent of the Windows Task Manager is called the System Monitor, which you can launch by searching for "System Monitor" in the Activities overview.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Please press the Command + Option + Esc keys at the same time.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[HashiCorp & Non-SEB Exams] If your session gets disconnected at any point during the exam, please be reminded that we will need to check your Task Manager/Activity Monitor again and quickly re-scan the room/desk before resuming your session.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                </div>
+            </div>
+
+            <div class="process-category">
+                <div class="category-title">8. Termination Messages</div>
+                <div class="list-container">
+                    <div class="spiel-row"><span class="spiel-text">Unfortunately, the use of foul language has been detected during this exam, which violates our code of conduct. As a result, this exam will now be terminated. We take the integrity of our testing environment seriously and expect all participants to adhere to respectful behavior. Thank you for your understanding.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Unfortunately, the use of prohibited application has been detected during this exam, which violates our code of conduct. As a result, this exam will now be terminated. Please email support@certiverse.com and they can escalate your issue.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Unfortunately, the use of a prohibited device has been detected during this exam, which violates our code of conduct. As a result, this exam will now be terminated. Please email support@certiverse.com and they can escalate your issue.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Unfortunately, another person has been detected nearby. As a result, this exam will now be terminated. Please email support@certiverse.com and they can escalate your issue.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Unfortunately, you failed to comply with the proctor's requests during this exam. As a result, this exam will now be terminated. Please email support@certiverse.com and they can escalate your issue.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">Since you failed to return from your 5-minute break on time, we are obligated to terminate your exam. If you have any questions regarding this, you can contact support@certiverse.com.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                </div>
+            </div>
+
+            <div class="process-category">
+                <div class="category-title">9. Client-Specific Support & Rescheduling</div>
+                <div class="list-container">
+                    <div class="spiel-row"><span class="spiel-text">If you need to reschedule your exam, this article might help you: https://help.certiverse.com/portal/en/kb/articles/reschedule</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[InterSystems Documentation Navigation] Use Alt + Tab (PC) or Option + Tab (Mac) to switch between the exam and the pop-up documentation window. To zoom in or out, you may use the zoom tool in the upper right-hand corner. Alternatively, you may use ctrl + or ctrl - (PC) or command + or command - (Mac).</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[InterSystems] Please exit full screen mode and select the tab containing the documentation to switch between tabs.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[Zscaler Support] Please send an email to training@zscaler.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[HashiCorp Support] Please send an email to support@certiverse.com to reschedule your exam.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[HashiCorp Name Change] Kindly send an email to certifications@hashicorp.com to request a name change.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[NRPP Support] Please send an email to exams@nrpp.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[WellSky Support] Please send an email to support@certiverse.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[Camunda Support] Please send an email to certification@camunda.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[InterSystems Support] Please send an email to certification@intersystems.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[NVIDIA Support] Please send an email to support@certiverse.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[Akylade Support] Please send an email to support@certiverse.com for assistance or rescheduling.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">[DocuSign Name Change] Please contact docusignuniversity@docusign.com in order to request a name change.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                </div>
+            </div>
+
+            <div class="process-category">
+                <div class="category-title">10. Proctor Shift Handover / Takeover</div>
+                <div class="list-container">
+                    <div class="spiel-row"><span class="spiel-text">We are taking over your ongoing sessions. Please hold while we launch them. We will notify you once they are ready.</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                    <div class="spiel-row"><span class="spiel-text">We now have your ongoing sessions. You may close the sessions from your end. Are there any test-taker issues we should be aware of before you leave?</span><button class="copy-btn" onclick="copySpiel(this)">Copy</button></div>
+                </div>
+            </div>
+
         </div>
 
-        <!-- VIEW 1: CANNED MESSAGES -->
-        <div id="canned-view" class="view-container active">
-            
-            <div class="section-header">1. Welcome</div>
-            <div class="card-grid">
-                <div class="script-card"><span class="script-text">Hello and welcome! I will be your proctor for this exam.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">We have a few steps to complete before your exam begins. This time does not count against your exam time limit.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-            </div>
-
-            <div class="section-header">2. Identification Verification</div>
-            <div class="card-grid">
-                <div class="script-card"><span class="script-text">We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">You may keep your ID away. If there are any items on your desk surface, please remove them now as well.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">Ensure all electronic devices are put away and out of reach. That includes phones, smartwatches, headphones, earbuds and other similar devices.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">Unfortunately, the name on your provided identification does not match the name registered on this reservation. Please contact support@certiverse.com to request a name modification. Once updated, you can re-enter your reservation so we can continue with your check-in.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">Unfortunately, the name on your provided identification does not match the name registered on this reservation. To assist you with this, please contact support@certiverse.com to reach out to your exam sponsor, who will process the name change. Once completed, you can re-enter the reservation and we will continue.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-            </div>
-
-            <div class="section-header">3. System Verification (Running Applications Check — Non-SEB)</div>
-            <div class="card-grid">
-                <div class="script-card"><span class="script-text">[WINDOWS] Could you please open your Task Manager and click on Services?</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">[WINDOWS] Please scroll down slowly until you reach the end of the list.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">[WINDOWS] Thank you. You may now close your Task Manager.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">[WINDOWS] Please click on "Details" and do the same.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">[WINDOWS] Could you please open your Task Manager and click on Details? Please go to "Memory".</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">[WINDOWS] Could you please open your System Tray?</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">[MAC] Could you please open your Activity Monitor?</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">[MAC] You can find Activity Monitor on a Mac by using Spotlight Search (Command + Spacebar) and typing "Activity Monitor," or by navigating to Applications > Utilities in Finder and double-clicking the app icon.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">[MAC] Please scroll down slowly until you reach the end of the list.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">[LINUX] Could you please open your System Monitor?</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">[LINUX] You can open the System Monitor in Linux through the graphical menu (search for "System Monitor" or "System Tools"), by running gnome-system-monitor in the terminal or Alt+F2 dialog, or by setting a custom keyboard shortcut (often Ctrl+Shift+Esc or Ctrl+Alt+Del) in your system's Keyboard settings.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-            </div>
-
-            <div class="section-header">4. Clear Desk & Environment Setup</div>
-            <div class="card-grid">
-                <div class="script-card"><span class="script-text">Thank you. Just to remind, all electronics should be out of reach and turned off except the device where you will take the exam.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">Since extended monitors are prohibited, we will need to make sure that the one that you have right now is inaccessible. Please cover the screen that is right in front of you. You may use blankets or shirts.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-            </div>
-
-            <div class="section-header">5. Room Scan</div>
-            <div class="card-grid">
-                <div class="script-card"><span class="script-text">Next, we will now scan the room to confirm all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-            </div>
-
-            <div class="section-header">6. Camera & Framing Adjustments</div>
-            <div class="card-grid">
-                <div class="script-card"><span class="script-text">One moment, please. Kindly lower the angle of your camera so that we can see your head down to your shoulders.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">One moment. Please adjust your camera angle or position so that your face and shoulders are centered and fully visible on the screen.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-            </div>
-
-            <div class="section-header">7. Exam Release & Pre-Flight Policies</div>
-            <div class="card-grid">
-                <div class="script-card"><span class="script-text">Thank you. Do you have any questions before beginning your exam?</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">Please be advised that if your session gets disconnected at any point during the exam, we will need to check your Task Manager/Activity Monitor/System Monitor again and quickly re-scan the room/desk before resuming your session.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">Please click the Hide Video button.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">Please use this chat if you have any questions that are not related to the exam content. I will now release your exam for you to begin. You are ready to start! You can click the Hide Chat button to close the chat and begin.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">Once the exam has been released, it can no longer be canceled for it to be rescheduled. In the event that the session is briefly disconnected, it will be paused. You may just relaunch the exam and you will be redirected to the question or page where you left off.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">Please note that there are no scheduled breaks for this course once the exam has been released. If you need to use the restroom, you may do so now before we begin.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-            </div>
-
-            <div class="section-header">8. Non-SEB Exams</div>
-            <div class="card-grid">
-                <div class="script-card"><span class="script-text">Click on the "Enter Full Screen" button that you will find in the bottom center of the screen after you hide this chat.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">You may hide or move the pop-up screen-sharing message at the bottom center of your screen.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-            </div>
-
-            <div class="section-header">9. Technical Support & Reconnection</div>
-            <div class="card-grid">
-                <div class="script-card"><span class="script-text">Please refresh your browser. After the refresh, open your Activity Monitor (Mac) or Task Manager (Windows) before continuing with the preflight process. Once opened, scroll down slowly until you reach the bottom of the list.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">We apologize for the inconvenience. There was a temporary drop in the network.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-            </div>
-
-            <div class="section-header">10. Termination Messages</div>
-            <div class="card-grid">
-                <div class="script-card"><span class="script-text">Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-                <div class="script-card"><span class="script-text">The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance.</span><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
-            </div>
-
-        </div>
-
-        <!-- VIEW 2: CLIENT POLICIES -->
-        <div id="policies-view" class="view-container">
-            <div class="data-table-wrapper">
-                <table id="policies-table">
+        <!-- VIEW 2: NAME CHANGE POLICY -->
+        <div id="policies-view" class="view-section">
+            <div class="table-card">
+                <table>
                     <thead>
                         <tr>
                             <th>Client</th>
@@ -401,10 +523,10 @@
             </div>
         </div>
 
-        <!-- VIEW 3: SEVERITY INDEX -->
-        <div id="severity-view" class="view-container">
-            <div class="data-table-wrapper">
-                <table id="severity-table">
+        <!-- VIEW 3: VIOLATION THRESHOLD -->
+        <div id="severity-view" class="view-section">
+            <div class="table-card">
+                <table>
                     <thead>
                         <tr>
                             <th>Infraction Name</th>
@@ -452,18 +574,16 @@
     </div>
 
     <script>
-        // Tab Navigation
-        function switchView(viewId, btn) {
-            document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
+        function switchTab(viewId, btn) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
             btn.classList.add('active');
         }
 
-        // Clipboard Action
-        function copyText(btn) {
-            const card = btn.closest('.script-card');
-            const text = card.querySelector('.script-text').innerText;
+        function copySpiel(btn) {
+            const row = btn.closest('.spiel-row');
+            const text = row.querySelector('.spiel-text').innerText;
             navigator.clipboard.writeText(text).then(() => {
                 btn.innerText = '✓ Copied!';
                 btn.classList.add('copied');
@@ -474,20 +594,17 @@
             });
         }
 
-        // Real-Time Global Filtering Engine
-        function filterContent() {
-            const query = document.getElementById('globalSearch').value.toLowerCase().trim();
+        function filterAll() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
 
-            // Filter Canned Cards
-            document.querySelectorAll('.script-card').forEach(card => {
-                const text = card.querySelector('.script-text').innerText.toLowerCase();
-                card.style.display = text.includes(query) ? 'flex' : 'none';
+            document.querySelectorAll('.spiel-row').forEach(row => {
+                const text = row.querySelector('.spiel-text').innerText.toLowerCase();
+                row.style.display = text.includes(query) ? 'flex' : 'none';
             });
 
-            // Filter Table Rows
-            document.querySelectorAll('tbody tr').forEach(row => {
-                const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
+            document.querySelectorAll('tbody tr').forEach(tr => {
+                const text = tr.innerText.toLowerCase();
+                tr.style.display = text.includes(query) ? '' : 'none';
             });
         }
     </script>
