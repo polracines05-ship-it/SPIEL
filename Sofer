@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FiveActs Proctoring Operations Dashboard | Mario World 1-1 Edition</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --mario-sky: #5c94fc;
+            --glass-bg: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --text-dark: #111827;
+            --mario-red: #e52521;
+            --mario-green: #00a800;
+            --mario-yellow: #f8b800;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .pixel-font {
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        body {
+            background-color: var(--mario-sky);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- MARIO CANVAS BACKDROP --- */
+        #mario-canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* --- LIGHT GLASSMORPHISM UI CARDS --- */
+        .glass-panel {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25), 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .glass-header {
+            background-color: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        /* --- INTERACTIVE ROW & BUTTON STYLING --- */
+        .spiel-row {
+            background-color: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-left: 5px solid var(--mario-green);
+            transition: all 0.2s ease;
+        }
+
+        .spiel-row:hover {
+            border-color: var(--mario-green);
+            background-color: #ffffff;
+            box-shadow: 0 6px 18px rgba(0, 168, 0, 0.15);
+            transform: translateX(4px);
+        }
+
+        .nav-tab {
+            background-color: rgba(255, 255, 255, 0.7);
+            color: #374151;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .nav-tab:hover {
+            background-color: #ffffff;
+            color: #111827;
+            transform: translateY(-1px);
+        }
+
+        .nav-tab.active {
+            background-color: var(--mario-red);
+            color: #ffffff;
+            border-color: var(--mario-red);
+            font-weight: 800;
+            box-shadow: 0 4px 14px rgba(229, 37, 33, 0.35);
+        }
+
+        .copy-btn {
+            background-color: var(--mario-green);
+            color: #ffffff;
+            font-weight: 700;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 8px rgba(0, 168, 0, 0.3);
+        }
+
+        .copy-btn:hover {
+            background-color: #008800;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 168, 0, 0.4);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
+        .copy-btn.copied {
+            background-color: #111827 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 14px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        /* Accordion transition */
+        .accordion-content {
+            transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), opacity 0.25s ease;
+            overflow: hidden;
+        }
+
+        .accordion-content.collapsed {
+            max-height: 0 !important;
+            opacity: 0;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        /* --- TOAST NOTIFICATION --- */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 9999;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.4); }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.25); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--mario-red); }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen select-none">
+
+    <!-- SUPER MARIO CANVAS BACKGROUND -->
+    <div id="mario-canvas-container">
+        <canvas id="marioCanvas"></canvas>
+    </div>
+
+    <!-- TOAST ALERT -->
+    <div id="toast" class="glass-panel px-5 py-3 border-2 border-green-500 flex items-center gap-3 bg-white text-gray-900 font-bold text-sm shadow-2xl">
+        <span class="text-2xl">🍄</span>
+        <span id="toast-msg">Copied script to clipboard!</span>
+    </div>
+
+    <!-- HEADER -->
+    <header class="glass-header sticky top-0 z-50 px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <!-- Brand Logo Badge -->
+            <div class="bg-red-600 px-3 py-1.5 rounded-xl flex items-center shadow-md border-2 border-yellow-400 transform hover:scale-105 transition">
+                <span class="pixel-font text-white text-xs font-bold tracking-widest uppercase">FIVEACTS</span>
+            </div>
+            <div class="h-6 w-px bg-gray-300 hidden sm:block"></div>
+            <div class="flex flex-col">
+                <span class="text-sm font-black text-gray-900 tracking-wide hidden sm:block">Proctoring Operations Center</span>
+                <span class="text-[10px] text-red-600 font-bold tracking-wider uppercase hidden sm:block">World 1-1 Command Dashboard</span>
+            </div>
+        </div>
+
+        <!-- TAB NAVIGATION -->
+        <nav class="flex items-center gap-2 overflow-x-auto py-1 max-w-full">
+            <button class="nav-tab active px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-2" onclick="switchTab('checkin-view', this)">
+                <span>📋</span> Check-in Steps
+            </button>
+            <button class="nav-tab px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-2" onclick="switchTab('infractions-view', this)">
+                <span>🚨</span> Violations & Thresholds
+            </button>
+            <button class="nav-tab px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-2" onclick="switchTab('policies-view', this)">
+                <span>📄</span> Client Policies
+            </button>
+            <button class="nav-tab px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-2" onclick="switchTab('canned-view', this)">
+                <span>💬</span> Canned Messages
+            </button>
+        </nav>
+
+        <!-- CANVAS ANIMATION TOGGLE -->
+        <button id="toggleCanvasBtn" onclick="toggleMarioCanvas()" class="px-3 py-1.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold text-xs border border-yellow-500 shadow transition flex items-center gap-1.5">
+            <span>🎮</span> <span id="toggleCanvasText">Pause Background</span>
+        </button>
+    </header>
+
+    <!-- SEARCH & OS FILTERS BAR -->
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-6 pt-5 flex flex-col md:flex-row gap-4 justify-between items-center">
+        <!-- SEARCH BAR -->
+        <div class="relative w-full">
+            <input type="text" id="searchInput" oninput="filterAll()" 
+                placeholder="Search check-in steps, infraction rules, canned messages, or client policies..." 
+                class="w-full bg-white/90 backdrop-blur-md border-2 border-white/80 text-gray-900 placeholder-gray-500 text-sm rounded-xl px-11 py-3 focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-500/20 transition-all shadow-lg font-medium"
+            >
+            <svg class="absolute left-3.5 top-3.5 h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+        </div>
+
+        <!-- OS FILTER BAR FOR CHECK-IN STEPS -->
+        <div id="os-filter-bar" class="flex items-center gap-1.5 bg-white/90 p-1.5 rounded-xl border border-white/80 shrink-0 shadow-md">
+            <span class="text-[11px] font-black text-gray-600 uppercase tracking-wider px-2">OS:</span>
+            <button onclick="setOsFilter('ALL')" class="os-btn active px-3 py-1 text-xs font-black rounded-lg bg-red-600 text-white shadow-sm">ALL</button>
+            <button onclick="setOsFilter('WINDOWS')" class="os-btn px-3 py-1 text-xs font-bold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">WINDOWS</button>
+            <button onclick="setOsFilter('MAC')" class="os-btn px-3 py-1 text-xs font-bold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">MAC</button>
+            <button onclick="setOsFilter('LINUX')" class="os-btn px-3 py-1 text-xs font-bold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">LINUX</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINERS -->
+    <main class="relative z-10 w-full max-w-7xl mx-auto px-6 py-6 flex-grow">
+
+        <!-- ==================== TAB 1: CHECK-IN STEPS ==================== -->
+        <div id="checkin-view" class="view-section space-y-6">
+
+            <!-- 1. WELCOME -->
+            <div class="glass-panel overflow-hidden">
+                <div class="p-4 bg-white/60 flex items-center justify-between border-b border-gray-200 cursor-pointer" onclick="toggleAccordion('checkin-acc-1')">
+                    <h2 class="text-xs font-black text-red-600 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></span> 1. Welcome
+                    </h2>
+                    <span class="text-xs font-black bg-red-100 text-red-700 px-3 py-1 rounded-full">3 Scripts</span>
+                </div>
+                <div id="checkin-acc-1" class="accordion-content p-4 space-y-2.5">
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Hello and welcome! I will be your proctor for this exam.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">We have a few steps to complete before your exam begins. This time does not count against your exam time limit.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please hold while we prepare your exam. Thank you for waiting.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. IDENTIFICATION VERIFICATION -->
+            <div class="glass-panel overflow-hidden">
+                <div class="p-4 bg-white/60 flex items-center justify-between border-b border-gray-200 cursor-pointer" onclick="toggleAccordion('checkin-acc-2')">
+                    <h2 class="text-xs font-black text-red-600 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></span> 2. Identification Verification
+                    </h2>
+                    <span class="text-xs font-black bg-red-100 text-red-700 px-3 py-1 rounded-full">10 Scripts</span>
+                </div>
+                <div id="checkin-acc-2" class="accordion-content p-4 space-y-2.5">
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please bring your ID closer to the camera view.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please hold your ID steady.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please flip your ID.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please show the expiration date.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To assist you in reaching out to the exam sponsor who will process the name change, please contact support@certiverse.com. Once completed, you can re-enter the reservation and we will continue.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Thank you. You may keep your ID away now.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. SYSTEM VERIFICATION (WITH PLATFORM TAGS) -->
+            <div class="glass-panel overflow-hidden border-2 border-red-400">
+                <div class="p-4 bg-white/60 flex items-center justify-between border-b border-gray-200 cursor-pointer" onclick="toggleAccordion('checkin-acc-3')">
+                    <h2 class="text-xs font-black text-red-600 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-yellow-500 animate-ping"></span> 3. System Verification [PLATFORM SPECIFIC]
+                    </h2>
+                    <span class="text-xs font-black bg-red-100 text-red-700 px-3 py-1 rounded-full">11 Scripts</span>
+                </div>
+                <div id="checkin-acc-3" class="accordion-content p-4 space-y-2.5">
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4 os-card" data-os="ALL">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-gray-800 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">ALL</span>
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4 os-card" data-os="ALL">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-gray-800 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">ALL</span>
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Please also close the other Certiverse tab, leaving only this one open.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4 os-card" data-os="WINDOWS">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-blue-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">WINDOWS</span>
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Please open your Task Manager then scroll down slowly until you reach the end of the list.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4 os-card" data-os="WINDOWS">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-blue-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">WINDOWS</span>
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Thank you. You may close the Task Manager now.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4 os-card" data-os="WINDOWS">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-blue-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">WINDOWS</span>
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4 os-card" data-os="MAC">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-purple-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">MAC</span>
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Please open your Activity Monitor then scroll down slowly until you reach the end of the list.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4 os-card" data-os="MAC">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-purple-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">MAC</span>
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Thank you. You may close the Activity Monitor now.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4 os-card" data-os="MAC">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-purple-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">MAC</span>
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4 os-card" data-os="LINUX">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-amber-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">LINUX</span>
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4 os-card" data-os="LINUX">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-amber-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">LINUX</span>
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Thank you. You may close the System Monitor now.</div>
+                        </div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4 os-card" data-os="LINUX">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-amber-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">LINUX</span>
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Please close or force quit any applications not related to the exam. If needed, select the application and choose “End Process” or “Kill Process.”</div>
+                        </div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. CLEAR DESK -->
+            <div class="glass-panel overflow-hidden">
+                <div class="p-4 bg-white/60 flex items-center justify-between border-b border-gray-200 cursor-pointer" onclick="toggleAccordion('checkin-acc-4')">
+                    <h2 class="text-xs font-black text-red-600 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></span> 4. Clear Desk
+                    </h2>
+                    <span class="text-xs font-black bg-red-100 text-red-700 px-3 py-1 rounded-full">6 Scripts</span>
+                </div>
+                <div id="checkin-acc-4" class="accordion-content p-4 space-y-2.5">
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Thank you. If there are any items on your desk surface, please remove them now.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, smart glasses, and any other electronic device.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Headphones are not allowed during the exam. Please remove them and put them away.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Hats are not allowed during the exam. Please remove your hat and put it away.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please remove your smartwatch and place it out of reach.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">As outlined in the exam policies, only one laptop or computer without extra screens is allowed. Please remove or cover any additional monitors so they are not facing you directly.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. ROOM SCAN -->
+            <div class="glass-panel overflow-hidden">
+                <div class="p-4 bg-white/60 flex items-center justify-between border-b border-gray-200 cursor-pointer" onclick="toggleAccordion('checkin-acc-5')">
+                    <h2 class="text-xs font-black text-red-600 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></span> 5. Room Scan
+                    </h2>
+                    <span class="text-xs font-black bg-red-100 text-red-700 px-3 py-1 rounded-full">10 Scripts</span>
+                </div>
+                <div id="checkin-acc-5" class="accordion-content p-4 space-y-2.5">
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Thank you. We will now scan the room to confirm that all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">When doing the room scan, please hold your laptop or webcam in a way that allows the camera to clearly capture the room. Rotate it slowly and make sure nothing blocks the view, so we can see all areas of your workspace, including the desk, floor, walls, and surrounding environment.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please show us the desk area.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please show the area under the desk.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">All electronics should be out of reach and turned off.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please ensure your desk is clear of all items.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please direct your camera around the room one more time.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please make sure to capture all corners and edges of your desk during the room scan.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Is it possible for you to improve the lighting in your testing area? The window behind you is creating a backlight effect. Adjusting the lighting or moving slightly would help us proceed.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. EXAM RELEASE -->
+            <div class="glass-panel overflow-hidden">
+                <div class="p-4 bg-white/60 flex items-center justify-between border-b border-gray-200 cursor-pointer" onclick="toggleAccordion('checkin-acc-6')">
+                    <h2 class="text-xs font-black text-red-600 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></span> 6. Exam Release
+                    </h2>
+                    <span class="text-xs font-black bg-red-100 text-red-700 px-3 py-1 rounded-full">5 Scripts</span>
+                </div>
+                <div id="checkin-acc-6" class="accordion-content p-4 space-y-2.5">
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Thank you for your cooperation. You may now click the “Hide Video” button on the side of this chat box.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Thank you. Do you have any questions before beginning your exam?</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Please use this chat if you have any questions that are not related to the exam content. I will now release your exam.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">You can click the “Hide Chat” button on the side or the X at the top-right to begin your exam.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. MISCELLANEOUS -->
+            <div class="glass-panel overflow-hidden">
+                <div class="p-4 bg-white/60 flex items-center justify-between border-b border-gray-200 cursor-pointer" onclick="toggleAccordion('checkin-acc-7')">
+                    <h2 class="text-xs font-black text-red-600 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></span> 7. Miscellaneous
+                    </h2>
+                    <span class="text-xs font-black bg-red-100 text-red-700 px-3 py-1 rounded-full">2 Scripts</span>
+                </div>
+                <div id="checkin-acc-7" class="accordion-content p-4 space-y-2.5">
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">Breaks are not allowed for this exam.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                    <div class="spiel-row p-3.5 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium text-gray-800 spiel-text">I apologize for the delay. Thank you for your patience.</div>
+                        <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 2: INFRACTIONS MATRIX ==================== -->
+        <div id="infractions-view" class="view-section hidden space-y-6">
+            <div class="glass-panel p-6">
+                <!-- Filters Header -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-lg font-black text-gray-900 tracking-wide flex items-center gap-2">
+                            <span>🚨</span> Infractions & Severity Threshold Index
+                        </h2>
+                        <p class="text-xs font-semibold text-gray-600 mt-1">Real-time reference for candidate violations, severity levels, and threshold limits.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="filterInfractions('ALL')" class="inf-btn active px-3 py-1.5 rounded-xl text-xs font-bold bg-red-600 text-white shadow-sm">All</button>
+                        <button onclick="filterInfractions('Minor')" class="inf-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-100 text-gray-800 hover:bg-gray-200">Minor Only</button>
+                        <button onclick="filterInfractions('Major')" class="inf-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-100 text-gray-800 hover:bg-gray-200">Major Only</button>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto rounded-xl border border-gray-200">
+                    <table class="w-full text-left border-collapse bg-white/80">
+                        <thead>
+                            <tr class="bg-gray-100/90 text-gray-700 text-xs uppercase font-black tracking-wider border-b border-gray-200">
+                                <th class="py-3.5 px-4">Infraction Name</th>
+                                <th class="py-3.5 px-4">Context</th>
+                                <th class="py-3.5 px-4">Category</th>
+                                <th class="py-3.5 px-4">Severity</th>
+                                <th class="py-3.5 px-4 text-center">Threshold Limit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="infractions-tbody" class="divide-y divide-gray-200 text-xs font-medium text-gray-800">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 3: CLIENT POLICIES TRACKER ==================== -->
+        <div id="policies-view" class="view-section hidden space-y-6">
+            <div class="glass-panel p-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-lg font-black text-gray-900 tracking-wide flex items-center gap-2">
+                            <span>📄</span> Sponsor & Client Policy Matrix
+                        </h2>
+                        <p class="text-xs font-semibold text-gray-600 mt-1">Quick lookup matrix for name matching, break policies, and SEB requirements.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="filterPolicies('ALL')" class="pol-btn active px-3 py-1.5 rounded-xl text-xs font-bold bg-red-600 text-white shadow-sm">All Clients</button>
+                        <button onclick="filterPolicies('SEB')" class="pol-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-100 text-gray-800 hover:bg-gray-200">SEB Only</button>
+                        <button onclick="filterPolicies('Non-SEB')" class="pol-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-100 text-gray-800 hover:bg-gray-200">Non-SEB</button>
+                        <button onclick="filterPolicies('Breaks Allowed')" class="pol-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-100 text-gray-800 hover:bg-gray-200">Breaks Allowed</button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-gray-200">
+                    <table class="w-full text-left border-collapse bg-white/80">
+                        <thead>
+                            <tr class="bg-gray-100/90 text-gray-700 text-xs uppercase font-black tracking-wider border-b border-gray-200">
+                                <th class="py-3.5 px-4">Client</th>
+                                <th class="py-3.5 px-4">Name Change</th>
+                                <th class="py-3.5 px-4">Breaks Policy</th>
+                                <th class="py-3.5 px-4">Name Policy</th>
+                                <th class="py-3.5 px-4">SEB / Non-SEB</th>
+                                <th class="py-3.5 px-4">Documentation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="policies-tbody" class="divide-y divide-gray-200 text-xs font-medium text-gray-800">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 4: CANNED MESSAGES ==================== -->
+        <div id="canned-view" class="view-section hidden space-y-6">
+            <div class="glass-panel p-6 space-y-6">
+                <div class="border-b border-gray-200 pb-4">
+                    <h2 class="text-lg font-black text-gray-900 tracking-wide flex items-center gap-2">
+                        <span>💬</span> Canned Response Library
+                    </h2>
+                    <p class="text-xs font-semibold text-gray-600 mt-1">Pre-approved response scripts categorized for fast incident dispatch.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Category: Troubleshooting -->
+                    <div class="bg-white/70 p-4 rounded-xl border border-gray-200 space-y-3">
+                        <h3 class="text-xs font-black text-red-600 uppercase tracking-wider flex items-center gap-2">
+                            <span>🛠️</span> Technical Troubleshooting
+                        </h3>
+                        <div class="spiel-row p-3 rounded-xl flex items-center justify-between gap-4">
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Please refresh your browser page and reconnect to your session. Your progress will be saved automatically.</div>
+                            <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                        </div>
+                        <div class="spiel-row p-3 rounded-xl flex items-center justify-between gap-4">
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Please ensure your camera permissions are set to 'Allow' in your browser settings.</div>
+                            <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                        </div>
+                    </div>
+
+                    <!-- Category: Warnings & Violations -->
+                    <div class="bg-white/70 p-4 rounded-xl border border-gray-200 space-y-3">
+                        <h3 class="text-xs font-black text-red-600 uppercase tracking-wider flex items-center gap-2">
+                            <span>⚠️</span> Prohibited Behaviors & Warnings
+                        </h3>
+                        <div class="spiel-row p-3 rounded-xl flex items-center justify-between gap-4">
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Warning: Please ensure your face remains fully in the camera view at all times.</div>
+                            <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                        </div>
+                        <div class="spiel-row p-3 rounded-xl flex items-center justify-between gap-4">
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Warning: Reading questions aloud or talking to yourself is not permitted during this exam.</div>
+                            <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                        </div>
+                        <div class="spiel-row p-3 rounded-xl flex items-center justify-between gap-4">
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Warning: Please refrain from looking away from the screen for extended periods.</div>
+                            <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                        </div>
+                    </div>
+
+                    <!-- Category: Termination -->
+                    <div class="bg-white/70 p-4 rounded-xl border border-gray-200 space-y-3">
+                        <h3 class="text-xs font-black text-red-600 uppercase tracking-wider flex items-center gap-2">
+                            <span>🛑</span> Session Termination Notices
+                        </h3>
+                        <div class="spiel-row p-3 rounded-xl flex items-center justify-between gap-4 border-left-red">
+                            <div class="text-sm font-medium text-gray-800 spiel-text">Due to unresolvable security policy violations, your exam session must be terminated. Please reach out to support@certiverse.com for next steps.</div>
+                            <button class="copy-btn text-xs px-4 py-2 rounded-lg shrink-0" onclick="copySpiel(this)">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        /* ==========================================================================
+           SUPER MARIO 1-1 CANVASES & ANIMATION ENGINE
+           ========================================================================== */
+        const canvas = document.getElementById('marioCanvas');
+        const ctx = canvas.getContext('2d');
+        let animationFrameId = null;
+        let isCanvasRunning = true;
+
+        // Resize Canvas to Viewport
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Mario Animation State
+        const worldState = {
+            scrollX: 0,
+            groundY: 0,
+            mario: {
+                x: 120,
+                y: 0,
+                vx: 0,
+                vy: 0,
+                width: 32,
+                height: 32,
+                isJumping: false,
+                frame: 0,
+                coins: 0
+            },
+            blocks: [],
+            enemies: [],
+            clouds: [],
+            hills: []
+        };
+
+        // Initialize Mario World Objects
+        function initWorld() {
+            worldState.groundY = canvas.height - 64;
+            worldState.mario.y = worldState.groundY - worldState.mario.height;
+
+            // Generate Static Hills
+            worldState.hills = [
+                { x: 100, width: 160, height: 80 },
+                { x: 500, width: 220, height: 110 },
+                { x: 900, width: 140, height: 70 },
+                { x: 1400, width: 200, height: 100 }
+            ];
+
+            // Generate Clouds
+            worldState.clouds = [
+                { x: 150, y: 80, scale: 1 },
+                { x: 450, y: 120, scale: 1.2 },
+                { x: 800, y: 70, scale: 0.9 },
+                { x: 1200, y: 100, scale: 1.1 }
+            ];
+
+            // Generate Blocks (Bricks & Question Blocks)
+            worldState.blocks = [
+                { x: 300, y: worldState.groundY - 110, type: 'brick' },
+                { x: 332, y: worldState.groundY - 110, type: 'question', hit: false, bounceY: 0 },
+                { x: 364, y: worldState.groundY - 110, type: 'brick' },
+                { x: 700, y: worldState.groundY - 110, type: 'question', hit: false, bounceY: 0 },
+                { x: 732, y: worldState.groundY - 110, type: 'brick' },
+                { x: 1100, y: worldState.groundY - 120, type: 'question', hit: false, bounceY: 0 }
+            ];
+
+            // Generate Enemies
+            worldState.enemies = [
+                { x: 450, y: worldState.groundY - 28, type: 'goomba', vx: -1, width: 28, height: 28 },
+                { x: 850, y: worldState.groundY - 32, type: 'koopa', vx: -1.2, width: 28, height: 32 },
+                { x: 1300, y: worldState.groundY - 28, type: 'goomba', vx: -0.8, width: 28, height: 28 }
+            ];
+        }
+
+        // Draw Parallax Clouds
+        function drawClouds() {
+            ctx.fillStyle = '#ffffff';
+            worldState.clouds.forEach(cloud => {
+                const drawX = (cloud.x - worldState.scrollX * 0.3) % (canvas.width + 400) - 200;
+                ctx.beginPath();
+                ctx.arc(drawX, cloud.y, 24 * cloud.scale, 0, Math.PI * 2);
+                ctx.arc(drawX + 20 * cloud.scale, cloud.y - 10 * cloud.scale, 28 * cloud.scale, 0, Math.PI * 2);
+                ctx.arc(drawX + 45 * cloud.scale, cloud.y, 22 * cloud.scale, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // Draw Parallax Hills
+        function drawHills() {
+            ctx.fillStyle = '#00a800';
+            worldState.hills.forEach(hill => {
+                const drawX = (hill.x - worldState.scrollX * 0.5) % (canvas.width + 500) - 250;
+                ctx.beginPath();
+                ctx.moveTo(drawX, worldState.groundY);
+                ctx.lineTo(drawX + hill.width / 2, worldState.groundY - hill.height);
+                ctx.lineTo(drawX + hill.width, worldState.groundY);
+                ctx.fill();
+                // Hill Border
+                ctx.strokeStyle = '#006800';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            });
+        }
+
+        // Draw Ground Floor
+        function drawGround() {
+            const tileSize = 32;
+            const startX = -(worldState.scrollX % tileSize);
+
+            for (let x = startX; x < canvas.width + tileSize; x += tileSize) {
+                // Top dirt border
+                ctx.fillStyle = '#00a800';
+                ctx.fillRect(x, worldState.groundY, tileSize, 8);
+                // Dirt body
+                ctx.fillStyle = '#c84c0c';
+                ctx.fillRect(x, worldState.groundY + 8, tileSize, canvas.height - worldState.groundY - 8);
+                // Brick lines
+                ctx.strokeStyle = '#802800';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x, worldState.groundY + 8, tileSize, tileSize);
+            }
+        }
+
+        // Draw Blocks
+        function drawBlocks() {
+            worldState.blocks.forEach(block => {
+                const drawX = block.x - worldState.scrollX;
+                if (drawX > -50 && drawX < canvas.width + 50) {
+                    const drawY = block.y + (block.bounceY || 0);
+
+                    if (block.type === 'brick') {
+                        ctx.fillStyle = '#c84c0c';
+                        ctx.fillRect(drawX, drawY, 32, 32);
+                        ctx.strokeStyle = '#000000';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(drawX, drawY, 32, 32);
+                    } else if (block.type === 'question') {
+                        ctx.fillStyle = block.hit ? '#802800' : '#f8b800';
+                        ctx.fillRect(drawX, drawY, 32, 32);
+                        ctx.strokeStyle = '#000000';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(drawX, drawY, 32, 32);
+
+                        if (!block.hit) {
+                            ctx.fillStyle = '#000000';
+                            ctx.font = 'bold 18px "Press Start 2P", monospace';
+                            ctx.fillText('?', drawX + 8, drawY + 23);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Draw Pixel Mario
+        function drawMario() {
+            const m = worldState.mario;
+            ctx.save();
+            ctx.translate(m.x, m.y);
+
+            // Mario Cap & Shirt (Red)
+            ctx.fillStyle = '#e52521';
+            ctx.fillRect(4, 0, 24, 8);
+            ctx.fillRect(4, 12, 24, 10);
+
+            // Overalls (Blue)
+            ctx.fillStyle = '#0024db';
+            ctx.fillRect(8, 18, 16, 10);
+
+            // Face (Peach)
+            ctx.fillStyle = '#fcb468';
+            ctx.fillRect(8, 8, 16, 6);
+
+            // Shoes (Brown)
+            ctx.fillStyle = '#802800';
+            ctx.fillRect(4, 28, 10, 4);
+            ctx.fillRect(18, 28, 10, 4);
+
+            ctx.restore();
+        }
+
+        // Draw Enemies
+        function drawEnemies() {
+            worldState.enemies.forEach(e => {
+                const drawX = e.x - worldState.scrollX;
+                if (drawX > -50 && drawX < canvas.width + 50) {
+                    if (e.type === 'goomba') {
+                        // Goomba Head
+                        ctx.fillStyle = '#a84400';
+                        ctx.beginPath();
+                        ctx.arc(drawX + 14, e.y + 14, 14, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Feet
+                        ctx.fillStyle = '#000000';
+                        ctx.fillRect(drawX + 2, e.y + 22, 8, 6);
+                        ctx.fillRect(drawX + 18, e.y + 22, 8, 6);
+                    } else if (e.type === 'koopa') {
+                        // Koopa Shell
+                        ctx.fillStyle = '#00a800';
+                        ctx.fillRect(drawX + 4, e.y + 8, 20, 20);
+                        // Head
+                        ctx.fillStyle = '#f8b800';
+                        ctx.fillRect(drawX, e.y, 12, 12);
+                    }
+                }
+            });
+        }
+
+        // Main Loop
+        function animateWorld() {
+            ctx.fillStyle = '#5c94fc';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Scroll World Forward
+            worldState.scrollX += 2.2;
+
+            // Update Mario Physics & Jump Logic
+            const m = worldState.mario;
+            m.vy += 0.6; // Gravity
+            m.y += m.vy;
+
+            // Land on ground
+            if (m.y >= worldState.groundY - m.height) {
+                m.y = worldState.groundY - m.height;
+                m.vy = 0;
+                m.isJumping = false;
+            }
+
+            // Periodic Random Jumps
+            if (!m.isJumping && Math.random() < 0.015) {
+                m.vy = -12;
+                m.isJumping = true;
+            }
+
+            // Check Collision with Blocks
+            worldState.blocks.forEach(b => {
+                const drawX = b.x - worldState.scrollX;
+                if (Math.abs(m.x - drawX) < 28 && m.y <= b.y + 32 && m.y >= b.y && m.vy < 0) {
+                    m.vy = 2;
+                    if (b.type === 'question' && !b.hit) {
+                        b.hit = true;
+                        b.bounceY = -10;
+                        setTimeout(() => b.bounceY = 0, 150);
+                    }
+                }
+            });
+
+            // Update Enemies
+            worldState.enemies.forEach(e => {
+                e.x += e.vx;
+                if (e.x < worldState.scrollX - 200) {
+                    e.x = worldState.scrollX + canvas.width + Math.random() * 300;
+                }
+            });
+
+            // Render Layers
+            drawClouds();
+            drawHills();
+            drawBlocks();
+            drawEnemies();
+            drawGround();
+            drawMario();
+
+            if (isCanvasRunning) {
+                animationFrameId = requestAnimationFrame(animateWorld);
+            }
+        }
+
+        // Initialize and Start
+        initWorld();
+        animateWorld();
+
+        // Pause/Play Canvas Control
+        function toggleMarioCanvas() {
+            const btnText = document.getElementById('toggleCanvasText');
+            if (isCanvasRunning) {
+                isCanvasRunning = false;
+                cancelAnimationFrame(animationFrameId);
+                btnText.innerText = "Play Background";
+            } else {
+                isCanvasRunning = true;
+                animateWorld();
+                btnText.innerText = "Pause Background";
+            }
+        }
+
+        /* ==========================================================================
+           DATA MATRICES & DASHBOARD INTERACTIVITY
+           ========================================================================== */
+
+        // Infractions Data
+        const infractionsData = [
+            { name: "Another person in the room", context: "Check in, Testing", category: "Prohibited Behavior", severity: "Minor", limit: 2 },
+            { name: "Books / Supplemental Materials", context: "Check in, Testing", category: "Prohibited Items", severity: "Minor", limit: 2 },
+            { name: "Camera", context: "Check in, Testing", category: "Prohibited Electronic Device", severity: "Minor", limit: 2 },
+            { name: "Desk is not cleared off", context: "Check in, Testing", category: "Check in", severity: "Minor", limit: 2 },
+            { name: "Desk is not cleared off (Check-in only)", context: "Check in", category: "Check in", severity: "Minor", limit: 2 },
+            { name: "Does not do complete scan", context: "Check in", category: "Check in", severity: "Minor", limit: 1 },
+            { name: "Eating/drinking without approved Special Accom", context: "Testing", category: "Prohibited Behavior", severity: "Minor", limit: 1 },
+            { name: "Environment or camera view too dark / candidate not visible", context: "Check in", category: "Check in", severity: "Minor", limit: 2 },
+            { name: "Face coverings", context: "Check in", category: "Check in", severity: "Minor", limit: 2 },
+            { name: "Face out of view", context: "Testing", category: "Prohibited Behavior", severity: "Minor", limit: 2 },
+            { name: "Failure to return from break", context: "Testing", category: "Prohibited Behavior", severity: "Major", limit: 0 },
+            { name: "Headphones / Earbuds", context: "Check in", category: "Prohibited Electronic Device", severity: "Minor", limit: 1 },
+            { name: "Headwear (unless exempt)", context: "Check in", category: "Prohibited Items", severity: "Minor", limit: 1 },
+            { name: "Internal environment too loud", context: "Check in, Testing", category: "Prohibited Behavior", severity: "Minor", limit: 2 },
+            { name: "Leaves testing area", context: "Testing", category: "Prohibited Behavior", severity: "Minor", limit: 1 },
+            { name: "Looking elsewhere", context: "Testing", category: "Prohibited Behavior", severity: "Minor", limit: 4 },
+            { name: "Mobile phone in use", context: "Testing", category: "Prohibited Electronic Device", severity: "Major", limit: 0 },
+            { name: "Mobile phone visible", context: "Check in", category: "Prohibited Electronic Device", severity: "Minor", limit: 1 },
+            { name: "Not following proctor instructions", context: "Check in, Testing", category: "Prohibited Behavior", severity: "Minor", limit: 2 },
+            { name: "Proctor harassment (disrespectful, name calling)", context: "Check in, Testing", category: "Prohibited Behavior", severity: "Major", limit: 0 },
+            { name: "Proper clothing", context: "Check in", category: "Prohibited Behavior", severity: "Minor", limit: 1 },
+            { name: "Remote Desktop Applications", context: "Check in, Testing", category: "Prohibited Behavior", severity: "Major", limit: 0 },
+            { name: "Secondary device (computer, laptop, calculator)", context: "Check in", category: "Prohibited Electronic Device", severity: "Minor", limit: 1 },
+            { name: "Smart Watch", context: "Check in", category: "Prohibited Electronic Device", severity: "Minor", limit: 1 },
+            { name: "Smoking or Vaping", context: "Check in, Testing", category: "Prohibited Behavior", severity: "Minor", limit: 1 },
+            { name: "Suspicious behavior", context: "Testing", category: "Prohibited Behavior", severity: "Minor", limit: 2 },
+            { name: "Talking aloud", context: "Testing", category: "Prohibited Behavior", severity: "Minor", limit: 2 },
+            { name: "Talking to others", context: "Testing", category: "Prohibited Behavior", severity: "Minor", limit: 2 },
+            { name: "Whiteboard / bulletin board with writing", context: "Check in, Testing", category: "Prohibited Items", severity: "Minor", limit: 2 }
+        ];
+
+        // Client Policies Data
+        const policiesData = [
+            { client: "Akylade", change: "Allowed", breaks: "One (1) Five (5) Minute Break", namePol: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
+            { client: "Atlassian", change: "Not Allowed", breaks: "None", namePol: "Nicknames Allowed", seb: "SEB", docs: "Not Allowed" },
+            { client: "Blue Prism", change: "Allowed", breaks: "None", namePol: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
+            { client: "BMC", change: "Not Allowed", breaks: "One (1) Five (5) Minute Break", namePol: "Name Must Match Govt. ID", seb: "SEB", docs: "Allowed" },
+            { client: "Camunda", change: "Allowed", breaks: "None", namePol: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
+            { client: "Casbo", change: "Allowed", breaks: "None", namePol: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
+            { client: "DocuSign", change: "Not Allowed", breaks: "None", namePol: "Nicknames Allowed", seb: "SEB", docs: "Not Allowed" },
+            { client: "HashiCorp", change: "Not Allowed", breaks: "None (Vault Prep: One (1) Fifteen (15) Min Break)", namePol: "Name Must Match Govt. ID", seb: "Non-SEB", docs: "Not Allowed" },
+            { client: "InterSystems", change: "Not Allowed", breaks: "One (1) Ten (10) Minute Break", namePol: "Nicknames Allowed", seb: "SEB", docs: "Depends on Exam" },
+            { client: "NRPP", change: "Allowed", breaks: "One (1) Fifteen (15) Minute Break", namePol: "Nicknames Allowed", seb: "SEB", docs: "Allowed" },
+            { client: "NVIDIA", change: "Allowed", breaks: "None (Beta 180: Two (2) Five (5) Min Breaks)", namePol: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
+            { client: "Open Text", change: "Not Allowed", breaks: "None", namePol: "Name Must Match Govt. ID", seb: "SEB", docs: "Allowed" },
+            { client: "Project Success Inc.", change: "Allowed", breaks: "None", namePol: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
+            { client: "SideFX", change: "Allowed", breaks: "None", namePol: "Name Must Match Govt. ID", seb: "SEB", docs: "Textbooks Allowed" },
+            { client: "VastData", change: "Allowed", breaks: "None", namePol: "Name Must Match Govt. ID", seb: "SEB", docs: "Not Allowed" },
+            { client: "WellSky", change: "Allowed", breaks: "Unlimited Breaks (10–20 Mins)", namePol: "Name Must Match Govt. ID", seb: "SEB", docs: "Allowed" }
+        ];
+
+        // Render Infractions Table
+        function renderInfractions(filter = 'ALL') {
+            const tbody = document.getElementById('infractions-tbody');
+            tbody.innerHTML = '';
+
+            const filtered = infractionsData.filter(i => filter === 'ALL' || i.severity === filter);
+
+            filtered.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-red-50/50 transition";
+                
+                const sevBadge = item.severity === 'Major' 
+                    ? `<span class="bg-red-600 text-white font-bold px-2.5 py-0.5 rounded-full text-[10px]">MAJOR</span>`
+                    : `<span class="bg-amber-500 text-white font-bold px-2.5 py-0.5 rounded-full text-[10px]">MINOR</span>`;
+
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-bold text-gray-900">${item.name}</td>
+                    <td class="py-3 px-4 text-gray-600">${item.context}</td>
+                    <td class="py-3 px-4 text-gray-600">${item.category}</td>
+                    <td class="py-3 px-4">${sevBadge}</td>
+                    <td class="py-3 px-4 text-center font-black text-gray-900">${item.limit}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Render Policies Table
+        function renderPolicies(filter = 'ALL') {
+            const tbody = document.getElementById('policies-tbody');
+            tbody.innerHTML = '';
+
+            const filtered = policiesData.filter(p => {
+                if (filter === 'ALL') return true;
+                if (filter === 'SEB') return p.seb === 'SEB';
+                if (filter === 'Non-SEB') return p.seb === 'Non-SEB';
+                if (filter === 'Breaks Allowed') return !p.breaks.startsWith('None');
+                return true;
+            });
+
+            filtered.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-red-50/50 transition";
+
+                const sebBadge = p.seb === 'SEB' 
+                    ? `<span class="bg-blue-600 text-white font-bold px-2 py-0.5 rounded text-[10px]">SEB</span>`
+                    : `<span class="bg-purple-600 text-white font-bold px-2 py-0.5 rounded text-[10px]">NON-SEB</span>`;
+
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-black text-gray-900">${p.client}</td>
+                    <td class="py-3 px-4 text-gray-700 font-semibold">${p.change}</td>
+                    <td class="py-3 px-4 text-gray-700">${p.breaks}</td>
+                    <td class="py-3 px-4 text-gray-700">${p.namePol}</td>
+                    <td class="py-3 px-4">${sebBadge}</td>
+                    <td class="py-3 px-4 text-gray-700">${p.docs}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Initialize Tables
+        renderInfractions();
+        renderPolicies();
+
+        // Switch Views
+        function switchTab(viewId, btn) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(viewId).classList.remove('hidden');
+            btn.classList.add('active');
+        }
+
+        // Toggle Accordion Panels
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('collapsed');
+        }
+
+        // Copy Script to Clipboard & Show Toast
+        function copySpiel(btn) {
+            const row = btn.closest('.spiel-row');
+            const text = row.querySelector('.spiel-text').innerText;
+
+            // Fallback for document copy
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            // Button Feedback
+            btn.classList.add('copied');
+            btn.innerText = "Copied!";
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.innerText = "Copy";
+            }, 1800);
+
+            // Toast Alert
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // Filter Infractions
+        function filterInfractions(type) {
+            document.querySelectorAll('.inf-btn').forEach(b => {
+                b.classList.remove('bg-red-600', 'text-white', 'active');
+                b.classList.add('bg-gray-100', 'text-gray-800');
+            });
+            event.target.classList.add('bg-red-600', 'text-white', 'active');
+            renderInfractions(type);
+        }
+
+        // Filter Policies
+        function filterPolicies(type) {
+            document.querySelectorAll('.pol-btn').forEach(b => {
+                b.classList.remove('bg-red-600', 'text-white', 'active');
+                b.classList.add('bg-gray-100', 'text-gray-800');
+            });
+            event.target.classList.add('bg-red-600', 'text-white', 'active');
+            renderPolicies(type);
+        }
+
+        // Filter OS Cards
+        function setOsFilter(os) {
+            document.querySelectorAll('.os-btn').forEach(b => {
+                b.classList.remove('bg-red-600', 'text-white', 'active');
+                b.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            event.target.classList.add('bg-red-600', 'text-white', 'active');
+
+            document.querySelectorAll('.os-card').forEach(card => {
+                const cardOs = card.getAttribute('data-os');
+                if (os === 'ALL' || cardOs === 'ALL' || cardOs === os) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Universal Search Filter
+        function filterAll() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+
+            document.querySelectorAll('.spiel-row').forEach(row => {
+                const text = row.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    row.style.display = 'flex';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
