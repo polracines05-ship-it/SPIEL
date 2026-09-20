@@ -50,6 +50,20 @@
       radial-gradient(circle at 15% 80%, rgba(212, 163, 56, 0.25), transparent 55%),
       linear-gradient(180deg, #1f0808 0%, #151016 35%, #0d1218 70%, #050404 100%);
   }
+
+  /* DRIFTING CLOUDS & FOG */
+  .sky-clouds {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 20% at 20% 15%, rgba(255, 255, 255, 0.08), transparent 70%),
+      radial-gradient(ellipse 80% 30% at 75% 25%, rgba(255, 255, 255, 0.06), transparent 75%),
+      radial-gradient(ellipse 50% 15% at 50% 40%, rgba(212, 163, 56, 0.05), transparent 80%);
+    animation: floatClouds 45s ease-in-out infinite alternate;
+  }
+  @keyframes floatClouds {
+    0% { transform: translateX(-30px) scale(1); }
+    100% { transform: translateX(30px) scale(1.05); }
+  }
   
   /* RED RISING SUN (RISING EDO SUN) */
   .scene-sun {
@@ -68,6 +82,12 @@
 
   .scene-mountains { position: absolute; left: 0; right: 0; bottom: 12%; height: 48%; opacity: 0.9; }
   .scene-mountains svg { width: 100%; height: 100%; display: block; }
+
+  /* FORESTS / TREES SILHOUETTE */
+  .scene-trees {
+    position: absolute; left: 0; right: 0; bottom: 18%; height: 22%; opacity: 0.85;
+  }
+  .scene-trees svg { width: 100%; height: 100%; display: block; }
   
   /* Kyoto Pagoda */
   .scene-pagoda { position: absolute; right: 8%; bottom: 18%; width: 220px; opacity: 0.9; filter: drop-shadow(0 0 25px rgba(0,0,0,0.95)); }
@@ -335,6 +355,24 @@
   .risk-legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.74rem; color: var(--parchment-faint); margin-bottom: 16px; align-items: center; }
   .risk-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
 
+  /* ================= TROUBLESHOOTING FLOW STYLES ================= */
+  .trouble-section { margin-bottom: 28px; }
+  .trouble-card {
+    border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 14px;
+    background: rgba(255,255,255,0.03); backdrop-filter: blur(8px); box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+  }
+  .trouble-card h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--gold-bright); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .flow-step {
+    border-left: 2px stroke var(--line); padding-left: 14px; margin-bottom: 12px; position: relative;
+  }
+  .flow-step-num { font-size: 0.72rem; font-weight: 700; color: var(--gold-bright); text-transform: uppercase; letter-spacing: 0.05em; }
+  .flow-step-title { font-size: 0.92rem; font-weight: 600; color: var(--parchment); margin: 2px 0 4px; }
+  .flow-step-action { font-size: 0.84rem; color: var(--parchment-dim); line-height: 1.4; margin-bottom: 6px; }
+  .flow-step-spiel {
+    background: rgba(0,0,0,0.35); border: 1px solid var(--line-soft); border-radius: 6px; padding: 8px 10px;
+    font-size: 0.82rem; color: #efe9dc; margin-top: 4px; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  }
+
   /* ================= RESPONSIVE ================= */
   @media (max-width: 960px) {
     .sidebar { width: 240px; }
@@ -362,6 +400,7 @@
   <!-- ================= ATMOSPHERIC SCENE ================= -->
   <div class="scene" aria-hidden="true">
     <div class="scene-sky"></div>
+    <div class="sky-clouds"></div>
     <div class="scene-sun"></div>
     <div class="lens-flare"></div>
     
@@ -370,6 +409,23 @@
       <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
         <polygon points="0,300 0,160 120,70 280,180 450,80 620,190 800,60 980,170 1200,100 1200,300" fill="#080b0d"/>
         <polygon points="0,300 0,210 180,130 380,210 580,140 820,220 1020,150 1200,190 1200,300" fill="#12181e" opacity=".92"/>
+      </svg>
+    </div>
+
+    <!-- Pine Forest Silhouettes -->
+    <div class="scene-trees">
+      <svg viewBox="0 0 1200 150" preserveAspectRatio="none">
+        <g fill="#080b0d" opacity="0.85">
+          <polygon points="50,150 60,110 70,150"/>
+          <polygon points="65,150 75,95 85,150"/>
+          <polygon points="120,150 135,80 150,150"/>
+          <polygon points="140,150 150,100 160,150"/>
+          <polygon points="280,150 295,75 310,150"/>
+          <polygon points="300,150 310,90 320,150"/>
+          <polygon points="850,150 865,70 880,150"/>
+          <polygon points="870,150 880,95 890,150"/>
+          <polygon points="1020,150 1035,85 1050,150"/>
+        </g>
       </svg>
     </div>
 
@@ -539,6 +595,7 @@
     <div class="view-selectors">
       <button class="view-btn active" data-view="view-home" onclick="switchView('view-home', this)"><span class="vi">🏯</span> Home</button>
       <button class="view-btn" data-view="view-checkin" onclick="switchView('view-checkin', this)"><span class="vi">📜</span> Check-In Steps</button>
+      <button class="view-btn" data-view="view-troubleshooting" onclick="switchView('view-troubleshooting', this)"><span class="vi">🛠️</span> Troubleshooting</button>
       <button class="view-btn" data-view="view-library" onclick="switchView('view-library', this)"><span class="vi">🔍</span> Canned Messages</button>
       <button class="view-btn" data-view="view-threshold" onclick="switchView('view-threshold', this)"><span class="vi">⚠️</span> Threshold Center</button>
       <button class="view-btn" data-view="view-policies" onclick="switchView('view-policies', this)"><span class="vi">🗝️</span> Client Policies</button>
@@ -600,6 +657,106 @@
       <p class="page-sub">Work sequentially through categories 1&ndash;13. A proctor can complete a full check-in using this guidance.</p>
       <div style="margin-bottom:16px;"><button class="filter-chip" onclick="resetProgress()">Reset progress</button></div>
       <div id="checkinAccordions"></div>
+    </div>
+
+    <!-- TROUBLESHOOTING VIEW -->
+    <div id="view-troubleshooting" class="dashboard-view">
+      <h2 class="page-title">Hardware & System Troubleshooting</h2>
+      <p class="page-sub">Guided workflows for candidate audio, video, and screen sharing issues across SEB &amp; Non-SEB environments.</p>
+
+      <div class="trouble-section">
+        <div class="trouble-card">
+          <h3>🎤 Microphone Troubleshooting</h3>
+          
+          <div class="flow-step">
+            <div class="flow-step-num">Step 1 — Browser Check</div>
+            <div class="flow-step-title">Verify Compatible Browser</div>
+            <div class="flow-step-action">Check if candidate is on Google Chrome or Microsoft Edge. If No, instruct to switch.</div>
+            <div class="flow-step-spiel">
+              <span>"Please ensure you are using the latest version of Google Chrome or Microsoft Edge for this exam."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please ensure you are using the latest version of Google Chrome or Microsoft Edge for this exam.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 2 — Device Mute &amp; Permissions</div>
+            <div class="flow-step-title">Hardware Mute &amp; OS Permissions</div>
+            <div class="flow-step-action">Verify mic hardware toggle and OS Privacy Settings (Windows Sound Settings / macOS Privacy &amp; Security).</div>
+            <div class="flow-step-spiel">
+              <span>"Please check if your microphone has a physical mute switch. Also verify in your system settings that microphone access is allowed for your browser."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check if your microphone has a physical mute switch. Also verify in your system settings that microphone access is allowed for your browser.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 3 — Input Selection &amp; Network</div>
+            <div class="flow-step-title">Select Correct Input &amp; Disable VPN</div>
+            <div class="flow-step-action">Confirm correct microphone is chosen on pre-flight screen and disable active VPN/ZScaler.</div>
+            <div class="flow-step-spiel">
+              <span>"Please refresh your tab to access the pre-flight screen and ensure the correct microphone device is selected. Please also disable any active VPN or proxy."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please refresh your tab to access the pre-flight screen and ensure the correct microphone device is selected. Please also disable any active VPN or proxy.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 4 — Reboot &amp; Fallback</div>
+            <div class="flow-step-title">Restart Device / Alternate Hardware</div>
+            <div class="flow-step-action">If mic remains unresponsive, request full reboot to reset audio drivers or switch to fallback device.</div>
+            <div class="flow-step-spiel">
+              <span>"Please perform a full restart of your computer to reset your audio drivers, then relaunch your exam reservation. If the issue persists, you may need to use a secondary computer."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please perform a full restart of your computer to reset your audio drivers, then relaunch your exam reservation. If the issue persists, you may need to use a secondary computer.')">⚜ Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="trouble-card">
+          <h3>🖥️ Screen Sharing Troubleshooting</h3>
+          
+          <div class="flow-step">
+            <div class="flow-step-num">Step 1 — Display &amp; OS Permissions</div>
+            <div class="flow-step-title">Disconnect Dual Displays &amp; Enable Recording</div>
+            <div class="flow-step-action">Disconnect secondary monitors and confirm macOS Screen Recording / Windows Graphics permissions.</div>
+            <div class="flow-step-spiel">
+              <span>"Please disconnect all external or secondary monitors. Only one screen is allowed. For Mac users, ensure browser Screen Recording is allowed in System Preferences > Privacy."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please disconnect all external or secondary monitors. Only one screen is allowed. For Mac users, ensure browser Screen Recording is allowed in System Preferences > Privacy.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 2 — Network &amp; Session Reset</div>
+            <div class="flow-step-title">Switch Connection or Rejoin</div>
+            <div class="flow-step-action">Switch to personal Wi-Fi or mobile hotspot if corporate network blocks WebRTC streams. Rejoin session.</div>
+            <div class="flow-step-spiel">
+              <span>"It appears your network is blocking screen sharing. Please try disabling any VPN or switching to a mobile hotspot or personal Wi-Fi connection, then refresh your page."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It appears your network is blocking screen sharing. Please try disabling any VPN or switching to a mobile hotspot or personal Wi-Fi connection, then refresh your page.')">⚜ Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="trouble-card">
+          <h3>📷 Camera Troubleshooting</h3>
+          
+          <div class="flow-step">
+            <div class="flow-step-num">Step 1 — Physical Lens &amp; OS Permissions</div>
+            <div class="flow-step-title">Check Privacy Cover &amp; Camera Permissions</div>
+            <div class="flow-step-action">Inspect physical webcam slider/switch and verify browser pad-lock camera permissions.</div>
+            <div class="flow-step-spiel">
+              <span>"Please check if your camera has a physical sliding cover or hardware switch and ensure it is open. Verify that browser camera access is set to 'Allow'."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check if your camera has a physical sliding cover or hardware switch and ensure it is open. Verify that browser camera access is set to \'Allow\'.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 2 — Driver Reset &amp; Escalation</div>
+            <div class="flow-step-title">Reboot System or Contact Support</div>
+            <div class="flow-step-action">Reboot system to clear video capture locks. If persistent, escalate to support@certiverse.com.</div>
+            <div class="flow-step-spiel">
+              <span>"Please restart your computer to reset your video capture drivers and relaunch the exam. If the issue persists, please contact support@certiverse.com for rescheduling."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please restart your computer to reset your video capture drivers and relaunch the exam. If the issue persists, please contact support@certiverse.com for rescheduling.')">⚜ Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- CANNED MESSAGE LIBRARY VIEW -->
@@ -769,6 +926,7 @@
     {id:"m8_4", cat:"8", tags:["critical"], text:"Please ask all others to leave the room."},
     {id:"m8_5", cat:"8", tags:[], text:"Please remain on the exam environment tab only."},
     {id:"m8_6", cat:"8", tags:["critical"], text:"Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."},
+    {id:"m8_7", cat:"8", tags:["critical"], text:"Unfortunately, we are not allowed to release the exam unless all requirements are met."},
 
     // 9. Technical Support
     {id:"m9_1", cat:"9", tags:[], text:"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."},
@@ -921,6 +1079,20 @@
     return arr;
   }
   function isIn(key, id){ return loadSet(key).indexOf(id) !== -1; }
+
+  window.copyDirectText = function(btn, text) {
+    function showCopied(){
+      var original = btn.textContent;
+      btn.textContent = "✓ Copied";
+      btn.classList.add("copied");
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
+    }
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(showCopied, function(){ fallbackCopy(text, showCopied); });
+    } else {
+      fallbackCopy(text, showCopied);
+    }
+  };
 
   var TAG_LABELS = {win:"Windows", mac:"macOS", linux:"Linux", critical:"Termination risk", hashi:"Hashicorp"};
 
