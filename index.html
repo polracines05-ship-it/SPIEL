@@ -3,931 +3,1346 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveActs Proctor Dojo Command Center</title>
+<title>FiveActs Proctor Dojo — Kyoto Edition</title>
 <style>
   :root {
-    --bg-deep: #141419;
-    --bg-surface: #1e1e26;
-    --bg-card: #262630;
-    --bg-card-hover: #2e2e3a;
-    --border-subtle: #363645;
-    --border-accent: #8b5cf6;
-    --text-main: #f4f4f5;
-    --text-muted: #c2c2ce;
-    --accent-gold: #fbbf24;
-    --accent-gold-glow: rgba(251, 191, 36, 0.25);
-    --accent-crimson: #ef4444;
-    --accent-indigo: #6366f1;
-    --accent-emerald: #10b981;
-    --sidebar-width: 280px;
+    --ink: #0c0a09;
+    --slate: #15191d;
+    --slate-2: #1e242b;
+    --parchment: #f3ebd9;
+    --parchment-dim: #d3c5a5;
+    --parchment-faint: #a39577;
+    --blue: #324b5c;
+    --blue-bright: #527d9a;
+    --bamboo: #3d5943;
+    --bamboo-bright: #618c69;
+    --gold: #cb9b39;
+    --gold-bright: #ebd080;
+    --crimson: #8a2424;
+    --crimson-bright: #be413b;
+    --line: rgba(203, 155, 57, 0.25);
+    --line-soft: rgba(243, 235, 217, 0.08);
+    --shadow: rgba(0, 0, 0, 0.65);
+    --font-head: Georgia, "Iowan Old Style", "Palatino Linotype", "Hiragino Mincho ProN", serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
-  html, body { height: 100vh; overflow: hidden; background-color: var(--bg-deep); color: var(--text-main); }
-
-  .dojo-atmosphere {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0;
-    background: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(251, 191, 36, 0.06) 0%, transparent 40%);
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font-body);
+    color: var(--parchment);
+    background-color: var(--ink);
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
   }
 
-  .app-container { display: flex; height: 100vh; width: 100vw; position: relative; z-index: 1; }
+  /* ================= ATMOSPHERIC SCENE (KYOTO SAMURAI PERIOD) ================= */
+  .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .scene-sky {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% -10%, rgba(138, 36, 36, 0.35), transparent 70%),
+      radial-gradient(circle at 80% 20%, rgba(235, 208, 128, 0.08), transparent 40%),
+      linear-gradient(180deg, #16100e 0%, #121619 35%, #0d1215 70%, #070605 100%);
+  }
+  
+  /* Edo Moon / Sun Backdrop Accent */
+  .scene-sun {
+    position: absolute; top: 8%; right: 12%; width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(203, 155, 57, 0.15) 0%, rgba(138, 36, 36, 0.08) 50%, transparent 75%);
+    filter: blur(20px);
+  }
 
-  /* SIDEBAR */
+  .scene-fog {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(211, 197, 165, 0.03) 30%, rgba(211, 197, 165, 0.07) 60%, transparent 90%);
+    background-size: 200% 200%;
+    animation: driftFog 60s ease-in-out infinite alternate;
+  }
+  @keyframes driftFog { 0% { background-position: 0% 30%; } 100% { background-position: 100% 70%; } }
+
+  .scene-mountains { position: absolute; left: 0; right: 0; bottom: 20%; height: 40%; opacity: 0.65; }
+  .scene-mountains svg { width: 100%; height: 100%; display: block; }
+  
+  .scene-pagoda { position: absolute; right: 5%; bottom: 24%; width: 220px; opacity: 0.45; filter: drop-shadow(0 0 12px rgba(0,0,0,0.8)); }
+  .scene-pagoda svg { width: 100%; height: auto; display: block; }
+
+  .scene-torii { position: absolute; left: 6%; bottom: 22%; width: 140px; opacity: 0.35; filter: drop-shadow(0 0 10px rgba(0,0,0,0.9)); }
+  .scene-torii svg { width: 100%; height: auto; display: block; }
+
+  .scene-bamboo { position: absolute; left: 0; right: 0; bottom: 0; height: 32%; opacity: 0.48; }
+  .scene-bamboo svg { width: 100%; height: 100%; display: block; }
+
+  .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 250px 80px rgba(0,0,0,0.75); }
+
+  #sakuraCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+
+  /* ================= SIDEBAR ================= */
   .sidebar {
-    width: var(--sidebar-width); background-color: var(--bg-surface); border-right: 1px solid var(--border-subtle);
-    display: flex; flex-direction: column; flex-shrink: 0; z-index: 10; box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+    position: relative; z-index: 2;
+    width: 290px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
+    background: linear-gradient(180deg, rgba(21, 25, 29, 0.94), rgba(12, 10, 9, 0.96));
+    border-right: 1px solid var(--line);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    display: flex; flex-direction: column; padding: 0;
   }
-  .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-subtle); background: linear-gradient(to bottom, #22222d, var(--bg-surface)); display: flex; align-items: center; gap: 14px; }
-  
-  .five-acts-logo {
-    width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, var(--accent-gold), #d97706);
-    display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: #141419;
-    box-shadow: 0 4px 12px var(--accent-gold-glow); flex-shrink: 0; position: relative; overflow: hidden;
+  .sidebar::before {
+    content: ""; display: block; height: 4px; width: 100%; flex-shrink: 0;
+    background: linear-gradient(90deg, transparent, var(--gold-bright), transparent);
   }
-  .five-acts-logo::after { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shine 3s infinite; }
-  @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
-
-  .clan-seal { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent-gold); font-weight: 700; margin-bottom: 2px; }
-  .dojo-title { font-size: 1rem; font-weight: 800; letter-spacing: 0.05em; color: #fff; }
-  .dojo-subtitle { font-size: 0.68rem; color: var(--text-muted); }
-
-  .nav-scroll { flex-grow: 1; overflow-y: auto; padding: 16px 12px; }
-  .nav-group-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: #828294; margin: 16px 8px 8px; font-weight: 700; }
-  
-  .nav-item {
-    display: flex; align-items: center; justify-content: space-between; padding: 11px 14px;
-    color: var(--text-muted); text-decoration: none; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
-    margin-bottom: 4px; transition: all 0.2s ease; border: 1px solid transparent; cursor: pointer;
+  .sidebar-header { padding: 22px 18px 18px; text-align: center; border-bottom: 1px solid var(--line); }
+  .brand-mark {
+    width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 55%, #6e5019 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.65rem; box-shadow: 0 0 0 3px rgba(203, 155, 57, 0.22), 0 8px 24px rgba(0,0,0,0.7);
+    color: #1a1205; font-family: var(--font-head); font-weight: 700;
   }
-  .nav-item:hover { background-color: var(--bg-card); color: var(--text-main); border-color: var(--border-subtle); }
-  .nav-item.active { background-color: var(--bg-card); color: var(--accent-gold); border-color: rgba(251, 191, 36, 0.4); box-shadow: 0 0 15px var(--accent-gold-glow); }
-  .nav-badge { font-size: 0.65rem; background: var(--border-subtle); padding: 2px 6px; border-radius: 4px; color: var(--text-main); }
-
-  .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border-subtle); font-size: 0.7rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); }
-
-  /* MAIN VIEWPORT */
-  .main-viewport { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; background-color: var(--bg-deep); }
-  
-  .top-command-bar {
-    padding: 16px 32px; background-color: var(--bg-surface); border-bottom: 1px solid var(--border-subtle);
-    display: flex; justify-content: space-between; align-items: center; min-height: 76px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  .sidebar-header h1 {
+    font-family: var(--font-head); font-size: 1.1rem; letter-spacing: 0.08em; color: var(--parchment);
+    text-transform: uppercase;
   }
-  .page-indicator h2 { font-size: 1.25rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
-  .page-indicator p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
-  
-  .clock-badge {
-    background: var(--bg-card); border: 1px solid var(--border-subtle); padding: 8px 16px; border-radius: 8px;
-    font-family: monospace; font-size: 0.9rem; font-weight: 700; color: var(--accent-gold); letter-spacing: 0.05em;
-    display: flex; align-items: center; gap: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+  .sidebar-header .subtitle { font-size: 0.68rem; color: var(--gold-bright); margin-top: 5px; letter-spacing: 0.14em; text-transform: uppercase; }
+
+  .view-selectors { padding: 14px 12px; border-bottom: 1px solid var(--line); }
+  .view-btn {
+    width: 100%; display: flex; align-items: center; gap: 10px; background: none; border: 1px solid transparent;
+    color: var(--parchment-dim); text-align: left; padding: 10px 12px; font-size: 0.86rem; font-weight: 600;
+    border-radius: 6px; cursor: pointer; margin-bottom: 4px; transition: all 0.15s ease;
+    font-family: var(--font-body);
+  }
+  .view-btn .vi { font-size: 1rem; width: 1.3em; text-align: center; }
+  .view-btn:hover { background-color: rgba(203, 155, 57, 0.1); color: var(--parchment); }
+  .view-btn.active { background-color: rgba(203, 155, 57, 0.16); color: var(--gold-bright); border-color: var(--line); }
+
+  .nav-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--parchment-faint); margin: 14px 16px 6px; font-weight: 700; }
+  .nav-links { list-style: none; padding: 0 8px; overflow-y: auto; flex-grow: 1; }
+  .nav-links li { margin-bottom: 2px; }
+  .nav-links button {
+    width: 100%; text-align: left; background: none; border: none; cursor: pointer;
+    display: flex; justify-content: space-between; gap: 6px;
+    padding: 7px 10px; color: var(--parchment-dim); border-radius: 4px; font-size: 0.78rem;
+    transition: all 0.12s ease; font-family: var(--font-body);
+  }
+  .nav-links button:hover { background-color: rgba(203, 155, 57, 0.1); color: var(--gold-bright); padding-left: 14px; }
+  .nav-links .cnt { color: var(--parchment-faint); font-size: 0.7rem; }
+
+  .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--line); font-size: 0.66rem; color: var(--parchment-faint); text-align: center; letter-spacing: 0.05em; }
+
+  /* ================= MAIN CONTENT ================= */
+  .main-content { position: relative; z-index: 2; flex-grow: 1; padding: 26px 32px 50px; min-width: 0; }
+  .search-wrapper {
+    position: sticky; top: 0; z-index: 50; padding: 4px 0 16px;
+    background: linear-gradient(180deg, var(--ink) 78%, transparent);
+  }
+  .search-input {
+    width: 100%; padding: 13px 20px; font-size: 0.95rem; border-radius: 10px;
+    border: 1px solid var(--line); background: rgba(21, 25, 29, 0.85); backdrop-filter: blur(8px);
+    color: var(--parchment); outline: none; transition: border-color 0.15s, box-shadow 0.15s; font-family: var(--font-body);
+  }
+  .search-input::placeholder { color: var(--parchment-faint); }
+  .search-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(203, 155, 57, 0.16); }
+  .search-count { font-size: 0.74rem; color: var(--parchment-faint); margin-top: 8px; min-height: 1em; }
+
+  .dashboard-view { display: none; }
+  .dashboard-view.active { display: block; }
+
+  .page-title { font-family: var(--font-head); font-size: 1.55rem; color: var(--parchment); margin-bottom: 4px; letter-spacing: 0.02em; }
+  .page-sub { font-size: 0.85rem; color: var(--parchment-faint); margin-bottom: 22px; }
+
+  .section-container { margin-bottom: 26px; scroll-margin-top: 90px; }
+  .section-title {
+    font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; color: var(--parchment);
+    border-bottom: 1px solid var(--line); padding-bottom: 9px; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .section-count { font-size: 0.7rem; font-weight: 600; color: var(--parchment-faint); background: rgba(255,255,255,0.04); border: 1px solid var(--line); padding: 2px 9px; border-radius: 10px; font-family: var(--font-body); }
+  .empty-state { color: var(--parchment-faint); font-size: 0.85rem; padding: 24px 18px; text-align: center; border: 1px dashed var(--line); border-radius: 8px; background: rgba(255,255,255,0.02); }
+
+  /* ================= CARDS & SCROLLS ================= */
+  .card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(243, 235, 217, 0.05), rgba(243, 235, 217, 0.02));
+    border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: 4px 10px 10px 4px;
+    padding: 14px 16px; margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    transition: border-color 0.15s, transform 0.15s, background 0.15s;
+    backdrop-filter: blur(4px);
+  }
+  .card:hover { background: linear-gradient(180deg, rgba(243, 235, 217, 0.08), rgba(243, 235, 217, 0.03)); border-left-color: var(--gold-bright); }
+  .card.is-pinned { border-left-color: var(--blue-bright); }
+  .card-body { flex-grow: 1; min-width: 0; }
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+  .card-tag { display: inline-block; font-size: 0.6rem; font-weight: 700; padding: 2px 7px; border-radius: 3px; background: rgba(255,255,255,0.06); color: var(--parchment); letter-spacing: 0.04em; text-transform: uppercase; }
+  .card-tag.win { background: rgba(50, 75, 92, 0.45); color: #b9d4e6; }
+  .card-tag.mac { background: rgba(120, 86, 163, 0.38); color: #dcc9f2; }
+  .card-tag.linux { background: rgba(61, 89, 67, 0.45); color: #c3e0c9; }
+  .card-tag.critical { background: rgba(138, 36, 36, 0.5); color: #f0b8b4; }
+  .card-tag.hashi { background: rgba(203, 155, 57, 0.3); color: var(--gold-bright); }
+
+  .message-text { font-size: 0.93rem; line-height: 1.6; white-space: pre-line; color: #efe9dc; font-family: var(--font-body); }
+
+  .card-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; align-items: stretch; }
+  .icon-btn {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--line); color: var(--parchment-dim);
+    border-radius: 6px; padding: 5px 8px; font-size: 0.85rem; cursor: pointer; line-height: 1;
+    transition: all 0.15s ease;
+  }
+  .icon-btn:hover { background: rgba(203, 155, 57, 0.15); color: var(--gold-bright); }
+  .icon-btn.on { color: var(--gold-bright); border-color: var(--gold); background: rgba(203, 155, 57, 0.18); }
+  .icon-row { display: flex; gap: 6px; }
+
+  .seal-btn {
+    background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 60%, #6e5019 100%);
+    color: #1a1205; border: none; padding: 9px 14px; border-radius: 50px;
+    cursor: pointer; font-size: 0.78rem; font-weight: 700; white-space: nowrap; min-width: 128px;
+    transition: transform 0.12s, box-shadow 0.15s; box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    font-family: var(--font-body); letter-spacing: 0.02em; text-align: center;
+  }
+  .seal-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.55); }
+  .seal-btn.copied { background: linear-gradient(180deg, #f3ebd9, #d3c5a5); color: #211a10; }
+  .seal-btn:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+
+  .progress-check { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; flex-shrink: 0; }
+
+  /* ================= ACCORDION ================= */
+  .accordion { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-bottom: 14px; background: rgba(255,255,255,0.015); backdrop-filter: blur(4px); }
+  .accordion summary {
+    list-style: none; cursor: pointer; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: linear-gradient(180deg, rgba(203, 155, 57, 0.08), rgba(203, 155, 57, 0.02));
+    font-family: var(--font-head); font-size: 1.02rem; color: var(--parchment);
+  }
+  .accordion summary::-webkit-details-marker { display: none; }
+  .accordion summary .cat-left { display: flex; align-items: center; gap: 10px; }
+  .accordion summary .cat-num {
+    width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--gold); color: var(--gold-bright);
+    display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-family: var(--font-body); font-weight: 700; flex-shrink: 0;
+  }
+  .accordion summary .cat-progress { font-size: 0.72rem; color: var(--parchment-faint); font-family: var(--font-body); }
+  .accordion summary .chevron { transition: transform 0.2s; color: var(--parchment-faint); }
+  .accordion[open] summary .chevron { transform: rotate(90deg); }
+  .accordion-body { padding: 14px 16px 16px; }
+
+  /* ================= DASHBOARD COMPONENTS ================= */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 26px; }
+  .stat-card { border: 1px solid var(--line); border-radius: 10px; padding: 16px; background: rgba(255,255,255,0.03); text-align: center; backdrop-filter: blur(4px); }
+  .stat-card .num { font-family: var(--font-head); font-size: 1.7rem; color: var(--gold-bright); }
+  .stat-card .lbl { font-size: 0.72rem; color: var(--parchment-faint); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+
+  .clock-card { border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 26px; flex-wrap: wrap; backdrop-filter: blur(4px); }
+  .clock-time { font-family: var(--font-head); font-size: 1.6rem; color: var(--parchment); letter-spacing: 0.03em; }
+  .clock-date { font-size: 0.75rem; color: var(--parchment-faint); }
+
+  .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 26px; }
+  .quick-btn {
+    border: 1px solid var(--line); border-radius: 8px; padding: 14px; background: rgba(255,255,255,0.03);
+    color: var(--parchment); cursor: pointer; text-align: left; font-size: 0.85rem; font-weight: 600;
+    transition: all 0.15s ease; font-family: var(--font-body); backdrop-filter: blur(4px);
+  }
+  .quick-btn:hover { background: rgba(203, 155, 57, 0.12); border-color: var(--gold); }
+  .quick-btn .qi { display: block; font-size: 1.2rem; margin-bottom: 6px; }
+
+  .mini-list { display: flex; flex-direction: column; gap: 8px; }
+  .mini-item {
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: rgba(255,255,255,0.02); font-size: 0.82rem; backdrop-filter: blur(4px);
+  }
+  .mini-item .txt { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #efe9dc; }
+  .mini-item .cat-chip { font-size: 0.65rem; color: var(--parchment-faint); border: 1px solid var(--line); border-radius: 8px; padding: 1px 7px; flex-shrink: 0; }
+
+  /* ================= TABLES ================= */
+  .table-responsive { width: 100%; overflow-x: auto; background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 10px; backdrop-filter: blur(4px); }
+  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.83rem; min-width: 820px; }
+  th { background: rgba(203, 155, 57, 0.1); color: var(--parchment); padding: 12px; border-bottom: 1px solid var(--line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--line-soft); color: #efe9dc; }
+  tbody tr:hover td { background: rgba(203, 155, 57, 0.05); }
+  tbody tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+  .badge-minor { background: rgba(255,255,255,0.06); color: #efe9dc; }
+  .badge-major { background: rgba(138, 36, 36, 0.45); color: #f0b8b4; }
+
+  /* ================= POLICY GENERATOR & THRESHOLDS ================= */
+  .gen-panel { border: 1px solid var(--line); border-radius: 10px; padding: 18px; background: rgba(255,255,255,0.03); margin-bottom: 26px; backdrop-filter: blur(4px); }
+  .gen-select { width: 100%; max-width: 420px; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line); background: rgba(12, 10, 9, 0.7); color: var(--parchment); font-size: 0.9rem; margin-bottom: 14px; font-family: var(--font-body); }
+  .gen-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .gen-card { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; background: rgba(255,255,255,0.02); }
+  .gen-card h4 { font-family: var(--font-head); font-size: 0.85rem; color: var(--gold-bright); margin-bottom: 6px; }
+  .gen-card p { font-size: 0.84rem; line-height: 1.5; color: #efe9dc; margin-bottom: 10px; }
+
+  .filter-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filter-chip {
+    border: 1px solid var(--line); background: rgba(255,255,255,0.03); color: var(--parchment-dim);
+    padding: 7px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; font-family: var(--font-body);
+  }
+  .filter-chip:hover { border-color: var(--gold); }
+  .filter-chip.active { background: rgba(203, 155, 57, 0.18); color: var(--gold-bright); border-color: var(--gold); }
+
+  .infraction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+  .infr-card { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: rgba(255,255,255,0.03); cursor: pointer; transition: all 0.15s ease; border-left: 4px solid var(--parchment-faint); backdrop-filter: blur(4px); }
+  .infr-card:hover { background: rgba(255,255,255,0.05); }
+  .infr-card.risk-green { border-left-color: #618c69; }
+  .infr-card.risk-yellow { border-left-color: #cb9b39; }
+  .infr-card.risk-orange { border-left-color: #d17538; }
+  .infr-card.risk-red { border-left-color: #be413b; }
+  .infr-name { font-weight: 700; color: var(--parchment); margin-bottom: 6px; font-size: 0.92rem; }
+  .infr-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.7rem; color: var(--parchment-faint); margin-bottom: 6px; }
+  .infr-threshold { font-size: 0.72rem; color: var(--parchment-faint); }
+  .infr-detail { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); font-size: 0.83rem; line-height: 1.5; display: none; }
+  .infr-card.expanded .infr-detail { display: block; }
+  .risk-legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.74rem; color: var(--parchment-faint); margin-bottom: 16px; align-items: center; }
+  .risk-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
+
+  /* ================= RESPONSIVE ================= */
+  @media (max-width: 960px) {
+    .sidebar { width: 240px; }
+  }
+  @media (max-width: 640px) {
+    body { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: relative; }
+    .nav-links { display: none; }
+    .card { flex-direction: column; align-items: stretch; }
+    .card-actions { flex-direction: row; justify-content: flex-end; }
+    .seal-btn { width: 100%; }
   }
 
-  .content-area { flex-grow: 1; overflow-y: auto; padding: 32px; position: relative; }
-  .page-view { display: none; }
-  .page-view.active { display: block; animation: fadeIn 0.25s ease-out; }
-
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* SHARED COMPONENTS */
-  .search-box-container { position: relative; margin-bottom: 24px; }
-  .global-search-input {
-    width: 100%; padding: 14px 20px 14px 44px; background-color: var(--bg-surface); border: 1px solid var(--border-subtle);
-    border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; transition: all 0.2s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-  }
-  .global-search-input:focus { border-color: var(--accent-gold); box-shadow: 0 0 0 3px var(--accent-gold-glow), inset 0 2px 4px rgba(0,0,0,0.2); }
-  .search-icon-abs { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
-
-  .filter-pills { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
-  .filter-pill {
-    background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 7px 14px; border-radius: 20px;
-    font-size: 0.75rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.15s;
-  }
-  .filter-pill:hover { border-color: var(--text-muted); color: #fff; }
-  .filter-pill.active { background: var(--accent-gold); color: #141419; border-color: var(--accent-gold); font-weight: 700; box-shadow: 0 0 10px var(--accent-gold-glow); }
-
-  .dojo-card {
-    background-color: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px;
-    padding: 20px; margin-bottom: 14px; transition: border-color 0.15s, box-shadow 0.15s; position: relative;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
-  .dojo-card:hover { border-color: #525266; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
-
-  .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; }
-  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-  .tag { font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(--border-subtle); color: var(--text-main); text-transform: uppercase; }
-  .tag.minor { background: rgba(251, 191, 36, 0.15); color: #fde68a; border: 1px solid rgba(251, 191, 36, 0.3); }
-  .tag.major { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
-
-  .action-btn {
-    background-color: var(--accent-gold); color: #141419; border: none; padding: 8px 16px; border-radius: 6px;
-    font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
-    flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .action-btn:hover { background-color: #fcd34d; transform: translateY(-1px); box-shadow: 0 4px 12px var(--accent-gold-glow); }
-  .action-btn.copied { background-color: var(--accent-emerald); color: #fff; }
-
-  /* HOME VIEW */
-  .home-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
-  @media(max-width: 1100px) { .home-grid { grid-template-columns: 1fr; } }
-
-  .welcome-banner {
-    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-surface) 100%); border: 1px solid var(--border-subtle);
-    border-radius: 12px; padding: 28px; margin-bottom: 24px; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-  }
-  .welcome-banner::after { content: "5A"; position: absolute; right: 20px; bottom: -20px; font-size: 8rem; color: rgba(255,255,255,0.02); font-weight: 900; pointer-events: none; }
-  .welcome-banner h3 { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
-  .welcome-banner p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; max-width: 650px; }
-
-  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-  .stat-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 18px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-  .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--accent-gold); margin-bottom: 4px; font-family: monospace; }
-  .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
-
-  .quick-actions-panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
-  .section-heading { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
-
-  .quick-links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .quick-link-tile {
-    background: var(--bg-card); border: 1px solid var(--border-subtle); padding: 16px; border-radius: 8px;
-    text-align: left; cursor: pointer; transition: all 0.2s; color: var(--text-main); display: block; text-decoration: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  }
-  .quick-link-tile:hover { border-color: var(--accent-gold); background: var(--bg-card-hover); transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
-  .quick-link-tile h4 { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
-  .quick-link-tile p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
-
-  /* ACCORDIONS */
-  .accordion-section { margin-bottom: 16px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-surface); overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-  .accordion-header {
-    padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
-    background: var(--bg-surface); transition: background 0.15s; user-select: none;
-  }
-  .accordion-header:hover { background: var(--bg-card); }
-  .accordion-title { font-size: 1rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .accordion-content { padding: 20px; border-top: 1px solid var(--border-subtle); background: var(--bg-deep); display: none; }
-  .accordion-section.expanded .accordion-content { display: block; }
-  .chevron { transition: transform 0.2s; font-size: 0.8rem; color: var(--text-muted); }
-  .accordion-section.expanded .chevron { transform: rotate(180deg); }
-
-  .spiel-item {
-    background: var(--bg-card); border: 1px solid var(--border-subtle); padding: 14px 16px; border-radius: 8px;
-    margin-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
-  }
-  .spiel-text { font-size: 0.88rem; line-height: 1.5; color: #e4e4e7; flex-grow: 1; }
-
-  /* TACTICAL SIMULATOR */
-  .tactical-selector-box { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
-
-  /* CLIENT LIBRARY */
-  .client-grid-layout { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
-  @media(max-width: 900px) { .client-grid-layout { grid-template-columns: 1fr; } }
-  
-  .client-list-sidebar { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; max-height: 600px; overflow-y: auto; padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-  .client-item { padding: 12px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; transition: all 0.15s; }
-  .client-item:hover { background: var(--bg-card); color: #fff; }
-  .client-item.active { background: var(--accent-gold); color: #141419; font-weight: 700; box-shadow: 0 0 10px var(--accent-gold-glow); }
-
-  .client-details-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
-  .policy-property-row { display: grid; grid-template-columns: 180px 1fr; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); font-size: 0.85rem; }
-  .policy-property-row:last-child { border-bottom: none; }
-  .property-key { color: var(--text-muted); font-weight: 600; }
-  .property-val { color: #fff; font-weight: 600; }
-
-  /* TABLES */
-  .dojo-table-wrapper { width: 100%; overflow-x: auto; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
-  .dojo-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
-  .dojo-table th { background: #22222d; padding: 14px 16px; color: var(--text-muted); font-weight: 700; border-bottom: 1px solid var(--border-subtle); white-space: nowrap; }
-  .dojo-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: #e4e4e7; }
-  .dojo-table tbody tr:hover td { background: var(--bg-card); }
-  .dojo-table tbody tr:last-child td { border-bottom: none; }
-
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #525266; }
+  ::-webkit-scrollbar-thumb { background: rgba(203, 155, 57, 0.28); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(203, 155, 57, 0.45); }
 </style>
 </head>
 <body>
 
-<div class="dojo-atmosphere"></div>
-
-<div class="app-container">
-  
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <div class="five-acts-logo">5A</div>
-      <div>
-        <div class="clan-seal">FiveActs Dojo</div>
-        <div class="dojo-title">Proctor Command</div>
-      </div>
-    </div>
-
-    <div class="nav-scroll">
-      <div class="nav-group-title">Main Hall</div>
-      <div class="nav-item active" onclick="switchPage('home', this)">
-        <span>🏯 Home / Command Center</span>
-      </div>
-
-      <div class="nav-group-title">Training Scrolls</div>
-      <div class="nav-item" onclick="switchPage('checkin', this)">
-        <span>📜 Check-In Steps</span>
-        <span class="nav-badge" id="count-checkin">12</span>
-      </div>
-      <div class="nav-item" onclick="switchPage('canned', this)">
-        <span>💬 Canned Messages</span>
-        <span class="nav-badge" id="count-canned">8</span>
-      </div>
-
-      <div class="nav-group-title">Clan Records</div>
-      <div class="nav-item" onclick="switchPage('infractions', this)">
-        <span>⚖ Infraction Thresholds</span>
-        <span class="nav-badge" id="count-infractions">23</span>
-      </div>
-      <div class="nav-item" onclick="switchPage('policies', this)">
-        <span>🏛 Client Policy Library</span>
-        <span class="nav-badge" id="count-policies">16</span>
-      </div>
-      <div class="nav-item" onclick="switchPage('faq', this)">
-        <span>📖 Wisdom Library (FAQ)</span>
-        <span class="nav-badge" id="count-faq">7</span>
-      </div>
-    </div>
-
-    <div class="sidebar-footer">
-      <span>FiveActs Secure Hub</span>
-      <span>v3.5</span>
-    </div>
-  </aside>
-
-  <main class="main-viewport">
+  <!-- ================= ATMOSPHERIC SCENE ================= -->
+  <div class="scene" aria-hidden="true">
+    <div class="scene-sky"></div>
+    <div class="scene-sun"></div>
     
-    <header class="top-command-bar">
-      <div class="page-indicator">
-        <h2 id="current-page-title">🏯 Home / Command Center</h2>
-        <p id="current-page-desc">Operational dashboard and real-time proctoring metrics.</p>
-      </div>
-      <div class="clock-badge" id="ph-clock">
-        <span>🕒 PHT --:--:--</span>
-      </div>
-    </header>
+    <!-- Mountain Ridges -->
+    <div class="scene-mountains">
+      <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
+        <polygon points="0,300 0,160 120,70 280,180 450,80 620,190 800,60 980,170 1200,100 1200,300" fill="#090d10"/>
+        <polygon points="0,300 0,210 180,130 380,210 580,140 820,220 1020,150 1200,190 1200,300" fill="#11161a" opacity=".85"/>
+      </svg>
+    </div>
 
-    <div class="content-area">
+    <!-- Pagoda Silhouette -->
+    <div class="scene-pagoda">
+      <svg viewBox="0 0 100 160" preserveAspectRatio="xMidYMax meet">
+        <g fill="#070a0c">
+          <polygon points="50,5 47,15 53,15"/>
+          <polygon points="20,35 50,20 80,35 72,38 50,28 28,38"/>
+          <rect x="36" y="38" width="28" height="15"/>
+          <polygon points="14,58 50,42 86,58 76,62 50,52 24,62"/>
+          <rect x="32" y="62" width="36" height="18"/>
+          <polygon points="8,85 50,66 92,85 80,90 50,78 20,90"/>
+          <rect x="28" y="90" width="44" height="22"/>
+          <polygon points="2,118 50,96 98,118 84,124 50,110 16,124"/>
+          <rect x="24" y="124" width="52" height="36"/>
+        </g>
+      </svg>
+    </div>
 
-      <div id="page-home" class="page-view active">
-        <div class="welcome-banner">
-          <h3>
-            <div class="five-acts-logo" style="width:36px; height:36px; font-size:1rem;">5A</div>
-            Welcome to the FiveActs Proctor Dojo
-          </h3>
-          <p>Discipline, precision, and uncompromised security. Access complete training scrolls, exact check-in spiels, client clan policies, and infraction triage matrices instantly under Standard Philippine Time.</p>
+    <!-- Torii Gate Silhouette -->
+    <div class="scene-torii">
+      <svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMax meet">
+        <g fill="#070a0c">
+          <path d="M5,15 Q60,5 115,15 L112,22 Q60,14 8,22 Z"/>
+          <rect x="12" y="25" width="96" height="6"/>
+          <rect x="28" y="31" width="10" height="89"/>
+          <rect x="82" y="31" width="10" height="89"/>
+          <rect x="20" y="48" width="80" height="7"/>
+          <rect x="55" y="25" width="10" height="23"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Bamboo Grove -->
+    <div class="scene-bamboo">
+      <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
+        <g stroke="#070a0c" stroke-width="7" opacity=".9">
+          <line x1="30" y1="200" x2="30" y2="10"/><line x1="75" y1="200" x2="75" y2="50"/>
+          <line x1="140" y1="200" x2="140" y2="0"/><line x1="210" y1="200" x2="210" y2="60"/>
+          <line x1="940" y1="200" x2="940" y2="20"/><line x1="1010" y1="200" x2="1010" y2="60"/>
+          <line x1="1090" y1="200" x2="1090" y2="0"/><line x1="1160" y1="200" x2="1160" y2="40"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="scene-fog"></div>
+    <div class="scene-vignette"></div>
+    <canvas id="sakuraCanvas"></canvas>
+  </div>
+
+  <!-- ================= SIDEBAR ================= -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-mark">五</div>
+      <h1>Proctor Dojo</h1>
+      <div class="subtitle">Observe &middot; Verify &middot; Protect</div>
+    </div>
+
+    <div class="view-selectors">
+      <button class="view-btn active" data-view="view-home" onclick="switchView('view-home', this)"><span class="vi">🏯</span> Home</button>
+      <button class="view-btn" data-view="view-checkin" onclick="switchView('view-checkin', this)"><span class="vi">📜</span> Check-In Steps</button>
+      <button class="view-btn" data-view="view-library" onclick="switchView('view-library', this)"><span class="vi">🔍</span> Canned Messages</button>
+      <button class="view-btn" data-view="view-threshold" onclick="switchView('view-threshold', this)"><span class="vi">⚠️</span> Threshold Center</button>
+      <button class="view-btn" data-view="view-policies" onclick="switchView('view-policies', this)"><span class="vi">🗝️</span> Client Policies</button>
+      <button class="view-btn" data-view="view-faq" onclick="switchView('view-faq', this)"><span class="vi">🎋</span> FAQ Archive</button>
+    </div>
+
+    <div class="nav-label">Check-in categories</div>
+    <ul class="nav-links" id="checkinAnchors"></ul>
+
+    <div class="sidebar-footer">Certiverse &middot; Proctor Dojo</div>
+  </div>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <div class="main-content">
+    <div class="search-wrapper">
+      <input type="text" id="globalSearch" class="search-input" placeholder="Seek knowledge... search spiels, policies, infractions" oninput="filterAll()" aria-label="Search all content">
+      <div class="search-count" id="searchCount"></div>
+    </div>
+
+    <!-- HOME VIEW -->
+    <div id="view-home" class="dashboard-view active">
+      <h2 class="page-title">Operations Hall</h2>
+      <p class="page-sub">The dojo's main hall — statistics, shortcuts, and your recent work.</p>
+
+      <div class="clock-card">
+        <div>
+          <div class="clock-time" id="clockTime">--:--:--</div>
+          <div class="clock-date" id="clockDate">Loading UTC time&hellip;</div>
         </div>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-value" id="stat-checkin-count">12</div>
-            <div class="stat-label">Check-In Protocols</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="stat-policy-count">16</div>
-            <div class="stat-label">Client Policy Vaults</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="stat-infraction-count">23</div>
-            <div class="stat-label">Infraction Thresholds</div>
-          </div>
-        </div>
-
-        <div class="home-grid">
-          <div class="quick-actions-panel">
-            <div class="section-heading">
-              <span>Quick Operational Jump</span>
-            </div>
-            <div class="quick-links-grid">
-              <div class="quick-link-tile" onclick="switchPage('checkin', document.querySelectorAll('.nav-item')[1])">
-                <h4>📜 Check-In Steps</h4>
-                <p>Exact proctor verification spiels and OS instructions.</p>
-              </div>
-              <div class="quick-link-tile" onclick="switchPage('canned', document.querySelectorAll('.nav-item')[2])">
-                <h4>💬 Canned Messages</h4>
-                <p>Instant command palette for warnings and support.</p>
-              </div>
-              <div class="quick-link-tile" onclick="switchPage('infractions', document.querySelectorAll('.nav-item')[3])">
-                <h4>⚖ Infraction Triage</h4>
-                <p>Tactical decision matrix for violations and thresholds.</p>
-              </div>
-              <div class="quick-link-tile" onclick="switchPage('policies', document.querySelectorAll('.nav-item')[4])">
-                <h4>🏛 Client Policy Library</h4>
-                <p>Name match, break policies, and SEB requirements by client.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="quick-actions-panel">
-            <div class="section-heading">
-              <span>Emergency Operations Panel</span>
-            </div>
-            <div style="display:flex; flex-direction:column; gap:10px;">
-              <button class="action-btn" style="width:100%; justify-content:center; padding:12px;" onclick="copyEmergencySpiel('support')">
-                📋 Copy Tech Support Email Spiel
-              </button>
-              <button class="action-btn" style="width:100%; justify-content:center; padding:12px; background:var(--accent-crimson); color:#fff;" onclick="copyEmergencySpiel('terminate')">
-                ⚠️ Copy Immediate Termination Spiel
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="page-checkin" class="page-view">
-        <div class="search-box-container">
-          <span class="search-icon-abs">🔍</span>
-          <input type="text" class="global-search-input" placeholder="Search exact check-in spiels (e.g. ID, welcome, Windows, room scan)..." oninput="filterCheckin(this.value)">
-        </div>
-        <div id="checkin-container"></div>
-      </div>
-
-      <div id="page-canned" class="page-view">
-        <div class="search-box-container">
-          <span class="search-icon-abs">🔍</span>
-          <input type="text" id="canned-search-input" class="global-search-input" placeholder="Search canned messages..." oninput="filterCannedMessages(this.value)">
-        </div>
-
-        <div class="filter-pills" id="canned-filters">
-          <div class="filter-pill active" onclick="filterCannedCategory('all', this)">All Messages</div>
-          <div class="filter-pill" onclick="filterCannedCategory('warning', this)">Warnings</div>
-          <div class="filter-pill" onclick="filterCannedCategory('support', this)">Technical Support</div>
-          <div class="filter-pill" onclick="filterCannedCategory('termination', this)">Terminations</div>
-        </div>
-
-        <div id="canned-messages-container"></div>
+        <div class="clock-date">All check-in times are recorded in UTC.</div>
       </div>
 
-      <div id="page-infractions" class="page-view">
-        <div class="tactical-selector-box">
-          <div class="section-heading">
-            <span>⚡ Tactical Response Simulator (Quick Triage)</span>
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-            <div>
-              <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; display:block; margin-bottom:6px;">Select Infraction:</label>
-              <select id="tactical-select" class="global-search-input" style="padding:10px 14px;" onchange="updateTacticalSimulation()"></select>
-            </div>
-            <div id="tactical-output-summary" style="display:flex; flex-direction:column; justify-content:center; background:var(--bg-card); padding:12px; border-radius:8px; border:1px solid var(--border-subtle);">
-              <span style="font-size:0.75rem; color:var(--accent-gold); font-weight:700;">LIVE ACTION PATHWAY</span>
-              <span id="tactical-summary-text" style="font-size:0.85rem; color:#fff; margin-top:4px;">Select an infraction on the left to generate the tactical protocol.</span>
-            </div>
-          </div>
-        </div>
+      <div class="stat-grid" id="statGrid"></div>
 
-        <div class="search-box-container">
-          <span class="search-icon-abs">🔍</span>
-          <input type="text" class="global-search-input" placeholder="Search infractions by name or category..." oninput="filterInfractionsTable(this.value)">
-        </div>
+      <div class="section-container">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="quick-grid" id="quickGrid"></div>
+      </div>
 
-        <div class="filter-pills">
-          <div class="filter-pill active" onclick="filterInfractionSeverity('all', this)">All Severities</div>
-          <div class="filter-pill" onclick="filterInfractionSeverity('minor', this)">Minor</div>
-          <div class="filter-pill" onclick="filterInfractionSeverity('major', this)">Major</div>
-        </div>
+      <div class="section-container">
+        <h2 class="section-title">Favorites <span class="section-count" id="favCount"></span></h2>
+        <div class="mini-list" id="favList"></div>
+      </div>
 
-        <div class="dojo-table-wrapper">
-          <table class="dojo-table" id="infractions-table">
+      <div class="section-container">
+        <h2 class="section-title">Pinned Knowledge <span class="section-count" id="pinCount"></span></h2>
+        <div class="mini-list" id="pinList"></div>
+      </div>
+
+      <div class="section-container">
+        <h2 class="section-title">Recently Copied <span class="section-count" id="recentCount"></span></h2>
+        <div class="mini-list" id="recentList"></div>
+      </div>
+    </div>
+
+    <!-- CHECK-IN STEPS VIEW -->
+    <div id="view-checkin" class="dashboard-view">
+      <h2 class="page-title">Check-In Steps</h2>
+      <p class="page-sub">Work sequentially through categories 1&ndash;13. A proctor can complete a full check-in using this guidance.</p>
+      <div style="margin-bottom:16px;"><button class="filter-chip" onclick="resetProgress()">Reset progress</button></div>
+      <div id="checkinAccordions"></div>
+    </div>
+
+    <!-- CANNED MESSAGE LIBRARY VIEW -->
+    <div id="view-library" class="dashboard-view">
+      <h2 class="page-title">Canned Message Library</h2>
+      <p class="page-sub">Every spiel on file. Find one in seconds — search, or filter by category.</p>
+      <div class="filter-row" id="libraryFilters"></div>
+      <div id="libraryList"></div>
+    </div>
+
+    <!-- THRESHOLD CENTER VIEW -->
+    <div id="view-threshold" class="dashboard-view">
+      <h2 class="page-title">Infraction Threshold Center</h2>
+      <p class="page-sub">Tactical response reference. Risk color is derived from each infraction's severity and remaining threshold.</p>
+      <div class="risk-legend">
+        <span><span class="dot" style="background:#618c69;"></span>Standard</span>
+        <span><span class="dot" style="background:#cb9b39;"></span>Elevated</span>
+        <span><span class="dot" style="background:#d17538;"></span>Critical</span>
+        <span><span class="dot" style="background:#be413b;"></span>Immediate</span>
+      </div>
+      <div class="filter-row" id="thresholdFilters"></div>
+      <div class="infraction-grid" id="infractionGrid"></div>
+      <div class="empty-state" id="infractionEmpty" style="display:none;margin-top:14px;">No matching infractions.</div>
+    </div>
+
+    <!-- CLIENT POLICIES VIEW -->
+    <div id="view-policies" class="dashboard-view">
+      <h2 class="page-title">Client Policy Library</h2>
+      <p class="page-sub">Select a client to generate ready-to-copy responses, or search the full archive below.</p>
+
+      <div class="gen-panel">
+        <label for="policySelect" style="display:block;font-size:.8rem;color:var(--parchment-faint);margin-bottom:8px;">Policy Generator &mdash; select a client</label>
+        <select id="policySelect" class="gen-select" onchange="renderGenerator()"></select>
+        <div class="gen-cards" id="generatorCards"></div>
+      </div>
+
+      <div class="section-container">
+        <h2 class="section-title">Full Policy Archive <span class="section-count" id="policiesCount"></span></h2>
+        <div class="table-responsive">
+          <table id="policiesTable">
             <thead>
-              <tr>
-                <th>Violation Name</th>
-                <th>Context</th>
-                <th>Category</th>
-                <th>Severity</th>
-                <th style="text-align:center;">Threshold</th>
-              </tr>
+              <tr><th>Client</th><th>Name Change</th><th>Breaks Policy</th><th>Name Policy</th><th>SEB / Non-SEB</th><th>Documentation</th></tr>
             </thead>
-            <tbody id="infractions-tbody"></tbody>
+            <tbody id="policiesBody"></tbody>
           </table>
         </div>
+        <div class="empty-state" id="policiesEmpty" style="display:none;margin-top:10px;">No matching clients.</div>
       </div>
-
-      <div id="page-policies" class="page-view">
-        <div class="search-box-container">
-          <span class="search-icon-abs">🔍</span>
-          <input type="text" class="global-search-input" placeholder="Search client policies..." oninput="filterClientList(this.value)">
-        </div>
-
-        <div class="client-grid-layout">
-          <div class="client-list-sidebar" id="client-sidebar-list"></div>
-          <div class="client-details-card" id="client-details-pane"></div>
-        </div>
-      </div>
-
-      <div id="page-faq" class="page-view">
-        <div class="search-box-container">
-          <span class="search-icon-abs">🔍</span>
-          <input type="text" class="global-search-input" placeholder="Search knowledge base..." oninput="filterFaq(this.value)">
-        </div>
-
-        <div class="filter-pills" id="faq-filters">
-          <div class="filter-pill active" onclick="filterFaqCategory('all', this)">All Articles</div>
-          <div class="filter-pill" onclick="filterFaqCategory('ID Verification', this)">ID Verification</div>
-          <div class="filter-pill" onclick="filterFaqCategory('Room Scans', this)">Room Scans</div>
-          <div class="filter-pill" onclick="filterFaqCategory('Technical Issues', this)">Technical Issues</div>
-          <div class="filter-pill" onclick="filterFaqCategory('SEB', this)">SEB</div>
-        </div>
-
-        <div id="faq-container"></div>
-      </div>
-
     </div>
-  </main>
-</div>
+
+    <!-- FAQ ARCHIVE VIEW -->
+    <div id="view-faq" class="dashboard-view">
+      <h2 class="page-title">FAQ Archive</h2>
+      <p class="page-sub">Internal proctor encyclopedia.</p>
+      <div class="empty-state">
+        This archive is not yet compiled &mdash; no FAQ content has been supplied to build from.<br><br>
+        Send over your existing FAQ entries (question + answer, grouped by topic such as ID Verification, Room Scan, Technical Support, Reconnect Policies, Break Policies, Termination Policies, or SEB) and this section will be populated with live search, related topics, and quick navigation.
+      </div>
+    </div>
+
+  </div>
 
 <script>
-  const checkinData = [
-    {
-      title: "1. Welcome",
-      category: "Welcome",
-      spiels: [
-        "Hello and welcome! I will be your proctor for this exam.",
-        "We have a few steps to complete before your exam begins. This time does not count against your exam time limit.",
-        "Please hold while we prepare your exam. Thank you for waiting."
-      ]
-    },
-    {
-      title: "2. Identification Verification",
-      category: "Identification",
-      spiels: [
-        "We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible.",
-        "Please bring your ID closer to the camera view.",
-        "Please hold your ID steady.",
-        "Please flip your ID.",
-        "Please show the expiration date.",
-        "Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment.",
-        "You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling.",
-        "Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com.",
-        "Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To assist you in reaching out to the exam sponsor who will process the name change, please contact support@certiverse.com.",
-        "Once completed, you can re-enter the reservation and we will continue.",
-        "Thank you. You may keep your ID away now."
-      ]
-    },
-    {
-      title: "3. System Verification",
-      category: "System",
-      spiels: [
-        "[ALL] Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam.",
-        "[ALL] Please also close the other Certiverse tab, leaving only this one open.",
-        "[WINDOWS] Please open your Task Manager then scroll down slowly until you reach the end of the list.",
-        "Thank you. You may close the Task Manager now.",
-        "[WINDOWS] Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option.",
-        "[MAC] Please open your Activity Monitor then scroll down slowly until you reach the end of the list.",
-        "Thank you. You may close the Activity Monitor now.",
-        "[MAC] Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed.",
-        "[LINUX] Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list.",
-        "Thank you. You may close the System Monitor now.",
-        "[LINUX] Please close or force quit any applications not related to the exam. If needed, select the application and choose “End Process” or “Kill Process."
-      ]
-    },
-    {
-      title: "4. Clear Desk",
-      category: "Desk",
-      spiels: [
-        "Thank you. If there are any items on your desk surface, please remove them now.",
-        "Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, smart glasses, and any other electronic device.",
-        "Headphones are not allowed during the exam. Please remove them and put them away.",
-        "Hats are not allowed during the exam. Please remove your hat and put it away.",
-        "Please remove your smartwatch and place it out of reach.",
-        "As outlined in the exam policies, only one laptop or computer without extra screens is allowed. Please remove or cover any additional monitors so they are not facing you directly."
-      ]
-    },
-    {
-      title: "5. Room Scan",
-      category: "Room",
-      spiels: [
-        "Thank you. We will now scan the room to confirm that all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk.",
-        "When doing the room scan, please hold your laptop or webcam in a way that allows the camera to clearly capture the room. Rotate it slowly and make sure nothing blocks the view, so we can see all areas of your workspace, including the desk, floor, walls, and surrounding environment.",
-        "Please show us the desk area.",
-        "Please show the area under the desk.",
-        "All electronics should be out of reach and turned off.",
-        "Please ensure your desk is clear of all items.",
-        "Please direct your camera around the room one more time.",
-        "Please make sure to capture all corners and edges of your desk during the room scan.",
-        "Is it possible for you to improve the lighting in your testing area?",
-        "The window behind you is creating a backlight effect. Adjusting the lighting or moving slightly would help us proceed.",
-        "Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination."
-      ]
-    },
-    {
-      title: "6. Exam Release",
-      category: "Release",
-      spiels: [
-        "Thank you for your cooperation. You may now click the “Hide Video” button on the side of this chat box.",
-        "Thank you. Do you have any questions before beginning your exam?",
-        "If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection.",
-        "Please use this chat if you have any questions that are not related to the exam content. I will now release your exam.",
-        "You can click the “Hide Chat” button on the side or the X at the top-right to begin your exam."
-      ]
-    },
-    {
-      title: "7. Miscellaneous",
-      category: "Misc",
-      spiels: [
-        "Breaks are not allowed for this exam.",
-        "You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules.",
-        "Please wait briefly while we investigate this issue.",
-        "Sorry, but we cannot assist with content-related questions.",
-        "You can email support@certiverse.com for further assistance with rescheduling.",
-        "Please adjust your camera. Your head and shoulders must remain fully visible during the exam.",
-        "Welcome back!",
-        "Thank you. You may resume now."
-      ]
-    },
-    {
-      title: "8. Warnings",
-      category: "Warnings",
-      spiels: [
-        "Please refrain from talking aloud.",
-        "Please ensure your face is always within camera view.",
-        "Please keep your attention forward.",
-        "Please ask all others to leave the room.",
-        "Please remain on the exam environment tab only.",
-        "Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."
-      ]
-    },
-    {
-      title: "9. Technical Support",
-      category: "Support",
-      spiels: [
-        "Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open.",
-        "Please click the refresh button on the top left side of the screen.",
-        "Please try to reboot your machine and launch the exam again.",
-        "Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?",
-        "I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared.",
-        "Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser.",
-        "Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs.",
-        "It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network.",
-        "I understand. Are you currently on a company network?",
-        "Are you currently using a docking station?",
-        "Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled.",
-        "It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.",
-        "You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed.",
-        "Please check the following before starting the exam: Use the latest version of Google Chrome or Microsoft Edge. Ensure you have a stable internet connection. Disable any browser extensions or add-ons. Clear your browser cache. Make sure any VPN or proxy connection is turned off. Disconnect any external or extended monitors and use only one screen. Verify that the exam application is allowed in both your system and browser settings, and that all required permissions are enabled (such as camera, microphone, and screen sharing).",
-        "If the issue persists after checking the following, please restart your device and relaunch the exam."
-      ]
-    },
-    {
-      title: "11. Non-SEB Exams",
-      category: "Browser",
-      spiels: [
-        "Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat.",
-        "You may hide or move the pop-up screen-sharing message at the bottom center of your screen."
-      ]
-    },
-    {
-      title: "12. Termination Messages",
-      category: "Termination",
-      spiels: [
-        "Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
-        "The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
-        "We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
-        "Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
-        "The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance."
-      ]
-    },
-    {
-      title: "13. SEB — Secure Exam Browser",
-      category: "SEB",
-      spiels: [
-        "You may exit the Secure Exam Browser to resolve the issue. Once it is fixed, re-entering SEB will reconnect you so the exam can continue.",
-        "To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen.",
-        "To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen.",
-        "Please try to refresh the SEB and choose a different audio/video input.",
-        "There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."
-      ]
+(function(){
+  "use strict";
+
+  /* ============================================================
+     CATEGORIES Taxonomy
+     ============================================================ */
+  var CATEGORIES = [
+    {id:"1",  label:"Welcome",                     icon:"🌅"},
+    {id:"2",  label:"Identification Verification", icon:"🪪"},
+    {id:"3",  label:"System Verification",         icon:"🖥️"},
+    {id:"4",  label:"Clear Desk",                  icon:"🧹"},
+    {id:"5",  label:"Room Scan",                   icon:"🔍"},
+    {id:"6",  label:"Exam Release",                icon:"🚪"},
+    {id:"7",  label:"Miscellaneous",               icon:"🗂️"},
+    {id:"8",  label:"Warnings",                    icon:"⚠️"},
+    {id:"9",  label:"Technical Support",           icon:"🛠️"},
+    {id:"11", label:"Non-SEB Exams",               icon:"🔐"},
+    {id:"12", label:"Termination Messages",        icon:"⛔"},
+    {id:"13", label:"SEB",                         icon:"🧭"}
+  ];
+
+  function catLabel(id){
+    for (var i=0;i<CATEGORIES.length;i++){ if (CATEGORIES[i].id===id) return CATEGORIES[i].label; }
+    return id;
+  }
+
+  /* ============================================================
+     MESSAGES Data (Strictly matches updated check-in process)
+     ============================================================ */
+  var MESSAGES = [
+    // 1. Welcome
+    {id:"m1_1", cat:"1", tags:[], text:"Hello and welcome! I will be your proctor for this exam."},
+    {id:"m1_2", cat:"1", tags:[], text:"We have a few steps to complete before your exam begins. This time does not count against your exam time limit."},
+    {id:"m1_3", cat:"1", tags:[], text:"Please hold while we prepare your exam. Thank you for waiting."},
+
+    // 2. Identification Verification
+    {id:"m2_1", cat:"2", tags:[], text:"We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible."},
+    {id:"m2_2", cat:"2", tags:[], text:"Please bring your ID closer to the camera view."},
+    {id:"m2_3", cat:"2", tags:[], text:"Please hold your ID steady."},
+    {id:"m2_4", cat:"2", tags:[], text:"Please flip your ID."},
+    {id:"m2_5", cat:"2", tags:[], text:"Please show the expiration date."},
+    {id:"m2_6", cat:"2", tags:[], text:"Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment."},
+    {id:"m2_7", cat:"2", tags:["critical"], text:"You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling."},
+    {id:"m2_8", cat:"2", tags:["critical"], text:"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com."},
+    {id:"m2_9", cat:"2", tags:["critical"], text:"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To assist you in reaching out to the exam sponsor who will process the name change, please contact support@certiverse.com."},
+    {id:"m2_10", cat:"2", tags:[], text:"Once completed, you can re-enter the reservation and we will continue."},
+    {id:"m2_11", cat:"2", tags:[], text:"Thank you. You may keep your ID away now."},
+
+    // 3. System Verification
+    {id:"m3_1", cat:"3", tags:[], text:"Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam."},
+    {id:"m3_2", cat:"3", tags:[], text:"Please also close the other Certiverse tab, leaving only this one open."},
+    {id:"m3_3", cat:"3", tags:["win"], text:"Please open your Task Manager then scroll down slowly until you reach the end of the list."},
+    {id:"m3_4", cat:"3", tags:["win"], text:"Thank you. You may close the Task Manager now."},
+    {id:"m3_5", cat:"3", tags:["win"], text:"Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option."},
+    {id:"m3_6", cat:"3", tags:["mac"], text:"Please open your Activity Monitor then scroll down slowly until you reach the end of the list."},
+    {id:"m3_7", cat:"3", tags:["mac"], text:"Thank you. You may close the Activity Monitor now."},
+    {id:"m3_8", cat:"3", tags:["mac"], text:"Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed."},
+    {id:"m3_9", cat:"3", tags:["linux"], text:"Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list."},
+    {id:"m3_10", cat:"3", tags:["linux"], text:"Thank you. You may close the System Monitor now."},
+    {id:"m3_11", cat:"3", tags:["linux"], text:"Please close or force quit any applications not related to the exam. If needed, select the application and choose “End Process” or “Kill Process."},
+
+    // 4. Clear Desk
+    {id:"m4_1", cat:"4", tags:[], text:"Thank you. If there are any items on your desk surface, please remove them now."},
+    {id:"m4_2", cat:"4", tags:[], text:"Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, smart glasses, and any other electronic device."},
+    {id:"m4_3", cat:"4", tags:[], text:"Headphones are not allowed during the exam. Please remove them and put them away."},
+    {id:"m4_4", cat:"4", tags:[], text:"Hats are not allowed during the exam. Please remove your hat and put it away."},
+    {id:"m4_5", cat:"4", tags:[], text:"Please remove your smartwatch and place it out of reach."},
+    {id:"m4_6", cat:"4", tags:[], text:"As outlined in the exam policies, only one laptop or computer without extra screens is allowed. Please remove or cover any additional monitors so they are not facing you directly."},
+
+    // 5. Room Scan
+    {id:"m5_1", cat:"5", tags:[], text:"Thank you. We will now scan the room to confirm that all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk."},
+    {id:"m5_2", cat:"5", tags:[], text:"When doing the room scan, please hold your laptop or webcam in a way that allows the camera to clearly capture the room. Rotate it slowly and make sure nothing blocks the view, so we can see all areas of your workspace, including the desk, floor, walls, and surrounding environment."},
+    {id:"m5_3", cat:"5", tags:[], text:"Please show us the desk area."},
+    {id:"m5_4", cat:"5", tags:[], text:"Please show the area under the desk."},
+    {id:"m5_5", cat:"5", tags:[], text:"All electronics should be out of reach and turned off."},
+    {id:"m5_6", cat:"5", tags:[], text:"Please ensure your desk is clear of all items."},
+    {id:"m5_7", cat:"5", tags:[], text:"Please direct your camera around the room one more time."},
+    {id:"m5_8", cat:"5", tags:[], text:"Please make sure to capture all corners and edges of your desk during the room scan."},
+    {id:"m5_9", cat:"5", tags:[], text:"Is it possible for you to improve the lighting in your testing area?"},
+    {id:"m5_10", cat:"5", tags:[], text:"The window behind you is creating a backlight effect. Adjusting the lighting or moving slightly would help us proceed."},
+    {id:"m5_11", cat:"5", tags:["critical"], text:"Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination."},
+
+    // 6. Exam Release
+    {id:"m6_1", cat:"6", tags:[], text:"Thank you for your cooperation. You may now click the “Hide Video” button on the side of this chat box."},
+    {id:"m6_2", cat:"6", tags:[], text:"Thank you. Do you have any questions before beginning your exam?"},
+    {id:"m6_3", cat:"6", tags:[], text:"If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection."},
+    {id:"m6_4", cat:"6", tags:[], text:"Please use this chat if you have any questions that are not related to the exam content. I will now release your exam."},
+    {id:"m6_5", cat:"6", tags:[], text:"You can click the “Hide Chat” button on the side or the X at the top-right to begin your exam."},
+
+    // 7. Miscellaneous
+    {id:"m7_1", cat:"7", tags:[], text:"Breaks are not allowed for this exam."},
+    {id:"m7_2", cat:"7", tags:[], text:"You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules."},
+    {id:"m7_3", cat:"7", tags:[], text:"Please wait briefly while we investigate this issue."},
+    {id:"m7_4", cat:"7", tags:[], text:"Sorry, but we cannot assist with content-related questions."},
+    {id:"m7_5", cat:"7", tags:[], text:"You can email support@certiverse.com for further assistance with rescheduling."},
+    {id:"m7_6", cat:"7", tags:[], text:"Please adjust your camera. Your head and shoulders must remain fully visible during the exam."},
+    {id:"m7_7", cat:"7", tags:[], text:"Welcome back!"},
+    {id:"m7_8", cat:"7", tags:[], text:"Thank you. You may resume now."},
+
+    // 8. Warnings
+    {id:"m8_1", cat:"8", tags:[], text:"Please refrain from talking aloud."},
+    {id:"m8_2", cat:"8", tags:[], text:"Please ensure your face is always within camera view."},
+    {id:"m8_3", cat:"8", tags:[], text:"Please keep your attention forward."},
+    {id:"m8_4", cat:"8", tags:["critical"], text:"Please ask all others to leave the room."},
+    {id:"m8_5", cat:"8", tags:[], text:"Please remain on the exam environment tab only."},
+    {id:"m8_6", cat:"8", tags:["critical"], text:"Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."},
+
+    // 9. Technical Support
+    {id:"m9_1", cat:"9", tags:[], text:"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."},
+    {id:"m9_2", cat:"9", tags:[], text:"Please click the refresh button on the top left side of the screen."},
+    {id:"m9_3", cat:"9", tags:[], text:"Please try to reboot your machine and launch the exam again."},
+    {id:"m9_4", cat:"9", tags:[], text:"Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?"},
+    {id:"m9_5", cat:"9", tags:[], text:"I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared."},
+    {id:"m9_6", cat:"9", tags:[], text:"Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser."},
+    {id:"m9_7", cat:"9", tags:[], text:"Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs."},
+    {id:"m9_8", cat:"9", tags:[], text:"It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network."},
+    {id:"m9_9", cat:"9", tags:[], text:"I understand. Are you currently on a company network?"},
+    {id:"m9_10", cat:"9", tags:[], text:"Are you currently using a docking station?"},
+    {id:"m9_11", cat:"9", tags:[], text:"Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled."},
+    {id:"m9_12", cat:"9", tags:[], text:"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."},
+    {id:"m9_13", cat:"9", tags:["critical"], text:"You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed."},
+    {id:"m9_14", cat:"9", tags:[], text:"Please check the following before starting the exam:\n\n• Use the latest version of Google Chrome or Microsoft Edge.\n• Ensure you have a stable internet connection.\n• Disable any browser extensions or add-ons.\n• Clear your browser cache.\n• Make sure any VPN or proxy connection is turned off.\n• Disconnect any external or extended monitors and use only one screen.\n• Verify that the exam application is allowed in both your system and browser settings, and that all required permissions are enabled (such as camera, microphone, and screen sharing).\n\nIf the issue persists after checking the following, please restart your device and relaunch the exam."},
+
+    // 11. Non-SEB Exams
+    {id:"m11_1", cat:"11", tags:[], text:"Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat."},
+    {id:"m11_2", cat:"11", tags:[], text:"You may hide or move the pop-up screen-sharing message at the bottom center of your screen."},
+
+    // 12. Termination Messages
+    {id:"m12_1", cat:"12", tags:["critical"], term:"prohibited-app", text:"Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_2", cat:"12", tags:["critical"], term:"prohibited-device", text:"The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_3", cat:"12", tags:["critical"], term:"break-overage", text:"We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_4", cat:"12", tags:["critical"], term:"foul-language", text:"Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_5", cat:"12", tags:["critical"], term:"integrity-compromised", text:"The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance."},
+
+    // 13. SEB
+    {id:"m13_1", cat:"13", tags:[], text:"You may exit the Secure Exam Browser to resolve the issue. Once it is fixed, re-entering SEB will reconnect you so the exam can continue."},
+    {id:"m13_2", cat:"13", tags:[], text:"To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen."},
+    {id:"m13_3", cat:"13", tags:[], text:"To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen."},
+    {id:"m13_4", cat:"13", tags:[], text:"Please try to refresh the SEB and choose a different audio/video input."},
+    {id:"m13_5", cat:"13", tags:["critical"], text:"There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."}
+  ];
+
+  function findMessageById(id){
+    for (var i=0;i<MESSAGES.length;i++){ if (MESSAGES[i].id===id) return MESSAGES[i]; }
+    return null;
+  }
+  function findByTerm(term){
+    for (var i=0;i<MESSAGES.length;i++){ if (MESSAGES[i].term===term) return MESSAGES[i]; }
+    return null;
+  }
+
+  /* ============================================================
+     POLICIES Data
+     ============================================================ */
+  var POLICIES = [
+    ["Akylade","Allowed","One (1) five (5) minute break","Name must match govt. ID","SEB","Not allowed"],
+    ["Atlassian","Not allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["Blue Prism","Allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["BMC","Not allowed","One (1) five (5) minute break","Name must match govt. ID","SEB","Allowed"],
+    ["Camunda","Not allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["Casbo","Not allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["Docusign","Not allowed","None","Nicknames allowed","SEB","Not allowed"],
+    ["Hashicorp","Not allowed","None (Vault Prof: one (1) fifteen (15) minute break)","Name must match govt. ID","Non-SEB","Not allowed"],
+    ["Intersystems","Not allowed","One (1) ten (10) minute break","Nicknames allowed","SEB","Depends on the exam"],
+    ["NRPP","Allowed","One (1) fifteen (15) minute break","Nicknames allowed","SEB","Allowed"],
+    ["NVIDIA","Allowed","None (Beta 180: two (2) five (5) minute breaks)","Name must match govt. ID","SEB","Allowed"],
+    ["Open Text","Not allowed","None","Name must match govt. ID","SEB","Allowed"],
+    ["Project Success Incorporated","Allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["SideFX","Allowed","None","Name must match govt. ID","SEB","Textbooks allowed"],
+    ["VastData","Allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["WellSky","Allowed","Unlimited breaks (10-20 minutes per break)","Name must match govt. ID","SEB","Textbooks allowed"]
+  ];
+
+  /* ============================================================
+     INFRACTIONS Data
+     ============================================================ */
+  var INFRACTIONS = [
+    ["Another person in the room","Check in, Testing","Prohibited Behavior","Minor",2,"person",null],
+    ["Books / Supplemental Materials","Check in, Testing","Prohibited Items","Minor",2,"paper materials",null],
+    ["Camera","Check in, Testing","Prohibited Electronic Device","Minor",2,"camera",null],
+    ["Desk is not cleared off (only)","Check in","Check in","Minor",2,"desk",null],
+    ["Does not do complete scan: 360 room scan, desk/table top, under desk/table","Check in","Check in","Minor",1,"scan",null],
+    ["Eating/drinking without approved special accommodation","Testing","Prohibited Behavior","Minor",1,"beverages",null],
+    ["Environment or camera view too dark / candidate not visible","Check in, Testing","Check in","Minor",2,"lighting",null],
+    ["Face coverings","Check in","Check in","Minor",2,"",null],
+    ["Face out of view","Testing","Prohibited Behavior","Minor",2,"head and shoulders",null],
+    ["Failure to return from break","Testing","Prohibited Behavior","Major",0,"break","break-overage"],
+    ["Headphones/Earbuds","Check in","Prohibited Electronic Device","Minor",1,"headphones",null],
+    ["Headwear (unless allowed via accommodation/religious exempt)","Check in","Prohibited Items","Minor",1,"hat",null],
+    ["Internal environment too loud","Check in, Testing","Prohibited Behavior","Minor",2,"environment",null],
+    ["Leaves testing area","Testing","Prohibited Behavior","Minor",1,"permission",null],
+    ["Looking elsewhere","Testing","Prohibited Behavior","Major",4,"attention forward",null],
+    ["Mobile phone in use","Testing","Prohibited Electronic Device","Major",0,"mobile phone","prohibited-device"],
+    ["Mobile phone visible","Check in","Prohibited Electronic Device","Minor",1,"electronic devices",null],
+    ["Not following proctor instructions","Check in, Testing","Prohibited Behavior","Minor",2,"cooperation",null],
+    ["Proctor harassment (disrespectful, name calling)","Check in, Testing","Prohibited Behavior","Major",0,"disrespectful","foul-language"],
+    ["Proper clothing","Check in","Prohibited Behavior","Minor",1,"dressed appropriately",null],
+    ["Remote Desktop Applications","Check in","Prohibited Electronic Device","Minor",1,"Remote Desktop","prohibited-app"],
+    ["Secondary device (computer, laptop, calculator)","Check in","Prohibited Electronic Device","Minor",1,"electronic",null],
+    ["Smart Watch","Check in","Prohibited Electronic Device","Minor",0,"smartwatch",null],
+    ["Smoking or Vaping","Check in, Testing","Prohibited Behavior","Minor",2,"",null],
+    ["Suspicious behavior","Testing","Prohibited Behavior","Minor",2,"attention forward",null],
+    ["Talking aloud","Testing","Prohibited Behavior","Minor",2,"aloud",null],
+    ["Talking to others","Testing","Prohibited Behavior","Minor",2,"no one else",null],
+    ["Whiteboard/bulletin board with writing","Check in, Testing","Prohibited Items","Minor",2,"desk",null]
+  ];
+
+  /* ============================================================
+     QUICK ACTIONS (Home Dashboard)
+     ============================================================ */
+  var QUICK_ACTIONS = [
+    {icon:"🪪", label:"Blurry / Unclear ID", query:"blurry"},
+    {icon:"❗", label:"Name Mismatch",        query:"not the name registered"},
+    {icon:"📱", label:"Mobile Phone",          query:"mobile phone"},
+    {icon:"👀", label:"Face Out of View",      query:"head and shoulders"},
+    {icon:"⏱️", label:"Break Violation",      query:"break"},
+    {icon:"🖥️", label:"Task Manager / Apps",   query:"Task Manager"}
+  ];
+
+  /* ============================================================
+     UTILITIES
+     ============================================================ */
+  function escapeHtml(str){
+    return String(str)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function loadSet(key){
+    try {
+      var raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : [];
+    } catch(e){ return []; }
+  }
+  function saveSet(key, arr){
+    try { localStorage.setItem(key, JSON.stringify(arr)); } catch(e){}
+  }
+  function toggleInSet(key, id, cap){
+    var arr = loadSet(key);
+    var idx = arr.indexOf(id);
+    if (idx === -1){
+      arr.unshift(id);
+      if (cap){ arr = arr.slice(0, cap); }
+    } else {
+      arr.splice(idx, 1);
     }
-  ];
+    saveSet(key, arr);
+    return arr;
+  }
+  function addToRecent(key, id, cap){
+    var arr = loadSet(key);
+    var idx = arr.indexOf(id);
+    if (idx !== -1){ arr.splice(idx,1); }
+    arr.unshift(id);
+    arr = arr.slice(0, cap || 10);
+    saveSet(key, arr);
+    return arr;
+  }
+  function isIn(key, id){ return loadSet(key).indexOf(id) !== -1; }
 
-  const cannedMessagesData = [
-    { category: "warning", tags: ["face", "camera"], text: "Please ensure your face is always within camera view." },
-    { category: "warning", tags: ["talking", "audio"], text: "Please refrain from talking aloud." },
-    { category: "warning", tags: ["phone", "device"], text: "The use of mobile phones is prohibited. Please put your phone away out of arm's reach immediately." },
-    { category: "support", tags: ["email", "help"], text: "You can email support@certiverse.com for further assistance with rescheduling." },
-    { category: "termination", tags: ["violation", "code"], text: "The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance." },
-    { category: "warning", tags: ["eyes", "focus"], text: "Please keep your attention forward." },
-    { category: "support", tags: ["connection", "reconnect"], text: "You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted." },
-    { category: "warning", tags: ["tab", "browser"], text: "Please remain on the exam environment tab only." }
-  ];
+  var TAG_LABELS = {win:"Windows", mac:"macOS", linux:"Linux", critical:"Termination risk", hashi:"Hashicorp"};
 
-  const infractionsData = [
-    { name: "Another person in the room", context: "Check-in, Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 },
-    { name: "Books / Supplemental Materials", context: "Check-in, Testing", category: "Prohibited Items", severity: "minor", threshold: 2 },
-    { name: "Camera obstruction / issues", context: "Check-in, Testing", category: "Prohibited Device", severity: "minor", threshold: 2 },
-    { name: "Desk is not cleared off", context: "Check-in, Testing", category: "Check-in", severity: "minor", threshold: 2 },
-    { name: "Does not do complete scan (360, desk, under)", context: "Check-in", category: "Check-in", severity: "minor", threshold: 1 },
-    { name: "Eating/drinking without approved Special Accom", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 1 },
-    { name: "Environment or camera view too dark", context: "Check-in", category: "Check-in", severity: "minor", threshold: 2 },
-    { name: "Face coverings", context: "Check-in", category: "Check-in", severity: "minor", threshold: 2 },
-    { name: "Face out of view", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 },
-    { name: "Failure to return from break", context: "Testing", category: "Prohibited Behavior", severity: "major", threshold: 0 },
-    { name: "Headphones/Earbuds", context: "Check-in", category: "Prohibited Device", severity: "minor", threshold: 1 },
-    { name: "Headwear", context: "Check-in", category: "Prohibited Items", severity: "minor", threshold: 1 },
-    { name: "Internal environment too loud", context: "Check-in, Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 },
-    { name: "Leaves testing area", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 1 },
-    { name: "Looking elsewhere / wandering eyes", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 4 },
-    { name: "Mobile phone in use", context: "Testing", category: "Prohibited Device", severity: "major", threshold: 0 },
-    { name: "Mobile phone visible", context: "Check-in", category: "Prohibited Device", severity: "minor", threshold: 1 },
-    { name: "Not following proctor instructions", context: "Check-in, Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 },
-    { name: "Proctor harassment", context: "Check-in, Testing", category: "Prohibited Behavior", severity: "major", threshold: 0 },
-    { name: "Remote Desktop Applications", context: "Check-in, Testing", category: "Prohibited Device", severity: "major", threshold: 0 },
-    { name: "Secondary device (computer, laptop)", context: "Check-in", category: "Prohibited Device", severity: "minor", threshold: 1 },
-    { name: "Smart Watch", context: "Check-in", category: "Prohibited Device", severity: "minor", threshold: 1 },
-    { name: "Talking aloud / to others", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 }
-  ];
-
-  const clientPoliciesData = [
-    { name: "AKYLADE", nameMatch: "Govt ID Match", breakPolicy: "One (1) 5-min break", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "ATLASSIAN", nameMatch: "Nicknames Allowed", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "BLUE PRISM", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "BMC", nameMatch: "Govt ID Match", breakPolicy: "One (1) 5-min break", seb: "SEB Required", notes: "Documentation Allowed" },
-    { name: "CAMUNDA", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "CASBO", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "DOCUSIGN", nameMatch: "Nicknames Allowed", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "HASHICORP", nameMatch: "Govt ID Match", breakPolicy: "None (Vault Prof: 1x 15-min break)", seb: "Non-SEB", notes: "Documentation Not Allowed" },
-    { name: "INTERSYSTEMS", nameMatch: "Nicknames Allowed", breakPolicy: "One (1) 10-min break", seb: "SEB Required", notes: "Depends on Exam" },
-    { name: "NRPP", nameMatch: "Nicknames Allowed", breakPolicy: "One (1) 15-min break", seb: "SEB Required", notes: "Documentation Allowed" },
-    { name: "NVIDIA", nameMatch: "Govt ID Match", breakPolicy: "None (Beta 180: Two 5-min breaks)", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "OPEN TEXT", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Allowed" },
-    { name: "PROJECT SUCCESS", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "SIDEFX", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Textbooks Allowed" },
-    { name: "VASTDATA", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "WELLSKY", nameMatch: "Govt ID Match", breakPolicy: "Unlimited (10-20 mins)", seb: "SEB Required", notes: "Textbooks Allowed" }
-  ];
-
-  const faqData = [
-    { category: "ID Verification", question: "What forms of ID are accepted during check-in?", answer: "A valid government-issued photo ID (Passport, Driver's License, or National ID) that clearly displays your full legal name matching your exam reservation." },
-    { category: "Room Scans", question: "How should a candidate conduct a 360-degree room scan?", answer: "The candidate must slowly pan their webcam or laptop around the entire room, showing all four walls, the desk surface, underneath the desk, and chair." },
-    { category: "Technical Issues", question: "What should I do if a candidate experiences severe technical disconnection?", answer: "Candidates who miss their appointment or face unresolvable drop-offs must contact support@certiverse.com to request rescheduling or ticket review." },
-    { category: "SEB", question: "What is Secure Exam Browser (SEB) mode?", answer: "SEB is a hardened browser environment that locks down the candidate workstation, preventing access to unauthorized websites, files, and system shortcuts." },
-    { category: "Technical Issues", question: "What are the minimum system requirements?", answer: "A working webcam, microphone, stable high-speed internet connection, and a compatible modern web browser or Secure Exam Browser." },
-    { category: "ID Verification", question: "What if the candidate's name on ID differs slightly?", answer: "Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com." }
-  ];
-
-  window.addEventListener('DOMContentLoaded', () => {
-    initClock();
-    renderCheckin(checkinData);
-    renderCanned(cannedMessagesData);
-    renderInfractions(infractionsData);
-    renderClients();
-    renderFaq(faqData);
-    populateTacticalSelect();
-  });
-
-  function initClock() {
-    setInterval(() => {
-      const now = new Date();
-      const options = { timeZone: 'Asia/Manila', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-      const phtString = new Intl.DateTimeFormat('en-GB', options).format(now) + ' PHT';
-      document.getElementById('ph-clock').innerHTML = `<span>🕒 ${phtString}</span>`;
-    }, 1000);
+  function renderTags(tags){
+    if (!tags || !tags.length) return "";
+    var out = "";
+    for (var i=0;i<tags.length;i++){
+      var t = tags[i];
+      out += '<span class="card-tag ' + t + '">' + (TAG_LABELS[t] || t) + '</span>';
+    }
+    return '<div class="card-tags">' + out + '</div>';
   }
 
-  function switchPage(pageId, navElement) {
-    document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-    document.getElementById(`page-${pageId}`).classList.add('active');
-    if (navElement) navElement.classList.add('active');
-
-    const titles = {
-      home: ["🏯 Home / Command Center", "Operational dashboard and real-time proctoring metrics."],
-      checkin: ["📜 Check-In Steps", "Exact proctor verification spiels and OS specific instructions."],
-      canned: ["💬 Canned Messages", "Universal message repository for fast proctor communication."],
-      infractions: ["⚖ Infraction Threshold Center", "Tactical decision matrix for violations and threshold monitoring."],
-      policies: ["🏛 Client Policy Library", "Source of truth for client name match, breaks, and SEB requirements."],
-      faq: ["📖 Wisdom Library (FAQ)", "Centralized Certiverse knowledge base and searchable archives."]
-    };
-
-    document.getElementById('current-page-title').innerText = titles[pageId][0];
-    document.getElementById('current-page-desc').innerText = titles[pageId][1];
+  function renderMessageCard(msg, opts){
+    opts = opts || {};
+    var pinned = isIn("ph_pins", msg.id);
+    var faved  = isIn("ph_favs", msg.id);
+    var progressBox = "";
+    if (opts.progress){
+      var done = isIn("ph_progress", msg.id);
+      progressBox = '<input type="checkbox" class="progress-check" title="Mark reviewed" ' +
+        (done ? "checked" : "") + ' onchange="toggleProgress(\'' + msg.id + '\')">';
+    }
+    return (
+      '<div class="card' + (pinned ? " is-pinned" : "") + '" data-id="' + msg.id + '" data-cat="' + msg.cat + '">' +
+        (progressBox ? '<div>' + progressBox + '</div>' : '') +
+        '<div class="card-body">' +
+          renderTags(msg.tags) +
+          '<p class="message-text">' + escapeHtml(msg.text) + '</p>' +
+        '</div>' +
+        '<div class="card-actions">' +
+          '<div class="icon-row">' +
+            '<button class="icon-btn' + (faved ? " on" : "") + '" title="Favorite" onclick="toggleFav(\'' + msg.id + '\')">' + (faved ? "★" : "☆") + '</button>' +
+            '<button class="icon-btn' + (pinned ? " on" : "") + '" title="Pin" onclick="togglePin(\'' + msg.id + '\')">📌</button>' +
+          '</div>' +
+          '<button class="seal-btn" onclick="copyMessage(this,\'' + msg.id + '\')">⚜ Copy Scroll</button>' +
+        '</div>' +
+      '</div>'
+    );
   }
 
-  function renderCheckin(data) {
-    const container = document.getElementById('checkin-container');
-    container.innerHTML = data.map((item, index) => `
-      <div class="accordion-section ${index === 0 ? 'expanded' : ''}" id="checkin-sec-${index}">
-        <div class="accordion-header" onclick="toggleAccordion('checkin-sec-${index}')">
-          <div class="accordion-title">
-            <span>${item.title}</span>
-            <span class="tag" style="background:#363645;">${item.category}</span>
-          </div>
-          <span class="chevron">▼</span>
-        </div>
-        <div class="accordion-content">
-          ${item.spiels.map(spiel => `
-            <div class="spiel-item">
-              <div class="spiel-text">${spiel}</div>
-              <button class="action-btn" onclick="copyText(this, \`${spiel}\`)">📋 Copy</button>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function toggleAccordion(id) {
-    const sec = document.getElementById(id);
-    sec.classList.toggle('expanded');
-  }
-
-  function filterCheckin(query) {
-    const q = query.toLowerCase();
-    const filtered = checkinData.map(sec => {
-      const matchingSpiels = sec.spiels.filter(s => s.toLowerCase().includes(q));
-      if (sec.title.toLowerCase().includes(q) || matchingSpiels.length > 0) {
-        return {
-          ...sec,
-          spiels: sec.title.toLowerCase().includes(q) ? sec.spiels : matchingSpiels
-        };
+  /* ============================================================
+     CHECK-IN STEPS
+     ============================================================ */
+  function renderCheckin(){
+    var wrap = document.getElementById("checkinAccordions");
+    var html = "";
+    for (var i=0;i<CATEGORIES.length;i++){
+      var cat = CATEGORIES[i];
+      var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
+      html += '<details class="accordion" id="accordion-' + cat.id + '"' + (i===0 ? " open" : "") + '>' +
+        '<summary>' +
+          '<span class="cat-left"><span class="cat-num">' + cat.id + '</span>' + cat.icon + '&nbsp; ' + cat.label + '</span>' +
+          '<span class="cat-progress" id="progress-' + cat.id + '"></span>' +
+          '<span class="chevron">&#10148;</span>' +
+        '</summary>' +
+        '<div class="accordion-body" id="body-' + cat.id + '">';
+      if (msgs.length === 0){
+        html += '<div class="empty-state">No scripted messages on file for this category yet.</div>';
+      } else {
+        for (var j=0;j<msgs.length;j++){ html += renderMessageCard(msgs[j], {progress:true}); }
       }
-      return null;
-    }).filter(Boolean);
-    renderCheckin(filtered.length > 0 ? filtered : checkinData);
+      html += '</div></details>';
+    }
+    wrap.innerHTML = html;
+    updateProgressLabels();
+
+    var anchorList = document.getElementById("checkinAnchors");
+    var aHtml = "";
+    for (var k=0;k<CATEGORIES.length;k++){
+      var c = CATEGORIES[k];
+      var count = MESSAGES.filter(function(m){ return m.cat === c.id; }).length;
+      aHtml += '<li><button onclick="goToCategory(\'' + c.id + '\')">' + c.id + '. ' + c.label + ' <span class="cnt">' + count + '</span></button></li>';
+    }
+    anchorList.innerHTML = aHtml;
   }
 
-  function renderCanned(data) {
-    const container = document.getElementById('canned-messages-container');
-    container.innerHTML = data.map(item => `
-      <div class="dojo-card">
-        <div class="card-header-row">
-          <div class="card-tags">
-            <span class="tag">${item.category}</span>
-            ${item.tags.map(t => `<span class="tag" style="background:#363645;">#${t}</span>`).join('')}
-          </div>
-          <button class="action-btn" onclick="copyText(this, \`${item.text}\`)">📋 Copy Spiel</button>
-        </div>
-        <p style="font-size:0.9rem; line-height:1.6; color:#e4e4e7;">${item.text}</p>
-      </div>
-    `).join('');
-  }
-
-  function filterCannedMessages(query) {
-    const q = query.toLowerCase();
-    const filtered = cannedMessagesData.filter(i => i.text.toLowerCase().includes(q) || i.tags.some(t => t.includes(q)) || i.category.includes(q));
-    renderCanned(filtered);
-  }
-
-  function filterCannedCategory(category, el) {
-    document.querySelectorAll('#canned-filters .filter-pill').forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
-    if (category === 'all') {
-      renderCanned(cannedMessagesData);
-    } else {
-      renderCanned(cannedMessagesData.filter(i => i.category === category));
+  function updateProgressLabels(){
+    var progressAll = loadSet("ph_progress");
+    for (var i=0;i<CATEGORIES.length;i++){
+      var cat = CATEGORIES[i];
+      var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
+      var done = 0;
+      for (var j=0;j<msgs.length;j++){ if (progressAll.indexOf(msgs[j].id) !== -1) done++; }
+      var el = document.getElementById("progress-" + cat.id);
+      if (el){ el.textContent = msgs.length ? (done + " / " + msgs.length + " reviewed") : ""; }
     }
   }
 
-  function renderInfractions(data) {
-    const tbody = document.getElementById('infractions-tbody');
-    tbody.innerHTML = data.map(i => `
-      <tr>
-        <td><strong>${i.name}</strong></td>
-        <td>${i.context}</td>
-        <td>${i.category}</td>
-        <td><span class="tag ${i.severity}">${i.severity}</span></td>
-        <td style="text-align:center; font-family:monospace; font-weight:700;">${i.threshold}</td>
-      </tr>
-    `).join('');
-  }
+  window.toggleProgress = function(id){
+    toggleInSet("ph_progress", id);
+    updateProgressLabels();
+  };
 
-  function filterInfractionsTable(query) {
-    const q = query.toLowerCase();
-    const filtered = infractionsData.filter(i => i.name.toLowerCase().includes(q) || i.category.toLowerCase().includes(q));
-    renderInfractions(filtered);
-  }
+  window.resetProgress = function(){
+    saveSet("ph_progress", []);
+    renderCheckin();
+    filterAll();
+  };
 
-  function filterInfractionSeverity(severity, el) {
-    document.querySelectorAll('#page-infractions .filter-pill').forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
-    if (severity === 'all') {
-      renderInfractions(infractionsData);
-    } else {
-      renderInfractions(infractionsData.filter(i => i.severity === severity));
+  window.goToCategory = function(catId){
+    var viewBtn = document.querySelector('.view-btn[data-view="view-checkin"]');
+    switchView("view-checkin", viewBtn);
+    var el = document.getElementById("accordion-" + catId);
+    if (el){
+      el.open = true;
+      el.scrollIntoView({behavior:"smooth", block:"start"});
     }
-  }
+  };
 
-  function populateTacticalSelect() {
-    const select = document.getElementById('tactical-select');
-    select.innerHTML = infractionsData.map((i, index) => `<option value="${index}">${i.name} (${i.severity.toUpperCase()})</option>`).join('');
-    updateTacticalSimulation();
-  }
+  /* ============================================================
+     CANNED MESSAGE LIBRARY
+     ============================================================ */
+  var libraryActiveCat = "all";
 
-  function updateTacticalSimulation() {
-    const idx = document.getElementById('tactical-select').value;
-    const item = infractionsData[idx];
-    const summaryText = document.getElementById('tactical-summary-text');
-    summaryText.innerHTML = `Violation: <strong>${item.name}</strong> | Severity: <span style="color:${item.severity === 'major' ? '#fca5a5' : '#fde68a'}">${item.severity.toUpperCase()}</span> | Threshold: ${item.threshold} | Action: ${item.threshold === 0 ? 'Immediate Escalation / Termination' : 'Issue Warning & Track Count'}`;
-  }
-
-  function renderClients() {
-    const sidebar = document.getElementById('client-sidebar-list');
-    sidebar.innerHTML = clientPoliciesData.map((c, index) => `
-      <div class="client-item ${index === 0 ? 'active' : ''}" onclick="selectClient(${index}, this)">${c.name}</div>
-    `).join('');
-    selectClient(0, sidebar.children[0]);
-  }
-
-  function selectClient(index, el) {
-    document.querySelectorAll('.client-item').forEach(i => i.classList.remove('active'));
-    if (el) el.classList.add('active');
-    const client = clientPoliciesData[index];
-    const pane = document.getElementById('client-details-pane');
-    pane.innerHTML = `
-      <div class="section-heading" style="margin-bottom:20px;">
-        <span>🏛 Client Clan Record: ${client.name}</span>
-        <button class="action-btn" onclick="copyText(this, 'Client: ${client.name}\\nName Match: ${client.nameMatch}\\nBreak Policy: ${client.breakPolicy}\\nSEB: ${client.seb}\\nNotes: ${client.notes}')">📋 Copy Policy Record</button>
-      </div>
-      <div class="policy-property-row">
-        <div class="property-key">Client Name</div>
-        <div class="property-val">${client.name}</div>
-      </div>
-      <div class="policy-property-row">
-        <div class="property-key">Name Match Rules</div>
-        <div class="property-val">${client.nameMatch}</div>
-      </div>
-      <div class="policy-property-row">
-        <div class="property-key">Break Policy</div>
-        <div class="property-val">${client.breakPolicy}</div>
-      </div>
-      <div class="policy-property-row">
-        <div class="property-key">SEB Requirements</div>
-        <div class="property-val">${client.seb}</div>
-      </div>
-      <div class="policy-property-row">
-        <div class="property-key">Special Notes</div>
-        <div class="property-val">${client.notes}</div>
-      </div>
-    `;
-  }
-
-  function filterClientList(query) {
-    const q = query.toLowerCase();
-    const filtered = clientPoliciesData.filter(c => c.name.toLowerCase().includes(q));
-    const sidebar = document.getElementById('client-sidebar-list');
-    sidebar.innerHTML = filtered.map((c) => `
-      <div class="client-item" onclick="selectClientByName('${c.name}', this)">${c.name}</div>
-    `).join('');
-  }
-
-  function selectClientByName(name, el) {
-    const idx = clientPoliciesData.findIndex(c => c.name === name);
-    selectClient(idx, el);
-  }
-
-  function renderFaq(data) {
-    const container = document.getElementById('faq-container');
-    container.innerHTML = data.map(item => `
-      <div class="dojo-card">
-        <div class="card-header-row">
-          <span class="tag">${item.category}</span>
-        </div>
-        <h4 style="font-size:1rem; font-weight:700; color:#fff; margin-bottom:8px;">${item.question}</h4>
-        <p style="font-size:0.85rem; line-height:1.6; color:var(--text-muted);">${item.answer}</p>
-      </div>
-    `).join('');
-  }
-
-  function filterFaq(query) {
-    const q = query.toLowerCase();
-    const filtered = faqData.filter(i => i.question.toLowerCase().includes(q) || i.answer.toLowerCase().includes(q) || i.category.toLowerCase().includes(q));
-    renderFaq(filtered);
-  }
-
-  function filterFaqCategory(cat, el) {
-    document.querySelectorAll('#faq-filters .filter-pill').forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
-    if (cat === 'all') {
-      renderFaq(faqData);
-    } else {
-      renderFaq(faqData.filter(i => i.category === cat));
+  function renderLibraryFilters(){
+    var wrap = document.getElementById("libraryFilters");
+    var html = '<button class="filter-chip' + (libraryActiveCat==="all" ? " active" : "") + '" onclick="setLibraryFilter(\'all\')">All (' + MESSAGES.length + ')</button>';
+    for (var i=0;i<CATEGORIES.length;i++){
+      var cat = CATEGORIES[i];
+      var count = MESSAGES.filter(function(m){ return m.cat === cat.id; }).length;
+      html += '<button class="filter-chip' + (libraryActiveCat===cat.id ? " active" : "") + '" onclick="setLibraryFilter(\'' + cat.id + '\')">' + cat.icon + ' ' + cat.label + ' (' + count + ')</button>';
     }
+    wrap.innerHTML = html;
   }
 
-  function copyText(btn, text) {
-    navigator.clipboard.writeText(text).then(() => {
-      const orig = btn.innerHTML;
-      btn.innerHTML = '✓ Copied';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.innerHTML = orig;
-        btn.classList.remove('copied');
-      }, 1500);
+  window.setLibraryFilter = function(catId){
+    libraryActiveCat = catId;
+    renderLibraryFilters();
+    renderLibraryList();
+    filterAll();
+  };
+
+  function renderLibraryList(){
+    var wrap = document.getElementById("libraryList");
+    var msgs = libraryActiveCat === "all" ? MESSAGES : MESSAGES.filter(function(m){ return m.cat === libraryActiveCat; });
+    if (msgs.length === 0){
+      wrap.innerHTML = '<div class="empty-state">No scripted messages on file for this category yet.</div>';
+      return;
+    }
+    var html = "";
+    for (var i=0;i<msgs.length;i++){ html += renderMessageCard(msgs[i], {progress:false}); }
+    wrap.innerHTML = html;
+  }
+
+  /* ============================================================
+     FAVORITES, PINS, & COPY ACTIONS
+     ============================================================ */
+  window.toggleFav = function(id){ toggleInSet("ph_favs", id); renderAllInteractive(); };
+  window.togglePin = function(id){ toggleInSet("ph_pins", id); renderAllInteractive(); };
+
+  window.copyMessage = function(btn, id){
+    var msg = findMessageById(id);
+    if (!msg) return;
+    var text = msg.text;
+
+    function showCopied(){
+      var original = btn.textContent;
+      btn.textContent = "✓ Scroll Copied";
+      btn.classList.add("copied");
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
+    }
+    function afterCopy(){
+      addToRecent("ph_recent", id, 10);
+      showCopied();
+      renderHomeLists();
+    }
+
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(afterCopy, function(){ fallbackCopy(text, afterCopy); });
+    } else {
+      fallbackCopy(text, afterCopy);
+    }
+  };
+
+  function fallbackCopy(text, cb){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px";
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand("copy"); } catch(e){}
+    document.body.removeChild(ta);
+    if (cb) cb();
+  }
+
+  function renderAllInteractive(){
+    renderCheckin();
+    renderLibraryList();
+    renderHomeLists();
+    filterAll();
+  }
+
+  /* ============================================================
+     HOME DASHBOARD
+     ============================================================ */
+  function tickClock(){
+    var now = new Date();
+    var hh = String(now.getUTCHours()).padStart(2,"0");
+    var mm = String(now.getUTCMinutes()).padStart(2,"0");
+    var ss = String(now.getUTCSeconds()).padStart(2,"0");
+    document.getElementById("clockTime").textContent = hh + ":" + mm + ":" + ss + " UTC";
+    var opts = {weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"};
+    document.getElementById("clockDate").textContent = now.toLocaleDateString(undefined, opts);
+  }
+
+  function renderStats(){
+    var stats = [
+      {num: MESSAGES.length, lbl:"Canned Messages"},
+      {num: CATEGORIES.length, lbl:"Check-In Categories"},
+      {num: POLICIES.length, lbl:"Client Policies"},
+      {num: INFRACTIONS.length, lbl:"Infractions"},
+      {num: 0, lbl:"FAQ Entries"}
+    ];
+    var html = "";
+    for (var i=0;i<stats.length;i++){
+      html += '<div class="stat-card"><div class="num">' + stats[i].num + '</div><div class="lbl">' + stats[i].lbl + '</div></div>';
+    }
+    document.getElementById("statGrid").innerHTML = html;
+  }
+
+  function renderQuickActions(){
+    var html = "";
+    for (var i=0;i<QUICK_ACTIONS.length;i++){
+      var q = QUICK_ACTIONS[i];
+      html += '<button class="quick-btn" onclick="runQuickAction(\'' + q.query.replace(/'/g,"\\'") + '\')"><span class="qi">' + q.icon + '</span>' + q.label + '</button>';
+    }
+    document.getElementById("quickGrid").innerHTML = html;
+  }
+
+  window.runQuickAction = function(query){
+    var viewBtn = document.querySelector('.view-btn[data-view="view-library"]');
+    switchView("view-library", viewBtn);
+    setLibraryFilter("all");
+    var input = document.getElementById("globalSearch");
+    input.value = query;
+    filterAll();
+    window.scrollTo({top:0, behavior:"smooth"});
+  };
+
+  function renderMiniList(containerId, countId, ids, emptyText){
+    var container = document.getElementById(containerId);
+    document.getElementById(countId).textContent = ids.length ? String(ids.length) : "";
+    if (!ids.length){
+      container.innerHTML = '<div class="empty-state">' + emptyText + '</div>';
+      return;
+    }
+    var html = "";
+    for (var i=0;i<ids.length;i++){
+      var msg = findMessageById(ids[i]);
+      if (!msg) continue;
+      html += '<div class="mini-item">' +
+        '<span class="txt">' + escapeHtml(msg.text) + '</span>' +
+        '<span class="cat-chip">' + catLabel(msg.cat) + '</span>' +
+        '<button class="seal-btn" style="min-width:auto;padding:6px 12px;" onclick="copyMessage(this,\'' + msg.id + '\')">⚜</button>' +
+      '</div>';
+    }
+    container.innerHTML = html;
+  }
+
+  function renderHomeLists(){
+    renderMiniList("favList", "favCount", loadSet("ph_favs"), "No favorites yet — tap the star on any scroll to pin it here.");
+    renderMiniList("pinList", "pinCount", loadSet("ph_pins"), "Nothing pinned yet — tap 📌 on any scroll to keep it close at hand.");
+    renderMiniList("recentList", "recentCount", loadSet("ph_recent"), "Nothing copied yet this session.");
+  }
+
+  /* ============================================================
+     THRESHOLD CENTER
+     ============================================================ */
+  var thresholdActiveFilter = "all";
+
+  function riskTier(severity, threshold){
+    var sev = severity.toLowerCase();
+    if (sev === "major" && threshold === 0) return {cls:"risk-red", label:"Immediate"};
+    if (sev === "major") return {cls:"risk-orange", label:"Critical"};
+    if (sev === "minor" && threshold <= 1) return {cls:"risk-yellow", label:"Elevated"};
+    return {cls:"risk-green", label:"Standard"};
+  }
+
+  function renderThresholdFilters(){
+    var wrap = document.getElementById("thresholdFilters");
+    var counts = {all:INFRACTIONS.length, minor:0, major:0};
+    for (var i=0;i<INFRACTIONS.length;i++){ counts[INFRACTIONS[i][3].toLowerCase()]++; }
+    wrap.innerHTML =
+      '<button class="filter-chip' + (thresholdActiveFilter==="all" ? " active" : "") + '" onclick="setThresholdFilter(\'all\')">All (' + counts.all + ')</button>' +
+      '<button class="filter-chip' + (thresholdActiveFilter==="minor" ? " active" : "") + '" onclick="setThresholdFilter(\'minor\')">Minor (' + counts.minor + ')</button>' +
+      '<button class="filter-chip' + (thresholdActiveFilter==="major" ? " active" : "") + '" onclick="setThresholdFilter(\'major\')">Major (' + counts.major + ')</button>';
+  }
+
+  window.setThresholdFilter = function(f){
+    thresholdActiveFilter = f;
+    renderThresholdFilters();
+    renderInfractions();
+    filterAll();
+  };
+
+  function renderInfractions(){
+    var grid = document.getElementById("infractionGrid");
+    var html = "";
+    var shown = 0;
+    for (var i=0;i<INFRACTIONS.length;i++){
+      var r = INFRACTIONS[i];
+      var sevLower = r[3].toLowerCase();
+      if (thresholdActiveFilter !== "all" && thresholdActiveFilter !== sevLower) continue;
+      shown++;
+      var tier = riskTier(r[3], r[4]);
+      var badgeClass = sevLower === "major" ? "badge-major" : "badge-minor";
+      var detail = "";
+      if (r[6]){
+        var termMsg = findByTerm(r[6]);
+        if (termMsg){
+          detail = '<strong>Closest matching termination script:</strong><br>' + escapeHtml(termMsg.text) +
+            '<br><button class="seal-btn" style="margin-top:8px;" onclick="event.stopPropagation();copyMessage(this,\'' + termMsg.id + '\')">⚜ Copy Scroll</button>';
+        }
+      } else if (r[5]){
+        detail = 'No dedicated termination script. <button class="filter-chip" onclick="event.stopPropagation();runQuickAction(\'' + r[5].replace(/'/g,"\\'") + '\')">Search library for &ldquo;' + escapeHtml(r[5]) + '&rdquo;</button>';
+      } else {
+        detail = 'No scripted response on file &mdash; apply proctor judgment and document the incident per policy.';
+      }
+      html += '<div class="infr-card ' + tier.cls + '" data-severity="' + sevLower + '" onclick="this.classList.toggle(\'expanded\')">' +
+        '<div class="infr-name">' + escapeHtml(r[0]) + '</div>' +
+        '<div class="infr-meta"><span>' + escapeHtml(r[2]) + '</span><span>&middot;</span><span>' + escapeHtml(r[1]) + '</span></div>' +
+        '<div class="infr-meta"><span class="badge ' + badgeClass + '">' + escapeHtml(r[3]) + '</span><span class="infr-threshold">Threshold: ' + r[4] + ' / 1000 &middot; Risk: ' + tier.label + '</span></div>' +
+        '<div class="infr-detail">' + detail + '</div>' +
+      '</div>';
+    }
+    grid.innerHTML = html;
+    document.getElementById("infractionEmpty").style.display = shown === 0 ? "" : "none";
+  }
+
+  /* ============================================================
+     CLIENT POLICIES
+     ============================================================ */
+  function renderPolicies(){
+    var body = document.getElementById("policiesBody");
+    var rows = "";
+    for (var i=0;i<POLICIES.length;i++){
+      var p = POLICIES[i];
+      rows += "<tr>" +
+        "<td>" + escapeHtml(p[0]) + "</td><td>" + escapeHtml(p[1]) + "</td><td>" + escapeHtml(p[2]) + "</td>" +
+        "<td>" + escapeHtml(p[3]) + "</td><td>" + escapeHtml(p[4]) + "</td><td>" + escapeHtml(p[5]) + "</td>" +
+      "</tr>";
+    }
+    body.innerHTML = rows;
+    document.getElementById("policiesCount").textContent = POLICIES.length + " clients";
+
+    var select = document.getElementById("policySelect");
+    var opts = "";
+    for (var j=0;j<POLICIES.length;j++){ opts += '<option value="' + j + '">' + escapeHtml(POLICIES[j][0]) + '</option>'; }
+    select.innerHTML = opts;
+  }
+
+  window.renderGenerator = function(){
+    var idx = parseInt(document.getElementById("policySelect").value, 10) || 0;
+    var p = POLICIES[idx];
+    if (!p) return;
+    var client = p[0], nameChange = p[1], breaks = p[2], namePolicy = p[3], seb = p[4], docs = p[5];
+
+    var cards = [
+      {title:"Name Match Response", text:"For " + client + ", name changes are " + nameChange.toLowerCase() + ". " + namePolicy + "."},
+      {title:"Break Policy Response", text:"The break policy for " + client + " is: " + breaks + "."},
+      {title:"SEB Response", text:client + " exams run under " + seb + " conditions."},
+      {title:"Documentation Response", text:"Documentation/resource policy for " + client + ": " + docs + "."}
+    ];
+    var html = "";
+    for (var i=0;i<cards.length;i++){
+      var safeText = cards[i].text.replace(/'/g,"\\'").replace(/\n/g," ");
+      html += '<div class="gen-card"><h4>' + cards[i].title + '</h4><p>' + escapeHtml(cards[i].text) + '</p>' +
+        '<button class="seal-btn" onclick="copyGenerated(this,\'' + safeText.replace(/"/g,"&quot;") + '\')">⚜ Copy Scroll</button></div>';
+    }
+    document.getElementById("generatorCards").innerHTML = html;
+  };
+
+  window.copyGenerated = function(btn, text){
+    function showCopied(){
+      var original = btn.textContent;
+      btn.textContent = "✓ Scroll Copied";
+      btn.classList.add("copied");
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
+    }
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(showCopied, function(){ fallbackCopy(text, showCopied); });
+    } else {
+      fallbackCopy(text, showCopied);
+    }
+  };
+
+  /* ============================================================
+     KYOTO SAKURA CANVAS ENGINE
+     ============================================================ */
+  function initSakuraEngine(){
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var canvas = document.getElementById("sakuraCanvas");
+    if (!canvas) return;
+    var ctx = canvas.getContext("2d");
+
+    var width = canvas.width = window.innerWidth;
+    var height = canvas.height = window.innerHeight;
+
+    window.addEventListener("resize", function(){
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
     });
+
+    var petals = [];
+    var petalCount = 35;
+
+    for (var i = 0; i < petalCount; i++) {
+      petals.push({
+        x: Math.random() * width,
+        y: Math.random() * height - height,
+        size: Math.random() * 7 + 4,
+        speedY: Math.random() * 1.2 + 0.6,
+        speedX: Math.random() * 0.8 - 0.4,
+        rotation: Math.random() * 360,
+        rotSpeed: Math.random() * 1.5 - 0.75,
+        opacity: Math.random() * 0.4 + 0.3
+      });
+    }
+
+    function drawPetal(p) {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rotation * Math.PI) / 180);
+      ctx.globalAlpha = p.opacity;
+
+      var grad = ctx.createLinearGradient(0, 0, p.size, p.size);
+      grad.addColorStop(0, "#e8b4b4");
+      grad.addColorStop(1, "#c47a7a");
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(p.size, -p.size / 2, p.size * 1.2, p.size / 2, 0, p.size * 1.5);
+      ctx.bezierCurveTo(-p.size * 1.2, p.size / 2, -p.size, -p.size / 2, 0, 0);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+
+      for (var i = 0; i < petals.length; i++) {
+        var p = petals[i];
+        p.y += p.speedY;
+        p.x += p.speedX + Math.sin(p.y * 0.008);
+        p.rotation += p.rotSpeed;
+
+        if (p.y > height + 20) {
+          p.y = -20;
+          p.x = Math.random() * width;
+        }
+
+        drawPetal(p);
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
   }
 
-  function copyEmergencySpiel(type) {
-    const spiel = type === 'support' 
-      ? "You can email support@certiverse.com for further assistance with rescheduling."
-      : "The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance.";
-    navigator.clipboard.writeText(spiel);
-    alert("Emergency Spiel Copied to Clipboard.");
+  /* ============================================================
+     VIEW SWITCHING
+     ============================================================ */
+  window.switchView = function(viewId, btn){
+    var views = document.querySelectorAll(".dashboard-view");
+    for (var i=0;i<views.length;i++){ views[i].classList.remove("active"); }
+    var target = document.getElementById(viewId);
+    if (target){ target.classList.add("active"); }
+
+    var btns = document.querySelectorAll(".view-btn");
+    for (var j=0;j<btns.length;j++){ btns[j].classList.remove("active"); }
+    if (btn){ btn.classList.add("active"); }
+
+    var isCheckin = viewId === "view-checkin";
+    document.getElementById("checkinAnchors").style.display = isCheckin ? "" : "none";
+    document.querySelector(".nav-label").style.display = isCheckin ? "" : "none";
+
+    filterAll();
+  };
+
+  /* ============================================================
+     GLOBAL SEARCH ENGINE
+     ============================================================ */
+  function filterAll(){
+    var query = document.getElementById("globalSearch").value.trim().toLowerCase();
+    var matches = 0, total = 0;
+
+    // Accordions
+    var accordions = document.querySelectorAll("#checkinAccordions .accordion");
+    for (var a=0;a<accordions.length;a++){
+      var acc = accordions[a];
+      var cards = acc.querySelectorAll(".card");
+      var visible = 0;
+      for (var c=0;c<cards.length;c++){
+        total++;
+        var card = cards[c];
+        var text = card.textContent.toLowerCase();
+        var show = !query || text.indexOf(query) !== -1;
+        card.style.display = show ? "" : "none";
+        if (show){ visible++; matches++; }
+      }
+      acc.style.display = (cards.length === 0 || visible > 0) ? "" : "none";
+      if (query){ acc.open = visible > 0; }
+    }
+
+    // Library
+    var libCards = document.querySelectorAll("#libraryList .card");
+    for (var l=0;l<libCards.length;l++){
+      total++;
+      var lc = libCards[l];
+      var ltext = lc.textContent.toLowerCase();
+      var lshow = !query || ltext.indexOf(query) !== -1;
+      lc.style.display = lshow ? "" : "none";
+      if (lshow){ matches++; }
+    }
+
+    // Policies
+    var policyRows = document.querySelectorAll("#policiesBody tr");
+    var visiblePolicies = 0;
+    for (var pr=0;pr<policyRows.length;pr++){
+      total++;
+      var row = policyRows[pr];
+      var rtext = row.textContent.toLowerCase();
+      var showRow = !query || rtext.indexOf(query) !== -1;
+      row.style.display = showRow ? "" : "none";
+      if (showRow){ visiblePolicies++; matches++; }
+    }
+    var polEmpty = document.getElementById("policiesEmpty");
+    if (polEmpty){ polEmpty.style.display = (policyRows.length && visiblePolicies === 0) ? "" : "none"; }
+
+    // Infractions
+    var infrCards = document.querySelectorAll("#infractionGrid .infr-card");
+    var visibleInfr = 0;
+    for (var ir=0;ir<infrCards.length;ir++){
+      total++;
+      var icard = infrCards[ir];
+      var itext = icard.textContent.toLowerCase();
+      var ishow = !query || itext.indexOf(query) !== -1;
+      icard.style.display = ishow ? "" : "none";
+      if (ishow){ visibleInfr++; matches++; }
+    }
+    var infrEmpty = document.getElementById("infractionEmpty");
+    if (infrEmpty && infrCards.length){ infrEmpty.style.display = visibleInfr === 0 ? "" : "none"; }
+
+    var countLabel = document.getElementById("searchCount");
+    countLabel.textContent = query ? ("Showing " + matches + " of " + total + " matching items across the dojo") : "";
   }
+  window.filterAll = filterAll;
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  document.addEventListener("DOMContentLoaded", function(){
+    renderStats();
+    renderQuickActions();
+    renderHomeLists();
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    renderCheckin();
+    renderLibraryFilters();
+    renderLibraryList();
+
+    renderThresholdFilters();
+    renderInfractions();
+
+    renderPolicies();
+    renderGenerator();
+
+    initSakuraEngine();
+    filterAll();
+  });
+})();
 </script>
-
 </body>
 </html>
