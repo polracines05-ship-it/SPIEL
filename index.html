@@ -3,30 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveActs Proctor Dojo — Capsule Corp Command Deck (PST)</title>
+<title>FiveActs Proctor Dojo — Capsule Corp Radar Terminal</title>
 <style>
   :root {
-    --capsule-cyan: #00f0ff;
-    --capsule-cyan-glow: rgba(0, 240, 255, 0.45);
-    --dragon-orange: #ff7700;
-    --dragon-gold: #ffd700;
-    --dragon-glow: rgba(255, 119, 0, 0.55);
-    --ki-crimson: #ff1e56;
-    --ki-red: #cc1111;
-    --saiyan-blue: #0077ff;
+    /* Dragon Ball Z Palette */
+    --radar-bg: #021a0c;
+    --radar-grid: rgba(0, 255, 102, 0.22);
     --radar-green: #00ff66;
-    --radar-glow: rgba(0, 255, 102, 0.4);
+    --radar-glow: rgba(0, 255, 102, 0.5);
     
-    --bg-dark: #04060a;
-    --card-bg: rgba(10, 16, 26, 0.78);
-    --panel-bg: rgba(14, 22, 35, 0.85);
-    --border-line: rgba(0, 240, 255, 0.32);
-    --border-gold: rgba(255, 215, 0, 0.4);
-    --text-main: #f0f6fc;
-    --text-dim: #a3b8cc;
-    --text-muted: #647a8e;
+    --capsule-cyan: #00f0ff;
+    --capsule-cyan-glow: rgba(0, 240, 255, 0.6);
+    --saiyan-orange: #ff6600;
+    --saiyan-gold: #ffd700;
+    --saiyan-glow: rgba(255, 102, 0, 0.6);
+    --ki-pink: #ff007f;
+    --scouter-red: #ff1e56;
 
-    --font-head: Georgia, "Iowan Old Style", "Palatino Linotype", "Hiragino Mincho ProN", serif;
+    --panel-metal: rgba(12, 22, 20, 0.92);
+    --card-metal: rgba(18, 32, 28, 0.88);
+    --border-radar: rgba(0, 255, 102, 0.4);
+    --border-capsule: rgba(0, 240, 255, 0.4);
+
+    --text-main: #f0fff5;
+    --text-dim: #99d6b5;
+    --text-muted: #528c6e;
+
+    --font-head: Impact, "Arial Black", "Trebuchet MS", sans-serif;
     --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   }
 
@@ -35,7 +38,7 @@
   body {
     font-family: var(--font-body);
     color: var(--text-main);
-    background-color: var(--bg-dark);
+    background-color: var(--radar-bg);
     display: flex;
     min-height: 100vh;
     position: relative;
@@ -43,378 +46,361 @@
   }
 
   /* ============================================================
-     BACKGROUND ENVIRONMENT (KAMI'S LOOKOUT / SHENRON / ANIMATION)
+     DRAGON RADAR & KAMI'S LOOKOUT BACKGROUND
      ============================================================ */
   .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
   
-  .scene-sky {
+  /* Dragon Radar Grid Rings */
+  .radar-grid-bg {
     position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 100% 70% at 50% -10%, rgba(0, 119, 255, 0.3), transparent 80%),
-      radial-gradient(circle at 85% 20%, rgba(255, 119, 0, 0.25), transparent 50%),
-      radial-gradient(circle at 15% 80%, rgba(0, 240, 255, 0.18), transparent 55%),
-      linear-gradient(180deg, #060a12 0%, #08101a 40%, #050b14 75%, #020408 100%);
+    background-image: 
+      radial-gradient(circle at 50% 50%, transparent 20%, var(--radar-grid) 21%, transparent 22%),
+      radial-gradient(circle at 50% 50%, transparent 40%, var(--radar-grid) 41%, transparent 42%),
+      radial-gradient(circle at 50% 50%, transparent 60%, var(--radar-grid) 61%, transparent 62%),
+      radial-gradient(circle at 50% 50%, transparent 80%, var(--radar-grid) 81%, transparent 82%),
+      linear-gradient(0deg, transparent 49.5%, var(--radar-grid) 50%, transparent 50.5%),
+      linear-gradient(90deg, transparent 49.5%, var(--radar-grid) 50%, transparent 50.5%);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    opacity: 0.7;
   }
 
-  /* Sun / Ki Aura Halo */
-  .scene-sun {
-    position: absolute; top: 2%; right: 10%; width: 380px; height: 380px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, rgba(255, 119, 0, 0.22) 50%, transparent 75%);
-    filter: blur(25px);
-    animation: kiPulse 8s ease-in-out infinite alternate;
+  /* Radar Sweep Effect */
+  .radar-sweep {
+    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: conic-gradient(from 0deg at 50% 50%, rgba(0, 255, 102, 0.15) 0deg, transparent 60deg, transparent 360deg);
+    animation: radarSpin 12s linear infinite;
   }
-  @keyframes kiPulse {
-    0% { transform: scale(1); filter: blur(25px) brightness(1); }
-    100% { transform: scale(1.12); filter: blur(30px) brightness(1.3); }
+  @keyframes radarSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+  /* Shenron Flying Silhouette */
+  .shenron-sky {
+    position: absolute; right: -50px; top: 2%; width: 580px; height: 380px; opacity: 0.55;
+    filter: drop-shadow(0 0 25px var(--radar-glow));
+    animation: shenronFly 28s ease-in-out infinite alternate;
+  }
+  @keyframes shenronFly {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-25px) scale(1.05); }
   }
 
-  /* Layered Clouds */
-  .sky-clouds {
-    position: absolute; inset: 0;
-    background: 
-      radial-gradient(ellipse 60% 20% at 20% 18%, rgba(240, 246, 252, 0.08), transparent 70%),
-      radial-gradient(ellipse 80% 30% at 75% 25%, rgba(0, 240, 255, 0.06), transparent 75%),
-      radial-gradient(ellipse 50% 18% at 50% 45%, rgba(255, 119, 0, 0.05), transparent 80%);
-    animation: floatClouds 50s ease-in-out infinite alternate;
+  /* Flying Nimbus & Goku */
+  .nimbus-rider {
+    position: absolute; left: -160px; top: 15%; width: 140px; height: 70px; opacity: 0.88;
+    filter: drop-shadow(0 0 20px var(--saiyan-gold));
+    animation: nimbusFly 35s linear infinite;
   }
-  @keyframes floatClouds {
-    0% { transform: translateX(-40px) scale(1); }
-    100% { transform: translateX(40px) scale(1.05); }
+  @keyframes nimbusFly {
+    0% { transform: translateX(0) translateY(0); opacity: 0; }
+    5% { opacity: 0.9; }
+    90% { opacity: 0.9; }
+    100% { transform: translateX(calc(100vw + 320px)) translateY(-50px); opacity: 0; }
   }
 
   /* Kami's Lookout Dome Structure */
-  .lookout-structure {
-    position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 1400px; height: 280px;
-    opacity: 0.88; filter: drop-shadow(0 0 35px rgba(0, 240, 255, 0.2));
-  }
-  .lookout-structure svg { width: 100%; height: 100%; display: block; }
-
-  /* Shenron Silhouette Winding */
-  .shenron-sky {
-    position: absolute; right: 2%; top: 5%; width: 550px; height: 380px; opacity: 0.5;
-    filter: drop-shadow(0 0 25px rgba(0, 255, 102, 0.4));
-    animation: shenronDrift 25s ease-in-out infinite alternate;
-  }
-  @keyframes shenronDrift {
-    0% { transform: translateY(0px) rotate(0deg); }
-    100% { transform: translateY(-18px) rotate(-1.5deg); }
+  .lookout-dome {
+    position: absolute; left: 50%; transform: translateX(-50%); bottom: -40px; width: 1100px; height: 240px;
+    opacity: 0.85; filter: drop-shadow(0 0 30px var(--capsule-cyan-glow));
   }
 
-  /* Flying Nimbus & Goku Silhouette */
-  .nimbus-rider {
-    position: absolute; left: -150px; top: 18%; width: 120px; height: 60px; opacity: 0.8;
-    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.7));
-    animation: nimbusFlight 32s linear infinite;
-  }
-  @keyframes nimbusFlight {
-    0% { transform: translateX(0) translateY(0); opacity: 0; }
-    5% { opacity: 0.85; }
-    90% { opacity: 0.85; }
-    100% { transform: translateX(calc(100vw + 300px)) translateY(-40px); opacity: 0; }
-  }
-
-  .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 200px 70px rgba(4, 6, 10, 0.85); }
-  
   #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
   /* ============================================================
-     SIDEBAR — DRAGON RADAR NAVIGATION SYSTEM
+     SIDEBAR — CAPSULE CORP RADAR NAVIGATION
      ============================================================ */
   .sidebar {
     position: relative; z-index: 10;
-    width: 310px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
-    background: linear-gradient(180deg, rgba(10, 16, 26, 0.94), rgba(4, 6, 10, 0.98));
-    border-right: 1px solid var(--border-line);
+    width: 320px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
+    background: linear-gradient(180deg, rgba(2, 26, 12, 0.95), rgba(1, 15, 7, 0.98));
+    border-right: 2px solid var(--radar-green);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     display: flex; flex-direction: column; padding: 0;
-    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.75);
+    box-shadow: 8px 0 30px rgba(0, 255, 102, 0.2);
   }
   .sidebar::before {
-    content: ""; display: block; height: 4px; width: 100%; flex-shrink: 0;
-    background: linear-gradient(90deg, transparent, var(--capsule-cyan), var(--dragon-orange), transparent);
+    content: ""; display: block; height: 5px; width: 100%; flex-shrink: 0;
+    background: linear-gradient(90deg, var(--saiyan-orange), var(--saiyan-gold), var(--capsule-cyan), var(--radar-green));
   }
 
-  /* CAPSULE CORP & 7 DRAGON BALLS HEADER BRANDING */
-  .sidebar-header { padding: 22px 18px 18px; text-align: center; border-bottom: 1px solid var(--border-line); }
+  /* 7 DRAGON BALLS HEADER (F-I-V-E-A-C-T-S) */
+  .sidebar-header { padding: 22px 16px 18px; text-align: center; border-bottom: 1px solid var(--border-radar); }
   
   .dragon-balls-brand {
-    display: flex; justify-content: center; align-items: center; gap: 6px; margin-bottom: 12px;
+    display: flex; justify-content: center; align-items: center; gap: 5px; margin-bottom: 12px;
   }
   .dball {
-    width: 30px; height: 30px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, var(--dragon-gold), var(--dragon-orange) 65%, #883300 100%);
-    box-shadow: 0 0 10px var(--dragon-glow), inset 0 -2px 4px rgba(0,0,0,0.6);
+    width: 32px; height: 32px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffea00, #ff6600 70%, #992200 100%);
+    box-shadow: 0 0 12px var(--saiyan-glow), inset 0 -2px 5px rgba(0,0,0,0.7);
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.82rem; font-weight: 900; color: #1a0800; font-family: var(--font-head);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: default;
+    font-size: 0.88rem; font-weight: 900; color: #1a0500; font-family: var(--font-head);
+    transition: all 0.25s ease; cursor: pointer; text-shadow: 0 1px 2px rgba(255,255,255,0.6);
   }
   .dball:hover {
-    transform: translateY(-3px) scale(1.15);
-    box-shadow: 0 0 16px var(--dragon-gold), inset 0 -1px 3px rgba(255,255,255,0.8);
+    transform: translateY(-4px) scale(1.2);
+    box-shadow: 0 0 20px #ffea00, inset 0 -1px 3px #ffffff;
   }
 
   .sidebar-header h1 {
-    font-family: var(--font-head); font-size: 1.15rem; letter-spacing: 0.1em; color: var(--text-main);
-    text-transform: uppercase; text-shadow: 0 0 12px var(--capsule-cyan-glow);
+    font-family: var(--font-head); font-size: 1.3rem; letter-spacing: 0.12em; color: var(--text-main);
+    text-transform: uppercase; text-shadow: 0 0 12px var(--radar-glow);
   }
   .sidebar-header .subtitle {
-    font-size: 0.68rem; color: var(--capsule-cyan); margin-top: 4px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700;
+    font-size: 0.7rem; color: var(--saiyan-gold); margin-top: 4px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800;
   }
 
-  .view-selectors { padding: 14px 12px; border-bottom: 1px solid var(--border-line); }
+  .view-selectors { padding: 14px 12px; border-bottom: 1px solid var(--border-radar); }
   .view-btn {
-    width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); border: 1px solid rgba(0, 240, 255, 0.12);
-    color: var(--text-dim); text-align: left; padding: 11px 14px; font-size: 0.86rem; font-weight: 600;
+    width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(0, 255, 102, 0.04); border: 1px solid rgba(0, 255, 102, 0.2);
+    color: var(--text-dim); text-align: left; padding: 11px 14px; font-size: 0.88rem; font-weight: 700;
     border-radius: 8px; cursor: pointer; margin-bottom: 6px; transition: all 0.2s ease;
     font-family: var(--font-body); position: relative; overflow: hidden;
   }
-  .view-btn .vi { font-size: 1rem; width: 1.4em; text-align: center; color: var(--capsule-cyan); }
+  .view-btn .vi { font-size: 1.1rem; width: 1.4em; text-align: center; color: var(--radar-green); }
   .view-btn:hover {
-    background: rgba(0, 240, 255, 0.08); color: var(--text-main); border-color: var(--capsule-cyan);
-    transform: translateX(3px);
+    background: rgba(0, 255, 102, 0.12); color: var(--text-main); border-color: var(--radar-green);
+    transform: translateX(4px); box-shadow: 0 0 12px var(--radar-glow);
   }
   .view-btn.active {
-    background: linear-gradient(90deg, rgba(0, 240, 255, 0.18), rgba(0, 119, 255, 0.08));
-    color: var(--capsule-cyan); border-color: var(--capsule-cyan);
-    box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.25), 0 0 10px rgba(0, 240, 255, 0.2);
+    background: linear-gradient(90deg, rgba(0, 255, 102, 0.25), rgba(0, 240, 255, 0.1));
+    color: var(--radar-green); border-color: var(--radar-green);
+    box-shadow: inset 0 0 15px var(--radar-glow), 0 0 10px var(--radar-glow);
   }
   .view-btn.active::before {
-    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--capsule-cyan);
-    box-shadow: 0 0 8px var(--capsule-cyan);
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--radar-green);
+    box-shadow: 0 0 10px var(--radar-green);
   }
 
-  .nav-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-muted); margin: 16px 16px 8px; font-weight: 700; }
+  .nav-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin: 16px 16px 8px; font-weight: 800; }
   .nav-links { list-style: none; padding: 0 10px; overflow-y: auto; flex-grow: 1; }
   .nav-links li { margin-bottom: 3px; }
   .nav-links button {
     width: 100%; text-align: left; background: none; border: 1px solid transparent; cursor: pointer;
     display: flex; justify-content: space-between; align-items: center; gap: 6px;
-    padding: 8px 10px; color: var(--text-dim); border-radius: 6px; font-size: 0.78rem;
+    padding: 8px 10px; color: var(--text-dim); border-radius: 6px; font-size: 0.8rem; font-weight: 600;
     transition: all 0.18s ease; font-family: var(--font-body);
   }
   .nav-links button:hover {
-    background: rgba(0, 255, 102, 0.08); color: var(--radar-green); border-color: rgba(0, 255, 102, 0.25);
+    background: rgba(0, 240, 255, 0.12); color: var(--capsule-cyan); border-color: rgba(0, 240, 255, 0.3);
     padding-left: 14px;
   }
   .nav-links .cnt {
-    color: var(--text-muted); font-size: 0.7rem; background: rgba(0,0,0,0.4); padding: 1px 6px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);
+    color: var(--radar-green); font-size: 0.72rem; background: rgba(0,0,0,0.6); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--radar-grid); font-weight: 700;
   }
 
-  .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.06em; }
+  .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-radar); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
 
   /* ============================================================
-     MAIN CONTENT & RADAR SEARCH BAR
+     MAIN CONTENT & CAPSULE CORP SEARCH BAR
      ============================================================ */
-  .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 26px 36px 60px; min-width: 0; }
+  .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 26px 38px 60px; min-width: 0; }
   
   .search-wrapper {
-    position: sticky; top: 0; z-index: 50; padding: 6px 0 20px;
-    background: linear-gradient(180deg, var(--bg-dark) 82%, transparent);
+    position: sticky; top: 0; z-index: 50; padding: 6px 0 22px;
+    background: linear-gradient(180deg, var(--radar-bg) 85%, transparent);
   }
   .search-input {
-    width: 100%; padding: 14px 22px; font-size: 0.98rem; border-radius: 12px;
-    border: 1px solid var(--border-line); background: rgba(10, 16, 26, 0.88); backdrop-filter: blur(12px);
-    color: var(--text-main); outline: none; transition: all 0.25s ease; font-family: var(--font-body);
-    box-shadow: 0 6px 25px rgba(0,0,0,0.7), inset 0 0 10px rgba(0, 240, 255, 0.05);
+    width: 100%; padding: 15px 24px; font-size: 0.98rem; border-radius: 12px;
+    border: 2px solid var(--radar-green); background: rgba(2, 26, 12, 0.92); backdrop-filter: blur(14px);
+    color: var(--text-main); outline: none; transition: all 0.25s ease; font-family: var(--font-body); font-weight: 600;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.8), inset 0 0 12px var(--radar-glow);
   }
-  .search-input::placeholder { color: var(--text-muted); letter-spacing: 0.04em; }
+  .search-input::placeholder { color: var(--text-muted); letter-spacing: 0.05em; font-weight: 500; }
   .search-input:focus {
     border-color: var(--capsule-cyan);
-    box-shadow: 0 0 0 3px var(--capsule-cyan-glow), inset 0 0 15px rgba(0, 240, 255, 0.15);
+    box-shadow: 0 0 20px var(--capsule-cyan-glow), inset 0 0 15px rgba(0, 240, 255, 0.3);
   }
-  .search-count { font-size: 0.76rem; color: var(--radar-green); margin-top: 8px; min-height: 1em; font-weight: 600; letter-spacing: 0.03em; }
+  .search-count { font-size: 0.78rem; color: var(--radar-green); margin-top: 8px; min-height: 1em; font-weight: 700; letter-spacing: 0.04em; }
 
   .dashboard-view { display: none; }
   .dashboard-view.active { display: block; }
 
-  .page-title { font-family: var(--font-head); font-size: 1.7rem; color: var(--text-main); margin-bottom: 4px; letter-spacing: 0.03em; text-shadow: 0 0 15px var(--capsule-cyan-glow); }
-  .page-sub { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; }
+  .page-title { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); margin-bottom: 4px; letter-spacing: 0.05em; text-shadow: 0 0 15px var(--radar-glow); text-transform: uppercase; }
+  .page-sub { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; font-weight: 500; }
 
-  .section-container { margin-bottom: 28px; scroll-margin-top: 90px; }
+  .section-container { margin-bottom: 30px; scroll-margin-top: 90px; }
   .section-title {
-    font-family: var(--font-head); font-size: 1.15rem; font-weight: 700; color: var(--text-main);
-    border-bottom: 1px solid var(--border-line); padding-bottom: 10px; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; color: var(--text-main);
+    border-bottom: 2px solid var(--border-radar); padding-bottom: 10px; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; text-shadow: 0 0 10px var(--radar-glow); letter-spacing: 0.04em;
   }
-  .section-count { font-size: 0.72rem; font-weight: 700; color: var(--capsule-cyan); background: rgba(0, 240, 255, 0.08); border: 1px solid var(--border-line); padding: 2px 10px; border-radius: 12px; font-family: var(--font-body); }
-  .empty-state { color: var(--text-dim); font-size: 0.88rem; padding: 28px 20px; text-align: center; border: 1px dashed var(--border-line); border-radius: 10px; background: rgba(10, 16, 26, 0.4); backdrop-filter: blur(6px); }
+  .section-count { font-size: 0.75rem; font-weight: 800; color: var(--radar-green); background: rgba(0, 255, 102, 0.12); border: 1px solid var(--radar-green); padding: 2px 10px; border-radius: 12px; font-family: var(--font-body); }
+  .empty-state { color: var(--text-dim); font-size: 0.88rem; padding: 28px 20px; text-align: center; border: 1px dashed var(--border-radar); border-radius: 10px; background: rgba(2, 26, 12, 0.6); backdrop-filter: blur(8px); }
 
   /* ============================================================
-     CARDS — MISSION BRIEFINGS & DATA PANELS
+     CARDS — CAPSULE CORP DATA PANELS
      ============================================================ */
   .card {
     position: relative;
-    background: var(--card-bg);
-    border: 1px solid var(--border-line); border-left: 4px solid var(--capsule-cyan); border-radius: 6px 12px 12px 6px;
-    padding: 16px 18px; margin-bottom: 12px;
+    background: var(--card-metal);
+    border: 1px solid var(--border-radar); border-left: 4px solid var(--radar-green); border-radius: 6px 12px 12px 6px;
+    padding: 16px 18px; margin-bottom: 14px;
     display: flex; justify-content: space-between; align-items: center; gap: 18px;
-    transition: all 0.2s ease;
+    transition: all 0.22s ease;
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 6px 22px rgba(0,0,0,0.5);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.6);
   }
   .card:hover {
-    background: rgba(14, 22, 35, 0.88); border-left-color: var(--dragon-gold); transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(0, 240, 255, 0.15);
+    background: rgba(18, 38, 30, 0.95); border-left-color: var(--saiyan-gold); transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 255, 102, 0.25);
   }
-  .card.is-pinned { border-left-color: var(--dragon-orange); }
+  .card.is-pinned { border-left-color: var(--saiyan-orange); }
   .card-body { flex-grow: 1; min-width: 0; }
   .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
-  .card-tag { display: inline-block; font-size: 0.62rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-main); letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1); }
-  .card-tag.win { background: rgba(0, 119, 255, 0.25); color: #99ccff; border-color: rgba(0, 119, 255, 0.4); }
-  .card-tag.mac { background: rgba(153, 51, 255, 0.25); color: #e0b3ff; border-color: rgba(153, 51, 255, 0.4); }
-  .card-tag.linux { background: rgba(0, 255, 102, 0.2); color: #99ffcc; border-color: rgba(0, 255, 102, 0.35); }
-  .card-tag.critical { background: rgba(255, 30, 86, 0.3); color: #ff99aa; border-color: rgba(255, 30, 86, 0.5); }
-  .card-tag.hashi { background: rgba(255, 119, 0, 0.25); color: var(--dragon-gold); border-color: rgba(255, 119, 0, 0.4); }
+  .card-tag { display: inline-block; font-size: 0.62rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-main); letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.12); }
+  .card-tag.win { background: rgba(0, 119, 255, 0.3); color: #99ccff; border-color: rgba(0, 119, 255, 0.5); }
+  .card-tag.mac { background: rgba(153, 51, 255, 0.3); color: #e0b3ff; border-color: rgba(153, 51, 255, 0.5); }
+  .card-tag.linux { background: rgba(0, 255, 102, 0.25); color: #99ffcc; border-color: rgba(0, 255, 102, 0.4); }
+  .card-tag.critical { background: rgba(255, 30, 86, 0.35); color: #ff99aa; border-color: rgba(255, 30, 86, 0.6); }
+  .card-tag.hashi { background: rgba(255, 119, 0, 0.3); color: var(--saiyan-gold); border-color: rgba(255, 119, 0, 0.5); }
 
-  .message-text { font-size: 0.94rem; line-height: 1.65; white-space: pre-line; color: #f0f6fc; font-family: var(--font-body); }
+  .message-text { font-size: 0.94rem; line-height: 1.65; white-space: pre-line; color: #f0fff5; font-family: var(--font-body); font-weight: 500; }
 
   .card-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; align-items: stretch; }
   .icon-btn {
-    background: rgba(255,255,255,0.05); border: 1px solid var(--border-line); color: var(--text-dim);
+    background: rgba(0, 255, 102, 0.06); border: 1px solid var(--border-radar); color: var(--text-dim);
     border-radius: 6px; padding: 6px 10px; font-size: 0.88rem; cursor: pointer; line-height: 1;
     transition: all 0.2s ease;
   }
-  .icon-btn:hover { background: rgba(0, 240, 255, 0.15); color: var(--capsule-cyan); border-color: var(--capsule-cyan); }
-  .icon-btn.on { color: var(--dragon-gold); border-color: var(--dragon-orange); background: rgba(255, 119, 0, 0.2); }
+  .icon-btn:hover { background: rgba(0, 255, 102, 0.2); color: var(--radar-green); border-color: var(--radar-green); }
+  .icon-btn.on { color: var(--saiyan-gold); border-color: var(--saiyan-orange); background: rgba(255, 119, 0, 0.25); }
   .icon-row { display: flex; gap: 6px; }
 
   /* CAPSULE CORP TECH SEAL BUTTONS */
   .seal-btn {
-    background: linear-gradient(135deg, var(--capsule-cyan) 0%, var(--saiyan-blue) 100%);
-    color: #020814; border: none; padding: 10px 16px; border-radius: 50px;
-    cursor: pointer; font-size: 0.8rem; font-weight: 800; white-space: nowrap; min-width: 140px;
-    transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(0, 240, 255, 0.35);
-    font-family: var(--font-body); letter-spacing: 0.04em; text-align: center; text-transform: uppercase;
+    background: linear-gradient(135deg, var(--saiyan-orange) 0%, var(--saiyan-gold) 100%);
+    color: #1a0800; border: none; padding: 10px 18px; border-radius: 50px;
+    cursor: pointer; font-size: 0.82rem; font-weight: 900; white-space: nowrap; min-width: 150px;
+    transition: all 0.2s ease; box-shadow: 0 4px 18px var(--saiyan-glow);
+    font-family: var(--font-body); letter-spacing: 0.05em; text-align: center; text-transform: uppercase;
   }
   .seal-btn:hover {
-    transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 240, 255, 0.55); filter: brightness(1.15);
+    transform: translateY(-2px) scale(1.03); box-shadow: 0 6px 24px var(--saiyan-gold); filter: brightness(1.15);
   }
   .seal-btn.copied {
     background: linear-gradient(135deg, var(--radar-green) 0%, #00aa44 100%);
-    color: #021208; box-shadow: 0 4px 18px var(--radar-glow);
+    color: #021208; box-shadow: 0 4px 20px var(--radar-glow);
   }
-  .seal-btn:focus-visible { outline: 2px solid var(--capsule-cyan); outline-offset: 2px; }
+  .seal-btn:focus-visible { outline: 2px solid var(--saiyan-gold); outline-offset: 2px; }
 
-  .progress-check { width: 20px; height: 20px; accent-color: var(--capsule-cyan); cursor: pointer; flex-shrink: 0; }
+  .progress-check { width: 20px; height: 20px; accent-color: var(--radar-green); cursor: pointer; flex-shrink: 0; }
 
   /* ============================================================
-     ACCORDION & DASHBOARD COMPONENTS
+     ACCORDION & SCOUTER DASHBOARD PANELS
      ============================================================ */
-  .accordion { border: 1px solid var(--border-line); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.5); }
+  .accordion { border: 1px solid var(--border-radar); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-metal); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
   .accordion summary {
-    list-style: none; cursor: pointer; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    background: linear-gradient(180deg, rgba(0, 240, 255, 0.08), rgba(0, 240, 255, 0.02));
-    font-family: var(--font-head); font-size: 1.05rem; color: var(--text-main);
+    list-style: none; cursor: pointer; padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: linear-gradient(180deg, rgba(0, 255, 102, 0.1), rgba(0, 255, 102, 0.02));
+    font-family: var(--font-head); font-size: 1.1rem; color: var(--text-main); letter-spacing: 0.04em;
   }
   .accordion summary::-webkit-details-marker { display: none; }
   .accordion summary .cat-left { display: flex; align-items: center; gap: 12px; }
   .accordion summary .cat-num {
-    width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--capsule-cyan); color: var(--capsule-cyan);
-    display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-family: var(--font-body); font-weight: 800; flex-shrink: 0;
-    box-shadow: inset 0 0 8px var(--capsule-cyan-glow);
+    width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--radar-green); color: var(--radar-green);
+    display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-family: var(--font-body); font-weight: 900; flex-shrink: 0;
+    box-shadow: 0 0 10px var(--radar-glow), inset 0 0 8px var(--radar-glow);
   }
-  .accordion summary .cat-progress { font-size: 0.74rem; color: var(--text-dim); font-family: var(--font-body); font-weight: 600; }
-  .accordion summary .chevron { transition: transform 0.25s ease; color: var(--capsule-cyan); }
+  .accordion summary .cat-progress { font-size: 0.76rem; color: var(--text-dim); font-family: var(--font-body); font-weight: 700; }
+  .accordion summary .chevron { transition: transform 0.25s ease; color: var(--radar-green); }
   .accordion[open] summary .chevron { transform: rotate(90deg); }
-  .accordion-body { padding: 16px 18px 18px; }
+  .accordion-body { padding: 18px 20px 20px; }
 
   .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 28px; }
-  .stat-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 18px; background: var(--panel-bg); text-align: center; backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.5); }
-  .stat-card .num { font-family: var(--font-head); font-size: 1.85rem; color: var(--capsule-cyan); text-shadow: 0 0 10px var(--capsule-cyan-glow); font-weight: 700; }
-  .stat-card .lbl { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; font-weight: 700; }
+  .stat-card { border: 1px solid var(--border-radar); border-radius: 12px; padding: 18px; background: var(--panel-metal); text-align: center; backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+  .stat-card .num { font-family: var(--font-head); font-size: 2rem; color: var(--radar-green); text-shadow: 0 0 12px var(--radar-glow); font-weight: 700; }
+  .stat-card .lbl { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; font-weight: 800; }
 
-  .clock-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 18px 24px; background: var(--panel-bg); display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 28px; flex-wrap: wrap; backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.5); }
-  .clock-time { font-family: var(--font-head); font-size: 1.7rem; color: var(--text-main); letter-spacing: 0.04em; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
-  .clock-date { font-size: 0.78rem; color: var(--text-dim); font-weight: 600; }
+  .clock-card { border: 1px solid var(--border-radar); border-radius: 12px; padding: 18px 24px; background: var(--panel-metal); display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 28px; flex-wrap: wrap; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  .clock-time { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); letter-spacing: 0.05em; text-shadow: 0 0 12px var(--radar-glow); }
+  .clock-date { font-size: 0.8rem; color: var(--text-dim); font-weight: 700; }
 
   .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 28px; }
   .quick-btn {
-    border: 1px solid var(--border-line); border-radius: 10px; padding: 16px; background: var(--panel-bg);
-    color: var(--text-main); cursor: pointer; text-align: left; font-size: 0.88rem; font-weight: 700;
-    transition: all 0.2s ease; font-family: var(--font-body); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    border: 1px solid var(--border-radar); border-radius: 10px; padding: 16px; background: var(--panel-metal);
+    color: var(--text-main); cursor: pointer; text-align: left; font-size: 0.9rem; font-weight: 800;
+    transition: all 0.2s ease; font-family: var(--font-body); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6);
   }
-  .quick-btn:hover { background: rgba(0, 240, 255, 0.12); border-color: var(--capsule-cyan); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 240, 255, 0.2); }
-  .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--capsule-cyan); }
+  .quick-btn:hover { background: rgba(0, 255, 102, 0.12); border-color: var(--radar-green); transform: translateY(-2px); box-shadow: 0 8px 25px var(--radar-glow); }
+  .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--radar-green); }
 
   .mini-list { display: flex; flex-direction: column; gap: 10px; }
   .mini-item {
     display: flex; justify-content: space-between; align-items: center; gap: 12px;
-    border: 1px solid var(--border-line); border-radius: 10px; padding: 12px 14px; background: var(--card-bg); font-size: 0.84rem; backdrop-filter: blur(10px);
+    border: 1px solid var(--border-radar); border-radius: 10px; padding: 12px 14px; background: var(--card-metal); font-size: 0.85rem; backdrop-filter: blur(10px);
   }
-  .mini-item .txt { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #f0f6fc; }
-  .mini-item .cat-chip { font-size: 0.68rem; color: var(--capsule-cyan); border: 1px solid var(--border-line); border-radius: 10px; padding: 2px 8px; flex-shrink: 0; font-weight: 600; }
+  .mini-item .txt { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #f0fff5; }
+  .mini-item .cat-chip { font-size: 0.68rem; color: var(--radar-green); border: 1px solid var(--border-radar); border-radius: 10px; padding: 2px 8px; flex-shrink: 0; font-weight: 700; }
 
   /* ============================================================
      TABLES & POLICY GENERATOR
      ============================================================ */
-  .table-responsive { width: 100%; overflow-x: auto; background: var(--panel-bg); border: 1px solid var(--border-line); border-radius: 12px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.5); }
-  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; min-width: 840px; }
-  th { background: rgba(0, 240, 255, 0.12); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.03em; }
-  td { padding: 12px 14px; border-bottom: 1px solid var(--line-soft); color: #f0f6fc; }
-  tbody tr:hover td { background: rgba(0, 240, 255, 0.06); }
+  .table-responsive { width: 100%; overflow-x: auto; background: var(--panel-metal); border: 1px solid var(--border-radar); border-radius: 12px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.86rem; min-width: 840px; }
+  th { background: rgba(0, 255, 102, 0.12); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-radar); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.05em; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--line-soft); color: #f0fff5; }
+  tbody tr:hover td { background: rgba(0, 255, 102, 0.06); }
   tbody tr:last-child td { border-bottom: none; }
   .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
-  .badge-minor { background: rgba(255,255,255,0.08); color: #f0f6fc; border: 1px solid rgba(255,255,255,0.15); }
-  .badge-major { background: rgba(255, 30, 86, 0.3); color: #ff99aa; border: 1px solid rgba(255, 30, 86, 0.5); }
+  .badge-minor { background: rgba(255,255,255,0.08); color: #f0fff5; border: 1px solid rgba(255,255,255,0.18); }
+  .badge-major { background: rgba(255, 30, 86, 0.35); color: #ff99aa; border: 1px solid rgba(255, 30, 86, 0.6); }
 
-  .gen-panel { border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; background: var(--panel-bg); margin-bottom: 28px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.5); }
-  .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-line); background: rgba(4, 6, 10, 0.85); color: var(--text-main); font-size: 0.92rem; margin-bottom: 16px; font-family: var(--font-body); outline: none; }
-  .gen-select:focus { border-color: var(--capsule-cyan); box-shadow: 0 0 0 3px var(--capsule-cyan-glow); }
+  .gen-panel { border: 1px solid var(--border-radar); border-radius: 12px; padding: 20px; background: var(--panel-metal); margin-bottom: 28px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-radar); background: rgba(2, 26, 12, 0.95); color: var(--text-main); font-size: 0.92rem; margin-bottom: 16px; font-family: var(--font-body); outline: none; font-weight: 600; }
+  .gen-select:focus { border-color: var(--radar-green); box-shadow: 0 0 15px var(--radar-glow); }
   .gen-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
-  .gen-card { border: 1px solid var(--border-line); border-radius: 10px; padding: 14px 16px; background: var(--card-bg); display: flex; flex-direction: column; justify-content: space-between; }
-  .gen-card h4 { font-family: var(--font-head); font-size: 0.88rem; color: var(--capsule-cyan); margin-bottom: 8px; }
-  .gen-card p { font-size: 0.86rem; line-height: 1.55; color: #f0f6fc; margin-bottom: 12px; white-space: pre-line; }
+  .gen-card { border: 1px solid var(--border-radar); border-radius: 10px; padding: 14px 16px; background: var(--card-metal); display: flex; flex-direction: column; justify-content: space-between; }
+  .gen-card h4 { font-family: var(--font-head); font-size: 0.9rem; color: var(--radar-green); margin-bottom: 8px; letter-spacing: 0.03em; }
+  .gen-card p { font-size: 0.86rem; line-height: 1.55; color: #f0fff5; margin-bottom: 12px; white-space: pre-line; }
 
   .filter-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
   .filter-chip {
-    border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
-    padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; font-family: var(--font-body);
+    border: 1px solid var(--border-radar); background: rgba(255,255,255,0.04); color: var(--text-dim);
+    padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease; font-family: var(--font-body);
   }
-  .filter-chip:hover { border-color: var(--capsule-cyan); color: var(--text-main); }
-  .filter-chip.active { background: rgba(0, 240, 255, 0.2); color: var(--capsule-cyan); border-color: var(--capsule-cyan); box-shadow: 0 0 12px rgba(0, 240, 255, 0.25); }
+  .filter-chip:hover { border-color: var(--radar-green); color: var(--text-main); }
+  .filter-chip.active { background: rgba(0, 255, 102, 0.2); color: var(--radar-green); border-color: var(--radar-green); box-shadow: 0 0 12px var(--radar-glow); }
 
   .infraction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
-  .infr-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 16px 18px; background: var(--card-bg); cursor: pointer; transition: all 0.2s ease; border-left: 4px solid var(--text-dim); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.5); }
-  .infr-card:hover { background: rgba(14, 22, 35, 0.88); transform: translateY(-2px); }
+  .infr-card { border: 1px solid var(--border-radar); border-radius: 12px; padding: 16px 18px; background: var(--card-metal); cursor: pointer; transition: all 0.2s ease; border-left: 4px solid var(--text-dim); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+  .infr-card:hover { background: rgba(18, 38, 30, 0.95); transform: translateY(-2px); }
   .infr-card.risk-green { border-left-color: var(--radar-green); }
-  .infr-card.risk-yellow { border-left-color: var(--dragon-gold); }
-  .infr-card.risk-orange { border-left-color: var(--dragon-orange); }
+  .infr-card.risk-yellow { border-left-color: var(--saiyan-gold); }
+  .infr-card.risk-orange { border-left-color: var(--saiyan-orange); }
   .infr-card.risk-red { border-left-color: var(--ki-crimson); }
-  .infr-name { font-weight: 700; color: var(--text-main); margin-bottom: 6px; font-size: 0.95rem; }
-  .infr-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 6px; font-weight: 600; }
+  .infr-name { font-weight: 800; color: var(--text-main); margin-bottom: 6px; font-size: 0.95rem; }
+  .infr-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 6px; font-weight: 700; }
   .infr-threshold { font-size: 0.74rem; color: var(--text-dim); }
-  .infr-detail { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-line); font-size: 0.85rem; line-height: 1.55; display: none; }
+  .infr-detail { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-radar); font-size: 0.85rem; line-height: 1.55; display: none; }
   .infr-card.expanded .infr-detail { display: block; }
-  .risk-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.76rem; color: var(--text-dim); margin-bottom: 18px; align-items: center; font-weight: 600; }
+  .risk-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.76rem; color: var(--text-dim); margin-bottom: 18px; align-items: center; font-weight: 700; }
   .risk-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
 
   /* ================= TROUBLESHOOTING FLOW STYLES ================= */
   .trouble-section { margin-bottom: 30px; }
   .trouble-mode-header {
-    font-family: var(--font-head); font-size: 1.3rem; color: var(--capsule-cyan); border-bottom: 1px solid var(--border-line);
-    padding-bottom: 8px; margin: 24px 0 16px; text-transform: uppercase; letter-spacing: 0.06em; text-shadow: 0 0 10px var(--capsule-cyan-glow);
+    font-family: var(--font-head); font-size: 1.3rem; color: var(--radar-green); border-bottom: 2px solid var(--border-radar);
+    padding-bottom: 8px; margin: 24px 0 16px; text-transform: uppercase; letter-spacing: 0.06em; text-shadow: 0 0 12px var(--radar-glow);
   }
   .trouble-card {
-    border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; margin-bottom: 18px;
-    background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.5);
+    border: 1px solid var(--border-radar); border-radius: 12px; padding: 20px; margin-bottom: 18px;
+    background: var(--panel-metal); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6);
   }
-  .trouble-card h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .trouble-card h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; letter-spacing: 0.03em; }
   .flow-step {
-    border-left: 2px solid var(--capsule-cyan); padding-left: 16px; margin-bottom: 16px; position: relative;
+    border-left: 2px solid var(--radar-green); padding-left: 16px; margin-bottom: 16px; position: relative;
   }
-  .flow-step-num { font-size: 0.74rem; font-weight: 800; color: var(--capsule-cyan); text-transform: uppercase; letter-spacing: 0.06em; }
-  .flow-step-title { font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin: 3px 0 5px; }
-  .flow-step-action { font-size: 0.86rem; color: var(--text-dim); line-height: 1.45; margin-bottom: 8px; }
+  .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--radar-green); text-transform: uppercase; letter-spacing: 0.06em; }
+  .flow-step-title { font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin: 3px 0 5px; }
+  .flow-step-action { font-size: 0.86rem; color: var(--text-dim); line-height: 1.45; margin-bottom: 8px; font-weight: 500; }
   .flow-step-spiel {
-    background: rgba(4, 6, 10, 0.6); border: 1px solid var(--border-line); border-radius: 8px; padding: 10px 12px;
-    font-size: 0.84rem; color: #f0f6fc; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    background: rgba(2, 26, 12, 0.7); border: 1px solid var(--border-radar); border-radius: 8px; padding: 10px 12px;
+    font-size: 0.84rem; color: #f0fff5; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
   }
 
   /* ================= RESPONSIVE ================= */
   @media (max-width: 960px) {
-    .sidebar { width: 250px; }
-    .shenron-sky { opacity: 0.25; width: 380px; }
+    .sidebar { width: 260px; }
+    .shenron-sky { opacity: 0.3; width: 400px; }
     .lookout-structure { opacity: 0.6; }
   }
   @media (max-width: 640px) {
@@ -428,8 +414,8 @@
 
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.3); border-radius: 6px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(0, 240, 255, 0.5); }
+  ::-webkit-scrollbar-thumb { background: rgba(0, 255, 102, 0.35); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0, 255, 102, 0.6); }
 </style>
 </head>
 <body>
@@ -437,29 +423,30 @@
   <!-- ================= ATMOSPHERIC SCENE ================= -->
   <div class="scene" aria-hidden="true">
     <div class="scene-sky"></div>
+    <div class="radar-grid-bg"></div>
+    <div class="radar-sweep"></div>
     <div class="sky-clouds"></div>
     <div class="scene-sun"></div>
-    <div class="lens-flare"></div>
 
     <!-- Kami's Lookout Dome Structure -->
     <div class="lookout-structure">
       <svg viewBox="0 0 1200 240" preserveAspectRatio="xMidYMax meet">
-        <path d="M0,240 Q600,160 1200,240 Z" fill="#060e18" opacity="0.95"/>
-        <path d="M150,240 Q600,185 1050,240 Z" fill="#0a1624" opacity="0.8"/>
-        <path d="M540,195 Q600,130 660,195 Z" fill="#040a12"/>
-        <circle cx="600" cy="120" r="14" fill="#ffd700" opacity="0.7"/>
-        <rect x="585" y="145" width="30" height="50" fill="#03070d"/>
+        <path d="M0,240 Q600,160 1200,240 Z" fill="#02140a" opacity="0.95"/>
+        <path d="M150,240 Q600,185 1050,240 Z" fill="#042012" opacity="0.8"/>
+        <path d="M540,195 Q600,130 660,195 Z" fill="#010a05"/>
+        <circle cx="600" cy="120" r="14" fill="#ffd700" opacity="0.8"/>
+        <rect x="585" y="145" width="30" height="50" fill="#000603"/>
       </svg>
     </div>
 
-    <!-- Shenron Silhouette Winding -->
+    <!-- Shenron Winding Dragon -->
     <div class="shenron-sky">
       <svg viewBox="0 0 500 350" preserveAspectRatio="xMidYMin meet">
-        <g fill="none" stroke="#00ff66" stroke-width="3" opacity="0.85">
+        <g fill="none" stroke="#00ff66" stroke-width="3.5" opacity="0.85">
           <path d="M450,40 C380,80 340,160 400,220 C460,280 320,320 220,260 C120,200 180,110 120,80 C60,50 30,120 10,180" />
-          <path d="M430,55 Q360,110 380,180 M330,240 Q240,280 180,220 M140,150 Q100,80 50,110" stroke="#ffd700" stroke-width="1.8"/>
-          <path d="M440,30 L470,15 M455,45 L485,30 M420,20 L400,5" stroke="#ff7700" stroke-width="2.5"/>
-          <circle cx="445" cy="35" r="4" fill="#ff1e56" />
+          <path d="M430,55 Q360,110 380,180 M330,240 Q240,280 180,220 M140,150 Q100,80 50,110" stroke="#ffd700" stroke-width="2"/>
+          <path d="M440,30 L470,15 M455,45 L485,30 M420,20 L400,5" stroke="#ff7700" stroke-width="3"/>
+          <circle cx="445" cy="35" r="4.5" fill="#ff1e56" />
         </g>
       </svg>
     </div>
@@ -467,8 +454,8 @@
     <!-- Flying Nimbus & Goku Silhouette -->
     <div class="nimbus-rider">
       <svg viewBox="0 0 100 50" preserveAspectRatio="xMidYMid meet">
-        <path d="M10,35 Q20,20 40,25 Q55,10 75,20 Q90,15 95,30 Q100,42 80,45 Q60,48 40,45 Q15,48 10,35 Z" fill="#ffd700" opacity="0.9"/>
-        <path d="M45,22 Q40,10 50,5 Q55,12 60,8 Q58,18 65,22 Z" fill="#04060a"/>
+        <path d="M10,35 Q20,20 40,25 Q55,10 75,20 Q90,15 95,30 Q100,42 80,45 Q60,48 40,45 Q15,48 10,35 Z" fill="#ffd700" opacity="0.92"/>
+        <path d="M45,22 Q40,10 50,5 Q55,12 60,8 Q58,18 65,22 Z" fill="#010f06"/>
       </svg>
     </div>
 
