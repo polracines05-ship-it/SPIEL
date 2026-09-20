@@ -3,33 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveActs Proctor Dojo — Capsule Corp Radar Terminal</title>
+<title>FiveActs Proctor Dojo — Mount Paozu Operations Deck</title>
 <style>
   :root {
-    /* Dragon Ball Z Palette */
-    --radar-bg: #021a0c;
-    --radar-grid: rgba(0, 255, 102, 0.22);
-    --radar-green: #00ff66;
-    --radar-glow: rgba(0, 255, 102, 0.5);
-    
-    --capsule-cyan: #00f0ff;
-    --capsule-cyan-glow: rgba(0, 240, 255, 0.6);
-    --saiyan-orange: #ff6600;
-    --saiyan-gold: #ffd700;
-    --saiyan-glow: rgba(255, 102, 0, 0.6);
-    --ki-pink: #ff007f;
-    --scouter-red: #ff1e56;
+    /* Paozu Nostalgic Anime Palette */
+    --paozu-sky: #0b1d33;
+    --paozu-sun: #ffd000;
+    --paozu-green: #2a5a3b;
+    --paozu-moss: #1b3d26;
+    --paozu-parchment: #fcf7e8;
+    --paozu-parchment-dim: #d8cba9;
+    --paozu-gold: #e6a100;
+    --paozu-gold-bright: #ffcc00;
+    --paozu-orange: #f26522;
+    --paozu-crimson: #a82020;
+    --paozu-azure: #00d2ff;
 
-    --panel-metal: rgba(12, 22, 20, 0.92);
-    --card-metal: rgba(18, 32, 28, 0.88);
-    --border-radar: rgba(0, 255, 102, 0.4);
-    --border-capsule: rgba(0, 240, 255, 0.4);
+    --panel-bg: rgba(13, 27, 24, 0.88);
+    --card-bg: rgba(20, 38, 32, 0.85);
+    --border-line: rgba(230, 161, 0, 0.35);
+    --border-soft: rgba(252, 247, 232, 0.12);
 
-    --text-main: #f0fff5;
-    --text-dim: #99d6b5;
-    --text-muted: #528c6e;
+    --text-main: #fcf7e8;
+    --text-dim: #cad1be;
+    --text-muted: #7d8e75;
 
-    --font-head: Impact, "Arial Black", "Trebuchet MS", sans-serif;
+    --font-head: Georgia, "Iowan Old Style", "Palatino Linotype", "Hiragino Mincho ProN", serif;
     --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   }
 
@@ -38,7 +37,7 @@
   body {
     font-family: var(--font-body);
     color: var(--text-main);
-    background-color: var(--radar-bg);
+    background-color: #060e14;
     display: flex;
     min-height: 100vh;
     position: relative;
@@ -46,93 +45,129 @@
   }
 
   /* ============================================================
-     DRAGON RADAR & KAMI'S LOOKOUT BACKGROUND
+     BACKGROUND ENVIRONMENT (MOUNT PAOZU / LOOKOUT / NOSTALGIA)
      ============================================================ */
   .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
   
-  /* Dragon Radar Grid Rings */
-  .radar-grid-bg {
+  .scene-sky {
     position: absolute; inset: 0;
-    background-image: 
-      radial-gradient(circle at 50% 50%, transparent 20%, var(--radar-grid) 21%, transparent 22%),
-      radial-gradient(circle at 50% 50%, transparent 40%, var(--radar-grid) 41%, transparent 42%),
-      radial-gradient(circle at 50% 50%, transparent 60%, var(--radar-grid) 61%, transparent 62%),
-      radial-gradient(circle at 50% 50%, transparent 80%, var(--radar-grid) 81%, transparent 82%),
-      linear-gradient(0deg, transparent 49.5%, var(--radar-grid) 50%, transparent 50.5%),
-      linear-gradient(90deg, transparent 49.5%, var(--radar-grid) 50%, transparent 50.5%);
-    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
-    opacity: 0.7;
+    background:
+      radial-gradient(ellipse 100% 70% at 50% -10%, rgba(0, 210, 255, 0.35), transparent 80%),
+      radial-gradient(circle at 82% 20%, rgba(255, 208, 0, 0.28), transparent 50%),
+      radial-gradient(circle at 18% 85%, rgba(242, 101, 34, 0.2), transparent 55%),
+      linear-gradient(180deg, #091726 0%, #0d2838 38%, #092019 70%, #040e0b 100%);
   }
 
-  /* Radar Sweep Effect */
-  .radar-sweep {
-    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: conic-gradient(from 0deg at 50% 50%, rgba(0, 255, 102, 0.15) 0deg, transparent 60deg, transparent 360deg);
-    animation: radarSpin 12s linear infinite;
+  /* Heavenly Sunbeams / Ki Light Rays */
+  .sun-glow {
+    position: absolute; top: 2%; right: 12%; width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 208, 0, 0.45) 0%, rgba(242, 101, 34, 0.2) 50%, transparent 75%);
+    filter: blur(30px);
+    animation: heavenlyGlow 10s ease-in-out infinite alternate;
   }
-  @keyframes radarSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  @keyframes heavenlyGlow {
+    0% { transform: scale(1); filter: blur(30px) brightness(1); }
+    100% { transform: scale(1.15); filter: blur(35px) brightness(1.25); }
+  }
 
-  /* Shenron Flying Silhouette */
-  .shenron-sky {
-    position: absolute; right: -50px; top: 2%; width: 580px; height: 380px; opacity: 0.55;
-    filter: drop-shadow(0 0 25px var(--radar-glow));
-    animation: shenronFly 28s ease-in-out infinite alternate;
+  .sun-rays {
+    position: absolute; top: 0; right: 10%; width: 70%; height: 100%;
+    background: linear-gradient(135deg, transparent 35%, rgba(255, 208, 0, 0.08) 48%, rgba(255, 255, 255, 0.05) 52%, transparent 65%);
+    transform: rotate(-12deg);
   }
-  @keyframes shenronFly {
+
+  /* Drifting Anime Clouds */
+  .sky-clouds {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse 65% 22% at 20% 18%, rgba(252, 247, 232, 0.12), transparent 70%),
+      radial-gradient(ellipse 85% 32% at 75% 28%, rgba(252, 247, 232, 0.08), transparent 75%),
+      radial-gradient(ellipse 55% 20% at 50% 48%, rgba(255, 208, 0, 0.06), transparent 80%);
+    animation: floatClouds 55s ease-in-out infinite alternate;
+  }
+  @keyframes floatClouds {
+    0% { transform: translateX(-40px) scale(1); }
+    100% { transform: translateX(40px) scale(1.05); }
+  }
+
+  /* Distant Mountain Ranges & Waterfalls */
+  .scene-mountains { position: absolute; left: 0; right: 0; bottom: 12%; height: 52%; opacity: 0.92; }
+  .scene-mountains svg { width: 100%; height: 100%; display: block; }
+
+  /* Floating Kami's Lookout */
+  .lookout-floating {
+    position: absolute; right: 12%; top: 8%; width: 260px; height: 180px; opacity: 0.85;
+    filter: drop-shadow(0 0 25px rgba(255, 208, 0, 0.35));
+    animation: lookoutDrift 16s ease-in-out infinite alternate;
+  }
+  @keyframes lookoutDrift {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-14px); }
+  }
+
+  /* Mysterious Guardian Shenron in Clouds */
+  .shenron-clouds {
+    position: absolute; left: 15%; top: 6%; width: 620px; height: 320px; opacity: 0.45;
+    filter: drop-shadow(0 0 30px rgba(0, 210, 255, 0.35));
+    animation: shenronGlide 30s ease-in-out infinite alternate;
+  }
+  @keyframes shenronGlide {
     0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-25px) scale(1.05); }
+    100% { transform: translateY(-20px) scale(1.04); }
   }
 
-  /* Flying Nimbus & Goku */
-  .nimbus-rider {
-    position: absolute; left: -160px; top: 15%; width: 140px; height: 70px; opacity: 0.88;
-    filter: drop-shadow(0 0 20px var(--saiyan-gold));
-    animation: nimbusFly 35s linear infinite;
+  /* Goku on Flying Nimbus */
+  .nimbus-goku {
+    position: absolute; left: -160px; top: 22%; width: 150px; height: 75px; opacity: 0.9;
+    filter: drop-shadow(0 0 18px rgba(255, 208, 0, 0.8));
+    animation: nimbusSailing 38s linear infinite;
   }
-  @keyframes nimbusFly {
+  @keyframes nimbusSailing {
     0% { transform: translateX(0) translateY(0); opacity: 0; }
-    5% { opacity: 0.9; }
-    90% { opacity: 0.9; }
-    100% { transform: translateX(calc(100vw + 320px)) translateY(-50px); opacity: 0; }
+    5% { opacity: 0.95; }
+    90% { opacity: 0.95; }
+    100% { transform: translateX(calc(100vw + 350px)) translateY(-60px); opacity: 0; }
   }
 
-  /* Kami's Lookout Dome Structure */
-  .lookout-dome {
-    position: absolute; left: 50%; transform: translateX(-50%); bottom: -40px; width: 1100px; height: 240px;
-    opacity: 0.85; filter: drop-shadow(0 0 30px var(--capsule-cyan-glow));
+  /* Goku & Chi-Chi's House in Mount Paozu Foreground */
+  .paozu-house {
+    position: absolute; right: 4%; bottom: 10%; width: 320px; height: 260px; opacity: 0.92;
+    filter: drop-shadow(0 0 25px rgba(0,0,0,0.85));
   }
 
+  .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 220px 60px rgba(6, 14, 20, 0.75); }
+  
   #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
   /* ============================================================
-     SIDEBAR — CAPSULE CORP RADAR NAVIGATION
+     SIDEBAR — COMMAND NAVIGATION & 7 DRAGON BALLS
      ============================================================ */
   .sidebar {
     position: relative; z-index: 10;
-    width: 320px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
-    background: linear-gradient(180deg, rgba(2, 26, 12, 0.95), rgba(1, 15, 7, 0.98));
-    border-right: 2px solid var(--radar-green);
+    width: 310px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
+    background: linear-gradient(180deg, rgba(13, 27, 24, 0.92), rgba(6, 14, 20, 0.96));
+    border-right: 1px solid var(--border-line);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     display: flex; flex-direction: column; padding: 0;
-    box-shadow: 8px 0 30px rgba(0, 255, 102, 0.2);
+    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.7);
   }
   .sidebar::before {
-    content: ""; display: block; height: 5px; width: 100%; flex-shrink: 0;
-    background: linear-gradient(90deg, var(--saiyan-orange), var(--saiyan-gold), var(--capsule-cyan), var(--radar-green));
+    content: ""; display: block; height: 4px; width: 100%; flex-shrink: 0;
+    background: linear-gradient(90deg, transparent, var(--paozu-gold-bright), var(--paozu-orange), transparent);
   }
 
-  /* 7 DRAGON BALLS HEADER (F-I-V-E-A-C-T-S) */
-  .sidebar-header { padding: 22px 16px 18px; text-align: center; border-bottom: 1px solid var(--border-radar); }
+  /* 7 DRAGON BALLS (F-I-V-E-A-C-T-S) */
+  .sidebar-header { padding: 22px 18px 18px; text-align: center; border-bottom: 1px solid var(--border-line); }
   
   .dragon-balls-brand {
     display: flex; justify-content: center; align-items: center; gap: 5px; margin-bottom: 12px;
   }
   .dball {
     width: 32px; height: 32px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #ffea00, #ff6600 70%, #992200 100%);
-    box-shadow: 0 0 12px var(--saiyan-glow), inset 0 -2px 5px rgba(0,0,0,0.7);
+    background: radial-gradient(circle at 35% 30%, #ffea00, #f26522 70%, #882200 100%);
+    box-shadow: 0 0 12px rgba(255, 208, 0, 0.6), inset 0 -2px 5px rgba(0,0,0,0.7);
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.88rem; font-weight: 900; color: #1a0500; font-family: var(--font-head);
+    font-size: 0.88rem; font-weight: 900; color: #1a0800; font-family: var(--font-head);
     transition: all 0.25s ease; cursor: pointer; text-shadow: 0 1px 2px rgba(255,255,255,0.6);
   }
   .dball:hover {
@@ -141,36 +176,36 @@
   }
 
   .sidebar-header h1 {
-    font-family: var(--font-head); font-size: 1.3rem; letter-spacing: 0.12em; color: var(--text-main);
-    text-transform: uppercase; text-shadow: 0 0 12px var(--radar-glow);
+    font-family: var(--font-head); font-size: 1.25rem; letter-spacing: 0.1em; color: var(--text-main);
+    text-transform: uppercase; text-shadow: 0 2px 10px rgba(230, 161, 0, 0.4);
   }
   .sidebar-header .subtitle {
-    font-size: 0.7rem; color: var(--saiyan-gold); margin-top: 4px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800;
+    font-size: 0.7rem; color: var(--paozu-gold-bright); margin-top: 4px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800;
   }
 
-  .view-selectors { padding: 14px 12px; border-bottom: 1px solid var(--border-radar); }
+  .view-selectors { padding: 14px 12px; border-bottom: 1px solid var(--border-line); }
   .view-btn {
-    width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(0, 255, 102, 0.04); border: 1px solid rgba(0, 255, 102, 0.2);
-    color: var(--text-dim); text-align: left; padding: 11px 14px; font-size: 0.88rem; font-weight: 700;
+    width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(252, 247, 232, 0.03); border: 1px solid rgba(230, 161, 0, 0.2);
+    color: var(--paozu-parchment-dim); text-align: left; padding: 11px 14px; font-size: 0.86rem; font-weight: 600;
     border-radius: 8px; cursor: pointer; margin-bottom: 6px; transition: all 0.2s ease;
     font-family: var(--font-body); position: relative; overflow: hidden;
   }
-  .view-btn .vi { font-size: 1.1rem; width: 1.4em; text-align: center; color: var(--radar-green); }
+  .view-btn .vi { font-size: 1.1rem; width: 1.4em; text-align: center; color: var(--paozu-gold-bright); }
   .view-btn:hover {
-    background: rgba(0, 255, 102, 0.12); color: var(--text-main); border-color: var(--radar-green);
-    transform: translateX(4px); box-shadow: 0 0 12px var(--radar-glow);
+    background: rgba(230, 161, 0, 0.12); color: var(--text-main); border-color: var(--paozu-gold);
+    transform: translateX(4px); box-shadow: 0 0 12px rgba(230, 161, 0, 0.25);
   }
   .view-btn.active {
-    background: linear-gradient(90deg, rgba(0, 255, 102, 0.25), rgba(0, 240, 255, 0.1));
-    color: var(--radar-green); border-color: var(--radar-green);
-    box-shadow: inset 0 0 15px var(--radar-glow), 0 0 10px var(--radar-glow);
+    background: linear-gradient(90deg, rgba(230, 161, 0, 0.25), rgba(242, 101, 34, 0.1));
+    color: var(--paozu-gold-bright); border-color: var(--paozu-gold);
+    box-shadow: inset 0 0 15px rgba(230, 161, 0, 0.3), 0 0 12px rgba(230, 161, 0, 0.25);
   }
   .view-btn.active::before {
-    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--radar-green);
-    box-shadow: 0 0 10px var(--radar-green);
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--paozu-gold-bright);
+    box-shadow: 0 0 10px var(--paozu-gold-bright);
   }
 
-  .nav-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin: 16px 16px 8px; font-weight: 800; }
+  .nav-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin: 16px 16px 8px; font-weight: 800; }
   .nav-links { list-style: none; padding: 0 10px; overflow-y: auto; flex-grow: 1; }
   .nav-links li { margin-bottom: 3px; }
   .nav-links button {
@@ -180,59 +215,59 @@
     transition: all 0.18s ease; font-family: var(--font-body);
   }
   .nav-links button:hover {
-    background: rgba(0, 240, 255, 0.12); color: var(--capsule-cyan); border-color: rgba(0, 240, 255, 0.3);
+    background: rgba(0, 210, 255, 0.12); color: var(--paozu-azure); border-color: rgba(0, 210, 255, 0.3);
     padding-left: 14px;
   }
   .nav-links .cnt {
-    color: var(--radar-green); font-size: 0.72rem; background: rgba(0,0,0,0.6); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--radar-grid); font-weight: 700;
+    color: var(--paozu-gold-bright); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); font-weight: 700;
   }
 
-  .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-radar); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
+  .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
 
   /* ============================================================
-     MAIN CONTENT & CAPSULE CORP SEARCH BAR
+     MAIN CONTENT & SEARCH ENGINE
      ============================================================ */
   .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 26px 38px 60px; min-width: 0; }
   
   .search-wrapper {
     position: sticky; top: 0; z-index: 50; padding: 6px 0 22px;
-    background: linear-gradient(180deg, var(--radar-bg) 85%, transparent);
+    background: linear-gradient(180deg, #060e14 85%, transparent);
   }
   .search-input {
     width: 100%; padding: 15px 24px; font-size: 0.98rem; border-radius: 12px;
-    border: 2px solid var(--radar-green); background: rgba(2, 26, 12, 0.92); backdrop-filter: blur(14px);
+    border: 1px solid var(--border-line); background: rgba(13, 27, 24, 0.92); backdrop-filter: blur(14px);
     color: var(--text-main); outline: none; transition: all 0.25s ease; font-family: var(--font-body); font-weight: 600;
-    box-shadow: 0 6px 25px rgba(0,0,0,0.8), inset 0 0 12px var(--radar-glow);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.8), inset 0 0 12px rgba(230, 161, 0, 0.08);
   }
   .search-input::placeholder { color: var(--text-muted); letter-spacing: 0.05em; font-weight: 500; }
   .search-input:focus {
-    border-color: var(--capsule-cyan);
-    box-shadow: 0 0 20px var(--capsule-cyan-glow), inset 0 0 15px rgba(0, 240, 255, 0.3);
+    border-color: var(--paozu-gold-bright);
+    box-shadow: 0 0 20px rgba(255, 208, 0, 0.4), inset 0 0 15px rgba(255, 208, 0, 0.15);
   }
-  .search-count { font-size: 0.78rem; color: var(--radar-green); margin-top: 8px; min-height: 1em; font-weight: 700; letter-spacing: 0.04em; }
+  .search-count { font-size: 0.78rem; color: var(--paozu-gold-bright); margin-top: 8px; min-height: 1em; font-weight: 700; letter-spacing: 0.04em; }
 
   .dashboard-view { display: none; }
   .dashboard-view.active { display: block; }
 
-  .page-title { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); margin-bottom: 4px; letter-spacing: 0.05em; text-shadow: 0 0 15px var(--radar-glow); text-transform: uppercase; }
+  .page-title { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); margin-bottom: 4px; letter-spacing: 0.05em; text-shadow: 0 2px 12px rgba(0,0,0,0.8); text-transform: uppercase; }
   .page-sub { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; font-weight: 500; }
 
   .section-container { margin-bottom: 30px; scroll-margin-top: 90px; }
   .section-title {
     font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; color: var(--text-main);
-    border-bottom: 2px solid var(--border-radar); padding-bottom: 10px; margin-bottom: 18px;
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; text-shadow: 0 0 10px var(--radar-glow); letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--border-line); padding-bottom: 10px; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; text-shadow: 0 2px 8px rgba(0,0,0,0.8); letter-spacing: 0.04em;
   }
-  .section-count { font-size: 0.75rem; font-weight: 800; color: var(--radar-green); background: rgba(0, 255, 102, 0.12); border: 1px solid var(--radar-green); padding: 2px 10px; border-radius: 12px; font-family: var(--font-body); }
-  .empty-state { color: var(--text-dim); font-size: 0.88rem; padding: 28px 20px; text-align: center; border: 1px dashed var(--border-radar); border-radius: 10px; background: rgba(2, 26, 12, 0.6); backdrop-filter: blur(8px); }
+  .section-count { font-size: 0.75rem; font-weight: 800; color: var(--paozu-gold-bright); background: rgba(230, 161, 0, 0.15); border: 1px solid var(--border-line); padding: 2px 10px; border-radius: 12px; font-family: var(--font-body); }
+  .empty-state { color: var(--text-dim); font-size: 0.88rem; padding: 28px 20px; text-align: center; border: 1px dashed var(--border-line); border-radius: 10px; background: rgba(13, 27, 24, 0.6); backdrop-filter: blur(8px); }
 
   /* ============================================================
-     CARDS — CAPSULE CORP DATA PANELS
+     CARDS & SCROLLS
      ============================================================ */
   .card {
     position: relative;
-    background: var(--card-metal);
-    border: 1px solid var(--border-radar); border-left: 4px solid var(--radar-green); border-radius: 6px 12px 12px 6px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-line); border-left: 4px solid var(--paozu-gold); border-radius: 6px 12px 12px 6px;
     padding: 16px 18px; margin-bottom: 14px;
     display: flex; justify-content: space-between; align-items: center; gap: 18px;
     transition: all 0.22s ease;
@@ -240,137 +275,137 @@
     box-shadow: 0 6px 22px rgba(0,0,0,0.6);
   }
   .card:hover {
-    background: rgba(18, 38, 30, 0.95); border-left-color: var(--saiyan-gold); transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0, 255, 102, 0.25);
+    background: rgba(20, 42, 34, 0.92); border-left-color: var(--paozu-gold-bright); transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(230, 161, 0, 0.25);
   }
-  .card.is-pinned { border-left-color: var(--saiyan-orange); }
+  .card.is-pinned { border-left-color: var(--paozu-orange); }
   .card-body { flex-grow: 1; min-width: 0; }
   .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
   .card-tag { display: inline-block; font-size: 0.62rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-main); letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.12); }
-  .card-tag.win { background: rgba(0, 119, 255, 0.3); color: #99ccff; border-color: rgba(0, 119, 255, 0.5); }
-  .card-tag.mac { background: rgba(153, 51, 255, 0.3); color: #e0b3ff; border-color: rgba(153, 51, 255, 0.5); }
-  .card-tag.linux { background: rgba(0, 255, 102, 0.25); color: #99ffcc; border-color: rgba(0, 255, 102, 0.4); }
-  .card-tag.critical { background: rgba(255, 30, 86, 0.35); color: #ff99aa; border-color: rgba(255, 30, 86, 0.6); }
-  .card-tag.hashi { background: rgba(255, 119, 0, 0.3); color: var(--saiyan-gold); border-color: rgba(255, 119, 0, 0.5); }
+  .card-tag.win { background: rgba(0, 210, 255, 0.25); color: #99ebff; border-color: rgba(0, 210, 255, 0.4); }
+  .card-tag.mac { background: rgba(153, 51, 255, 0.25); color: #e0b3ff; border-color: rgba(153, 51, 255, 0.4); }
+  .card-tag.linux { background: rgba(42, 90, 59, 0.4); color: #b3ffcc; border-color: rgba(42, 90, 59, 0.6); }
+  .card-tag.critical { background: rgba(168, 32, 32, 0.35); color: #ff99aa; border-color: rgba(168, 32, 32, 0.6); }
+  .card-tag.hashi { background: rgba(242, 101, 34, 0.3); color: var(--paozu-gold-bright); border-color: rgba(242, 101, 34, 0.5); }
 
-  .message-text { font-size: 0.94rem; line-height: 1.65; white-space: pre-line; color: #f0fff5; font-family: var(--font-body); font-weight: 500; }
+  .message-text { font-size: 0.94rem; line-height: 1.65; white-space: pre-line; color: #fcf7e8; font-family: var(--font-body); font-weight: 500; }
 
   .card-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; align-items: stretch; }
   .icon-btn {
-    background: rgba(0, 255, 102, 0.06); border: 1px solid var(--border-radar); color: var(--text-dim);
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border-line); color: var(--text-dim);
     border-radius: 6px; padding: 6px 10px; font-size: 0.88rem; cursor: pointer; line-height: 1;
     transition: all 0.2s ease;
   }
-  .icon-btn:hover { background: rgba(0, 255, 102, 0.2); color: var(--radar-green); border-color: var(--radar-green); }
-  .icon-btn.on { color: var(--saiyan-gold); border-color: var(--saiyan-orange); background: rgba(255, 119, 0, 0.25); }
+  .icon-btn:hover { background: rgba(230, 161, 0, 0.2); color: var(--paozu-gold-bright); border-color: var(--paozu-gold); }
+  .icon-btn.on { color: var(--paozu-gold-bright); border-color: var(--paozu-orange); background: rgba(242, 101, 34, 0.25); }
   .icon-row { display: flex; gap: 6px; }
 
-  /* CAPSULE CORP TECH SEAL BUTTONS */
+  /* PAOZU SEAL BUTTONS */
   .seal-btn {
-    background: linear-gradient(135deg, var(--saiyan-orange) 0%, var(--saiyan-gold) 100%);
+    background: linear-gradient(135deg, var(--paozu-orange) 0%, var(--paozu-gold-bright) 100%);
     color: #1a0800; border: none; padding: 10px 18px; border-radius: 50px;
     cursor: pointer; font-size: 0.82rem; font-weight: 900; white-space: nowrap; min-width: 150px;
-    transition: all 0.2s ease; box-shadow: 0 4px 18px var(--saiyan-glow);
+    transition: all 0.2s ease; box-shadow: 0 4px 18px rgba(242, 101, 34, 0.4);
     font-family: var(--font-body); letter-spacing: 0.05em; text-align: center; text-transform: uppercase;
   }
   .seal-btn:hover {
-    transform: translateY(-2px) scale(1.03); box-shadow: 0 6px 24px var(--saiyan-gold); filter: brightness(1.15);
+    transform: translateY(-2px) scale(1.03); box-shadow: 0 6px 24px rgba(255, 208, 0, 0.6); filter: brightness(1.15);
   }
   .seal-btn.copied {
-    background: linear-gradient(135deg, var(--radar-green) 0%, #00aa44 100%);
-    color: #021208; box-shadow: 0 4px 20px var(--radar-glow);
+    background: linear-gradient(135deg, #00ff88 0%, #00aa44 100%);
+    color: #021208; box-shadow: 0 4px 20px rgba(0, 255, 136, 0.5);
   }
-  .seal-btn:focus-visible { outline: 2px solid var(--saiyan-gold); outline-offset: 2px; }
+  .seal-btn:focus-visible { outline: 2px solid var(--paozu-gold-bright); outline-offset: 2px; }
 
-  .progress-check { width: 20px; height: 20px; accent-color: var(--radar-green); cursor: pointer; flex-shrink: 0; }
+  .progress-check { width: 20px; height: 20px; accent-color: var(--paozu-gold); cursor: pointer; flex-shrink: 0; }
 
   /* ============================================================
-     ACCORDION & SCOUTER DASHBOARD PANELS
+     ACCORDION & DASHBOARD PANELS
      ============================================================ */
-  .accordion { border: 1px solid var(--border-radar); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-metal); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  .accordion { border: 1px solid var(--border-line); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
   .accordion summary {
     list-style: none; cursor: pointer; padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    background: linear-gradient(180deg, rgba(0, 255, 102, 0.1), rgba(0, 255, 102, 0.02));
+    background: linear-gradient(180deg, rgba(230, 161, 0, 0.12), rgba(230, 161, 0, 0.02));
     font-family: var(--font-head); font-size: 1.1rem; color: var(--text-main); letter-spacing: 0.04em;
   }
   .accordion summary::-webkit-details-marker { display: none; }
   .accordion summary .cat-left { display: flex; align-items: center; gap: 12px; }
   .accordion summary .cat-num {
-    width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--radar-green); color: var(--radar-green);
+    width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--paozu-gold); color: var(--paozu-gold-bright);
     display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-family: var(--font-body); font-weight: 900; flex-shrink: 0;
-    box-shadow: 0 0 10px var(--radar-glow), inset 0 0 8px var(--radar-glow);
+    box-shadow: 0 0 10px rgba(230, 161, 0, 0.4), inset 0 0 8px rgba(230, 161, 0, 0.4);
   }
   .accordion summary .cat-progress { font-size: 0.76rem; color: var(--text-dim); font-family: var(--font-body); font-weight: 700; }
-  .accordion summary .chevron { transition: transform 0.25s ease; color: var(--radar-green); }
+  .accordion summary .chevron { transition: transform 0.25s ease; color: var(--paozu-gold-bright); }
   .accordion[open] summary .chevron { transform: rotate(90deg); }
   .accordion-body { padding: 18px 20px 20px; }
 
   .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 28px; }
-  .stat-card { border: 1px solid var(--border-radar); border-radius: 12px; padding: 18px; background: var(--panel-metal); text-align: center; backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
-  .stat-card .num { font-family: var(--font-head); font-size: 2rem; color: var(--radar-green); text-shadow: 0 0 12px var(--radar-glow); font-weight: 700; }
+  .stat-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 18px; background: var(--panel-bg); text-align: center; backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+  .stat-card .num { font-family: var(--font-head); font-size: 2rem; color: var(--paozu-gold-bright); text-shadow: 0 0 12px rgba(255, 208, 0, 0.5); font-weight: 700; }
   .stat-card .lbl { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; font-weight: 800; }
 
-  .clock-card { border: 1px solid var(--border-radar); border-radius: 12px; padding: 18px 24px; background: var(--panel-metal); display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 28px; flex-wrap: wrap; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
-  .clock-time { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); letter-spacing: 0.05em; text-shadow: 0 0 12px var(--radar-glow); }
+  .clock-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 18px 24px; background: var(--panel-bg); display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 28px; flex-wrap: wrap; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  .clock-time { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); letter-spacing: 0.05em; text-shadow: 0 0 12px rgba(255,208,0,0.4); }
   .clock-date { font-size: 0.8rem; color: var(--text-dim); font-weight: 700; }
 
   .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 28px; }
   .quick-btn {
-    border: 1px solid var(--border-radar); border-radius: 10px; padding: 16px; background: var(--panel-metal);
+    border: 1px solid var(--border-line); border-radius: 10px; padding: 16px; background: var(--panel-bg);
     color: var(--text-main); cursor: pointer; text-align: left; font-size: 0.9rem; font-weight: 800;
     transition: all 0.2s ease; font-family: var(--font-body); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6);
   }
-  .quick-btn:hover { background: rgba(0, 255, 102, 0.12); border-color: var(--radar-green); transform: translateY(-2px); box-shadow: 0 8px 25px var(--radar-glow); }
-  .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--radar-green); }
+  .quick-btn:hover { background: rgba(230, 161, 0, 0.15); border-color: var(--paozu-gold-bright); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(230, 161, 0, 0.3); }
+  .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--paozu-gold-bright); }
 
   .mini-list { display: flex; flex-direction: column; gap: 10px; }
   .mini-item {
     display: flex; justify-content: space-between; align-items: center; gap: 12px;
-    border: 1px solid var(--border-radar); border-radius: 10px; padding: 12px 14px; background: var(--card-metal); font-size: 0.85rem; backdrop-filter: blur(10px);
+    border: 1px solid var(--border-line); border-radius: 10px; padding: 12px 14px; background: var(--card-bg); font-size: 0.85rem; backdrop-filter: blur(10px);
   }
-  .mini-item .txt { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #f0fff5; }
-  .mini-item .cat-chip { font-size: 0.68rem; color: var(--radar-green); border: 1px solid var(--border-radar); border-radius: 10px; padding: 2px 8px; flex-shrink: 0; font-weight: 700; }
+  .mini-item .txt { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #fcf7e8; }
+  .mini-item .cat-chip { font-size: 0.68rem; color: var(--paozu-gold-bright); border: 1px solid var(--border-line); border-radius: 10px; padding: 2px 8px; flex-shrink: 0; font-weight: 700; }
 
   /* ============================================================
      TABLES & POLICY GENERATOR
      ============================================================ */
-  .table-responsive { width: 100%; overflow-x: auto; background: var(--panel-metal); border: 1px solid var(--border-radar); border-radius: 12px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  .table-responsive { width: 100%; overflow-x: auto; background: var(--panel-bg); border: 1px solid var(--border-line); border-radius: 12px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
   table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.86rem; min-width: 840px; }
-  th { background: rgba(0, 255, 102, 0.12); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-radar); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.05em; }
-  td { padding: 12px 14px; border-bottom: 1px solid var(--line-soft); color: #f0fff5; }
-  tbody tr:hover td { background: rgba(0, 255, 102, 0.06); }
+  th { background: rgba(230, 161, 0, 0.15); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.05em; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border-soft); color: #fcf7e8; }
+  tbody tr:hover td { background: rgba(230, 161, 0, 0.08); }
   tbody tr:last-child td { border-bottom: none; }
   .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
-  .badge-minor { background: rgba(255,255,255,0.08); color: #f0fff5; border: 1px solid rgba(255,255,255,0.18); }
-  .badge-major { background: rgba(255, 30, 86, 0.35); color: #ff99aa; border: 1px solid rgba(255, 30, 86, 0.6); }
+  .badge-minor { background: rgba(255,255,255,0.08); color: #fcf7e8; border: 1px solid rgba(255,255,255,0.18); }
+  .badge-major { background: rgba(168, 32, 32, 0.35); color: #ff99aa; border: 1px solid rgba(168, 32, 32, 0.6); }
 
-  .gen-panel { border: 1px solid var(--border-radar); border-radius: 12px; padding: 20px; background: var(--panel-metal); margin-bottom: 28px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
-  .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-radar); background: rgba(2, 26, 12, 0.95); color: var(--text-main); font-size: 0.92rem; margin-bottom: 16px; font-family: var(--font-body); outline: none; font-weight: 600; }
-  .gen-select:focus { border-color: var(--radar-green); box-shadow: 0 0 15px var(--radar-glow); }
+  .gen-panel { border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; background: var(--panel-bg); margin-bottom: 28px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-line); background: rgba(6, 14, 20, 0.95); color: var(--text-main); font-size: 0.92rem; margin-bottom: 16px; font-family: var(--font-body); outline: none; font-weight: 600; }
+  .gen-select:focus { border-color: var(--paozu-gold-bright); box-shadow: 0 0 15px rgba(255, 208, 0, 0.3); }
   .gen-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
-  .gen-card { border: 1px solid var(--border-radar); border-radius: 10px; padding: 14px 16px; background: var(--card-metal); display: flex; flex-direction: column; justify-content: space-between; }
-  .gen-card h4 { font-family: var(--font-head); font-size: 0.9rem; color: var(--radar-green); margin-bottom: 8px; letter-spacing: 0.03em; }
-  .gen-card p { font-size: 0.86rem; line-height: 1.55; color: #f0fff5; margin-bottom: 12px; white-space: pre-line; }
+  .gen-card { border: 1px solid var(--border-line); border-radius: 10px; padding: 14px 16px; background: var(--card-bg); display: flex; flex-direction: column; justify-content: space-between; }
+  .gen-card h4 { font-family: var(--font-head); font-size: 0.9rem; color: var(--paozu-gold-bright); margin-bottom: 8px; letter-spacing: 0.03em; }
+  .gen-card p { font-size: 0.86rem; line-height: 1.55; color: #fcf7e8; margin-bottom: 12px; white-space: pre-line; }
 
   .filter-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
   .filter-chip {
-    border: 1px solid var(--border-radar); background: rgba(255,255,255,0.04); color: var(--text-dim);
+    border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
     padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease; font-family: var(--font-body);
   }
-  .filter-chip:hover { border-color: var(--radar-green); color: var(--text-main); }
-  .filter-chip.active { background: rgba(0, 255, 102, 0.2); color: var(--radar-green); border-color: var(--radar-green); box-shadow: 0 0 12px var(--radar-glow); }
+  .filter-chip:hover { border-color: var(--paozu-gold-bright); color: var(--text-main); }
+  .filter-chip.active { background: rgba(230, 161, 0, 0.25); color: var(--paozu-gold-bright); border-color: var(--paozu-gold); box-shadow: 0 0 12px rgba(230, 161, 0, 0.3); }
 
   .infraction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
-  .infr-card { border: 1px solid var(--border-radar); border-radius: 12px; padding: 16px 18px; background: var(--card-metal); cursor: pointer; transition: all 0.2s ease; border-left: 4px solid var(--text-dim); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
-  .infr-card:hover { background: rgba(18, 38, 30, 0.95); transform: translateY(-2px); }
-  .infr-card.risk-green { border-left-color: var(--radar-green); }
-  .infr-card.risk-yellow { border-left-color: var(--saiyan-gold); }
-  .infr-card.risk-orange { border-left-color: var(--saiyan-orange); }
-  .infr-card.risk-red { border-left-color: var(--ki-crimson); }
+  .infr-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 16px 18px; background: var(--card-bg); cursor: pointer; transition: all 0.2s ease; border-left: 4px solid var(--text-dim); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+  .infr-card:hover { background: rgba(20, 42, 34, 0.92); transform: translateY(-2px); }
+  .infr-card.risk-green { border-left-color: #00ff88; }
+  .infr-card.risk-yellow { border-left-color: var(--paozu-gold-bright); }
+  .infr-card.risk-orange { border-left-color: var(--paozu-orange); }
+  .infr-card.risk-red { border-left-color: #ff3b30; }
   .infr-name { font-weight: 800; color: var(--text-main); margin-bottom: 6px; font-size: 0.95rem; }
   .infr-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 6px; font-weight: 700; }
   .infr-threshold { font-size: 0.74rem; color: var(--text-dim); }
-  .infr-detail { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-radar); font-size: 0.85rem; line-height: 1.55; display: none; }
+  .infr-detail { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-line); font-size: 0.85rem; line-height: 1.55; display: none; }
   .infr-card.expanded .infr-detail { display: block; }
   .risk-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.76rem; color: var(--text-dim); margin-bottom: 18px; align-items: center; font-weight: 700; }
   .risk-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
@@ -378,30 +413,30 @@
   /* ================= TROUBLESHOOTING FLOW STYLES ================= */
   .trouble-section { margin-bottom: 30px; }
   .trouble-mode-header {
-    font-family: var(--font-head); font-size: 1.3rem; color: var(--radar-green); border-bottom: 2px solid var(--border-radar);
-    padding-bottom: 8px; margin: 24px 0 16px; text-transform: uppercase; letter-spacing: 0.06em; text-shadow: 0 0 12px var(--radar-glow);
+    font-family: var(--font-head); font-size: 1.3rem; color: var(--paozu-gold-bright); border-bottom: 2px solid var(--border-line);
+    padding-bottom: 8px; margin: 24px 0 16px; text-transform: uppercase; letter-spacing: 0.06em; text-shadow: 0 0 12px rgba(255, 208, 0, 0.4);
   }
   .trouble-card {
-    border: 1px solid var(--border-radar); border-radius: 12px; padding: 20px; margin-bottom: 18px;
-    background: var(--panel-metal); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6);
+    border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; margin-bottom: 18px;
+    background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6);
   }
   .trouble-card h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; letter-spacing: 0.03em; }
   .flow-step {
-    border-left: 2px solid var(--radar-green); padding-left: 16px; margin-bottom: 16px; position: relative;
+    border-left: 2px solid var(--paozu-gold-bright); padding-left: 16px; margin-bottom: 16px; position: relative;
   }
-  .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--radar-green); text-transform: uppercase; letter-spacing: 0.06em; }
+  .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--paozu-gold-bright); text-transform: uppercase; letter-spacing: 0.06em; }
   .flow-step-title { font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin: 3px 0 5px; }
   .flow-step-action { font-size: 0.86rem; color: var(--text-dim); line-height: 1.45; margin-bottom: 8px; font-weight: 500; }
   .flow-step-spiel {
-    background: rgba(2, 26, 12, 0.7); border: 1px solid var(--border-radar); border-radius: 8px; padding: 10px 12px;
-    font-size: 0.84rem; color: #f0fff5; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    background: rgba(6, 14, 20, 0.75); border: 1px solid var(--border-line); border-radius: 8px; padding: 10px 12px;
+    font-size: 0.84rem; color: #fcf7e8; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
   }
 
   /* ================= RESPONSIVE ================= */
   @media (max-width: 960px) {
     .sidebar { width: 260px; }
-    .shenron-sky { opacity: 0.3; width: 400px; }
-    .lookout-structure { opacity: 0.6; }
+    .shenron-clouds { opacity: 0.25; width: 400px; }
+    .paozu-house { width: 240px; height: 190px; }
   }
   @media (max-width: 640px) {
     body { flex-direction: column; }
@@ -414,8 +449,8 @@
 
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(0, 255, 102, 0.35); border-radius: 6px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(0, 255, 102, 0.6); }
+  ::-webkit-scrollbar-thumb { background: rgba(230, 161, 0, 0.35); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(230, 161, 0, 0.6); }
 </style>
 </head>
 <body>
@@ -423,39 +458,66 @@
   <!-- ================= ATMOSPHERIC SCENE ================= -->
   <div class="scene" aria-hidden="true">
     <div class="scene-sky"></div>
-    <div class="radar-grid-bg"></div>
-    <div class="radar-sweep"></div>
     <div class="sky-clouds"></div>
-    <div class="scene-sun"></div>
-
-    <!-- Kami's Lookout Dome Structure -->
-    <div class="lookout-structure">
-      <svg viewBox="0 0 1200 240" preserveAspectRatio="xMidYMax meet">
-        <path d="M0,240 Q600,160 1200,240 Z" fill="#02140a" opacity="0.95"/>
-        <path d="M150,240 Q600,185 1050,240 Z" fill="#042012" opacity="0.8"/>
-        <path d="M540,195 Q600,130 660,195 Z" fill="#010a05"/>
-        <circle cx="600" cy="120" r="14" fill="#ffd700" opacity="0.8"/>
-        <rect x="585" y="145" width="30" height="50" fill="#000603"/>
+    <div class="sun-glow"></div>
+    <div class="sun-rays"></div>
+    
+    <!-- Mount Paozu Layered Mountains -->
+    <div class="scene-mountains">
+      <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
+        <!-- Far Mountain Ridge -->
+        <polygon points="0,300 0,160 140,65 310,180 480,75 660,190 840,55 1020,165 1200,95 1200,300" fill="#0c231e"/>
+        <!-- Mid Mountain Ridge & Waterfall Flow -->
+        <polygon points="0,300 0,205 190,120 390,205 600,130 840,215 1040,140 1200,185 1200,300" fill="#133128" opacity=".92"/>
+        <path d="M600,130 L605,300 L595,300 Z" fill="#00d2ff" opacity="0.65"/>
       </svg>
     </div>
 
-    <!-- Shenron Winding Dragon -->
-    <div class="shenron-sky">
-      <svg viewBox="0 0 500 350" preserveAspectRatio="xMidYMin meet">
-        <g fill="none" stroke="#00ff66" stroke-width="3.5" opacity="0.85">
-          <path d="M450,40 C380,80 340,160 400,220 C460,280 320,320 220,260 C120,200 180,110 120,80 C60,50 30,120 10,180" />
-          <path d="M430,55 Q360,110 380,180 M330,240 Q240,280 180,220 M140,150 Q100,80 50,110" stroke="#ffd700" stroke-width="2"/>
-          <path d="M440,30 L470,15 M455,45 L485,30 M420,20 L400,5" stroke="#ff7700" stroke-width="3"/>
-          <circle cx="445" cy="35" r="4.5" fill="#ff1e56" />
+    <!-- Floating Kami's Lookout -->
+    <div class="lookout-floating">
+      <svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMax meet">
+        <path d="M20,100 Q100,60 180,100 Z" fill="#091814"/>
+        <circle cx="100" cy="55" r="10" fill="#ffcc00" opacity="0.9"/>
+        <rect x="92" y="70" width="16" height="25" fill="#040b09"/>
+      </svg>
+    </div>
+
+    <!-- Guardian Shenron in Clouds -->
+    <div class="shenron-clouds">
+      <svg viewBox="0 0 500 280" preserveAspectRatio="xMidYMin meet">
+        <g fill="none" stroke="#2a5a3b" stroke-width="4" opacity="0.75">
+          <path d="M480,30 C410,70 370,140 430,190 C490,240 350,280 250,230 C150,180 200,100 140,70 C80,40 50,100 30,150" />
+          <path d="M460,45 Q390,95 410,155 M360,210 Q270,250 210,200" stroke="#ffcc00" stroke-width="2"/>
+          <path d="M470,20 L495,10 M480,32 L500,22" stroke="#f26522" stroke-width="2.5"/>
+          <circle cx="455" cy="25" r="3.5" fill="#ff1e56" />
         </g>
       </svg>
     </div>
 
     <!-- Flying Nimbus & Goku Silhouette -->
-    <div class="nimbus-rider">
+    <div class="nimbus-goku">
       <svg viewBox="0 0 100 50" preserveAspectRatio="xMidYMid meet">
-        <path d="M10,35 Q20,20 40,25 Q55,10 75,20 Q90,15 95,30 Q100,42 80,45 Q60,48 40,45 Q15,48 10,35 Z" fill="#ffd700" opacity="0.92"/>
-        <path d="M45,22 Q40,10 50,5 Q55,12 60,8 Q58,18 65,22 Z" fill="#010f06"/>
+        <path d="M10,35 Q20,20 40,25 Q55,10 75,20 Q90,15 95,30 Q100,42 80,45 Q60,48 40,45 Q15,48 10,35 Z" fill="#ffcc00" opacity="0.95"/>
+        <path d="M45,22 Q40,10 50,5 Q55,12 60,8 Q58,18 65,22 Z" fill="#060e14"/>
+        <!-- Power Pole -->
+        <line x1="30" y1="30" x2="70" y2="2" stroke="#f26522" stroke-width="2.5"/>
+      </svg>
+    </div>
+
+    <!-- Goku & Chi-Chi's House (Mount Paozu Foreground) -->
+    <div class="paozu-house">
+      <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMax meet">
+        <g fill="#091814">
+          <!-- House Dome & Chimney -->
+          <path d="M30,130 Q100,40 170,130 Z" fill="#1b3d26"/>
+          <path d="M40,130 Q100,50 160,130 Z" fill="#0d2117"/>
+          <rect x="135" y="55" width="12" height="28" fill="#091814"/>
+          <!-- Smoke Trail -->
+          <path d="M141,50 Q148,35 142,20 Q150,10 145,0" stroke="rgba(252, 247, 232, 0.4)" stroke-width="3" fill="none"/>
+          <!-- Windows & Door -->
+          <circle cx="100" cy="85" r="14" fill="#ffcc00" opacity="0.85"/>
+          <rect x="88" y="108" width="24" height="22" fill="#040e0b"/>
+        </g>
       </svg>
     </div>
 
@@ -463,7 +525,7 @@
     <canvas id="fxCanvas"></canvas>
   </div>
 
-  <!-- ================= SIDEBAR — DRAGON RADAR ================= -->
+  <!-- ================= SIDEBAR — MOUNT PAOZU COMMAND ================= -->
   <div class="sidebar">
     <div class="sidebar-header">
       <!-- 7 DRAGON BALLS WITH "F-I-V-E-A-C-T-S" -->
@@ -499,7 +561,7 @@
   <!-- ================= MAIN CONTENT ================= -->
   <div class="main-content">
     <div class="search-wrapper">
-      <input type="text" id="globalSearch" class="search-input" placeholder="Scan the Dragon Radar database... search spiels, policies, infractions" oninput="filterAll()" aria-label="Search all content">
+      <input type="text" id="globalSearch" class="search-input" placeholder="Seek knowledge... search spiels, policies, infractions" oninput="filterAll()" aria-label="Search all content">
       <div class="search-count" id="searchCount"></div>
     </div>
 
@@ -754,10 +816,10 @@
       <h2 class="page-title">Infraction Threshold Center</h2>
       <p class="page-sub">Tactical response reference. Risk color is derived from each infraction's severity and remaining threshold.</p>
       <div class="risk-legend">
-        <span><span class="dot" style="background:#618c69;"></span>Standard</span>
-        <span><span class="dot" style="background:#d4a338;"></span>Elevated</span>
-        <span><span class="dot" style="background:#d17538;"></span>Critical</span>
-        <span><span class="dot" style="background:#d94b43;"></span>Immediate</span>
+        <span><span class="dot" style="background:#00ff88;"></span>Standard</span>
+        <span><span class="dot" style="background:#ffcc00;"></span>Elevated</span>
+        <span><span class="dot" style="background:#f26522;"></span>Critical</span>
+        <span><span class="dot" style="background:#ff3b30;"></span>Immediate</span>
       </div>
       <div class="filter-row" id="thresholdFilters"></div>
       <div class="infraction-grid" id="infractionGrid"></div>
@@ -1511,33 +1573,33 @@
       height = canvas.height = window.innerHeight;
     });
 
-    // 1. Sakura Petals Particles
+    // 1. Dandelion & Sakura Petals
     var petals = [];
     var petalCount = 45;
     for (var i = 0; i < petalCount; i++) {
       petals.push({
         x: Math.random() * width,
         y: Math.random() * height - height,
-        size: Math.random() * 8 + 4,
-        speedY: Math.random() * 1.2 + 0.6,
+        size: Math.random() * 7 + 4,
+        speedY: Math.random() * 1.1 + 0.5,
         speedX: Math.random() * 0.8 - 0.4,
         rotation: Math.random() * 360,
-        rotSpeed: Math.random() * 1.5 - 0.75,
+        rotSpeed: Math.random() * 1.4 - 0.7,
         opacity: Math.random() * 0.45 + 0.25
       });
     }
 
-    // 2. Rising Fire/Spirit Embers
+    // 2. Rising Golden Dandelion Seeds / Light Particles
     var embers = [];
-    var emberCount = 30;
+    var emberCount = 35;
     for (var j = 0; j < emberCount; j++) {
       embers.push({
         x: Math.random() * width,
         y: Math.random() * height + height * 0.5,
         radius: Math.random() * 2 + 1,
-        speedY: -(Math.random() * 0.9 + 0.4),
+        speedY: -(Math.random() * 0.8 + 0.3),
         speedX: Math.random() * 0.6 - 0.3,
-        opacity: Math.random() * 0.6 + 0.3,
+        opacity: Math.random() * 0.5 + 0.25,
         pulse: Math.random() * 0.05
       });
     }
@@ -1549,8 +1611,8 @@
       ctx.globalAlpha = p.opacity;
 
       var grad = ctx.createLinearGradient(0, 0, p.size, p.size);
-      grad.addColorStop(0, "#f3c2c2");
-      grad.addColorStop(1, "#c97373");
+      grad.addColorStop(0, "#ffddaa");
+      grad.addColorStop(1, "#f26522");
 
       ctx.fillStyle = grad;
       ctx.beginPath();
@@ -1564,9 +1626,9 @@
     function drawEmber(e) {
       ctx.save();
       ctx.globalAlpha = e.opacity;
-      ctx.fillStyle = "#f3d785";
+      ctx.fillStyle = "#ffcc00";
       ctx.shadowBlur = 10;
-      ctx.shadowColor = "#d4a338";
+      ctx.shadowColor = "#ff8800";
       ctx.beginPath();
       ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
       ctx.fill();
@@ -1576,7 +1638,7 @@
     function animate() {
       ctx.clearRect(0, 0, width, height);
 
-      // Render Embers
+      // Render Seeds
       for (var k = 0; k < embers.length; k++) {
         var e = embers[k];
         e.y += e.speedY;
@@ -1590,7 +1652,7 @@
         drawEmber(e);
       }
 
-      // Render Sakura
+      // Render Petals
       for (var i = 0; i < petals.length; i++) {
         var p = petals[i];
         p.y += p.speedY;
