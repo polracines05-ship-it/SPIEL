@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveActs Proctor Dojo — Mount Paozu Command Deck (PST)</title>
+<title>FiveActs Proctor Dojo — Capsule Corp Command Deck (PST)</title>
 <style>
   :root {
     /* Paozu & Dragon Ball Z Palette */
@@ -125,7 +125,7 @@
     100% { transform: translateY(-20px) scale(1.04); }
   }
 
-  /* Goku on Flying Nimbus */
+  /* Flying Nimbus & Goku */
   .nimbus-goku {
     position: absolute; left: -160px; top: 22%; width: 150px; height: 75px; opacity: 0.9;
     filter: drop-shadow(0 0 18px rgba(255, 208, 0, 0.8));
@@ -233,10 +233,13 @@
   .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
 
   /* ============================================================
-     MAIN CONTENT & SEARCH ENGINE
+     MAIN CONTENT & SEARCH ENGINE (EXCLUSIVE TO CANNED MESSAGES)
      ============================================================ */
   .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 26px 38px 60px; min-width: 0; }
-  .search-wrapper { position: sticky; top: 0; z-index: 50; padding: 6px 0 22px; background: linear-gradient(180deg, #060e14 85%, transparent); }
+  
+  .library-search-box {
+    position: relative; margin-bottom: 22px;
+  }
   .search-input {
     width: 100%; padding: 15px 24px; font-size: 0.98rem; border-radius: 12px;
     border: 1px solid var(--border-line); background: rgba(10, 20, 28, 0.92); backdrop-filter: blur(14px);
@@ -245,6 +248,28 @@
   }
   .search-input::placeholder { color: var(--text-muted); letter-spacing: 0.05em; font-weight: 500; }
   .search-input:focus { border-color: var(--paozu-gold-bright); box-shadow: 0 0 20px rgba(255, 208, 0, 0.4), inset 0 0 15px rgba(255, 208, 0, 0.15); }
+  
+  /* DRAGON RADAR SUGGESTION DROPDOWN */
+  .suggestions-dropdown {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
+    background: rgba(10, 20, 28, 0.96); border: 1px solid var(--paozu-gold-bright);
+    border-radius: 0 0 12px 12px; backdrop-filter: blur(16px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 15px rgba(255, 208, 0, 0.3);
+    max-height: 280px; overflow-y: auto; display: none; margin-top: 4px;
+  }
+  .suggestion-item {
+    padding: 12px 18px; border-bottom: 1px solid var(--border-soft); cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    transition: all 0.18s ease; font-size: 0.85rem; color: var(--text-main);
+  }
+  .suggestion-item:hover {
+    background: rgba(230, 161, 0, 0.2); color: var(--paozu-gold-bright); padding-left: 22px;
+  }
+  .suggestion-item .sug-cat {
+    font-size: 0.68rem; color: var(--paozu-gold); border: 1px solid var(--border-line);
+    border-radius: 8px; padding: 2px 7px; flex-shrink: 0; font-weight: 700;
+  }
+
   .search-count { font-size: 0.78rem; color: var(--paozu-gold-bright); margin-top: 8px; min-height: 1em; font-weight: 700; letter-spacing: 0.04em; }
 
   .dashboard-view { display: none; }
@@ -273,7 +298,9 @@
     transition: all 0.22s ease; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 6px 22px rgba(0,0,0,0.6);
   }
-  .card:hover { background: rgba(20, 42, 34, 0.92); border-left-color: var(--paozu-gold-bright); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(230, 161, 0, 0.25); }
+  .card:hover, .card.highlighted {
+    background: rgba(20, 42, 34, 0.92); border-left-color: var(--paozu-gold-bright); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(230, 161, 0, 0.35);
+  }
   .card.is-pinned { border-left-color: var(--paozu-orange); }
   .card-body { flex-grow: 1; min-width: 0; }
   .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
@@ -560,10 +587,6 @@
 
   <!-- ================= MAIN CONTENT ================= -->
   <div class="main-content">
-    <div class="search-wrapper">
-      <input type="text" id="globalSearch" class="search-input" placeholder="Seek knowledge... search spiels, policies, infractions" oninput="filterAll()" aria-label="Search all content">
-      <div class="search-count" id="searchCount"></div>
-    </div>
 
     <!-- HOME VIEW -->
     <div id="view-home" class="dashboard-view active">
@@ -604,7 +627,7 @@
     <!-- CHECK-IN STEPS VIEW -->
     <div id="view-checkin" class="dashboard-view">
       <h2 class="page-title">Check-In Steps</h2>
-      <p class="page-sub">Work sequentially through categories 1&ndash;13. Select an exam pathway below to configure the process.</p>
+      <p class="page-sub">Work sequentially through categories 1&ndash;13. Select an exam mode below to configure steps.</p>
       
       <!-- EXAM MODE TOGGLE BUTTONS (SEB VS NON-SEB) -->
       <div class="path-selector-box">
@@ -634,8 +657,8 @@
             <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
             <div class="flow-step-action">1. Start: Microphone not working.<br>2. Using Chrome or Edge? &bull; No &rarr; Switch browser. &bull; Yes &rarr; Continue to next step.</div>
             <div class="flow-step-spiel">
-              <span>"Please check the following before starting the exam:\nUse the latest version of Google Chrome or Microsoft Edge."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check the following before starting the exam:\nUse the latest version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
+              <span>"Step 1: Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.\n\nStep 2: If you are using Google Chrome, and you are experiencing this issue, please switch to Microsoft Edge. If you are experiencing issues in Microsoft Edge, please switch to Google Chrome."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Step 1: Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.\n\nStep 2: If you are using Google Chrome, and you are experiencing this issue, please switch to Microsoft Edge. If you are experiencing issues in Microsoft Edge, please switch to Google Chrome.')">⚜ Copy</button>
             </div>
           </div>
 
@@ -693,8 +716,8 @@
             <div class="flow-step-title">Browser Verification</div>
             <div class="flow-step-action">1. Start: Can't share screen.<br>2. Using Chrome or Edge? &bull; No &rarr; Switch browser. &bull; Yes &rarr; Continue.</div>
             <div class="flow-step-spiel">
-              <span>"Please check the following before starting the exam:\nUse the latest version of Google Chrome or Microsoft Edge."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check the following before starting the exam:\nUse the latest version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
+              <span>"Step 1: Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.\n\nStep 2: If you are using Google Chrome, and you are experiencing this issue, please switch to Microsoft Edge. If you are experiencing issues in Microsoft Edge, please switch to Google Chrome."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Step 1: Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.\n\nStep 2: If you are using Google Chrome, and you are experiencing this issue, please switch to Microsoft Edge. If you are experiencing issues in Microsoft Edge, please switch to Google Chrome.')">⚜ Copy</button>
             </div>
           </div>
 
@@ -821,10 +844,18 @@
       </div>
     </div>
 
-    <!-- CANNED MESSAGE LIBRARY VIEW -->
+    <!-- CANNED MESSAGE LIBRARY VIEW (EXCLUSIVE SEARCH ENGINE) -->
     <div id="view-library" class="dashboard-view">
       <h2 class="page-title">Canned Message Library</h2>
-      <p class="page-sub">Every spiel on file. Find one in seconds — search, or filter by category.</p>
+      <p class="page-sub">Search our Dragon Radar database for instant spiels and copyable candidate responses.</p>
+      
+      <!-- EXCLUSIVE CANNED MESSAGES SEARCH INPUT WITH AUTOCOMPLETE -->
+      <div class="library-search-box">
+        <input type="text" id="globalSearch" class="search-input" placeholder="Scan Dragon Radar database... search spiels, camera, permissions, reboot" oninput="handleLibrarySearch()" onfocus="handleLibrarySearch()" aria-label="Search canned messages">
+        <div class="suggestions-dropdown" id="suggestionsBox"></div>
+      </div>
+      <div class="search-count" id="searchCount"></div>
+
       <div class="filter-row" id="libraryFilters"></div>
       <div id="libraryList"></div>
     </div>
@@ -1054,7 +1085,7 @@
     {id:"m9_11", cat:"9", tags:[], text:"Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled."},
     {id:"m9_12", cat:"9", tags:[], text:"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."},
     {id:"m9_13", cat:"9", tags:["critical"], text:"You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed."},
-    {id:"m9_14", cat:"9", tags:[], text:"Please check the following before starting the exam:\n\n• Use the latest version of Google Chrome or Microsoft Edge.\n• Ensure you have a stable internet connection.\n• Disable any browser extensions or add-ons.\n• Clear your browser cache.\n• Make sure any VPN or proxy connection is turned off.\n• Disconnect any external or extended monitors and use only one screen.\n• Verify that the exam application is allowed in both your system and browser settings, and that all required permissions are enabled (such as camera, microphone, and screen sharing).\n\nIf the issue persists after checking the following, please restart your device and relaunch the exam."},
+    {id:"m9_14", cat:"9", tags:[], text:"Please check the following before starting the exam:\n\nStep 1: Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.\n\nStep 2: If you are using Google Chrome, and you are experiencing this issue, please switch to Microsoft Edge. If you are experiencing issues in Microsoft Edge, please switch to Google Chrome."},
 
     // 11. Non-SEB Exams
     {id:"m11_1", cat:"11", tags:[], text:"Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat."},
@@ -1374,7 +1405,7 @@
   };
 
   /* ============================================================
-     CANNED MESSAGE LIBRARY
+     CANNED MESSAGE LIBRARY & EXCLUSIVE AUTOCOMPLETE SEARCH
      ============================================================ */
   var libraryActiveCat = "all";
 
@@ -1407,6 +1438,63 @@
     for (var i=0;i<msgs.length;i++){ html += renderMessageCard(msgs[i], {progress:false}); }
     wrap.innerHTML = html;
   }
+
+  /* EXCLUSIVE SEARCH AUTOCOMPLETE HANDLER */
+  window.handleLibrarySearch = function() {
+    var query = document.getElementById("globalSearch").value.trim().toLowerCase();
+    var dropdown = document.getElementById("suggestionsBox");
+
+    if (!query) {
+      dropdown.style.display = "none";
+      filterAll();
+      return;
+    }
+
+    var suggestions = MESSAGES.filter(function(m) {
+      return m.text.toLowerCase().indexOf(query) !== -1;
+    }).slice(0, 6); // Top 6 suggestion matches
+
+    if (suggestions.length === 0) {
+      dropdown.style.display = "none";
+      filterAll();
+      return;
+    }
+
+    var html = "";
+    for (var i = 0; i < suggestions.length; i++) {
+      var s = suggestions[i];
+      var snippet = s.text.length > 70 ? s.text.substring(0, 70) + "..." : s.text;
+      html += '<div class="suggestion-item" onclick="selectSuggestion(\'' + s.id + '\')">' +
+        '<span>' + escapeHtml(snippet) + '</span>' +
+        '<span class="sug-cat">' + catLabel(s.cat) + '</span>' +
+      '</div>';
+    }
+
+    dropdown.innerHTML = html;
+    dropdown.style.display = "block";
+    filterAll();
+  };
+
+  window.selectSuggestion = function(msgId) {
+    document.getElementById("suggestionsBox").style.display = "none";
+    var targetCard = document.querySelector('#libraryList .card[data-id="' + msgId + '"]');
+    if (targetCard) {
+      targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
+      targetCard.classList.add("highlighted");
+      setTimeout(function() {
+        targetCard.classList.remove("highlighted");
+      }, 2500);
+    }
+  };
+
+  // Hide suggestion dropdown on outside click
+  document.addEventListener("click", function(e) {
+    var searchBox = document.querySelector(".library-search-box");
+    if (searchBox && !searchBox.contains(e.target)) {
+      var dropdown = document.getElementById("suggestionsBox");
+      if (dropdown) dropdown.style.display = "none";
+    }
+  });
 
   /* ============================================================
      FAVORITES, PINS, & COPY ACTIONS
@@ -1806,7 +1894,8 @@
      GLOBAL SEARCH ENGINE
      ============================================================ */
   function filterAll(){
-    var query = document.getElementById("globalSearch").value.trim().toLowerCase();
+    var searchEl = document.getElementById("globalSearch");
+    var query = searchEl ? searchEl.value.trim().toLowerCase() : "";
     var matches = 0, total = 0;
 
     // Accordions
@@ -1867,7 +1956,9 @@
     if (infrEmpty && infrCards.length){ infrEmpty.style.display = visibleInfr === 0 ? "" : "none"; }
 
     var countLabel = document.getElementById("searchCount");
-    countLabel.textContent = query ? ("Showing " + matches + " of " + total + " matching items across the dojo") : "";
+    if (countLabel) {
+      countLabel.textContent = query ? ("Showing " + matches + " of " + total + " matching items across the dojo") : "";
+    }
   }
   window.filterAll = filterAll;
 
