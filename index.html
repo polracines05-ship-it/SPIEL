@@ -3,9 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveActs Proctor Dojo — Mount Paozu 24h Celestial Deck</title>
+<title>FiveActs Proctor Dojo — Mount Paozu Command Deck (PST)</title>
 <style>
   :root {
+    /* Paozu & Dragon Ball Z Palette */
+    --paozu-sky: #0b1d33;
+    --paozu-sun: #ffd000;
+    --paozu-green: #2a5a3b;
+    --paozu-moss: #1b3d26;
     --paozu-parchment: #fcf7e8;
     --paozu-parchment-dim: #d8cba9;
     --paozu-gold: #e6a100;
@@ -13,17 +18,18 @@
     --paozu-orange: #f26522;
     --paozu-crimson: #a82020;
     --paozu-azure: #00d2ff;
+    --ki-aura: rgba(255, 204, 0, 0.4);
 
-    --panel-bg: rgba(10, 20, 28, 0.88);
-    --card-bg: rgba(16, 32, 42, 0.85);
-    --border-line: rgba(230, 161, 0, 0.4);
-    --border-soft: rgba(252, 247, 232, 0.15);
+    --panel-bg: rgba(13, 27, 24, 0.88);
+    --card-bg: rgba(20, 38, 32, 0.85);
+    --border-line: rgba(230, 161, 0, 0.35);
+    --border-soft: rgba(252, 247, 232, 0.12);
 
     --text-main: #fcf7e8;
     --text-dim: #cad1be;
     --text-muted: #7d8e75;
 
-    --font-head: Georgia, "Iowan Old Style", "Palatino Linotype", "Hiragino Mincho ProN", serif;
+    --font-head: Impact, "Arial Black", Georgia, serif;
     --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   }
 
@@ -32,7 +38,7 @@
   body {
     font-family: var(--font-body);
     color: var(--text-main);
-    background-color: #03080e;
+    background-color: #060e14;
     display: flex;
     min-height: 100vh;
     position: relative;
@@ -50,30 +56,12 @@
   }
 
   @keyframes celestialCycle {
-    /* 0s: Dawn */
-    0%, 100% {
-      background: linear-gradient(180deg, #1d0f28 0%, #4a213e 35%, #8c3b4f 70%, #d96b43 100%);
-    }
-    /* 3.3s: Morning */
-    16.6% {
-      background: linear-gradient(180deg, #103c61 0%, #1e6992 35%, #4ea3c8 70%, #9be1eb 100%);
-    }
-    /* 6.6s: Afternoon */
-    33.3% {
-      background: linear-gradient(180deg, #092c48 0%, #114b73 35%, #2a87b3 70%, #76d0f0 100%);
-    }
-    /* 10s: Twilight / Sunset */
-    50% {
-      background: linear-gradient(180deg, #160a24 0%, #421032 35%, #822234 70%, #df5720 100%);
-    }
-    /* 13.3s: Night */
-    66.6% {
-      background: linear-gradient(180deg, #040914 0%, #081526 35%, #0b2238 70%, #0a1829 100%);
-    }
-    /* 16.6s: Midnight */
-    83.3% {
-      background: linear-gradient(180deg, #010308 0%, #030712 35%, #050d1f 70%, #020610 100%);
-    }
+    0%, 100% { background: linear-gradient(180deg, #1d0f28 0%, #4a213e 35%, #8c3b4f 70%, #d96b43 100%); }
+    16.6%    { background: linear-gradient(180deg, #103c61 0%, #1e6992 35%, #4ea3c8 70%, #9be1eb 100%); }
+    33.3%    { background: linear-gradient(180deg, #092c48 0%, #114b73 35%, #2a87b3 70%, #76d0f0 100%); }
+    50%      { background: linear-gradient(180deg, #160a24 0%, #421032 35%, #822234 70%, #df5720 100%); }
+    66.6%    { background: linear-gradient(180deg, #040914 0%, #081526 35%, #0b2238 70%, #0a1829 100%); }
+    83.3%    { background: linear-gradient(180deg, #010308 0%, #030712 35%, #050d1f 70%, #020610 100%); }
   }
 
   /* Heavenly Sun & Ki Aura Glow Sync */
@@ -92,7 +80,13 @@
     83.3%    { background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, rgba(5, 13, 31, 0.1) 50%, transparent 75%); }
   }
 
-  /* Drifting Clouds */
+  .sun-rays {
+    position: absolute; top: 0; right: 10%; width: 70%; height: 100%;
+    background: linear-gradient(135deg, transparent 35%, rgba(255, 208, 0, 0.08) 48%, rgba(255, 255, 255, 0.05) 52%, transparent 65%);
+    transform: rotate(-12deg);
+  }
+
+  /* Drifting Anime Clouds */
   .sky-clouds {
     position: absolute; inset: 0;
     background: 
@@ -105,11 +99,11 @@
     100% { transform: translateX(40px) scale(1.05); }
   }
 
-  /* Distant Mount Paozu Ridges */
+  /* Distant Mountain Ranges */
   .scene-mountains { position: absolute; left: 0; right: 0; bottom: 10%; height: 52%; opacity: 0.92; }
   .scene-mountains svg { width: 100%; height: 100%; display: block; }
 
-  /* Kami's Lookout */
+  /* Floating Kami's Lookout */
   .lookout-floating {
     position: absolute; right: 12%; top: 8%; width: 260px; height: 180px; opacity: 0.85;
     filter: drop-shadow(0 0 25px rgba(255, 208, 0, 0.35));
@@ -131,7 +125,7 @@
     100% { transform: translateY(-20px) scale(1.04); }
   }
 
-  /* Flying Nimbus & Goku */
+  /* Goku on Flying Nimbus */
   .nimbus-goku {
     position: absolute; left: -160px; top: 22%; width: 150px; height: 75px; opacity: 0.9;
     filter: drop-shadow(0 0 18px rgba(255, 208, 0, 0.8));
@@ -144,7 +138,7 @@
     100% { transform: translateX(calc(100vw + 350px)) translateY(-60px); opacity: 0; }
   }
 
-  /* Goku & Chi-Chi's House in Mount Paozu */
+  /* Goku & Chi-Chi's House */
   .paozu-house {
     position: absolute; right: 4%; bottom: 8%; width: 320px; height: 260px; opacity: 0.92;
     filter: drop-shadow(0 0 25px rgba(0,0,0,0.85));
@@ -154,12 +148,12 @@
   #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
   /* ============================================================
-     SIDEBAR & NAVIGATION
+     SIDEBAR — COMMAND NAVIGATION & 7 DRAGON BALLS
      ============================================================ */
   .sidebar {
     position: relative; z-index: 10;
     width: 310px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
-    background: linear-gradient(180deg, rgba(10, 20, 28, 0.92), rgba(3, 8, 14, 0.96));
+    background: linear-gradient(180deg, rgba(13, 27, 24, 0.92), rgba(6, 14, 20, 0.96));
     border-right: 1px solid var(--border-line);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     display: flex; flex-direction: column; padding: 0;
@@ -191,6 +185,11 @@
     text-transform: uppercase; text-shadow: 0 2px 10px rgba(230, 161, 0, 0.4);
   }
   .sidebar-header .subtitle { font-size: 0.7rem; color: var(--paozu-gold-bright); margin-top: 4px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800; }
+
+  .scouter-hud {
+    margin: 10px 14px 0; padding: 6px 10px; background: rgba(230, 161, 0, 0.12); border: 1px dashed var(--paozu-gold-bright);
+    border-radius: 6px; font-size: 0.68rem; color: var(--paozu-gold-bright); font-weight: 800; letter-spacing: 0.08em; display: flex; justify-content: space-between;
+  }
 
   .view-selectors { padding: 14px 12px; border-bottom: 1px solid var(--border-line); }
   .view-btn {
@@ -227,7 +226,9 @@
     background: rgba(0, 210, 255, 0.12); color: var(--paozu-azure); border-color: rgba(0, 210, 255, 0.3);
     padding-left: 14px;
   }
-  .nav-links .cnt { color: var(--paozu-gold-bright); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); font-weight: 700; }
+  .nav-links .cnt {
+    color: var(--paozu-gold-bright); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); font-weight: 700;
+  }
 
   .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
 
@@ -235,7 +236,7 @@
      MAIN CONTENT & SEARCH ENGINE
      ============================================================ */
   .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 26px 38px 60px; min-width: 0; }
-  .search-wrapper { position: sticky; top: 0; z-index: 50; padding: 6px 0 22px; background: linear-gradient(180deg, #03080e 85%, transparent); }
+  .search-wrapper { position: sticky; top: 0; z-index: 50; padding: 6px 0 22px; background: linear-gradient(180deg, #060e14 85%, transparent); }
   .search-input {
     width: 100%; padding: 15px 24px; font-size: 0.98rem; border-radius: 12px;
     border: 1px solid var(--border-line); background: rgba(10, 20, 28, 0.92); backdrop-filter: blur(14px);
@@ -319,14 +320,14 @@
 
   /* CHECK-IN QUICK PATH SELECTOR */
   .path-selector-box {
-    display: flex; gap: 10px; margin-bottom: 18px; padding: 12px 16px; background: rgba(10, 20, 28, 0.6);
+    display: flex; gap: 10px; margin-bottom: 18px; padding: 12px 16px; background: rgba(10, 20, 28, 0.65);
     border: 1px solid var(--border-line); border-radius: 10px; flex-wrap: wrap; align-items: center;
   }
   .path-btn {
     border: 1px solid var(--border-line); background: rgba(255,255,255,0.05); color: var(--text-main);
-    padding: 8px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+    padding: 8px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease;
   }
-  .path-btn:hover { background: rgba(230, 161, 0, 0.2); border-color: var(--paozu-gold-bright); }
+  .path-btn:hover, .path-btn.active { background: rgba(230, 161, 0, 0.25); border-color: var(--paozu-gold-bright); color: var(--paozu-gold-bright); }
 
   /* ================= ACCORDION & DASHBOARD ================= */
   .accordion { border: 1px solid var(--border-line); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
@@ -603,14 +604,14 @@
     <!-- CHECK-IN STEPS VIEW -->
     <div id="view-checkin" class="dashboard-view">
       <h2 class="page-title">Check-In Steps</h2>
-      <p class="page-sub">Work sequentially through categories 1&ndash;13. Select an exam pathway below to jump to essential steps.</p>
+      <p class="page-sub">Work sequentially through categories 1&ndash;13. Select an exam pathway below to configure the process.</p>
       
-      <!-- QUICK PATHWAY SELECTOR -->
+      <!-- EXAM MODE TOGGLE BUTTONS (SEB VS NON-SEB) -->
       <div class="path-selector-box">
-        <span style="font-size:0.8rem;font-weight:700;color:var(--paozu-gold-bright);">Quick Route:</span>
-        <button class="path-btn" onclick="goToCategory('2')">Non-SEB Path (ID Check &rarr; System Check)</button>
-        <button class="path-btn" onclick="goToCategory('13')">SEB Path (Safe Exam Browser Check)</button>
-        <button class="path-btn" style="margin-left:auto;" onclick="resetProgress()">Reset progress</button>
+        <span style="font-size:0.8rem;font-weight:800;color:var(--paozu-gold-bright);">Exam Mode Configuration:</span>
+        <button class="path-btn active" id="btn-mode-nonseb" onclick="setExamMode('nonseb')">⚡ Non-SEB Mode (Needs System Verification)</button>
+        <button class="path-btn" id="btn-mode-seb" onclick="setExamMode('seb')">🔒 SEB Mode (Hides System Verification)</button>
+        <button class="path-btn" style="margin-left:auto;" onclick="resetProgress()">Reset Progress</button>
       </div>
 
       <div id="checkinAccordions"></div>
@@ -1246,15 +1247,30 @@
   }
 
   /* ============================================================
-     CHECK-IN STEPS & OS SUB-FILTERING
+     CHECK-IN STEPS & EXAM MODE TOGGLE (SEB VS NON-SEB)
      ============================================================ */
   var activeOsFilter = "all";
+  var activeExamMode = "nonseb"; // "nonseb" or "seb"
+
+  window.setExamMode = function(mode) {
+    activeExamMode = mode;
+    document.getElementById("btn-mode-nonseb").classList.toggle("active", mode === "nonseb");
+    document.getElementById("btn-mode-seb").classList.toggle("active", mode === "seb");
+    renderCheckin();
+  };
 
   function renderCheckin(){
     var wrap = document.getElementById("checkinAccordions");
     var html = "";
-    for (var i=0;i<CATEGORIES.length;i++){
-      var cat = CATEGORIES[i];
+
+    // Filter categories depending on Exam Mode (Hide Category 3 if SEB)
+    var displayCategories = CATEGORIES.filter(function(cat) {
+      if (activeExamMode === "seb" && cat.id === "3") return false;
+      return true;
+    });
+
+    for (var i=0;i<displayCategories.length;i++){
+      var cat = displayCategories[i];
       var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
       
       html += '<details class="accordion" id="accordion-' + cat.id + '"' + (i===0 ? " open" : "") + '>' +
@@ -1265,7 +1281,7 @@
         '</summary>' +
         '<div class="accordion-body" id="body-' + cat.id + '">';
       
-      // Inject OS Sub-Filter for Category 3 (System Verification)
+      // Inject OS Sub-Filter for Category 3 (System Verification) in Non-SEB Mode
       if (cat.id === "3") {
         html += '<div class="os-subfilter-row">' +
           '<button class="os-subchip' + (activeOsFilter==="all" ? " active" : "") + '" onclick="setOsSubFilter(\'all\')">All Platforms</button>' +
@@ -1280,7 +1296,6 @@
       } else {
         for (var j=0;j<msgs.length;j++){ 
           var m = msgs[j];
-          // Filter Category 3 by OS tags if active
           if (cat.id === "3" && activeOsFilter !== "all") {
             if (m.tags.length > 0 && m.tags.indexOf(activeOsFilter) === -1) continue;
           }
@@ -1294,8 +1309,8 @@
 
     var anchorList = document.getElementById("checkinAnchors");
     var aHtml = "";
-    for (var k=0;k<CATEGORIES.length;k++){
-      var c = CATEGORIES[k];
+    for (var k=0;k<displayCategories.length;k++){
+      var c = displayCategories[k];
       var count = MESSAGES.filter(function(m){ return m.cat === c.id; }).length;
       aHtml += '<li><button onclick="goToCategory(\'' + c.id + '\')">' + c.id + '. ' + c.label + ' <span class="cnt">' + count + '</span></button></li>';
     }
@@ -1304,12 +1319,9 @@
 
   window.setOsSubFilter = function(osKey) {
     activeOsFilter = osKey;
-    var acc3 = document.getElementById("accordion-3");
     renderCheckin();
-    if (acc3) {
-      var newAcc3 = document.getElementById("accordion-3");
-      if (newAcc3) newAcc3.open = true;
-    }
+    var acc3 = document.getElementById("accordion-3");
+    if (acc3) acc3.open = true;
   };
 
   // Single-Accordion Open Logic
