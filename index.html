@@ -3,30 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveActs Proctor Dojo — Capsule Corp Command Deck (PST)</title>
+<title>FiveActs Proctor Dojo — Mount Paozu 24h Celestial Deck</title>
 <style>
   :root {
-    /* Dragon Ball Z & Capsule Corp Palette */
-    --capsule-cyan: #00f0ff;
-    --capsule-cyan-glow: rgba(0, 240, 255, 0.45);
-    --saiyan-orange: #ff7700;
-    --saiyan-gold: #ffd700;
-    --saiyan-glow: rgba(255, 119, 0, 0.55);
-    --ki-crimson: #ff1e56;
-    --scouter-red: #ff1e56;
-    --radar-green: #00ff66;
-    --radar-glow: rgba(0, 255, 102, 0.4);
-    
-    --bg-dark: #03070d;
-    --card-bg: rgba(8, 16, 28, 0.88);
-    --panel-bg: rgba(12, 22, 36, 0.92);
-    --border-line: rgba(0, 240, 255, 0.35);
-    --border-gold: rgba(255, 215, 0, 0.45);
-    --text-main: #f0f6fc;
-    --text-dim: #a3b8cc;
-    --text-muted: #647a8e;
+    --paozu-parchment: #fcf7e8;
+    --paozu-parchment-dim: #d8cba9;
+    --paozu-gold: #e6a100;
+    --paozu-gold-bright: #ffcc00;
+    --paozu-orange: #f26522;
+    --paozu-crimson: #a82020;
+    --paozu-azure: #00d2ff;
 
-    --font-head: Impact, "Arial Black", "Trebuchet MS", sans-serif;
+    --panel-bg: rgba(10, 20, 28, 0.88);
+    --card-bg: rgba(16, 32, 42, 0.85);
+    --border-line: rgba(230, 161, 0, 0.4);
+    --border-soft: rgba(252, 247, 232, 0.15);
+
+    --text-main: #fcf7e8;
+    --text-dim: #cad1be;
+    --text-muted: #7d8e75;
+
+    --font-head: Georgia, "Iowan Old Style", "Palatino Linotype", "Hiragino Mincho ProN", serif;
     --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   }
 
@@ -35,7 +32,7 @@
   body {
     font-family: var(--font-body);
     color: var(--text-main);
-    background-color: var(--bg-dark);
+    background-color: #03080e;
     display: flex;
     min-height: 100vh;
     position: relative;
@@ -43,89 +40,102 @@
   }
 
   /* ============================================================
-     BACKGROUND ENVIRONMENT & DRAGON RADAR CANVAS
+     DYNAMIC 20-SECOND DAY-NIGHT SKY ENGINE
      ============================================================ */
   .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
   
   .scene-sky {
     position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 100% 70% at 50% -10%, rgba(0, 240, 255, 0.25), transparent 80%),
-      radial-gradient(circle at 85% 20%, rgba(255, 119, 0, 0.3), transparent 50%),
-      radial-gradient(circle at 15% 80%, rgba(0, 255, 102, 0.2), transparent 55%),
-      linear-gradient(180deg, #02050a 0%, #06101c 40%, #040c17 75%, #010306 100%);
+    animation: celestialCycle 20s ease-in-out infinite;
   }
 
-  /* Radar Grid Background Rings */
-  .radar-grid-overlay {
-    position: absolute; inset: 0;
-    background-image: 
-      radial-gradient(circle at 50% 50%, transparent 18%, rgba(0, 240, 255, 0.1) 19%, transparent 20%),
-      radial-gradient(circle at 50% 50%, transparent 38%, rgba(0, 240, 255, 0.1) 39%, transparent 40%),
-      radial-gradient(circle at 50% 50%, transparent 58%, rgba(0, 240, 255, 0.1) 59%, transparent 60%),
-      radial-gradient(circle at 50% 50%, transparent 78%, rgba(0, 240, 255, 0.1) 79%, transparent 80%),
-      linear-gradient(0deg, transparent 49.6%, rgba(0, 240, 255, 0.1) 50%, transparent 50.4%),
-      linear-gradient(90deg, transparent 49.6%, rgba(0, 240, 255, 0.1) 50%, transparent 50.4%);
-    opacity: 0.8;
+  @keyframes celestialCycle {
+    /* 0s: Dawn */
+    0%, 100% {
+      background: linear-gradient(180deg, #1d0f28 0%, #4a213e 35%, #8c3b4f 70%, #d96b43 100%);
+    }
+    /* 3.3s: Morning */
+    16.6% {
+      background: linear-gradient(180deg, #103c61 0%, #1e6992 35%, #4ea3c8 70%, #9be1eb 100%);
+    }
+    /* 6.6s: Afternoon */
+    33.3% {
+      background: linear-gradient(180deg, #092c48 0%, #114b73 35%, #2a87b3 70%, #76d0f0 100%);
+    }
+    /* 10s: Twilight / Sunset */
+    50% {
+      background: linear-gradient(180deg, #160a24 0%, #421032 35%, #822234 70%, #df5720 100%);
+    }
+    /* 13.3s: Night */
+    66.6% {
+      background: linear-gradient(180deg, #040914 0%, #081526 35%, #0b2238 70%, #0a1829 100%);
+    }
+    /* 16.6s: Midnight */
+    83.3% {
+      background: linear-gradient(180deg, #010308 0%, #030712 35%, #050d1f 70%, #020610 100%);
+    }
   }
 
-  .radar-sweep {
-    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: conic-gradient(from 0deg at 50% 50%, rgba(0, 240, 255, 0.12) 0deg, transparent 60deg, transparent 360deg);
-    animation: radarSpin 14s linear infinite;
-  }
-  @keyframes radarSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
+  /* Heavenly Sun & Ki Aura Glow Sync */
   .sun-glow {
-    position: absolute; top: 2%; right: 10%; width: 400px; height: 400px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 215, 0, 0.45) 0%, rgba(255, 119, 0, 0.25) 50%, transparent 75%);
-    filter: blur(28px);
-    animation: kiPulse 8s ease-in-out infinite alternate;
-  }
-  @keyframes kiPulse {
-    0% { transform: scale(1); filter: blur(28px) brightness(1); }
-    100% { transform: scale(1.15); filter: blur(35px) brightness(1.3); }
+    position: absolute; top: 2%; right: 12%; width: 420px; height: 420px; border-radius: 50%;
+    animation: sunGlowCycle 20s ease-in-out infinite;
+    filter: blur(30px);
   }
 
+  @keyframes sunGlowCycle {
+    0%, 100% { background: radial-gradient(circle, rgba(255, 140, 0, 0.6) 0%, rgba(217, 107, 67, 0.3) 50%, transparent 75%); }
+    16.6%    { background: radial-gradient(circle, rgba(255, 230, 100, 0.7) 0%, rgba(155, 225, 235, 0.3) 50%, transparent 75%); }
+    33.3%    { background: radial-gradient(circle, rgba(255, 255, 180, 0.8) 0%, rgba(118, 208, 240, 0.3) 50%, transparent 75%); }
+    50%      { background: radial-gradient(circle, rgba(223, 87, 32, 0.8) 0%, rgba(130, 34, 52, 0.4) 50%, transparent 75%); }
+    66.6%    { background: radial-gradient(circle, rgba(0, 210, 255, 0.35) 0%, rgba(11, 34, 56, 0.2) 50%, transparent 75%); }
+    83.3%    { background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, rgba(5, 13, 31, 0.1) 50%, transparent 75%); }
+  }
+
+  /* Drifting Clouds */
   .sky-clouds {
     position: absolute; inset: 0;
     background: 
-      radial-gradient(ellipse 65% 22% at 20% 18%, rgba(240, 246, 252, 0.08), transparent 70%),
-      radial-gradient(ellipse 85% 32% at 75% 28%, rgba(0, 240, 255, 0.06), transparent 75%);
-    animation: floatClouds 50s ease-in-out infinite alternate;
+      radial-gradient(ellipse 65% 22% at 20% 18%, rgba(252, 247, 232, 0.12), transparent 70%),
+      radial-gradient(ellipse 85% 32% at 75% 28%, rgba(252, 247, 232, 0.08), transparent 75%);
+    animation: floatClouds 55s ease-in-out infinite alternate;
   }
   @keyframes floatClouds {
     0% { transform: translateX(-40px) scale(1); }
     100% { transform: translateX(40px) scale(1.05); }
   }
 
-  /* Kami's Lookout Structure */
+  /* Distant Mount Paozu Ridges */
+  .scene-mountains { position: absolute; left: 0; right: 0; bottom: 10%; height: 52%; opacity: 0.92; }
+  .scene-mountains svg { width: 100%; height: 100%; display: block; }
+
+  /* Kami's Lookout */
   .lookout-floating {
-    position: absolute; right: 8%; top: 6%; width: 280px; height: 190px; opacity: 0.88;
-    filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.35));
+    position: absolute; right: 12%; top: 8%; width: 260px; height: 180px; opacity: 0.85;
+    filter: drop-shadow(0 0 25px rgba(255, 208, 0, 0.35));
     animation: lookoutDrift 16s ease-in-out infinite alternate;
   }
   @keyframes lookoutDrift {
     0% { transform: translateY(0); }
-    100% { transform: translateY(-16px); }
+    100% { transform: translateY(-14px); }
   }
 
-  /* Shenron Silhouette */
-  .shenron-sky {
-    position: absolute; left: 12%; top: 4%; width: 620px; height: 320px; opacity: 0.5;
-    filter: drop-shadow(0 0 30px var(--radar-glow));
-    animation: shenronGlide 28s ease-in-out infinite alternate;
+  /* Guardian Shenron in Clouds */
+  .shenron-clouds {
+    position: absolute; left: 15%; top: 6%; width: 620px; height: 320px; opacity: 0.45;
+    filter: drop-shadow(0 0 30px rgba(0, 210, 255, 0.35));
+    animation: shenronGlide 30s ease-in-out infinite alternate;
   }
   @keyframes shenronGlide {
     0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-22px) scale(1.04); }
+    100% { transform: translateY(-20px) scale(1.04); }
   }
 
-  /* Goku on Flying Nimbus */
+  /* Flying Nimbus & Goku */
   .nimbus-goku {
-    position: absolute; left: -160px; top: 20%; width: 150px; height: 75px; opacity: 0.95;
-    filter: drop-shadow(0 0 20px var(--saiyan-gold));
-    animation: nimbusSailing 36s linear infinite;
+    position: absolute; left: -160px; top: 22%; width: 150px; height: 75px; opacity: 0.9;
+    filter: drop-shadow(0 0 18px rgba(255, 208, 0, 0.8));
+    animation: nimbusSailing 38s linear infinite;
   }
   @keyframes nimbusSailing {
     0% { transform: translateX(0) translateY(0); opacity: 0; }
@@ -134,37 +144,39 @@
     100% { transform: translateX(calc(100vw + 350px)) translateY(-60px); opacity: 0; }
   }
 
-  .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 220px 70px rgba(3, 7, 13, 0.85); }
-  
+  /* Goku & Chi-Chi's House in Mount Paozu */
+  .paozu-house {
+    position: absolute; right: 4%; bottom: 8%; width: 320px; height: 260px; opacity: 0.92;
+    filter: drop-shadow(0 0 25px rgba(0,0,0,0.85));
+  }
+
+  .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 220px 60px rgba(3, 8, 14, 0.75); }
   #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
   /* ============================================================
-     SIDEBAR — CAPSULE CORP RADAR COMMAND
+     SIDEBAR & NAVIGATION
      ============================================================ */
   .sidebar {
     position: relative; z-index: 10;
-    width: 320px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
-    background: linear-gradient(180deg, rgba(8, 16, 28, 0.95), rgba(3, 7, 13, 0.98));
+    width: 310px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
+    background: linear-gradient(180deg, rgba(10, 20, 28, 0.92), rgba(3, 8, 14, 0.96));
     border-right: 1px solid var(--border-line);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     display: flex; flex-direction: column; padding: 0;
-    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.8);
+    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.7);
   }
   .sidebar::before {
-    content: ""; display: block; height: 5px; width: 100%; flex-shrink: 0;
-    background: linear-gradient(90deg, transparent, var(--capsule-cyan), var(--saiyan-gold), var(--saiyan-orange), transparent);
+    content: ""; display: block; height: 4px; width: 100%; flex-shrink: 0;
+    background: linear-gradient(90deg, transparent, var(--paozu-gold-bright), var(--paozu-orange), transparent);
   }
 
-  /* 7 DRAGON BALLS BRANDING (F-I-V-E-A-C-T-S) */
+  /* 7 DRAGON BALLS (F-I-V-E-A-C-T-S) */
   .sidebar-header { padding: 22px 18px 18px; text-align: center; border-bottom: 1px solid var(--border-line); }
-  
-  .dragon-balls-brand {
-    display: flex; justify-content: center; align-items: center; gap: 5px; margin-bottom: 12px;
-  }
+  .dragon-balls-brand { display: flex; justify-content: center; align-items: center; gap: 5px; margin-bottom: 12px; }
   .dball {
     width: 32px; height: 32px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #ffea00, #ff6600 70%, #882200 100%);
-    box-shadow: 0 0 12px var(--saiyan-glow), inset 0 -2px 5px rgba(0,0,0,0.7);
+    background: radial-gradient(circle at 35% 30%, #ffea00, #f26522 70%, #882200 100%);
+    box-shadow: 0 0 12px rgba(255, 208, 0, 0.6), inset 0 -2px 5px rgba(0,0,0,0.7);
     display: flex; align-items: center; justify-content: center;
     font-size: 0.88rem; font-weight: 900; color: #1a0800; font-family: var(--font-head);
     transition: all 0.25s ease; cursor: pointer; text-shadow: 0 1px 2px rgba(255,255,255,0.6);
@@ -175,38 +187,31 @@
   }
 
   .sidebar-header h1 {
-    font-family: var(--font-head); font-size: 1.3rem; letter-spacing: 0.12em; color: var(--text-main);
-    text-transform: uppercase; text-shadow: 0 0 12px var(--capsule-cyan-glow);
+    font-family: var(--font-head); font-size: 1.25rem; letter-spacing: 0.1em; color: var(--text-main);
+    text-transform: uppercase; text-shadow: 0 2px 10px rgba(230, 161, 0, 0.4);
   }
-  .sidebar-header .subtitle {
-    font-size: 0.7rem; color: var(--capsule-cyan); margin-top: 4px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800;
-  }
-
-  .scouter-hud {
-    margin: 10px 14px 0; padding: 6px 10px; background: rgba(0, 240, 255, 0.08); border: 1px dashed var(--capsule-cyan);
-    border-radius: 6px; font-size: 0.68rem; color: var(--capsule-cyan); font-weight: 800; letter-spacing: 0.08em; display: flex; justify-content: space-between;
-  }
+  .sidebar-header .subtitle { font-size: 0.7rem; color: var(--paozu-gold-bright); margin-top: 4px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800; }
 
   .view-selectors { padding: 14px 12px; border-bottom: 1px solid var(--border-line); }
   .view-btn {
-    width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(0, 240, 255, 0.03); border: 1px solid rgba(0, 240, 255, 0.15);
-    color: var(--text-dim); text-align: left; padding: 11px 14px; font-size: 0.88rem; font-weight: 700;
+    width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(252, 247, 232, 0.03); border: 1px solid rgba(230, 161, 0, 0.2);
+    color: var(--paozu-parchment-dim); text-align: left; padding: 11px 14px; font-size: 0.86rem; font-weight: 600;
     border-radius: 8px; cursor: pointer; margin-bottom: 6px; transition: all 0.2s ease;
     font-family: var(--font-body); position: relative; overflow: hidden;
   }
-  .view-btn .vi { font-size: 1.1rem; width: 1.4em; text-align: center; color: var(--capsule-cyan); }
+  .view-btn .vi { font-size: 1.1rem; width: 1.4em; text-align: center; color: var(--paozu-gold-bright); }
   .view-btn:hover {
-    background: rgba(0, 240, 255, 0.12); color: var(--text-main); border-color: var(--capsule-cyan);
-    transform: translateX(4px); box-shadow: 0 0 12px var(--capsule-cyan-glow);
+    background: rgba(230, 161, 0, 0.12); color: var(--text-main); border-color: var(--paozu-gold);
+    transform: translateX(4px); box-shadow: 0 0 12px rgba(230, 161, 0, 0.25);
   }
   .view-btn.active {
-    background: linear-gradient(90deg, rgba(0, 240, 255, 0.22), rgba(0, 119, 255, 0.1));
-    color: var(--capsule-cyan); border-color: var(--capsule-cyan);
-    box-shadow: inset 0 0 15px var(--capsule-cyan-glow), 0 0 10px var(--capsule-cyan-glow);
+    background: linear-gradient(90deg, rgba(230, 161, 0, 0.25), rgba(242, 101, 34, 0.1));
+    color: var(--paozu-gold-bright); border-color: var(--paozu-gold);
+    box-shadow: inset 0 0 15px rgba(230, 161, 0, 0.3), 0 0 12px rgba(230, 161, 0, 0.25);
   }
   .view-btn.active::before {
-    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--capsule-cyan);
-    box-shadow: 0 0 10px var(--capsule-cyan);
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--paozu-gold-bright);
+    box-shadow: 0 0 10px var(--paozu-gold-bright);
   }
 
   .nav-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin: 16px 16px 8px; font-weight: 800; }
@@ -219,12 +224,10 @@
     transition: all 0.18s ease; font-family: var(--font-body);
   }
   .nav-links button:hover {
-    background: rgba(0, 240, 255, 0.12); color: var(--capsule-cyan); border-color: rgba(0, 240, 255, 0.3);
+    background: rgba(0, 210, 255, 0.12); color: var(--paozu-azure); border-color: rgba(0, 210, 255, 0.3);
     padding-left: 14px;
   }
-  .nav-links .cnt {
-    color: var(--capsule-cyan); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); font-weight: 700;
-  }
+  .nav-links .cnt { color: var(--paozu-gold-bright); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); font-weight: 700; }
 
   .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
 
@@ -232,136 +235,125 @@
      MAIN CONTENT & SEARCH ENGINE
      ============================================================ */
   .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 26px 38px 60px; min-width: 0; }
-  
-  .search-wrapper {
-    position: sticky; top: 0; z-index: 50; padding: 6px 0 22px;
-    background: linear-gradient(180deg, var(--bg-dark) 85%, transparent);
-  }
+  .search-wrapper { position: sticky; top: 0; z-index: 50; padding: 6px 0 22px; background: linear-gradient(180deg, #03080e 85%, transparent); }
   .search-input {
     width: 100%; padding: 15px 24px; font-size: 0.98rem; border-radius: 12px;
-    border: 1px solid var(--border-line); background: rgba(8, 16, 28, 0.92); backdrop-filter: blur(14px);
+    border: 1px solid var(--border-line); background: rgba(10, 20, 28, 0.92); backdrop-filter: blur(14px);
     color: var(--text-main); outline: none; transition: all 0.25s ease; font-family: var(--font-body); font-weight: 600;
-    box-shadow: 0 6px 25px rgba(0,0,0,0.8), inset 0 0 12px rgba(0, 240, 255, 0.1);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.8), inset 0 0 12px rgba(230, 161, 0, 0.08);
   }
   .search-input::placeholder { color: var(--text-muted); letter-spacing: 0.05em; font-weight: 500; }
-  .search-input:focus {
-    border-color: var(--capsule-cyan);
-    box-shadow: 0 0 20px var(--capsule-cyan-glow), inset 0 0 15px rgba(0, 240, 255, 0.2);
-  }
-  .search-count { font-size: 0.78rem; color: var(--capsule-cyan); margin-top: 8px; min-height: 1em; font-weight: 700; letter-spacing: 0.04em; }
+  .search-input:focus { border-color: var(--paozu-gold-bright); box-shadow: 0 0 20px rgba(255, 208, 0, 0.4), inset 0 0 15px rgba(255, 208, 0, 0.15); }
+  .search-count { font-size: 0.78rem; color: var(--paozu-gold-bright); margin-top: 8px; min-height: 1em; font-weight: 700; letter-spacing: 0.04em; }
 
   .dashboard-view { display: none; }
   .dashboard-view.active { display: block; }
 
-  .page-title { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); margin-bottom: 4px; letter-spacing: 0.05em; text-shadow: 0 0 15px var(--capsule-cyan-glow); text-transform: uppercase; }
+  .page-title { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); margin-bottom: 4px; letter-spacing: 0.05em; text-shadow: 0 2px 12px rgba(0,0,0,0.8); text-transform: uppercase; }
   .page-sub { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; font-weight: 500; }
 
   .section-container { margin-bottom: 30px; scroll-margin-top: 90px; }
   .section-title {
     font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; color: var(--text-main);
-    border-bottom: 1px solid var(--border-line); padding-bottom: 10px; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; text-shadow: 0 0 10px var(--capsule-cyan-glow); letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--border-line); padding-bottom: 10px; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; text-shadow: 0 2px 8px rgba(0,0,0,0.8); letter-spacing: 0.04em;
   }
-  .section-count { font-size: 0.75rem; font-weight: 800; color: var(--capsule-cyan); background: rgba(0, 240, 255, 0.12); border: 1px solid var(--border-line); padding: 2px 10px; border-radius: 12px; font-family: var(--font-body); }
-  .empty-state { color: var(--text-dim); font-size: 0.88rem; padding: 28px 20px; text-align: center; border: 1px dashed var(--border-line); border-radius: 10px; background: rgba(8, 16, 28, 0.6); backdrop-filter: blur(8px); }
+  .section-count { font-size: 0.75rem; font-weight: 800; color: var(--paozu-gold-bright); background: rgba(230, 161, 0, 0.15); border: 1px solid var(--border-line); padding: 2px 10px; border-radius: 12px; font-family: var(--font-body); }
+  .empty-state { color: var(--text-dim); font-size: 0.88rem; padding: 28px 20px; text-align: center; border: 1px dashed var(--border-line); border-radius: 10px; background: rgba(10, 20, 28, 0.6); backdrop-filter: blur(8px); }
 
   /* ============================================================
-     CARDS & SCROLLS — CAPSULE CORP DATA PANELS
+     CARDS & SCROLLS
      ============================================================ */
   .card {
-    position: relative;
-    background: var(--card-bg);
-    border: 1px solid var(--border-line); border-left: 4px solid var(--capsule-cyan); border-radius: 6px 12px 12px 6px;
+    position: relative; background: var(--card-bg);
+    border: 1px solid var(--border-line); border-left: 4px solid var(--paozu-gold); border-radius: 6px 12px 12px 6px;
     padding: 16px 18px; margin-bottom: 14px;
     display: flex; justify-content: space-between; align-items: center; gap: 18px;
-    transition: all 0.22s ease;
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    transition: all 0.22s ease; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 6px 22px rgba(0,0,0,0.6);
   }
-  .card:hover {
-    background: rgba(14, 26, 42, 0.95); border-left-color: var(--saiyan-gold); transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0, 240, 255, 0.22);
-  }
-  .card.is-pinned { border-left-color: var(--saiyan-orange); }
+  .card:hover { background: rgba(20, 42, 34, 0.92); border-left-color: var(--paozu-gold-bright); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(230, 161, 0, 0.25); }
+  .card.is-pinned { border-left-color: var(--paozu-orange); }
   .card-body { flex-grow: 1; min-width: 0; }
   .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
   .card-tag { display: inline-block; font-size: 0.62rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-main); letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.12); }
-  .card-tag.win { background: rgba(0, 119, 255, 0.3); color: #99ccff; border-color: rgba(0, 119, 255, 0.5); }
-  .card-tag.mac { background: rgba(153, 51, 255, 0.3); color: #e0b3ff; border-color: rgba(153, 51, 255, 0.5); }
-  .card-tag.linux { background: rgba(0, 255, 102, 0.25); color: #99ffcc; border-color: rgba(0, 255, 102, 0.4); }
-  .card-tag.critical { background: rgba(255, 30, 86, 0.35); color: #ff99aa; border-color: rgba(255, 30, 86, 0.6); }
-  .card-tag.hashi { background: rgba(255, 119, 0, 0.3); color: var(--saiyan-gold); border-color: rgba(255, 119, 0, 0.5); }
+  .card-tag.win { background: rgba(0, 210, 255, 0.25); color: #99ebff; border-color: rgba(0, 210, 255, 0.4); }
+  .card-tag.mac { background: rgba(153, 51, 255, 0.25); color: #e0b3ff; border-color: rgba(153, 51, 255, 0.4); }
+  .card-tag.linux { background: rgba(42, 90, 59, 0.4); color: #b3ffcc; border-color: rgba(42, 90, 59, 0.6); }
+  .card-tag.critical { background: rgba(168, 32, 32, 0.35); color: #ff99aa; border-color: rgba(168, 32, 32, 0.6); }
+  .card-tag.hashi { background: rgba(242, 101, 34, 0.3); color: var(--paozu-gold-bright); border-color: rgba(242, 101, 34, 0.5); }
 
-  .message-text { font-size: 0.94rem; line-height: 1.65; white-space: pre-line; color: #f0f6fc; font-family: var(--font-body); font-weight: 500; }
+  .message-text { font-size: 0.94rem; line-height: 1.65; white-space: pre-line; color: #fcf7e8; font-family: var(--font-body); font-weight: 500; }
 
   .card-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; align-items: stretch; }
   .icon-btn {
-    background: rgba(0, 240, 255, 0.06); border: 1px solid var(--border-line); color: var(--text-dim);
-    border-radius: 6px; padding: 6px 10px; font-size: 0.88rem; cursor: pointer; line-height: 1;
-    transition: all 0.2s ease;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border-line); color: var(--text-dim);
+    border-radius: 6px; padding: 6px 10px; font-size: 0.88rem; cursor: pointer; line-height: 1; transition: all 0.2s ease;
   }
-  .icon-btn:hover { background: rgba(0, 240, 255, 0.2); color: var(--capsule-cyan); border-color: var(--capsule-cyan); }
-  .icon-btn.on { color: var(--saiyan-gold); border-color: var(--saiyan-orange); background: rgba(255, 119, 0, 0.25); }
+  .icon-btn:hover { background: rgba(230, 161, 0, 0.2); color: var(--paozu-gold-bright); border-color: var(--paozu-gold); }
+  .icon-btn.on { color: var(--paozu-gold-bright); border-color: var(--paozu-orange); background: rgba(242, 101, 34, 0.25); }
   .icon-row { display: flex; gap: 6px; }
 
-  /* CAPSULE CORP TECH SEAL BUTTONS */
+  /* PAOZU SEAL BUTTONS */
   .seal-btn {
-    background: linear-gradient(135deg, var(--saiyan-orange) 0%, var(--saiyan-gold) 100%);
+    background: linear-gradient(135deg, var(--paozu-orange) 0%, var(--paozu-gold-bright) 100%);
     color: #1a0800; border: none; padding: 10px 18px; border-radius: 50px;
     cursor: pointer; font-size: 0.82rem; font-weight: 900; white-space: nowrap; min-width: 150px;
-    transition: all 0.2s ease; box-shadow: 0 4px 18px var(--saiyan-glow);
+    transition: all 0.2s ease; box-shadow: 0 4px 18px rgba(242, 101, 34, 0.4);
     font-family: var(--font-body); letter-spacing: 0.05em; text-align: center; text-transform: uppercase;
   }
-  .seal-btn:hover {
-    transform: translateY(-2px) scale(1.03); box-shadow: 0 6px 24px var(--saiyan-gold); filter: brightness(1.15);
-  }
-  .seal-btn.copied {
-    background: linear-gradient(135deg, var(--radar-green) 0%, #00aa44 100%);
-    color: #021208; box-shadow: 0 4px 20px var(--radar-glow);
-  }
-  .seal-btn:focus-visible { outline: 2px solid var(--saiyan-gold); outline-offset: 2px; }
+  .seal-btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 6px 24px rgba(255, 208, 0, 0.6); filter: brightness(1.15); }
+  .seal-btn.copied { background: linear-gradient(135deg, #00ff88 0%, #00aa44 100%); color: #021208; box-shadow: 0 4px 20px rgba(0, 255, 136, 0.5); }
+  .seal-btn:focus-visible { outline: 2px solid var(--paozu-gold-bright); outline-offset: 2px; }
 
-  .progress-check { width: 20px; height: 20px; accent-color: var(--capsule-cyan); cursor: pointer; flex-shrink: 0; }
+  .progress-check { width: 20px; height: 20px; accent-color: var(--paozu-gold); cursor: pointer; flex-shrink: 0; }
 
   /* OS SUB-DROPDOWN FILTER FOR SYSTEM VERIFICATION */
-  .os-subfilter-row {
-    display: flex; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px dashed var(--border-line);
-  }
+  .os-subfilter-row { display: flex; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px dashed var(--border-line); }
   .os-subchip {
     border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
     padding: 5px 12px; border-radius: 14px; font-size: 0.74rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease;
   }
-  .os-subchip:hover { border-color: var(--capsule-cyan); color: var(--text-main); }
-  .os-subchip.active { background: rgba(0, 240, 255, 0.2); color: var(--capsule-cyan); border-color: var(--capsule-cyan); }
+  .os-subchip:hover { border-color: var(--paozu-gold-bright); color: var(--text-main); }
+  .os-subchip.active { background: rgba(230, 161, 0, 0.25); color: var(--paozu-gold-bright); border-color: var(--paozu-gold); }
 
-  /* ============================================================
-     ACCORDION & SCOUTER DASHBOARD PANELS
-     ============================================================ */
+  /* CHECK-IN QUICK PATH SELECTOR */
+  .path-selector-box {
+    display: flex; gap: 10px; margin-bottom: 18px; padding: 12px 16px; background: rgba(10, 20, 28, 0.6);
+    border: 1px solid var(--border-line); border-radius: 10px; flex-wrap: wrap; align-items: center;
+  }
+  .path-btn {
+    border: 1px solid var(--border-line); background: rgba(255,255,255,0.05); color: var(--text-main);
+    padding: 8px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+  }
+  .path-btn:hover { background: rgba(230, 161, 0, 0.2); border-color: var(--paozu-gold-bright); }
+
+  /* ================= ACCORDION & DASHBOARD ================= */
   .accordion { border: 1px solid var(--border-line); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
   .accordion summary {
     list-style: none; cursor: pointer; padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    background: linear-gradient(180deg, rgba(0, 240, 255, 0.12), rgba(0, 240, 255, 0.02));
+    background: linear-gradient(180deg, rgba(230, 161, 0, 0.12), rgba(230, 161, 0, 0.02));
     font-family: var(--font-head); font-size: 1.1rem; color: var(--text-main); letter-spacing: 0.04em;
   }
   .accordion summary::-webkit-details-marker { display: none; }
   .accordion summary .cat-left { display: flex; align-items: center; gap: 12px; }
   .accordion summary .cat-num {
-    width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--capsule-cyan); color: var(--capsule-cyan);
+    width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--paozu-gold); color: var(--paozu-gold-bright);
     display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-family: var(--font-body); font-weight: 900; flex-shrink: 0;
-    box-shadow: 0 0 10px var(--capsule-cyan-glow), inset 0 0 8px var(--capsule-cyan-glow);
+    box-shadow: 0 0 10px rgba(230, 161, 0, 0.4), inset 0 0 8px rgba(230, 161, 0, 0.4);
   }
   .accordion summary .cat-progress { font-size: 0.76rem; color: var(--text-dim); font-family: var(--font-body); font-weight: 700; }
-  .accordion summary .chevron { transition: transform 0.25s ease; color: var(--capsule-cyan); }
+  .accordion summary .chevron { transition: transform 0.25s ease; color: var(--paozu-gold-bright); }
   .accordion[open] summary .chevron { transform: rotate(90deg); }
   .accordion-body { padding: 18px 20px 20px; }
 
   .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 28px; }
   .stat-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 18px; background: var(--panel-bg); text-align: center; backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
-  .stat-card .num { font-family: var(--font-head); font-size: 2rem; color: var(--capsule-cyan); text-shadow: 0 0 12px var(--capsule-cyan-glow); font-weight: 700; }
+  .stat-card .num { font-family: var(--font-head); font-size: 2rem; color: var(--paozu-gold-bright); text-shadow: 0 0 12px rgba(255, 208, 0, 0.5); font-weight: 700; }
   .stat-card .lbl { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; font-weight: 800; }
 
   .clock-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 18px 24px; background: var(--panel-bg); display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 28px; flex-wrap: wrap; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
-  .clock-time { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); letter-spacing: 0.05em; text-shadow: 0 0 12px var(--capsule-cyan-glow); }
+  .clock-time { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); letter-spacing: 0.05em; text-shadow: 0 0 12px rgba(255,208,0,0.4); }
   .clock-date { font-size: 0.8rem; color: var(--text-dim); font-weight: 700; }
 
   .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 28px; }
@@ -370,53 +362,51 @@
     color: var(--text-main); cursor: pointer; text-align: left; font-size: 0.9rem; font-weight: 800;
     transition: all 0.2s ease; font-family: var(--font-body); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6);
   }
-  .quick-btn:hover { background: rgba(0, 240, 255, 0.12); border-color: var(--capsule-cyan); transform: translateY(-2px); box-shadow: 0 8px 25px var(--capsule-cyan-glow); }
-  .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--capsule-cyan); }
+  .quick-btn:hover { background: rgba(230, 161, 0, 0.15); border-color: var(--paozu-gold-bright); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(230, 161, 0, 0.3); }
+  .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--paozu-gold-bright); }
 
   .mini-list { display: flex; flex-direction: column; gap: 10px; }
   .mini-item {
     display: flex; justify-content: space-between; align-items: center; gap: 12px;
     border: 1px solid var(--border-line); border-radius: 10px; padding: 12px 14px; background: var(--card-bg); font-size: 0.85rem; backdrop-filter: blur(10px);
   }
-  .mini-item .txt { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #f0f6fc; }
-  .mini-item .cat-chip { font-size: 0.68rem; color: var(--capsule-cyan); border: 1px solid var(--border-line); border-radius: 10px; padding: 2px 8px; flex-shrink: 0; font-weight: 700; }
+  .mini-item .txt { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #fcf7e8; }
+  .mini-item .cat-chip { font-size: 0.68rem; color: var(--paozu-gold-bright); border: 1px solid var(--border-line); border-radius: 10px; padding: 2px 8px; flex-shrink: 0; font-weight: 700; }
 
-  /* ============================================================
-     TABLES & POLICY GENERATOR
-     ============================================================ */
+  /* ================= TABLES & GENERATOR ================= */
   .table-responsive { width: 100%; overflow-x: auto; background: var(--panel-bg); border: 1px solid var(--border-line); border-radius: 12px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
   table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.86rem; min-width: 840px; }
-  th { background: rgba(0, 240, 255, 0.15); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.05em; }
-  td { padding: 12px 14px; border-bottom: 1px solid var(--line-soft); color: #f0f6fc; }
-  tbody tr:hover td { background: rgba(0, 240, 255, 0.06); }
+  th { background: rgba(230, 161, 0, 0.15); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.05em; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border-soft); color: #fcf7e8; }
+  tbody tr:hover td { background: rgba(230, 161, 0, 0.08); }
   tbody tr:last-child td { border-bottom: none; }
   .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
-  .badge-minor { background: rgba(255,255,255,0.08); color: #f0f6fc; border: 1px solid rgba(255,255,255,0.18); }
-  .badge-major { background: rgba(255, 30, 86, 0.35); color: #ff99aa; border: 1px solid rgba(255, 30, 86, 0.6); }
+  .badge-minor { background: rgba(255,255,255,0.08); color: #fcf7e8; border: 1px solid rgba(255,255,255,0.18); }
+  .badge-major { background: rgba(168, 32, 32, 0.35); color: #ff99aa; border: 1px solid rgba(168, 32, 32, 0.6); }
 
   .gen-panel { border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; background: var(--panel-bg); margin-bottom: 28px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
-  .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-line); background: rgba(3, 7, 13, 0.95); color: var(--text-main); font-size: 0.92rem; margin-bottom: 16px; font-family: var(--font-body); outline: none; font-weight: 600; }
-  .gen-select:focus { border-color: var(--capsule-cyan); box-shadow: 0 0 15px var(--capsule-cyan-glow); }
+  .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-line); background: rgba(6, 14, 20, 0.95); color: var(--text-main); font-size: 0.92rem; margin-bottom: 16px; font-family: var(--font-body); outline: none; font-weight: 600; }
+  .gen-select:focus { border-color: var(--paozu-gold-bright); box-shadow: 0 0 15px rgba(255, 208, 0, 0.3); }
   .gen-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
   .gen-card { border: 1px solid var(--border-line); border-radius: 10px; padding: 14px 16px; background: var(--card-bg); display: flex; flex-direction: column; justify-content: space-between; }
-  .gen-card h4 { font-family: var(--font-head); font-size: 0.9rem; color: var(--capsule-cyan); margin-bottom: 8px; letter-spacing: 0.03em; }
-  .gen-card p { font-size: 0.86rem; line-height: 1.55; color: #f0f6fc; margin-bottom: 12px; white-space: pre-line; }
+  .gen-card h4 { font-family: var(--font-head); font-size: 0.9rem; color: var(--paozu-gold-bright); margin-bottom: 8px; letter-spacing: 0.03em; }
+  .gen-card p { font-size: 0.86rem; line-height: 1.55; color: #fcf7e8; margin-bottom: 12px; white-space: pre-line; }
 
   .filter-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
   .filter-chip {
     border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
     padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease; font-family: var(--font-body);
   }
-  .filter-chip:hover { border-color: var(--capsule-cyan); color: var(--text-main); }
-  .filter-chip.active { background: rgba(0, 240, 255, 0.25); color: var(--capsule-cyan); border-color: var(--capsule-cyan); box-shadow: 0 0 12px var(--capsule-cyan-glow); }
+  .filter-chip:hover { border-color: var(--paozu-gold-bright); color: var(--text-main); }
+  .filter-chip.active { background: rgba(230, 161, 0, 0.25); color: var(--paozu-gold-bright); border-color: var(--paozu-gold); box-shadow: 0 0 12px rgba(230, 161, 0, 0.3); }
 
   .infraction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
   .infr-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 16px 18px; background: var(--card-bg); cursor: pointer; transition: all 0.2s ease; border-left: 4px solid var(--text-dim); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
-  .infr-card:hover { background: rgba(14, 26, 42, 0.95); transform: translateY(-2px); }
-  .infr-card.risk-green { border-left-color: var(--radar-green); }
-  .infr-card.risk-yellow { border-left-color: var(--saiyan-gold); }
-  .infr-card.risk-orange { border-left-color: var(--saiyan-orange); }
-  .infr-card.risk-red { border-left-color: var(--ki-crimson); }
+  .infr-card:hover { background: rgba(20, 42, 34, 0.92); transform: translateY(-2px); }
+  .infr-card.risk-green { border-left-color: #00ff88; }
+  .infr-card.risk-yellow { border-left-color: var(--paozu-gold-bright); }
+  .infr-card.risk-orange { border-left-color: var(--paozu-orange); }
+  .infr-card.risk-red { border-left-color: #ff3b30; }
   .infr-name { font-weight: 800; color: var(--text-main); margin-bottom: 6px; font-size: 0.95rem; }
   .infr-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 6px; font-weight: 700; }
   .infr-threshold { font-size: 0.74rem; color: var(--text-dim); }
@@ -428,8 +418,8 @@
   /* ================= TROUBLESHOOTING FLOW STYLES ================= */
   .trouble-section { margin-bottom: 30px; }
   .trouble-mode-header {
-    font-family: var(--font-head); font-size: 1.3rem; color: var(--capsule-cyan); border-bottom: 2px solid var(--border-line);
-    padding-bottom: 8px; margin: 24px 0 16px; text-transform: uppercase; letter-spacing: 0.06em; text-shadow: 0 0 12px var(--capsule-cyan-glow);
+    font-family: var(--font-head); font-size: 1.3rem; color: var(--paozu-gold-bright); border-bottom: 2px solid var(--border-line);
+    padding-bottom: 8px; margin: 24px 0 16px; text-transform: uppercase; letter-spacing: 0.06em; text-shadow: 0 0 12px rgba(255, 208, 0, 0.4);
   }
   .trouble-card {
     border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; margin-bottom: 18px;
@@ -437,21 +427,21 @@
   }
   .trouble-card h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; letter-spacing: 0.03em; }
   .flow-step {
-    border-left: 2px solid var(--capsule-cyan); padding-left: 16px; margin-bottom: 16px; position: relative;
+    border-left: 2px solid var(--paozu-gold-bright); padding-left: 16px; margin-bottom: 16px; position: relative;
   }
-  .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--capsule-cyan); text-transform: uppercase; letter-spacing: 0.06em; }
+  .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--paozu-gold-bright); text-transform: uppercase; letter-spacing: 0.06em; }
   .flow-step-title { font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin: 3px 0 5px; }
   .flow-step-action { font-size: 0.86rem; color: var(--text-dim); line-height: 1.45; margin-bottom: 8px; font-weight: 500; }
   .flow-step-spiel {
-    background: rgba(3, 7, 13, 0.75); border: 1px solid var(--border-line); border-radius: 8px; padding: 10px 12px;
-    font-size: 0.84rem; color: #f0f6fc; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    background: rgba(6, 14, 20, 0.75); border: 1px solid var(--border-line); border-radius: 8px; padding: 10px 12px;
+    font-size: 0.84rem; color: #fcf7e8; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
   }
 
   /* ================= RESPONSIVE ================= */
   @media (max-width: 960px) {
     .sidebar { width: 260px; }
-    .shenron-sky { opacity: 0.3; width: 400px; }
-    .lookout-structure { opacity: 0.6; }
+    .shenron-clouds { opacity: 0.25; width: 400px; }
+    .paozu-house { width: 240px; height: 190px; }
   }
   @media (max-width: 640px) {
     body { flex-direction: column; }
@@ -464,8 +454,8 @@
 
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.35); border-radius: 6px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(0, 240, 255, 0.6); }
+  ::-webkit-scrollbar-thumb { background: rgba(230, 161, 0, 0.35); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(230, 161, 0, 0.6); }
 </style>
 </head>
 <body>
@@ -473,30 +463,36 @@
   <!-- ================= ATMOSPHERIC SCENE ================= -->
   <div class="scene" aria-hidden="true">
     <div class="scene-sky"></div>
-    <div class="radar-grid-overlay"></div>
-    <div class="radar-sweep"></div>
     <div class="sky-clouds"></div>
     <div class="sun-glow"></div>
-
-    <!-- Kami's Lookout Structure -->
-    <div class="lookout-floating">
-      <svg viewBox="0 0 1200 240" preserveAspectRatio="xMidYMax meet">
-        <path d="M0,240 Q600,160 1200,240 Z" fill="#02140a" opacity="0.95"/>
-        <path d="M150,240 Q600,185 1050,240 Z" fill="#042012" opacity="0.8"/>
-        <path d="M540,195 Q600,130 660,195 Z" fill="#010a05"/>
-        <circle cx="600" cy="120" r="14" fill="#ffd700" opacity="0.85"/>
-        <rect x="585" y="145" width="30" height="50" fill="#000603"/>
+    <div class="sun-rays"></div>
+    
+    <!-- Mount Paozu Layered Mountains -->
+    <div class="scene-mountains">
+      <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
+        <polygon points="0,300 0,160 140,65 310,180 480,75 660,190 840,55 1020,165 1200,95 1200,300" fill="#0c231e"/>
+        <polygon points="0,300 0,205 190,120 390,205 600,130 840,215 1040,140 1200,185 1200,300" fill="#133128" opacity=".92"/>
+        <path d="M600,130 L605,300 L595,300 Z" fill="#00d2ff" opacity="0.65"/>
       </svg>
     </div>
 
-    <!-- Guardian Shenron -->
-    <div class="shenron-sky">
-      <svg viewBox="0 0 500 350" preserveAspectRatio="xMidYMin meet">
-        <g fill="none" stroke="#00ff66" stroke-width="3.5" opacity="0.85">
-          <path d="M450,40 C380,80 340,160 400,220 C460,280 320,320 220,260 C120,200 180,110 120,80 C60,50 30,120 10,180" />
-          <path d="M430,55 Q360,110 380,180 M330,240 Q240,280 180,220 M140,150 Q100,80 50,110" stroke="#ffd700" stroke-width="2"/>
-          <path d="M440,30 L470,15 M455,45 L485,30 M420,20 L400,5" stroke="#ff7700" stroke-width="3"/>
-          <circle cx="445" cy="35" r="4.5" fill="#ff1e56" />
+    <!-- Floating Kami's Lookout -->
+    <div class="lookout-floating">
+      <svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMax meet">
+        <path d="M20,100 Q100,60 180,100 Z" fill="#091814"/>
+        <circle cx="100" cy="55" r="10" fill="#ffcc00" opacity="0.9"/>
+        <rect x="92" y="70" width="16" height="25" fill="#040b09"/>
+      </svg>
+    </div>
+
+    <!-- Guardian Shenron in Clouds -->
+    <div class="shenron-clouds">
+      <svg viewBox="0 0 500 280" preserveAspectRatio="xMidYMin meet">
+        <g fill="none" stroke="#2a5a3b" stroke-width="4" opacity="0.75">
+          <path d="M480,30 C410,70 370,140 430,190 C490,240 350,280 250,230 C150,180 200,100 140,70 C80,40 50,100 30,150" />
+          <path d="M460,45 Q390,95 410,155 M360,210 Q270,250 210,200" stroke="#ffcc00" stroke-width="2"/>
+          <path d="M470,20 L495,10 M480,32 L500,22" stroke="#f26522" stroke-width="2.5"/>
+          <circle cx="455" cy="25" r="3.5" fill="#ff1e56" />
         </g>
       </svg>
     </div>
@@ -504,9 +500,23 @@
     <!-- Flying Nimbus & Goku Silhouette -->
     <div class="nimbus-goku">
       <svg viewBox="0 0 100 50" preserveAspectRatio="xMidYMid meet">
-        <path d="M10,35 Q20,20 40,25 Q55,10 75,20 Q90,15 95,30 Q100,42 80,45 Q60,48 40,45 Q15,48 10,35 Z" fill="#ffd700" opacity="0.95"/>
-        <path d="M45,22 Q40,10 50,5 Q55,12 60,8 Q58,18 65,22 Z" fill="#010f06"/>
-        <line x1="30" y1="30" x2="70" y2="2" stroke="#ff7700" stroke-width="2.5"/>
+        <path d="M10,35 Q20,20 40,25 Q55,10 75,20 Q90,15 95,30 Q100,42 80,45 Q60,48 40,45 Q15,48 10,35 Z" fill="#ffcc00" opacity="0.95"/>
+        <path d="M45,22 Q40,10 50,5 Q55,12 60,8 Q58,18 65,22 Z" fill="#060e14"/>
+        <line x1="30" y1="30" x2="70" y2="2" stroke="#f26522" stroke-width="2.5"/>
+      </svg>
+    </div>
+
+    <!-- Goku & Chi-Chi's House (Mount Paozu Foreground) -->
+    <div class="paozu-house">
+      <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMax meet">
+        <g fill="#091814">
+          <path d="M30,130 Q100,40 170,130 Z" fill="#1b3d26"/>
+          <path d="M40,130 Q100,50 160,130 Z" fill="#0d2117"/>
+          <rect x="135" y="55" width="12" height="28" fill="#091814"/>
+          <path d="M141,50 Q148,35 142,20 Q150,10 145,0" stroke="rgba(252, 247, 232, 0.4)" stroke-width="3" fill="none"/>
+          <circle cx="100" cy="85" r="14" fill="#ffcc00" opacity="0.85"/>
+          <rect x="88" y="108" width="24" height="22" fill="#040e0b"/>
+        </g>
       </svg>
     </div>
 
@@ -514,7 +524,7 @@
     <canvas id="fxCanvas"></canvas>
   </div>
 
-  <!-- ================= SIDEBAR — DRAGON RADAR COMMAND ================= -->
+  <!-- ================= SIDEBAR ================= -->
   <div class="sidebar">
     <div class="sidebar-header">
       <!-- 7 DRAGON BALLS WITH "F-I-V-E-A-C-T-S" -->
@@ -529,11 +539,6 @@
       </div>
       <h1>Proctor Dojo</h1>
       <div class="subtitle">Observe &middot; Verify &middot; Protect</div>
-    </div>
-
-    <div class="scouter-hud">
-      <span>SCOUTER RADAR</span>
-      <span>KI: MAXIMUM</span>
     </div>
 
     <div class="view-selectors">
@@ -555,7 +560,7 @@
   <!-- ================= MAIN CONTENT ================= -->
   <div class="main-content">
     <div class="search-wrapper">
-      <input type="text" id="globalSearch" class="search-input" placeholder="Scan the Dragon Radar database... search spiels, policies, infractions" oninput="filterAll()" aria-label="Search all content">
+      <input type="text" id="globalSearch" class="search-input" placeholder="Seek knowledge... search spiels, policies, infractions" oninput="filterAll()" aria-label="Search all content">
       <div class="search-count" id="searchCount"></div>
     </div>
 
@@ -598,8 +603,16 @@
     <!-- CHECK-IN STEPS VIEW -->
     <div id="view-checkin" class="dashboard-view">
       <h2 class="page-title">Check-In Steps</h2>
-      <p class="page-sub">Work sequentially through categories 1&ndash;13. A proctor can complete a full check-in using this guidance.</p>
-      <div style="margin-bottom:16px;"><button class="filter-chip" onclick="resetProgress()">Reset progress</button></div>
+      <p class="page-sub">Work sequentially through categories 1&ndash;13. Select an exam pathway below to jump to essential steps.</p>
+      
+      <!-- QUICK PATHWAY SELECTOR -->
+      <div class="path-selector-box">
+        <span style="font-size:0.8rem;font-weight:700;color:var(--paozu-gold-bright);">Quick Route:</span>
+        <button class="path-btn" onclick="goToCategory('2')">Non-SEB Path (ID Check &rarr; System Check)</button>
+        <button class="path-btn" onclick="goToCategory('13')">SEB Path (Safe Exam Browser Check)</button>
+        <button class="path-btn" style="margin-left:auto;" onclick="resetProgress()">Reset progress</button>
+      </div>
+
       <div id="checkinAccordions"></div>
     </div>
 
@@ -616,9 +629,9 @@
           <h3>🎤 Audio &mdash; Microphone Not Working (Non-SEB)</h3>
           
           <div class="flow-step">
-            <div class="flow-step-num">Step 1 &amp; 2 &mdash; Browser Compatibility Check</div>
+            <div class="flow-step-num">Step 1 &amp; 2 &mdash; Start &amp; Browser Check</div>
             <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
-            <div class="flow-step-action">Check if candidate is on Chrome or Edge. If No &rarr; Instruct candidate to switch browser.</div>
+            <div class="flow-step-action">1. Start: Microphone not working.<br>2. Using Chrome or Edge? &bull; No &rarr; Switch browser. &bull; Yes &rarr; Continue to next step.</div>
             <div class="flow-step-spiel">
               <span>"Please check the following before starting the exam:\nUse the latest version of Google Chrome or Microsoft Edge."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check the following before starting the exam:\nUse the latest version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
@@ -626,9 +639,9 @@
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 3 &mdash; Hardware Device Switch / Mute</div>
-            <div class="flow-step-title">Check Physical Mute Switch or Headset Toggle</div>
-            <div class="flow-step-action">Inspect headset or laptop mute toggle switch. Ensure microphone is unmuted.</div>
+            <div class="flow-step-num">Step 3 &mdash; Device Mute Settings</div>
+            <div class="flow-step-title">Mic Muted in Device Settings?</div>
+            <div class="flow-step-action">3. Mic muted in device settings? &bull; Yes &rarr; Unmute mic in settings. &bull; No &rarr; Continue to next step.</div>
             <div class="flow-step-spiel">
               <span>"Please check for a microphone switch or button on your device or headset and make sure it is unmuted."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check for a microphone switch or button on your device or headset and make sure it is unmuted.')">⚜ Copy</button>
@@ -637,8 +650,8 @@
 
           <div class="flow-step">
             <div class="flow-step-num">Step 4 &amp; 5 &mdash; Browser &amp; OS Permissions</div>
-            <div class="flow-step-title">Allow Microphone Access in Browser Lock Icon &amp; OS Settings</div>
-            <div class="flow-step-action">Check lock icon near URL bar and system sound privacy settings. Enable permissions.</div>
+            <div class="flow-step-title">Browser &amp; OS Microphone Permissions</div>
+            <div class="flow-step-action">4. Browser mic permission enabled? &bull; No &rarr; Allow mic in browser. &bull; Yes &rarr; Continue.<br>5. OS mic permission enabled? &bull; No &rarr; Enable in OS settings. &bull; Yes &rarr; Continue.</div>
             <div class="flow-step-spiel">
               <span>"Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser.')">⚜ Copy</button>
@@ -646,9 +659,9 @@
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 6 &amp; 7 &mdash; Pre-Flight Selection &amp; Network/VPN</div>
-            <div class="flow-step-title">Select Device Input &amp; Disable Active Corporate VPN/ZScaler</div>
-            <div class="flow-step-action">Refresh tab to pre-flight screen to pick correct microphone. Disable VPN software.</div>
+            <div class="flow-step-num">Step 6 &amp; 7 &mdash; Input Device &amp; Corporate VPN</div>
+            <div class="flow-step-title">Select Correct Mic &amp; VPN / Company Device Check</div>
+            <div class="flow-step-action">6. Correct mic selected in browser? &bull; No &rarr; Select correct input device. &bull; Yes &rarr; Continue.<br>7. VPN or company device? &bull; Yes &rarr; Disable VPN or use personal machine. &bull; No &rarr; Continue.</div>
             <div class="flow-step-spiel">
               <span>"Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled.')">⚜ Copy</button>
@@ -656,9 +669,9 @@
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 8 &amp; 9 &mdash; Rejoin &amp; Computer Reboot</div>
-            <div class="flow-step-title">Re-enter Session / Full Device Restart</div>
-            <div class="flow-step-action">Ask candidate to rejoin session. If still failing, request full system reboot to clear driver locks.</div>
+            <div class="flow-step-num">Step 8, 9, 10 &amp; 11 &mdash; Rejoin, Reboot &amp; Fallback</div>
+            <div class="flow-step-title">Rejoin Session, Reboot Machine, or Alternate Device</div>
+            <div class="flow-step-action">8. Ask candidate to rejoin (leave &amp; re-enter). &bull; Still failing &rarr; Continue.<br>9. Ask candidate to restart device (full reboot resets audio drivers). &bull; Done &rarr; Restart &amp; rejoin. &bull; Still failing &rarr; Continue.<br>10. Use a different device.<br>11. End Goal: Microphone issue resolved ✓</div>
             <div class="flow-step-spiel">
               <span>"I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'I\'m no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared.')">⚜ Copy</button>
@@ -675,9 +688,19 @@
           <h3>🖥️ Screen Sharing &mdash; Can't Share Screen (Non-SEB)</h3>
           
           <div class="flow-step">
-            <div class="flow-step-num">Step 1, 2 &amp; 3 &mdash; Permissions &amp; Monitored Displays</div>
-            <div class="flow-step-title">OS Permissions &amp; Disconnect Secondary Displays</div>
-            <div class="flow-step-action">Disconnect extra screens. On Mac, check System Preferences &gt; Privacy &gt; Screen Recording.</div>
+            <div class="flow-step-num">Step 1 &amp; 2 &mdash; Start &amp; Browser Compatibility</div>
+            <div class="flow-step-title">Browser Verification</div>
+            <div class="flow-step-action">1. Start: Can't share screen.<br>2. Using Chrome or Edge? &bull; No &rarr; Switch browser. &bull; Yes &rarr; Continue.</div>
+            <div class="flow-step-spiel">
+              <span>"Please check the following before starting the exam:\nUse the latest version of Google Chrome or Microsoft Edge."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check the following before starting the exam:\nUse the latest version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 3 &amp; 4 &mdash; Permissions &amp; Dual Monitors</div>
+            <div class="flow-step-title">OS Screen Permissions &amp; Disconnect Secondary Displays</div>
+            <div class="flow-step-action">3. Browser permissions enabled? &bull; No &rarr; Enable in OS settings. &bull; Yes &rarr; Continue.<br>4. Using dual monitors? &bull; Yes &rarr; Disconnect 2nd monitor. &bull; No &rarr; Continue.</div>
             <div class="flow-step-spiel">
               <span>"Disconnect any external or extended monitors and use only one screen."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Disconnect any external or extended monitors and use only one screen.')">⚜ Copy</button>
@@ -685,9 +708,9 @@
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 4 &amp; 5 &mdash; VPN &amp; Network Hotspot</div>
-            <div class="flow-step-title">Disable Managed VPN / Switch to Alternate Wi-Fi</div>
-            <div class="flow-step-action">Disable VPN or proxy. Switch to personal Wi-Fi or mobile hotspot if corporate Wi-Fi blocks streaming.</div>
+            <div class="flow-step-num">Step 5 &amp; 6 &mdash; VPN &amp; Network Switching</div>
+            <div class="flow-step-title">Disable Corporate VPN / Try Alternate Wi-Fi or Hotspot</div>
+            <div class="flow-step-action">5. VPN or company device? &bull; Yes &rarr; Disable VPN or use personal machine. &bull; No &rarr; Continue.<br>6. Try a different network (switch to hotspot or Wi-Fi). &bull; Yes &rarr; Switch to hotspot/Wi-Fi. &bull; Still failing &rarr; Continue.</div>
             <div class="flow-step-spiel">
               <span>"Make sure any VPN or proxy connection is turned off."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Make sure any VPN or proxy connection is turned off.')">⚜ Copy</button>
@@ -699,9 +722,9 @@
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 6 &amp; 7 &mdash; Dashboard Relaunch &amp; Reboot</div>
-            <div class="flow-step-title">Relaunch Session / Restart Computer</div>
-            <div class="flow-step-action">Relaunch exam from candidate dashboard. If still failing, restart machine to reset display cache.</div>
+            <div class="flow-step-num">Step 7, 8, 9 &amp; 10 &mdash; Rejoin, Reboot &amp; Fallback</div>
+            <div class="flow-step-title">Re-enter Session / Full Device Restart / Alternate Hardware</div>
+            <div class="flow-step-action">7. Ask candidate to rejoin (leave and re-enter session). &bull; Still failing &rarr; Continue.<br>8. Ask candidate to restart device (full reboot clears permission caches). &bull; Done &rarr; Restart &amp; rejoin. &bull; Still failing &rarr; Continue.<br>9. Use a different device.<br>10. End Goal: Screen sharing resolved ✓</div>
             <div class="flow-step-spiel">
               <span>"Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?"</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?')">⚜ Copy</button>
@@ -714,9 +737,9 @@
           <h3>📷 Video &mdash; Camera Not Working (Non-SEB)</h3>
           
           <div class="flow-step">
-            <div class="flow-step-num">Step 1, 2 &amp; 3 &mdash; Physical Switch, Cover &amp; Permissions</div>
-            <div class="flow-step-title">Check Physical Switch/Slider &amp; Browser Lock Icon</div>
-            <div class="flow-step-action">Inspect camera privacy shutter, physical laptop switch, and browser lock permissions.</div>
+            <div class="flow-step-num">Step 1, 2 &amp; 3 &mdash; Physical Switch &amp; Shutter</div>
+            <div class="flow-step-title">Hardware Camera Switch or Slider Privacy Cover</div>
+            <div class="flow-step-action">1. Start: Camera not working.<br>2. Using Chrome or Edge? &bull; No &rarr; Switch browser.<br>3. Camera covered or physically off? &bull; Yes &rarr; Uncover or enable camera switch. &bull; No &rarr; Continue.</div>
             <div class="flow-step-spiel">
               <span>"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open.')">⚜ Copy</button>
@@ -724,9 +747,9 @@
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 4, 5 &amp; 6 &mdash; Close Competing Apps &amp; Enable Access</div>
-            <div class="flow-step-title">Close Conflicting Applications (Zoom, Teams, Skype)</div>
-            <div class="flow-step-action">Ensure no background software is locking the camera hardware. Verify browser permissions.</div>
+            <div class="flow-step-num">Step 4, 5 &amp; 6 &mdash; Permissions &amp; VPN Check</div>
+            <div class="flow-step-title">Browser &amp; OS Camera Permissions / Close Secondary Apps</div>
+            <div class="flow-step-action">4. Browser camera permission enabled? &bull; No &rarr; Allow camera in browser.<br>5. OS camera permission enabled? &bull; No &rarr; Enable in OS settings.<br>6. VPN or company device? &bull; Yes &rarr; Disable VPN or use personal machine.</div>
             <div class="flow-step-spiel">
               <span>"Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs.')">⚜ Copy</button>
@@ -734,9 +757,9 @@
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 7, 8 &amp; 9 &mdash; Browser Refresh &amp; Reconnection Rules</div>
-            <div class="flow-step-title">Click Top-Left Refresh Button &amp; 30-Min Policy</div>
-            <div class="flow-step-action">Refresh browser window. Remind candidate of 30-minute auto-save reconnection policy.</div>
+            <div class="flow-step-num">Step 7, 8, 9, 10 &amp; 11 &mdash; Rejoin, Reboot &amp; Fallback</div>
+            <div class="flow-step-title">Refresh Browser / Reboot System / 30-Min Policy</div>
+            <div class="flow-step-action">7. Try a different network (switch to hotspot or Wi-Fi).<br>8. Ask candidate to rejoin.<br>9. Ask candidate to restart device (full reboot resets camera drivers).<br>10. Use a different device.<br>11. End Goal: Camera issue resolved ✓</div>
             <div class="flow-step-spiel">
               <span>"Please click the refresh button on the top left side of the screen."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please click the refresh button on the top left side of the screen.')">⚜ Copy</button>
@@ -812,8 +835,8 @@
       <div class="risk-legend">
         <span><span class="dot" style="background:#00ff88;"></span>Standard</span>
         <span><span class="dot" style="background:#ffcc00;"></span>Elevated</span>
-        <span><span class="dot" style="background:#ff7700;"></span>Critical</span>
-        <span><span class="dot" style="background:#ff1e56;"></span>Immediate</span>
+        <span><span class="dot" style="background:#f26522;"></span>Critical</span>
+        <span><span class="dot" style="background:#ff3b30;"></span>Immediate</span>
       </div>
       <div class="filter-row" id="thresholdFilters"></div>
       <div class="infraction-grid" id="infractionGrid"></div>
@@ -848,10 +871,60 @@
     <!-- FAQ ARCHIVE VIEW -->
     <div id="view-faq" class="dashboard-view">
       <h2 class="page-title">FAQ Archive</h2>
-      <p class="page-sub">Internal proctor encyclopedia.</p>
-      <div class="empty-state">
-        This archive is not yet compiled &mdash; no FAQ content has been supplied to build from.<br><br>
-        Send over your existing FAQ entries (question + answer, grouped by topic such as ID Verification, Room Scan, Technical Support, Reconnect Policies, Break Policies, Termination Policies, or SEB) and this section will be populated with live search, related topics, and quick navigation.
+      <p class="page-sub">Official Certiverse Knowledge Base &amp; Internal Proctor FAQ Encyclopedia.</p>
+
+      <div class="trouble-card">
+        <h3>❓ General Booking &amp; Exam Launch</h3>
+        <div class="flow-step">
+          <div class="flow-step-title">How can candidates verify if their device meets hardware requirements?</div>
+          <div class="flow-step-action">Candidates should run the compatibility check tool prior to exam day. Note that Chromebooks are not supported.</div>
+          <div class="flow-step-spiel">
+            <span>"Please verify that your computer meets all system requirements by using the pre-exam compatibility tool on your Certiverse dashboard. Please note that Chromebooks are not supported."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your computer meets all system requirements by using the pre-exam compatibility tool on your Certiverse dashboard. Please note that Chromebooks are not supported.')">⚜ Copy</button>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-title">Blank page on Certiverse.com or launch blocking?</div>
+          <div class="flow-step-action">Corporate VPNs or managed firewalls often block WebRTC streams. Advise switching to a personal machine.</div>
+          <div class="flow-step-spiel">
+            <span>"Corporate firewalls or VPNs may cause a blank page or stream block. Please switch to a personal computer and personal network connection to access your exam."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Corporate firewalls or VPNs may cause a blank page or stream block. Please switch to a personal computer and personal network connection to access your exam.')">⚜ Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trouble-card">
+        <h3>🪪 Identity Verification &amp; Stripe</h3>
+        <div class="flow-step">
+          <div class="flow-step-title">Candidate Failed ID Verification Flow</div>
+          <div class="flow-step-action">Support teams perform manual review. Candidates can retry until reservation expiry.</div>
+          <div class="flow-step-spiel">
+            <span>"Your ID verification attempt will be manually reviewed by our support team. You may retry the verification process via your reservation dashboard until your exam session expires."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Your ID verification attempt will be manually reviewed by our support team. You may retry the verification process via your reservation dashboard until your exam session expires.')">⚜ Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trouble-card">
+        <h3>⏱️ Exam Disconnections &amp; Results</h3>
+        <div class="flow-step">
+          <div class="flow-step-title">What happens if disconnected mid-exam?</div>
+          <div class="flow-step-action">Progress auto-saves. Candidate has 30 minutes to reconnect before auto-submission.</div>
+          <div class="flow-step-spiel">
+            <span>"If you get disconnected, your progress is automatically saved. You have up to 30 minutes to reconnect before your session is auto-submitted."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you get disconnected, your progress is automatically saved. You have up to 30 minutes to reconnect before your session is auto-submitted.')">⚜ Copy</button>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-title">When will exam results and score reports be delivered?</div>
+          <div class="flow-step-action">Score validation takes up to 72 hours. Official score reports and badges are sent by email.</div>
+          <div class="flow-step-spiel">
+            <span>"After completing your exam, answer validation takes up to 72 hours. Your score report, certificate, and digital badge will be delivered via email."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'After completing your exam, answer validation takes up to 72 hours. Your score report, certificate, and digital badge will be delivered via email.')">⚜ Copy</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1231,7 +1304,12 @@
 
   window.setOsSubFilter = function(osKey) {
     activeOsFilter = osKey;
+    var acc3 = document.getElementById("accordion-3");
     renderCheckin();
+    if (acc3) {
+      var newAcc3 = document.getElementById("accordion-3");
+      if (newAcc3) newAcc3.open = true;
+    }
   };
 
   // Single-Accordion Open Logic
