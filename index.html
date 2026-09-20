@@ -687,8 +687,8 @@
 
           <div class="flow-step">
             <div class="flow-step-num">Step 3 &mdash; Hardware Device Switch / Mute</div>
-            <div class="flow-step-title">Check Physical Mute Switch or Slider</div>
-            <div class="flow-step-action">Inspect headset/laptop mute switch. Unmute in hardware settings.</div>
+            <div class="flow-step-title">Check Physical Mute Switch or Headset Toggle</div>
+            <div class="flow-step-action">Inspect headset or laptop mute toggle switch. Ensure microphone is unmuted.</div>
             <div class="flow-step-spiel">
               <span>"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open.')">⚜ Copy</button>
@@ -720,6 +720,10 @@
             <div class="flow-step-title">Re-enter Session / Full Device Restart</div>
             <div class="flow-step-action">Ask candidate to rejoin session. If still failing, request full system reboot to clear driver locks.</div>
             <div class="flow-step-spiel">
+              <span>"I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'I\'m no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared.')">⚜ Copy</button>
+            </div>
+            <div class="flow-step-spiel" style="margin-top:6px;">
               <span>"Please try to reboot your machine and launch the exam again."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please try to reboot your machine and launch the exam again.')">⚜ Copy</button>
             </div>
@@ -748,6 +752,10 @@
               <span>"Make sure any VPN or proxy connection is turned off."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Make sure any VPN or proxy connection is turned off.')">⚜ Copy</button>
             </div>
+            <div class="flow-step-spiel" style="margin-top:6px;">
+              <span>"It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network.')">⚜ Copy</button>
+            </div>
           </div>
 
           <div class="flow-step">
@@ -766,9 +774,19 @@
           <h3>📷 Video &mdash; Camera Not Working (Non-SEB)</h3>
           
           <div class="flow-step">
-            <div class="flow-step-num">Step 1 &amp; 2 &mdash; Camera Lock Icon &amp; Applications</div>
-            <div class="flow-step-title">Verify Lock Icon &amp; Close Secondary Camera Apps</div>
-            <div class="flow-step-action">Ensure Zoom, Teams, or Skype are closed and Chrome/Edge has camera permission allowed.</div>
+            <div class="flow-step-num">Step 1, 2 &amp; 3 &mdash; Physical Switch, Cover &amp; Permissions</div>
+            <div class="flow-step-title">Check Physical Switch/Slider &amp; Browser Lock Icon</div>
+            <div class="flow-step-action">Inspect camera privacy shutter, physical laptop switch, and browser lock permissions.</div>
+            <div class="flow-step-spiel">
+              <span>"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 4, 5 &amp; 6 &mdash; Close Competing Apps &amp; Enable Access</div>
+            <div class="flow-step-title">Close Conflicting Applications (Zoom, Teams, Skype)</div>
+            <div class="flow-step-action">Ensure no background software is locking the camera hardware. Verify browser permissions.</div>
             <div class="flow-step-spiel">
               <span>"Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs.')">⚜ Copy</button>
@@ -776,10 +794,14 @@
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 3 &amp; 4 &mdash; Refresh &amp; Reconnection Rules</div>
-            <div class="flow-step-title">Refresh Tab &amp; Explain 30-Minute Window</div>
-            <div class="flow-step-action">Refresh browser tab. Remind candidate of 30-minute auto-save reconnection window.</div>
+            <div class="flow-step-num">Step 7, 8 &amp; 9 &mdash; Browser Refresh &amp; Reconnection Rules</div>
+            <div class="flow-step-title">Click Top-Left Refresh Button &amp; 30-Min Policy</div>
+            <div class="flow-step-action">Refresh browser window. Remind candidate of 30-minute auto-save reconnection policy.</div>
             <div class="flow-step-spiel">
+              <span>"Please click the refresh button on the top left side of the screen."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please click the refresh button on the top left side of the screen.')">⚜ Copy</button>
+            </div>
+            <div class="flow-step-spiel" style="margin-top:6px;">
               <span>"You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed.')">⚜ Copy</button>
             </div>
