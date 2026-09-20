@@ -77,7 +77,7 @@
   .scene-torii { position: absolute; left: 10%; bottom: 16%; width: 180px; opacity: 0.88; filter: drop-shadow(0 0 20px rgba(0,0,0,0.95)); }
   .scene-torii svg { width: 100%; height: auto; display: block; }
 
-  /* SAKURA TREES (LEFT & RIGHT SILHOUETTES) */
+  /* LEFT SAKURA TREE */
   .sakura-tree-left {
     position: absolute; left: -2%; top: -5%; width: 420px; height: 600px; opacity: 0.9;
     filter: drop-shadow(0 0 20px rgba(243, 194, 194, 0.25));
@@ -407,10 +407,8 @@
     <!-- LEFT SAKURA TREE -->
     <div class="sakura-tree-left">
       <svg viewBox="0 0 300 450" preserveAspectRatio="xMidYMin meet">
-        <!-- Trunk & Main Branches -->
         <path d="M-20,450 Q40,300 80,200 Q110,120 70,30 Q120,80 150,140 Q180,200 240,250 M80,200 Q140,150 200,100" fill="none" stroke="#080c0f" stroke-width="14" stroke-linecap="round"/>
         <path d="M80,200 Q140,150 200,100 M70,30 Q110,-10 160,-20" fill="none" stroke="#080c0f" stroke-width="8" stroke-linecap="round"/>
-        <!-- Cherry Blossom Clusters -->
         <g fill="#f3c2c2" opacity="0.85">
           <circle cx="70" cy="30" r="28"/>
           <circle cx="50" cy="15" r="22"/>
@@ -435,10 +433,8 @@
     <!-- RIGHT SAKURA TREE -->
     <div class="sakura-tree-right">
       <svg viewBox="0 0 300 450" preserveAspectRatio="xMidYMin meet">
-        <!-- Trunk & Main Branches -->
         <path d="M320,450 Q260,280 220,180 Q190,100 230,20 Q180,70 140,130 Q90,200 30,240 M220,180 Q150,130 90,90" fill="none" stroke="#080c0f" stroke-width="15" stroke-linecap="round"/>
         <path d="M220,180 Q150,130 90,90 M230,20 Q180,-20 120,-30" fill="none" stroke="#080c0f" stroke-width="9" stroke-linecap="round"/>
-        <!-- Cherry Blossom Clusters -->
         <g fill="#f3c2c2" opacity="0.85">
           <circle cx="230" cy="20" r="30"/>
           <circle cx="250" cy="10" r="24"/>
@@ -976,7 +972,7 @@
       var cat = CATEGORIES[i];
       var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
       html += '<details class="accordion" id="accordion-' + cat.id + '"' + (i===0 ? " open" : "") + '>' +
-        '<summary>' +
+        '<summary onclick="handleAccordionToggle(event, \'' + cat.id + '\')">' +
           '<span class="cat-left"><span class="cat-num">' + cat.id + '</span>' + cat.icon + '&nbsp; ' + cat.label + '</span>' +
           '<span class="cat-progress" id="progress-' + cat.id + '"></span>' +
           '<span class="chevron">&#10148;</span>' +
@@ -1001,6 +997,16 @@
     }
     anchorList.innerHTML = aHtml;
   }
+
+  // Single-Accordion Open Logic
+  window.handleAccordionToggle = function(e, currentId) {
+    var accordions = document.querySelectorAll("#checkinAccordions .accordion");
+    accordions.forEach(function(acc) {
+      if (acc.id !== "accordion-" + currentId) {
+        acc.removeAttribute("open");
+      }
+    });
+  };
 
   function updateProgressLabels(){
     var progressAll = loadSet("ph_progress");
@@ -1028,6 +1034,12 @@
   window.goToCategory = function(catId){
     var viewBtn = document.querySelector('.view-btn[data-view="view-checkin"]');
     switchView("view-checkin", viewBtn);
+    
+    var accordions = document.querySelectorAll("#checkinAccordions .accordion");
+    accordions.forEach(function(acc) {
+      acc.removeAttribute("open");
+    });
+
     var el = document.getElementById("accordion-" + catId);
     if (el){
       el.open = true;
