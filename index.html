@@ -3,1091 +3,1808 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveActs Proctor Operations | Living World Command Center</title>
+<title>FiveActs Proctor Dojo — Capsule Corp Command Deck (PST)</title>
 <style>
   :root {
-    --bg-glass: rgba(26, 26, 36, 0.78);
-    --bg-card-glass: rgba(38, 38, 50, 0.82);
-    --bg-card-hover: rgba(46, 46, 60, 0.90);
-    --border-subtle: rgba(255, 255, 255, 0.15);
-    --border-accent: #8b5cf6;
-    --text-main: #f4f4f5;
-    --text-muted: #c2c2ce;
-    --accent-gold: #fbbf24;
-    --accent-gold-glow: rgba(251, 191, 36, 0.35);
-    --accent-crimson: #ef4444;
-    --accent-indigo: #6366f1;
-    --accent-emerald: #10b981;
-    --sidebar-width: 280px;
+    /* Dragon Ball Z & Capsule Corp Palette */
+    --capsule-cyan: #00f0ff;
+    --capsule-cyan-glow: rgba(0, 240, 255, 0.45);
+    --saiyan-orange: #ff7700;
+    --saiyan-gold: #ffd700;
+    --saiyan-glow: rgba(255, 119, 0, 0.55);
+    --ki-crimson: #ff1e56;
+    --scouter-red: #ff1e56;
+    --radar-green: #00ff66;
+    --radar-glow: rgba(0, 255, 102, 0.4);
+    
+    --bg-dark: #03070d;
+    --card-bg: rgba(8, 16, 28, 0.88);
+    --panel-bg: rgba(12, 22, 36, 0.92);
+    --border-line: rgba(0, 240, 255, 0.35);
+    --border-gold: rgba(255, 215, 0, 0.45);
+    --text-main: #f0f6fc;
+    --text-dim: #a3b8cc;
+    --text-muted: #647a8e;
+
+    --font-head: Impact, "Arial Black", "Trebuchet MS", sans-serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
-  html, body { height: 100vh; overflow: hidden; background-color: #080b10; color: var(--text-main); }
-
-  /* 4K LIVING BACKGROUND CANVAS */
-  #dbz-living-world {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  /* FLOATING GLASSMORPHIC COMMAND CENTER */
-  .app-container {
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font-body);
+    color: var(--text-main);
+    background-color: var(--bg-dark);
     display: flex;
-    height: 100vh;
-    width: 100vw;
+    min-height: 100vh;
     position: relative;
-    z-index: 1;
-    backdrop-filter: blur(10px) saturate(120%);
-    -webkit-backdrop-filter: blur(10px) saturate(120%);
-    background: rgba(10, 12, 18, 0.35);
+    overflow-x: hidden;
   }
 
-  /* SIDEBAR */
+  /* ============================================================
+     BACKGROUND ENVIRONMENT & DRAGON RADAR CANVAS
+     ============================================================ */
+  .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  
+  .scene-sky {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 100% 70% at 50% -10%, rgba(0, 240, 255, 0.25), transparent 80%),
+      radial-gradient(circle at 85% 20%, rgba(255, 119, 0, 0.3), transparent 50%),
+      radial-gradient(circle at 15% 80%, rgba(0, 255, 102, 0.2), transparent 55%),
+      linear-gradient(180deg, #02050a 0%, #06101c 40%, #040c17 75%, #010306 100%);
+  }
+
+  /* Radar Grid Background Rings */
+  .radar-grid-overlay {
+    position: absolute; inset: 0;
+    background-image: 
+      radial-gradient(circle at 50% 50%, transparent 18%, rgba(0, 240, 255, 0.1) 19%, transparent 20%),
+      radial-gradient(circle at 50% 50%, transparent 38%, rgba(0, 240, 255, 0.1) 39%, transparent 40%),
+      radial-gradient(circle at 50% 50%, transparent 58%, rgba(0, 240, 255, 0.1) 59%, transparent 60%),
+      radial-gradient(circle at 50% 50%, transparent 78%, rgba(0, 240, 255, 0.1) 79%, transparent 80%),
+      linear-gradient(0deg, transparent 49.6%, rgba(0, 240, 255, 0.1) 50%, transparent 50.4%),
+      linear-gradient(90deg, transparent 49.6%, rgba(0, 240, 255, 0.1) 50%, transparent 50.4%);
+    opacity: 0.8;
+  }
+
+  .radar-sweep {
+    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: conic-gradient(from 0deg at 50% 50%, rgba(0, 240, 255, 0.12) 0deg, transparent 60deg, transparent 360deg);
+    animation: radarSpin 14s linear infinite;
+  }
+  @keyframes radarSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+  .sun-glow {
+    position: absolute; top: 2%; right: 10%; width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.45) 0%, rgba(255, 119, 0, 0.25) 50%, transparent 75%);
+    filter: blur(28px);
+    animation: kiPulse 8s ease-in-out infinite alternate;
+  }
+  @keyframes kiPulse {
+    0% { transform: scale(1); filter: blur(28px) brightness(1); }
+    100% { transform: scale(1.15); filter: blur(35px) brightness(1.3); }
+  }
+
+  .sky-clouds {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse 65% 22% at 20% 18%, rgba(240, 246, 252, 0.08), transparent 70%),
+      radial-gradient(ellipse 85% 32% at 75% 28%, rgba(0, 240, 255, 0.06), transparent 75%);
+    animation: floatClouds 50s ease-in-out infinite alternate;
+  }
+  @keyframes floatClouds {
+    0% { transform: translateX(-40px) scale(1); }
+    100% { transform: translateX(40px) scale(1.05); }
+  }
+
+  /* Kami's Lookout Structure */
+  .lookout-floating {
+    position: absolute; right: 8%; top: 6%; width: 280px; height: 190px; opacity: 0.88;
+    filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.35));
+    animation: lookoutDrift 16s ease-in-out infinite alternate;
+  }
+  @keyframes lookoutDrift {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-16px); }
+  }
+
+  /* Shenron Silhouette */
+  .shenron-sky {
+    position: absolute; left: 12%; top: 4%; width: 620px; height: 320px; opacity: 0.5;
+    filter: drop-shadow(0 0 30px var(--radar-glow));
+    animation: shenronGlide 28s ease-in-out infinite alternate;
+  }
+  @keyframes shenronGlide {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-22px) scale(1.04); }
+  }
+
+  /* Goku on Flying Nimbus */
+  .nimbus-goku {
+    position: absolute; left: -160px; top: 20%; width: 150px; height: 75px; opacity: 0.95;
+    filter: drop-shadow(0 0 20px var(--saiyan-gold));
+    animation: nimbusSailing 36s linear infinite;
+  }
+  @keyframes nimbusSailing {
+    0% { transform: translateX(0) translateY(0); opacity: 0; }
+    5% { opacity: 0.95; }
+    90% { opacity: 0.95; }
+    100% { transform: translateX(calc(100vw + 350px)) translateY(-60px); opacity: 0; }
+  }
+
+  .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 220px 70px rgba(3, 7, 13, 0.85); }
+  
+  #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+
+  /* ============================================================
+     SIDEBAR — CAPSULE CORP RADAR COMMAND
+     ============================================================ */
   .sidebar {
-    width: var(--sidebar-width); background-color: var(--bg-glass); border-right: 1px solid var(--border-subtle);
-    display: flex; flex-direction: column; flex-shrink: 0; z-index: 10; box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+    position: relative; z-index: 10;
+    width: 320px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
+    background: linear-gradient(180deg, rgba(8, 16, 28, 0.95), rgba(3, 7, 13, 0.98));
+    border-right: 1px solid var(--border-line);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    display: flex; flex-direction: column; padding: 0;
+    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.8);
   }
-  .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-subtle); background: linear-gradient(to bottom, rgba(34,34,45,0.8), var(--bg-glass)); display: flex; align-items: center; gap: 14px; }
+  .sidebar::before {
+    content: ""; display: block; height: 5px; width: 100%; flex-shrink: 0;
+    background: linear-gradient(90deg, transparent, var(--capsule-cyan), var(--saiyan-gold), var(--saiyan-orange), transparent);
+  }
+
+  /* 7 DRAGON BALLS BRANDING (F-I-V-E-A-C-T-S) */
+  .sidebar-header { padding: 22px 18px 18px; text-align: center; border-bottom: 1px solid var(--border-line); }
   
-  .five-acts-logo {
-    width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, var(--accent-gold), #d97706);
-    display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: #141419;
-    box-shadow: 0 4px 12px var(--accent-gold-glow); flex-shrink: 0; position: relative; overflow: hidden;
+  .dragon-balls-brand {
+    display: flex; justify-content: center; align-items: center; gap: 5px; margin-bottom: 12px;
   }
-  .five-acts-logo::after { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shine 3s infinite; }
-  @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
+  .dball {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffea00, #ff6600 70%, #882200 100%);
+    box-shadow: 0 0 12px var(--saiyan-glow), inset 0 -2px 5px rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.88rem; font-weight: 900; color: #1a0800; font-family: var(--font-head);
+    transition: all 0.25s ease; cursor: pointer; text-shadow: 0 1px 2px rgba(255,255,255,0.6);
+  }
+  .dball:hover {
+    transform: translateY(-4px) scale(1.2);
+    box-shadow: 0 0 20px #ffea00, inset 0 -1px 3px #ffffff;
+  }
 
-  .clan-seal { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent-gold); font-weight: 700; margin-bottom: 2px; }
-  .dojo-title { font-size: 1rem; font-weight: 800; letter-spacing: 0.05em; color: #fff; }
-  .dojo-subtitle { font-size: 0.68rem; color: var(--text-muted); }
+  .sidebar-header h1 {
+    font-family: var(--font-head); font-size: 1.3rem; letter-spacing: 0.12em; color: var(--text-main);
+    text-transform: uppercase; text-shadow: 0 0 12px var(--capsule-cyan-glow);
+  }
+  .sidebar-header .subtitle {
+    font-size: 0.7rem; color: var(--capsule-cyan); margin-top: 4px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800;
+  }
 
-  .nav-scroll { flex-grow: 1; overflow-y: auto; padding: 16px 12px; }
-  .nav-group-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: #a1a1aa; margin: 16px 8px 8px; font-weight: 700; }
+  .scouter-hud {
+    margin: 10px 14px 0; padding: 6px 10px; background: rgba(0, 240, 255, 0.08); border: 1px dashed var(--capsule-cyan);
+    border-radius: 6px; font-size: 0.68rem; color: var(--capsule-cyan); font-weight: 800; letter-spacing: 0.08em; display: flex; justify-content: space-between;
+  }
+
+  .view-selectors { padding: 14px 12px; border-bottom: 1px solid var(--border-line); }
+  .view-btn {
+    width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(0, 240, 255, 0.03); border: 1px solid rgba(0, 240, 255, 0.15);
+    color: var(--text-dim); text-align: left; padding: 11px 14px; font-size: 0.88rem; font-weight: 700;
+    border-radius: 8px; cursor: pointer; margin-bottom: 6px; transition: all 0.2s ease;
+    font-family: var(--font-body); position: relative; overflow: hidden;
+  }
+  .view-btn .vi { font-size: 1.1rem; width: 1.4em; text-align: center; color: var(--capsule-cyan); }
+  .view-btn:hover {
+    background: rgba(0, 240, 255, 0.12); color: var(--text-main); border-color: var(--capsule-cyan);
+    transform: translateX(4px); box-shadow: 0 0 12px var(--capsule-cyan-glow);
+  }
+  .view-btn.active {
+    background: linear-gradient(90deg, rgba(0, 240, 255, 0.22), rgba(0, 119, 255, 0.1));
+    color: var(--capsule-cyan); border-color: var(--capsule-cyan);
+    box-shadow: inset 0 0 15px var(--capsule-cyan-glow), 0 0 10px var(--capsule-cyan-glow);
+  }
+  .view-btn.active::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--capsule-cyan);
+    box-shadow: 0 0 10px var(--capsule-cyan);
+  }
+
+  .nav-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin: 16px 16px 8px; font-weight: 800; }
+  .nav-links { list-style: none; padding: 0 10px; overflow-y: auto; flex-grow: 1; }
+  .nav-links li { margin-bottom: 3px; }
+  .nav-links button {
+    width: 100%; text-align: left; background: none; border: 1px solid transparent; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 6px;
+    padding: 8px 10px; color: var(--text-dim); border-radius: 6px; font-size: 0.8rem; font-weight: 600;
+    transition: all 0.18s ease; font-family: var(--font-body);
+  }
+  .nav-links button:hover {
+    background: rgba(0, 240, 255, 0.12); color: var(--capsule-cyan); border-color: rgba(0, 240, 255, 0.3);
+    padding-left: 14px;
+  }
+  .nav-links .cnt {
+    color: var(--capsule-cyan); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); font-weight: 700;
+  }
+
+  .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
+
+  /* ============================================================
+     MAIN CONTENT & SEARCH ENGINE
+     ============================================================ */
+  .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 26px 38px 60px; min-width: 0; }
   
-  .nav-item {
-    display: flex; align-items: center; justify-content: space-between; padding: 11px 14px;
-    color: var(--text-muted); text-decoration: none; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
-    margin-bottom: 4px; transition: all 0.2s ease; border: 1px solid transparent; cursor: pointer;
+  .search-wrapper {
+    position: sticky; top: 0; z-index: 50; padding: 6px 0 22px;
+    background: linear-gradient(180deg, var(--bg-dark) 85%, transparent);
   }
-  .nav-item:hover { background-color: var(--bg-card-glass); color: var(--text-main); border-color: var(--border-subtle); }
-  .nav-item.active { background-color: var(--bg-card-glass); color: var(--accent-gold); border-color: rgba(251, 191, 36, 0.5); box-shadow: 0 0 15px var(--accent-gold-glow); }
-  .nav-badge { font-size: 0.65rem; background: var(--border-subtle); padding: 2px 6px; border-radius: 4px; color: var(--text-main); }
-
-  .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border-subtle); font-size: 0.7rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; background: var(--bg-glass); }
-
-  /* MAIN VIEWPORT */
-  .main-viewport { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-  
-  .top-command-bar {
-    padding: 16px 32px; background-color: var(--bg-glass); border-bottom: 1px solid var(--border-subtle);
-    display: flex; justify-content: space-between; align-items: center; min-height: 76px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  .search-input {
+    width: 100%; padding: 15px 24px; font-size: 0.98rem; border-radius: 12px;
+    border: 1px solid var(--border-line); background: rgba(8, 16, 28, 0.92); backdrop-filter: blur(14px);
+    color: var(--text-main); outline: none; transition: all 0.25s ease; font-family: var(--font-body); font-weight: 600;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.8), inset 0 0 12px rgba(0, 240, 255, 0.1);
   }
-  .page-indicator h2 { font-size: 1.25rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
-  .page-indicator p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
-  
-  .clock-badge {
-    background: var(--bg-card-glass); border: 1px solid var(--border-subtle); padding: 8px 16px; border-radius: 8px;
-    font-family: monospace; font-size: 0.9rem; font-weight: 700; color: var(--accent-gold); letter-spacing: 0.05em;
-    display: flex; align-items: center; gap: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+  .search-input::placeholder { color: var(--text-muted); letter-spacing: 0.05em; font-weight: 500; }
+  .search-input:focus {
+    border-color: var(--capsule-cyan);
+    box-shadow: 0 0 20px var(--capsule-cyan-glow), inset 0 0 15px rgba(0, 240, 255, 0.2);
+  }
+  .search-count { font-size: 0.78rem; color: var(--capsule-cyan); margin-top: 8px; min-height: 1em; font-weight: 700; letter-spacing: 0.04em; }
+
+  .dashboard-view { display: none; }
+  .dashboard-view.active { display: block; }
+
+  .page-title { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); margin-bottom: 4px; letter-spacing: 0.05em; text-shadow: 0 0 15px var(--capsule-cyan-glow); text-transform: uppercase; }
+  .page-sub { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; font-weight: 500; }
+
+  .section-container { margin-bottom: 30px; scroll-margin-top: 90px; }
+  .section-title {
+    font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; color: var(--text-main);
+    border-bottom: 1px solid var(--border-line); padding-bottom: 10px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; text-shadow: 0 0 10px var(--capsule-cyan-glow); letter-spacing: 0.04em;
+  }
+  .section-count { font-size: 0.75rem; font-weight: 800; color: var(--capsule-cyan); background: rgba(0, 240, 255, 0.12); border: 1px solid var(--border-line); padding: 2px 10px; border-radius: 12px; font-family: var(--font-body); }
+  .empty-state { color: var(--text-dim); font-size: 0.88rem; padding: 28px 20px; text-align: center; border: 1px dashed var(--border-line); border-radius: 10px; background: rgba(8, 16, 28, 0.6); backdrop-filter: blur(8px); }
+
+  /* ============================================================
+     CARDS & SCROLLS — CAPSULE CORP DATA PANELS
+     ============================================================ */
+  .card {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--border-line); border-left: 4px solid var(--capsule-cyan); border-radius: 6px 12px 12px 6px;
+    padding: 16px 18px; margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: center; gap: 18px;
+    transition: all 0.22s ease;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.6);
+  }
+  .card:hover {
+    background: rgba(14, 26, 42, 0.95); border-left-color: var(--saiyan-gold); transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 240, 255, 0.22);
+  }
+  .card.is-pinned { border-left-color: var(--saiyan-orange); }
+  .card-body { flex-grow: 1; min-width: 0; }
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .card-tag { display: inline-block; font-size: 0.62rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-main); letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.12); }
+  .card-tag.win { background: rgba(0, 119, 255, 0.3); color: #99ccff; border-color: rgba(0, 119, 255, 0.5); }
+  .card-tag.mac { background: rgba(153, 51, 255, 0.3); color: #e0b3ff; border-color: rgba(153, 51, 255, 0.5); }
+  .card-tag.linux { background: rgba(0, 255, 102, 0.25); color: #99ffcc; border-color: rgba(0, 255, 102, 0.4); }
+  .card-tag.critical { background: rgba(255, 30, 86, 0.35); color: #ff99aa; border-color: rgba(255, 30, 86, 0.6); }
+  .card-tag.hashi { background: rgba(255, 119, 0, 0.3); color: var(--saiyan-gold); border-color: rgba(255, 119, 0, 0.5); }
+
+  .message-text { font-size: 0.94rem; line-height: 1.65; white-space: pre-line; color: #f0f6fc; font-family: var(--font-body); font-weight: 500; }
+
+  .card-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; align-items: stretch; }
+  .icon-btn {
+    background: rgba(0, 240, 255, 0.06); border: 1px solid var(--border-line); color: var(--text-dim);
+    border-radius: 6px; padding: 6px 10px; font-size: 0.88rem; cursor: pointer; line-height: 1;
+    transition: all 0.2s ease;
+  }
+  .icon-btn:hover { background: rgba(0, 240, 255, 0.2); color: var(--capsule-cyan); border-color: var(--capsule-cyan); }
+  .icon-btn.on { color: var(--saiyan-gold); border-color: var(--saiyan-orange); background: rgba(255, 119, 0, 0.25); }
+  .icon-row { display: flex; gap: 6px; }
+
+  /* CAPSULE CORP TECH SEAL BUTTONS */
+  .seal-btn {
+    background: linear-gradient(135deg, var(--saiyan-orange) 0%, var(--saiyan-gold) 100%);
+    color: #1a0800; border: none; padding: 10px 18px; border-radius: 50px;
+    cursor: pointer; font-size: 0.82rem; font-weight: 900; white-space: nowrap; min-width: 150px;
+    transition: all 0.2s ease; box-shadow: 0 4px 18px var(--saiyan-glow);
+    font-family: var(--font-body); letter-spacing: 0.05em; text-align: center; text-transform: uppercase;
+  }
+  .seal-btn:hover {
+    transform: translateY(-2px) scale(1.03); box-shadow: 0 6px 24px var(--saiyan-gold); filter: brightness(1.15);
+  }
+  .seal-btn.copied {
+    background: linear-gradient(135deg, var(--radar-green) 0%, #00aa44 100%);
+    color: #021208; box-shadow: 0 4px 20px var(--radar-glow);
+  }
+  .seal-btn:focus-visible { outline: 2px solid var(--saiyan-gold); outline-offset: 2px; }
+
+  .progress-check { width: 20px; height: 20px; accent-color: var(--capsule-cyan); cursor: pointer; flex-shrink: 0; }
+
+  /* OS SUB-DROPDOWN FILTER FOR SYSTEM VERIFICATION */
+  .os-subfilter-row {
+    display: flex; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px dashed var(--border-line);
+  }
+  .os-subchip {
+    border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
+    padding: 5px 12px; border-radius: 14px; font-size: 0.74rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease;
+  }
+  .os-subchip:hover { border-color: var(--capsule-cyan); color: var(--text-main); }
+  .os-subchip.active { background: rgba(0, 240, 255, 0.2); color: var(--capsule-cyan); border-color: var(--capsule-cyan); }
+
+  /* ============================================================
+     ACCORDION & SCOUTER DASHBOARD PANELS
+     ============================================================ */
+  .accordion { border: 1px solid var(--border-line); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  .accordion summary {
+    list-style: none; cursor: pointer; padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: linear-gradient(180deg, rgba(0, 240, 255, 0.12), rgba(0, 240, 255, 0.02));
+    font-family: var(--font-head); font-size: 1.1rem; color: var(--text-main); letter-spacing: 0.04em;
+  }
+  .accordion summary::-webkit-details-marker { display: none; }
+  .accordion summary .cat-left { display: flex; align-items: center; gap: 12px; }
+  .accordion summary .cat-num {
+    width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--capsule-cyan); color: var(--capsule-cyan);
+    display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-family: var(--font-body); font-weight: 900; flex-shrink: 0;
+    box-shadow: 0 0 10px var(--capsule-cyan-glow), inset 0 0 8px var(--capsule-cyan-glow);
+  }
+  .accordion summary .cat-progress { font-size: 0.76rem; color: var(--text-dim); font-family: var(--font-body); font-weight: 700; }
+  .accordion summary .chevron { transition: transform 0.25s ease; color: var(--capsule-cyan); }
+  .accordion[open] summary .chevron { transform: rotate(90deg); }
+  .accordion-body { padding: 18px 20px 20px; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .stat-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 18px; background: var(--panel-bg); text-align: center; backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+  .stat-card .num { font-family: var(--font-head); font-size: 2rem; color: var(--capsule-cyan); text-shadow: 0 0 12px var(--capsule-cyan-glow); font-weight: 700; }
+  .stat-card .lbl { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; font-weight: 800; }
+
+  .clock-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 18px 24px; background: var(--panel-bg); display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 28px; flex-wrap: wrap; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  .clock-time { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); letter-spacing: 0.05em; text-shadow: 0 0 12px var(--capsule-cyan-glow); }
+  .clock-date { font-size: 0.8rem; color: var(--text-dim); font-weight: 700; }
+
+  .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 28px; }
+  .quick-btn {
+    border: 1px solid var(--border-line); border-radius: 10px; padding: 16px; background: var(--panel-bg);
+    color: var(--text-main); cursor: pointer; text-align: left; font-size: 0.9rem; font-weight: 800;
+    transition: all 0.2s ease; font-family: var(--font-body); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+  .quick-btn:hover { background: rgba(0, 240, 255, 0.12); border-color: var(--capsule-cyan); transform: translateY(-2px); box-shadow: 0 8px 25px var(--capsule-cyan-glow); }
+  .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--capsule-cyan); }
+
+  .mini-list { display: flex; flex-direction: column; gap: 10px; }
+  .mini-item {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    border: 1px solid var(--border-line); border-radius: 10px; padding: 12px 14px; background: var(--card-bg); font-size: 0.85rem; backdrop-filter: blur(10px);
+  }
+  .mini-item .txt { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #f0f6fc; }
+  .mini-item .cat-chip { font-size: 0.68rem; color: var(--capsule-cyan); border: 1px solid var(--border-line); border-radius: 10px; padding: 2px 8px; flex-shrink: 0; font-weight: 700; }
+
+  /* ============================================================
+     TABLES & POLICY GENERATOR
+     ============================================================ */
+  .table-responsive { width: 100%; overflow-x: auto; background: var(--panel-bg); border: 1px solid var(--border-line); border-radius: 12px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.86rem; min-width: 840px; }
+  th { background: rgba(0, 240, 255, 0.15); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.05em; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--line-soft); color: #f0f6fc; }
+  tbody tr:hover td { background: rgba(0, 240, 255, 0.06); }
+  tbody tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+  .badge-minor { background: rgba(255,255,255,0.08); color: #f0f6fc; border: 1px solid rgba(255,255,255,0.18); }
+  .badge-major { background: rgba(255, 30, 86, 0.35); color: #ff99aa; border: 1px solid rgba(255, 30, 86, 0.6); }
+
+  .gen-panel { border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; background: var(--panel-bg); margin-bottom: 28px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-line); background: rgba(3, 7, 13, 0.95); color: var(--text-main); font-size: 0.92rem; margin-bottom: 16px; font-family: var(--font-body); outline: none; font-weight: 600; }
+  .gen-select:focus { border-color: var(--capsule-cyan); box-shadow: 0 0 15px var(--capsule-cyan-glow); }
+  .gen-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+  .gen-card { border: 1px solid var(--border-line); border-radius: 10px; padding: 14px 16px; background: var(--card-bg); display: flex; flex-direction: column; justify-content: space-between; }
+  .gen-card h4 { font-family: var(--font-head); font-size: 0.9rem; color: var(--capsule-cyan); margin-bottom: 8px; letter-spacing: 0.03em; }
+  .gen-card p { font-size: 0.86rem; line-height: 1.55; color: #f0f6fc; margin-bottom: 12px; white-space: pre-line; }
+
+  .filter-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  .filter-chip {
+    border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
+    padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease; font-family: var(--font-body);
+  }
+  .filter-chip:hover { border-color: var(--capsule-cyan); color: var(--text-main); }
+  .filter-chip.active { background: rgba(0, 240, 255, 0.25); color: var(--capsule-cyan); border-color: var(--capsule-cyan); box-shadow: 0 0 12px var(--capsule-cyan-glow); }
+
+  .infraction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
+  .infr-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 16px 18px; background: var(--card-bg); cursor: pointer; transition: all 0.2s ease; border-left: 4px solid var(--text-dim); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+  .infr-card:hover { background: rgba(14, 26, 42, 0.95); transform: translateY(-2px); }
+  .infr-card.risk-green { border-left-color: var(--radar-green); }
+  .infr-card.risk-yellow { border-left-color: var(--saiyan-gold); }
+  .infr-card.risk-orange { border-left-color: var(--saiyan-orange); }
+  .infr-card.risk-red { border-left-color: var(--ki-crimson); }
+  .infr-name { font-weight: 800; color: var(--text-main); margin-bottom: 6px; font-size: 0.95rem; }
+  .infr-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 6px; font-weight: 700; }
+  .infr-threshold { font-size: 0.74rem; color: var(--text-dim); }
+  .infr-detail { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-line); font-size: 0.85rem; line-height: 1.55; display: none; }
+  .infr-card.expanded .infr-detail { display: block; }
+  .risk-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.76rem; color: var(--text-dim); margin-bottom: 18px; align-items: center; font-weight: 700; }
+  .risk-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+
+  /* ================= TROUBLESHOOTING FLOW STYLES ================= */
+  .trouble-section { margin-bottom: 30px; }
+  .trouble-mode-header {
+    font-family: var(--font-head); font-size: 1.3rem; color: var(--capsule-cyan); border-bottom: 2px solid var(--border-line);
+    padding-bottom: 8px; margin: 24px 0 16px; text-transform: uppercase; letter-spacing: 0.06em; text-shadow: 0 0 12px var(--capsule-cyan-glow);
+  }
+  .trouble-card {
+    border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; margin-bottom: 18px;
+    background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6);
+  }
+  .trouble-card h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; letter-spacing: 0.03em; }
+  .flow-step {
+    border-left: 2px solid var(--capsule-cyan); padding-left: 16px; margin-bottom: 16px; position: relative;
+  }
+  .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--capsule-cyan); text-transform: uppercase; letter-spacing: 0.06em; }
+  .flow-step-title { font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin: 3px 0 5px; }
+  .flow-step-action { font-size: 0.86rem; color: var(--text-dim); line-height: 1.45; margin-bottom: 8px; font-weight: 500; }
+  .flow-step-spiel {
+    background: rgba(3, 7, 13, 0.75); border: 1px solid var(--border-line); border-radius: 8px; padding: 10px 12px;
+    font-size: 0.84rem; color: #f0f6fc; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
   }
 
-  .content-area { flex-grow: 1; overflow-y: auto; padding: 32px; position: relative; }
-  .page-view { display: none; }
-  .page-view.active { display: block; animation: fadeIn 0.25s ease-out; }
-
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* SHARED COMPONENTS */
-  .search-box-container { position: relative; margin-bottom: 24px; }
-  .global-search-input {
-    width: 100%; padding: 14px 20px 14px 44px; background-color: var(--bg-glass); border: 1px solid var(--border-subtle);
-    border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; transition: all 0.2s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+  /* ================= RESPONSIVE ================= */
+  @media (max-width: 960px) {
+    .sidebar { width: 260px; }
+    .shenron-sky { opacity: 0.3; width: 400px; }
+    .lookout-structure { opacity: 0.6; }
   }
-  .global-search-input:focus { border-color: var(--accent-gold); box-shadow: 0 0 0 3px var(--accent-gold-glow), inset 0 2px 4px rgba(0,0,0,0.3); }
-  .search-icon-abs { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
-
-  .filter-pills { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
-  .filter-pill {
-    background: var(--bg-glass); border: 1px solid var(--border-subtle); padding: 7px 14px; border-radius: 20px;
-    font-size: 0.75rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.15s;
-  }
-  .filter-pill:hover { border-color: var(--text-muted); color: #fff; }
-  .filter-pill.active { background: var(--accent-gold); color: #141419; border-color: var(--accent-gold); font-weight: 700; box-shadow: 0 0 10px var(--accent-gold-glow); }
-
-  .dojo-card {
-    background-color: var(--bg-card-glass); border: 1px solid var(--border-subtle); border-radius: 10px;
-    padding: 20px; margin-bottom: 14px; transition: border-color 0.15s, box-shadow 0.15s; position: relative;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-  }
-  .dojo-card:hover { border-color: rgba(251, 191, 36, 0.4); box-shadow: 0 6px 20px rgba(0,0,0,0.5); }
-
-  .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; }
-  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-  .tag { font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(--border-subtle); color: var(--text-main); text-transform: uppercase; }
-  .tag.minor { background: rgba(251, 191, 36, 0.2); color: #fde68a; border: 1px solid rgba(251, 191, 36, 0.4); }
-  .tag.major { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.5); }
-
-  .action-btn {
-    background-color: var(--accent-gold); color: #141419; border: none; padding: 8px 16px; border-radius: 6px;
-    font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
-    flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  }
-  .action-btn:hover { background-color: #fcd34d; transform: translateY(-1px); box-shadow: 0 4px 12px var(--accent-gold-glow); }
-  .action-btn.copied { background-color: var(--accent-emerald); color: #fff; }
-
-  /* HOME VIEW */
-  .home-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
-  @media(max-width: 1100px) { .home-grid { grid-template-columns: 1fr; } }
-
-  .welcome-banner {
-    background: linear-gradient(135deg, var(--bg-card-glass) 0%, var(--bg-glass) 100%); border: 1px solid var(--border-subtle);
-    border-radius: 12px; padding: 28px; margin-bottom: 24px; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  }
-  .welcome-banner h3 { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
-  .welcome-banner p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; max-width: 650px; }
-
-  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-  .stat-card { background: var(--bg-glass); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 18px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-  .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--accent-gold); margin-bottom: 4px; font-family: monospace; }
-  .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
-
-  .quick-actions-panel { background: var(--bg-glass); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
-  .section-heading { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
-
-  .quick-links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .quick-link-tile {
-    background: var(--bg-card-glass); border: 1px solid var(--border-subtle); padding: 16px; border-radius: 8px;
-    text-align: left; cursor: pointer; transition: all 0.2s; color: var(--text-main); display: block; text-decoration: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .quick-link-tile:hover { border-color: var(--accent-gold); background: var(--bg-card-hover); transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
-  .quick-link-tile h4 { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
-  .quick-link-tile p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
-
-  /* ACCORDIONS */
-  .accordion-section { margin-bottom: 16px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-glass); overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-  .accordion-header {
-    padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
-    background: var(--bg-glass); transition: background 0.15s; user-select: none;
-  }
-  .accordion-header:hover { background: var(--bg-card-glass); }
-  .accordion-title { font-size: 1rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .accordion-content { padding: 20px; border-top: 1px solid var(--border-subtle); background: rgba(12, 14, 20, 0.75); display: none; }
-  .accordion-section.expanded .accordion-content { display: block; }
-  .chevron { transition: transform 0.2s; font-size: 0.8rem; color: var(--text-muted); }
-  .accordion-section.expanded .chevron { transform: rotate(180deg); }
-
-  .spiel-item {
-    background: var(--bg-card-glass); border: 1px solid var(--border-subtle); padding: 14px 16px; border-radius: 8px;
-    margin-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
-  }
-  .spiel-text { font-size: 0.88rem; line-height: 1.5; color: #e4e4e7; flex-grow: 1; }
-
-  /* TACTICAL SIMULATOR */
-  .tactical-selector-box { background: var(--bg-glass); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
-
-  /* CLIENT LIBRARY */
-  .client-grid-layout { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
-  @media(max-width: 900px) { .client-grid-layout { grid-template-columns: 1fr; } }
-  
-  .client-list-sidebar { background: var(--bg-glass); border: 1px solid var(--border-subtle); border-radius: 10px; max-height: 600px; overflow-y: auto; padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-  .client-item { padding: 12px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; transition: all 0.15s; }
-  .client-item:hover { background: var(--bg-card-glass); color: #fff; }
-  .client-item.active { background: var(--accent-gold); color: #141419; font-weight: 700; box-shadow: 0 0 10px var(--accent-gold-glow); }
-
-  .client-details-card { background: var(--bg-glass); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
-  .policy-property-row { display: grid; grid-template-columns: 180px 1fr; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); font-size: 0.85rem; }
-  .policy-property-row:last-child { border-bottom: none; }
-  .property-key { color: var(--text-muted); font-weight: 600; }
-  .property-val { color: #fff; font-weight: 600; }
-
-  /* TABLES */
-  .dojo-table-wrapper { width: 100%; overflow-x: auto; background: var(--bg-glass); border: 1px solid var(--border-subtle); border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
-  .dojo-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
-  .dojo-table th { background: rgba(30, 30, 42, 0.9); padding: 14px 16px; color: var(--text-muted); font-weight: 700; border-bottom: 1px solid var(--border-subtle); white-space: nowrap; }
-  .dojo-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: #e4e4e7; }
-  .dojo-table tbody tr:hover td { background: var(--bg-card-glass); }
-  .dojo-table tbody tr:last-child td { border-bottom: none; }
-
-  /* GOKU EVENT TOAST */
-  #dbz-event-toast {
-    position: fixed; bottom: 24px; right: 24px; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--accent-gold);
-    color: #fff; padding: 10px 18px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; opacity: 0;
-    transition: opacity 1s ease; z-index: 100; pointer-events: none; box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+  @media (max-width: 640px) {
+    body { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: relative; }
+    .nav-links { display: none; }
+    .card { flex-direction: column; align-items: stretch; }
+    .card-actions { flex-direction: row; justify-content: flex-end; }
+    .seal-btn { width: 100%; }
   }
 
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #525266; }
+  ::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.35); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0, 240, 255, 0.6); }
 </style>
 </head>
 <body>
 
-<!-- LIVING DRAGON BALL BACKDROP -->
-<canvas id="dbz-living-world"></canvas>
+  <!-- ================= ATMOSPHERIC SCENE ================= -->
+  <div class="scene" aria-hidden="true">
+    <div class="scene-sky"></div>
+    <div class="radar-grid-overlay"></div>
+    <div class="radar-sweep"></div>
+    <div class="sky-clouds"></div>
+    <div class="sun-glow"></div>
 
-<!-- EVENT TOAST -->
-<div id="dbz-event-toast">✨ Goku is traveling across the world on Flying Nimbus...</div>
+    <!-- Kami's Lookout Structure -->
+    <div class="lookout-floating">
+      <svg viewBox="0 0 1200 240" preserveAspectRatio="xMidYMax meet">
+        <path d="M0,240 Q600,160 1200,240 Z" fill="#02140a" opacity="0.95"/>
+        <path d="M150,240 Q600,185 1050,240 Z" fill="#042012" opacity="0.8"/>
+        <path d="M540,195 Q600,130 660,195 Z" fill="#010a05"/>
+        <circle cx="600" cy="120" r="14" fill="#ffd700" opacity="0.85"/>
+        <rect x="585" y="145" width="30" height="50" fill="#000603"/>
+      </svg>
+    </div>
 
-<!-- COMMAND CENTER INTERFACE -->
-<div class="app-container">
-  
-  <aside class="sidebar">
+    <!-- Guardian Shenron -->
+    <div class="shenron-sky">
+      <svg viewBox="0 0 500 350" preserveAspectRatio="xMidYMin meet">
+        <g fill="none" stroke="#00ff66" stroke-width="3.5" opacity="0.85">
+          <path d="M450,40 C380,80 340,160 400,220 C460,280 320,320 220,260 C120,200 180,110 120,80 C60,50 30,120 10,180" />
+          <path d="M430,55 Q360,110 380,180 M330,240 Q240,280 180,220 M140,150 Q100,80 50,110" stroke="#ffd700" stroke-width="2"/>
+          <path d="M440,30 L470,15 M455,45 L485,30 M420,20 L400,5" stroke="#ff7700" stroke-width="3"/>
+          <circle cx="445" cy="35" r="4.5" fill="#ff1e56" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Flying Nimbus & Goku Silhouette -->
+    <div class="nimbus-goku">
+      <svg viewBox="0 0 100 50" preserveAspectRatio="xMidYMid meet">
+        <path d="M10,35 Q20,20 40,25 Q55,10 75,20 Q90,15 95,30 Q100,42 80,45 Q60,48 40,45 Q15,48 10,35 Z" fill="#ffd700" opacity="0.95"/>
+        <path d="M45,22 Q40,10 50,5 Q55,12 60,8 Q58,18 65,22 Z" fill="#010f06"/>
+        <line x1="30" y1="30" x2="70" y2="2" stroke="#ff7700" stroke-width="2.5"/>
+      </svg>
+    </div>
+
+    <div class="scene-vignette"></div>
+    <canvas id="fxCanvas"></canvas>
+  </div>
+
+  <!-- ================= SIDEBAR — DRAGON RADAR COMMAND ================= -->
+  <div class="sidebar">
     <div class="sidebar-header">
-      <div class="five-acts-logo">5A</div>
-      <div>
-        <div class="clan-seal">FiveActs Dojo</div>
-        <div class="dojo-title">Proctor Command</div>
+      <!-- 7 DRAGON BALLS WITH "F-I-V-E-A-C-T-S" -->
+      <div class="dragon-balls-brand" title="FiveActs Dragon Balls">
+        <div class="dball">F</div>
+        <div class="dball">I</div>
+        <div class="dball">V</div>
+        <div class="dball">E</div>
+        <div class="dball">A</div>
+        <div class="dball">C</div>
+        <div class="dball">T</div>
+      </div>
+      <h1>Proctor Dojo</h1>
+      <div class="subtitle">Observe &middot; Verify &middot; Protect</div>
+    </div>
+
+    <div class="scouter-hud">
+      <span>SCOUTER RADAR</span>
+      <span>KI: MAXIMUM</span>
+    </div>
+
+    <div class="view-selectors">
+      <button class="view-btn active" data-view="view-home" onclick="switchView('view-home', this)"><span class="vi">🏯</span> Home</button>
+      <button class="view-btn" data-view="view-checkin" onclick="switchView('view-checkin', this)"><span class="vi">📜</span> Check-In Steps</button>
+      <button class="view-btn" data-view="view-troubleshooting" onclick="switchView('view-troubleshooting', this)"><span class="vi">🛠️</span> Troubleshooting</button>
+      <button class="view-btn" data-view="view-library" onclick="switchView('view-library', this)"><span class="vi">🔍</span> Canned Messages</button>
+      <button class="view-btn" data-view="view-threshold" onclick="switchView('view-threshold', this)"><span class="vi">⚠️</span> Threshold Center</button>
+      <button class="view-btn" data-view="view-policies" onclick="switchView('view-policies', this)"><span class="vi">🗝️</span> Client Policies</button>
+      <button class="view-btn" data-view="view-faq" onclick="switchView('view-faq', this)"><span class="vi">🎋</span> FAQ Archive</button>
+    </div>
+
+    <div class="nav-label">Check-in categories</div>
+    <ul class="nav-links" id="checkinAnchors"></ul>
+
+    <div class="sidebar-footer">Certiverse &middot; Proctor Dojo</div>
+  </div>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <div class="main-content">
+    <div class="search-wrapper">
+      <input type="text" id="globalSearch" class="search-input" placeholder="Scan the Dragon Radar database... search spiels, policies, infractions" oninput="filterAll()" aria-label="Search all content">
+      <div class="search-count" id="searchCount"></div>
+    </div>
+
+    <!-- HOME VIEW -->
+    <div id="view-home" class="dashboard-view active">
+      <h2 class="page-title">Operations Hall</h2>
+      <p class="page-sub">The dojo's main hall — statistics, shortcuts, and your recent work.</p>
+
+      <div class="clock-card">
+        <div>
+          <div class="clock-time" id="clockTime">--:--:--</div>
+          <div class="clock-date" id="clockDate">Loading Philippine Standard Time&hellip;</div>
+        </div>
+        <div class="clock-date">All check-in times are recorded in PST (UTC+8).</div>
+      </div>
+
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="section-container">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="quick-grid" id="quickGrid"></div>
+      </div>
+
+      <div class="section-container">
+        <h2 class="section-title">Favorites <span class="section-count" id="favCount"></span></h2>
+        <div class="mini-list" id="favList"></div>
+      </div>
+
+      <div class="section-container">
+        <h2 class="section-title">Pinned Knowledge <span class="section-count" id="pinCount"></span></h2>
+        <div class="mini-list" id="pinList"></div>
+      </div>
+
+      <div class="section-container">
+        <h2 class="section-title">Recently Copied <span class="section-count" id="recentCount"></span></h2>
+        <div class="mini-list" id="recentList"></div>
       </div>
     </div>
 
-    <div class="nav-scroll">
-      <div class="nav-group-title">Main Hall</div>
-      <div class="nav-item active" onclick="switchPage('home', this)">
-        <span>🏯 Home / Command Center</span>
-      </div>
+    <!-- CHECK-IN STEPS VIEW -->
+    <div id="view-checkin" class="dashboard-view">
+      <h2 class="page-title">Check-In Steps</h2>
+      <p class="page-sub">Work sequentially through categories 1&ndash;13. A proctor can complete a full check-in using this guidance.</p>
+      <div style="margin-bottom:16px;"><button class="filter-chip" onclick="resetProgress()">Reset progress</button></div>
+      <div id="checkinAccordions"></div>
+    </div>
 
-      <div class="nav-group-title">Training Scrolls</div>
-      <div class="nav-item" onclick="switchPage('checkin', this)">
-        <span>📜 Check-In Steps</span>
-        <span class="nav-badge" id="count-checkin">12</span>
-      </div>
-      <div class="nav-item" onclick="switchPage('canned', this)">
-        <span>💬 Canned Messages</span>
-        <span class="nav-badge" id="count-canned">8</span>
-      </div>
+    <!-- TROUBLESHOOTING VIEW -->
+    <div id="view-troubleshooting" class="dashboard-view">
+      <h2 class="page-title">Hardware &amp; System Troubleshooting</h2>
+      <p class="page-sub">Step-by-step diagnostic workflows for candidate Audio, Screen Sharing, and Camera issues across Non-SEB and SEB environments.</p>
 
-      <div class="nav-group-title">Clan Records</div>
-      <div class="nav-item" onclick="switchPage('infractions', this)">
-        <span>⚖ Infraction Thresholds</span>
-        <span class="nav-badge" id="count-infractions">23</span>
-      </div>
-      <div class="nav-item" onclick="switchPage('policies', this)">
-        <span>🏛 Client Policy Library</span>
-        <span class="nav-badge" id="count-policies">16</span>
-      </div>
-      <div class="nav-item" onclick="switchPage('faq', this)">
-        <span>📖 Wisdom Library (FAQ)</span>
-        <span class="nav-badge" id="count-faq">7</span>
+      <div class="trouble-section">
+        <div class="trouble-mode-header">🔐 NON-SEB (STANDARD BROWSER EXAMS)</div>
+
+        <!-- Non-SEB Microphone -->
+        <div class="trouble-card">
+          <h3>🎤 Audio &mdash; Microphone Not Working (Non-SEB)</h3>
+          
+          <div class="flow-step">
+            <div class="flow-step-num">Step 1 &amp; 2 &mdash; Browser Compatibility Check</div>
+            <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
+            <div class="flow-step-action">Check if candidate is on Chrome or Edge. If No &rarr; Instruct candidate to switch browser.</div>
+            <div class="flow-step-spiel">
+              <span>"Please check the following before starting the exam:\nUse the latest version of Google Chrome or Microsoft Edge."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check the following before starting the exam:\nUse the latest version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 3 &mdash; Hardware Device Switch / Mute</div>
+            <div class="flow-step-title">Check Physical Mute Switch or Headset Toggle</div>
+            <div class="flow-step-action">Inspect headset or laptop mute toggle switch. Ensure microphone is unmuted.</div>
+            <div class="flow-step-spiel">
+              <span>"Please check for a microphone switch or button on your device or headset and make sure it is unmuted."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check for a microphone switch or button on your device or headset and make sure it is unmuted.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 4 &amp; 5 &mdash; Browser &amp; OS Permissions</div>
+            <div class="flow-step-title">Allow Microphone Access in Browser Lock Icon &amp; OS Settings</div>
+            <div class="flow-step-action">Check lock icon near URL bar and system sound privacy settings. Enable permissions.</div>
+            <div class="flow-step-spiel">
+              <span>"Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 6 &amp; 7 &mdash; Pre-Flight Selection &amp; Network/VPN</div>
+            <div class="flow-step-title">Select Device Input &amp; Disable Active Corporate VPN/ZScaler</div>
+            <div class="flow-step-action">Refresh tab to pre-flight screen to pick correct microphone. Disable VPN software.</div>
+            <div class="flow-step-spiel">
+              <span>"Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 8 &amp; 9 &mdash; Rejoin &amp; Computer Reboot</div>
+            <div class="flow-step-title">Re-enter Session / Full Device Restart</div>
+            <div class="flow-step-action">Ask candidate to rejoin session. If still failing, request full system reboot to clear driver locks.</div>
+            <div class="flow-step-spiel">
+              <span>"I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'I\'m no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared.')">⚜ Copy</button>
+            </div>
+            <div class="flow-step-spiel" style="margin-top:6px;">
+              <span>"Please try to reboot your machine and launch the exam again."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please try to reboot your machine and launch the exam again.')">⚜ Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Non-SEB Screen Sharing -->
+        <div class="trouble-card">
+          <h3>🖥️ Screen Sharing &mdash; Can't Share Screen (Non-SEB)</h3>
+          
+          <div class="flow-step">
+            <div class="flow-step-num">Step 1, 2 &amp; 3 &mdash; Permissions &amp; Monitored Displays</div>
+            <div class="flow-step-title">OS Permissions &amp; Disconnect Secondary Displays</div>
+            <div class="flow-step-action">Disconnect extra screens. On Mac, check System Preferences &gt; Privacy &gt; Screen Recording.</div>
+            <div class="flow-step-spiel">
+              <span>"Disconnect any external or extended monitors and use only one screen."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Disconnect any external or extended monitors and use only one screen.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 4 &amp; 5 &mdash; VPN &amp; Network Hotspot</div>
+            <div class="flow-step-title">Disable Managed VPN / Switch to Alternate Wi-Fi</div>
+            <div class="flow-step-action">Disable VPN or proxy. Switch to personal Wi-Fi or mobile hotspot if corporate Wi-Fi blocks streaming.</div>
+            <div class="flow-step-spiel">
+              <span>"Make sure any VPN or proxy connection is turned off."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Make sure any VPN or proxy connection is turned off.')">⚜ Copy</button>
+            </div>
+            <div class="flow-step-spiel" style="margin-top:6px;">
+              <span>"It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 6 &amp; 7 &mdash; Dashboard Relaunch &amp; Reboot</div>
+            <div class="flow-step-title">Relaunch Session / Restart Computer</div>
+            <div class="flow-step-action">Relaunch exam from candidate dashboard. If still failing, restart machine to reset display cache.</div>
+            <div class="flow-step-spiel">
+              <span>"Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?"</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?')">⚜ Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Non-SEB Video -->
+        <div class="trouble-card">
+          <h3>📷 Video &mdash; Camera Not Working (Non-SEB)</h3>
+          
+          <div class="flow-step">
+            <div class="flow-step-num">Step 1, 2 &amp; 3 &mdash; Physical Switch, Cover &amp; Permissions</div>
+            <div class="flow-step-title">Check Physical Switch/Slider &amp; Browser Lock Icon</div>
+            <div class="flow-step-action">Inspect camera privacy shutter, physical laptop switch, and browser lock permissions.</div>
+            <div class="flow-step-spiel">
+              <span>"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 4, 5 &amp; 6 &mdash; Close Competing Apps &amp; Enable Access</div>
+            <div class="flow-step-title">Close Conflicting Applications (Zoom, Teams, Skype)</div>
+            <div class="flow-step-action">Ensure no background software is locking the camera hardware. Verify browser permissions.</div>
+            <div class="flow-step-spiel">
+              <span>"Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 7, 8 &amp; 9 &mdash; Browser Refresh &amp; Reconnection Rules</div>
+            <div class="flow-step-title">Click Top-Left Refresh Button &amp; 30-Min Policy</div>
+            <div class="flow-step-action">Refresh browser window. Remind candidate of 30-minute auto-save reconnection policy.</div>
+            <div class="flow-step-spiel">
+              <span>"Please click the refresh button on the top left side of the screen."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please click the refresh button on the top left side of the screen.')">⚜ Copy</button>
+            </div>
+            <div class="flow-step-spiel" style="margin-top:6px;">
+              <span>"You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed.')">⚜ Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="trouble-mode-header">🧭 SEB (SECURE EXAM BROWSER) EXAMS</div>
+
+        <!-- SEB Troubleshooting -->
+        <div class="trouble-card">
+          <h3>🔐 Secure Exam Browser &mdash; SEB Hardware &amp; Media Diagnostics</h3>
+          
+          <div class="flow-step">
+            <div class="flow-step-num">Step 1 &mdash; Top-Left SEB Refresh</div>
+            <div class="flow-step-title">Refresh Safe Exam Browser Navigation</div>
+            <div class="flow-step-action">Instruct candidate to click the SEB refresh icon located in the upper-left corner of the window.</div>
+            <div class="flow-step-spiel">
+              <span>"To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 2 &mdash; SEB Input Device Switching</div>
+            <div class="flow-step-title">Re-select Audio/Video Devices in SEB Bar</div>
+            <div class="flow-step-action">Refresh SEB media selector dialog and choose an alternate active webcam or microphone device.</div>
+            <div class="flow-step-spiel">
+              <span>"Please try to refresh the SEB and choose a different audio/video input."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please try to refresh the SEB and choose a different audio/video input.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 3 &mdash; Bottom-Right Power Icon Exit</div>
+            <div class="flow-step-title">Exit SEB Application to Reset Environment</div>
+            <div class="flow-step-action">Instruct candidate to exit SEB by clicking the bottom-right power icon, fix device settings, and re-enter.</div>
+            <div class="flow-step-spiel">
+              <span>"To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 4 &mdash; SEB Re-entry &amp; Support Escalation</div>
+            <div class="flow-step-title">Re-launch SEB or Escalate to Support</div>
+            <div class="flow-step-action">Re-launch SEB session. If version error persists, refer candidate to support@certiverse.com.</div>
+            <div class="flow-step-spiel">
+              <span>"There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam.')">⚜ Copy</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="sidebar-footer">
-      <span>FiveActs Secure Hub</span>
-      <span>v3.5</span>
+    <!-- CANNED MESSAGE LIBRARY VIEW -->
+    <div id="view-library" class="dashboard-view">
+      <h2 class="page-title">Canned Message Library</h2>
+      <p class="page-sub">Every spiel on file. Find one in seconds — search, or filter by category.</p>
+      <div class="filter-row" id="libraryFilters"></div>
+      <div id="libraryList"></div>
     </div>
-  </aside>
 
-  <main class="main-viewport">
-    
-    <header class="top-command-bar">
-      <div class="page-indicator">
-        <h2 id="current-page-title">🏯 Home / Command Center</h2>
-        <p id="current-page-desc">Operational dashboard and real-time proctoring metrics.</p>
+    <!-- THRESHOLD CENTER VIEW -->
+    <div id="view-threshold" class="dashboard-view">
+      <h2 class="page-title">Infraction Threshold Center</h2>
+      <p class="page-sub">Tactical response reference. Risk color is derived from each infraction's severity and remaining threshold.</p>
+      <div class="risk-legend">
+        <span><span class="dot" style="background:#00ff88;"></span>Standard</span>
+        <span><span class="dot" style="background:#ffcc00;"></span>Elevated</span>
+        <span><span class="dot" style="background:#ff7700;"></span>Critical</span>
+        <span><span class="dot" style="background:#ff1e56;"></span>Immediate</span>
       </div>
-      <div class="clock-badge" id="ph-clock">
-        <span>🕒 PHT --:--:--</span>
-      </div>
-    </header>
+      <div class="filter-row" id="thresholdFilters"></div>
+      <div class="infraction-grid" id="infractionGrid"></div>
+      <div class="empty-state" id="infractionEmpty" style="display:none;margin-top:14px;">No matching infractions.</div>
+    </div>
 
-    <div class="content-area">
+    <!-- CLIENT POLICIES VIEW -->
+    <div id="view-policies" class="dashboard-view">
+      <h2 class="page-title">Client Policy Library</h2>
+      <p class="page-sub">Select a client to generate ready-to-copy responses, or search the full archive below.</p>
 
-      <div id="page-home" class="page-view active">
-        <div class="welcome-banner">
-          <h3>
-            <div class="five-acts-logo" style="width:36px; height:36px; font-size:1rem;">5A</div>
-            Welcome to the FiveActs Proctor Dojo
-          </h3>
-          <p>Discipline, precision, and uncompromised security. Access complete training scrolls, exact check-in spiels, client clan policies, and infraction triage matrices instantly under Standard Philippine Time.</p>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-value" id="stat-checkin-count">12</div>
-            <div class="stat-label">Check-In Protocols</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="stat-policy-count">16</div>
-            <div class="stat-label">Client Policy Vaults</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="stat-infraction-count">23</div>
-            <div class="stat-label">Infraction Thresholds</div>
-          </div>
-        </div>
-
-        <div class="home-grid">
-          <div class="quick-actions-panel">
-            <div class="section-heading">
-              <span>Quick Operational Jump</span>
-            </div>
-            <div class="quick-links-grid">
-              <div class="quick-link-tile" onclick="switchPage('checkin', document.querySelectorAll('.nav-item')[1])">
-                <h4>📜 Check-In Steps</h4>
-                <p>Exact proctor verification spiels and OS instructions.</p>
-              </div>
-              <div class="quick-link-tile" onclick="switchPage('canned', document.querySelectorAll('.nav-item')[2])">
-                <h4>💬 Canned Messages</h4>
-                <p>Instant command palette for warnings and support.</p>
-              </div>
-              <div class="quick-link-tile" onclick="switchPage('infractions', document.querySelectorAll('.nav-item')[3])">
-                <h4>⚖ Infraction Triage</h4>
-                <p>Tactical decision matrix for violations and thresholds.</p>
-              </div>
-              <div class="quick-link-tile" onclick="switchPage('policies', document.querySelectorAll('.nav-item')[4])">
-                <h4>🏛 Client Policy Library</h4>
-                <p>Name match, break policies, and SEB requirements by client.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="quick-actions-panel">
-            <div class="section-heading">
-              <span>Emergency Operations Panel</span>
-            </div>
-            <div style="display:flex; flex-direction:column; gap:10px;">
-              <button class="action-btn" style="width:100%; justify-content:center; padding:12px;" onclick="copyEmergencySpiel('support')">
-                📋 Copy Tech Support Email Spiel
-              </button>
-              <button class="action-btn" style="width:100%; justify-content:center; padding:12px; background:var(--accent-crimson); color:#fff;" onclick="copyEmergencySpiel('terminate')">
-                ⚠️ Copy Immediate Termination Spiel
-              </button>
-            </div>
-          </div>
-        </div>
+      <div class="gen-panel">
+        <label for="policySelect" style="display:block;font-size:.8rem;color:var(--text-dim);margin-bottom:8px;">Policy Generator &mdash; select a client</label>
+        <select id="policySelect" class="gen-select" onchange="renderGenerator()"></select>
+        <div class="gen-cards" id="generatorCards"></div>
       </div>
 
-      <div id="page-checkin" class="page-view">
-        <div class="search-box-container">
-          <span class="search-icon-abs">🔍</span>
-          <input type="text" class="global-search-input" placeholder="Search exact check-in spiels (e.g. ID, welcome, Windows, room scan)..." oninput="filterCheckin(this.value)">
-        </div>
-        <div id="checkin-container"></div>
-      </div>
-
-      <div id="page-canned" class="page-view">
-        <div class="search-box-container">
-          <span class="search-icon-abs">🔍</span>
-          <input type="text" id="canned-search-input" class="global-search-input" placeholder="Search canned messages..." oninput="filterCannedMessages(this.value)">
-        </div>
-
-        <div class="filter-pills" id="canned-filters">
-          <div class="filter-pill active" onclick="filterCannedCategory('all', this)">All Messages</div>
-          <div class="filter-pill" onclick="filterCannedCategory('warning', this)">Warnings</div>
-          <div class="filter-pill" onclick="filterCannedCategory('support', this)">Technical Support</div>
-          <div class="filter-pill" onclick="filterCannedCategory('termination', this)">Terminations</div>
-        </div>
-
-        <div id="canned-messages-container"></div>
-      </div>
-
-      <div id="page-infractions" class="page-view">
-        <div class="tactical-selector-box">
-          <div class="section-heading">
-            <span>⚡ Tactical Response Simulator (Quick Triage)</span>
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-            <div>
-              <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; display:block; margin-bottom:6px;">Select Infraction:</label>
-              <select id="tactical-select" class="global-search-input" style="padding:10px 14px;" onchange="updateTacticalSimulation()"></select>
-            </div>
-            <div id="tactical-output-summary" style="display:flex; flex-direction:column; justify-content:center; background:var(--bg-card-glass); padding:12px; border-radius:8px; border:1px solid var(--border-subtle);">
-              <span style="font-size:0.75rem; color:var(--accent-gold); font-weight:700;">LIVE ACTION PATHWAY</span>
-              <span id="tactical-summary-text" style="font-size:0.85rem; color:#fff; margin-top:4px;">Select an infraction on the left to generate the tactical protocol.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="search-box-container">
-          <span class="search-icon-abs">🔍</span>
-          <input type="text" class="global-search-input" placeholder="Search infractions by name or category..." oninput="filterInfractionsTable(this.value)">
-        </div>
-
-        <div class="filter-pills">
-          <div class="filter-pill active" onclick="filterInfractionSeverity('all', this)">All Severities</div>
-          <div class="filter-pill" onclick="filterInfractionSeverity('minor', this)">Minor</div>
-          <div class="filter-pill" onclick="filterInfractionSeverity('major', this)">Major</div>
-        </div>
-
-        <div class="dojo-table-wrapper">
-          <table class="dojo-table" id="infractions-table">
+      <div class="section-container">
+        <h2 class="section-title">Full Policy Archive <span class="section-count" id="policiesCount"></span></h2>
+        <div class="table-responsive">
+          <table id="policiesTable">
             <thead>
-              <tr>
-                <th>Violation Name</th>
-                <th>Context</th>
-                <th>Category</th>
-                <th>Severity</th>
-                <th style="text-align:center;">Threshold</th>
-              </tr>
+              <tr><th>Client</th><th>Name Change</th><th>Breaks Policy</th><th>Name Policy</th><th>SEB / Non-SEB</th><th>Documentation</th></tr>
             </thead>
-            <tbody id="infractions-tbody"></tbody>
+            <tbody id="policiesBody"></tbody>
           </table>
         </div>
+        <div class="empty-state" id="policiesEmpty" style="display:none;margin-top:10px;">No matching clients.</div>
       </div>
-
-      <div id="page-policies" class="page-view">
-        <div class="search-box-container">
-          <span class="search-icon-abs">🔍</span>
-          <input type="text" class="global-search-input" placeholder="Search client policies..." oninput="filterClientList(this.value)">
-        </div>
-
-        <div class="client-grid-layout">
-          <div class="client-list-sidebar" id="client-sidebar-list"></div>
-          <div class="client-details-card" id="client-details-pane"></div>
-        </div>
-      </div>
-
-      <div id="page-faq" class="page-view">
-        <div class="search-box-container">
-          <span class="search-icon-abs">🔍</span>
-          <input type="text" class="global-search-input" placeholder="Search knowledge base..." oninput="filterFaq(this.value)">
-        </div>
-
-        <div class="filter-pills" id="faq-filters">
-          <div class="filter-pill active" onclick="filterFaqCategory('all', this)">All Articles</div>
-          <div class="filter-pill" onclick="filterFaqCategory('ID Verification', this)">ID Verification</div>
-          <div class="filter-pill" onclick="filterFaqCategory('Room Scans', this)">Room Scans</div>
-          <div class="filter-pill" onclick="filterFaqCategory('Technical Issues', this)">Technical Issues</div>
-          <div class="filter-pill" onclick="filterFaqCategory('SEB', this)">SEB</div>
-        </div>
-
-        <div id="faq-container"></div>
-      </div>
-
     </div>
-  </main>
-</div>
+
+    <!-- FAQ ARCHIVE VIEW -->
+    <div id="view-faq" class="dashboard-view">
+      <h2 class="page-title">FAQ Archive</h2>
+      <p class="page-sub">Internal proctor encyclopedia.</p>
+      <div class="empty-state">
+        This archive is not yet compiled &mdash; no FAQ content has been supplied to build from.<br><br>
+        Send over your existing FAQ entries (question + answer, grouped by topic such as ID Verification, Room Scan, Technical Support, Reconnect Policies, Break Policies, Termination Policies, or SEB) and this section will be populated with live search, related topics, and quick navigation.
+      </div>
+    </div>
+
+  </div>
 
 <script>
-  /* UNTOUCHED SPIELS & DATA */
-  const checkinData = [
-    {
-      title: "1. Welcome",
-      category: "Welcome",
-      spiels: [
-        "Hello and welcome! I will be your proctor for this exam.",
-        "We have a few steps to complete before your exam begins. This time does not count against your exam time limit.",
-        "Please hold while we prepare your exam. Thank you for waiting."
-      ]
-    },
-    {
-      title: "2. Identification Verification",
-      category: "Identification",
-      spiels: [
-        "We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible.",
-        "Please bring your ID closer to the camera view.",
-        "Please hold your ID steady.",
-        "Please flip your ID.",
-        "Please show the expiration date.",
-        "Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment.",
-        "You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling.",
-        "Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com.",
-        "Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To assist you in reaching out to the exam sponsor who will process the name change, please contact support@certiverse.com.",
-        "Once completed, you can re-enter the reservation and we will continue.",
-        "Thank you. You may keep your ID away now."
-      ]
-    },
-    {
-      title: "3. System Verification",
-      category: "System",
-      spiels: [
-        "[ALL] Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam.",
-        "[ALL] Please also close the other Certiverse tab, leaving only this one open.",
-        "[WINDOWS] Please open your Task Manager then scroll down slowly until you reach the end of the list.",
-        "Thank you. You may close the Task Manager now.",
-        "[WINDOWS] Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option.",
-        "[MAC] Please open your Activity Monitor then scroll down slowly until you reach the end of the list.",
-        "Thank you. You may close the Activity Monitor now.",
-        "[MAC] Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed.",
-        "[LINUX] Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list.",
-        "Thank you. You may close the System Monitor now.",
-        "[LINUX] Please close or force quit any applications not related to the exam. If needed, select the application and choose “End Process” or “Kill Process."
-      ]
-    },
-    {
-      title: "4. Clear Desk",
-      category: "Desk",
-      spiels: [
-        "Thank you. If there are any items on your desk surface, please remove them now.",
-        "Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, smart glasses, and any other electronic device.",
-        "Headphones are not allowed during the exam. Please remove them and put them away.",
-        "Hats are not allowed during the exam. Please remove your hat and put it away.",
-        "Please remove your smartwatch and place it out of reach.",
-        "As outlined in the exam policies, only one laptop or computer without extra screens is allowed. Please remove or cover any additional monitors so they are not facing you directly."
-      ]
-    },
-    {
-      title: "5. Room Scan",
-      category: "Room",
-      spiels: [
-        "Thank you. We will now scan the room to confirm that all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk.",
-        "When doing the room scan, please hold your laptop or webcam in a way that allows the camera to clearly capture the room. Rotate it slowly and make sure nothing blocks the view, so we can see all areas of your workspace, including the desk, floor, walls, and surrounding environment.",
-        "Please show us the desk area.",
-        "Please show the area under the desk.",
-        "All electronics should be out of reach and turned off.",
-        "Please ensure your desk is clear of all items.",
-        "Please direct your camera around the room one more time.",
-        "Please make sure to capture all corners and edges of your desk during the room scan.",
-        "Is it possible for you to improve the lighting in your testing area?",
-        "The window behind you is creating a backlight effect. Adjusting the lighting or moving slightly would help us proceed.",
-        "Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination."
-      ]
-    },
-    {
-      title: "6. Exam Release",
-      category: "Release",
-      spiels: [
-        "Thank you for your cooperation. You may now click the “Hide Video” button on the side of this chat box.",
-        "Thank you. Do you have any questions before beginning your exam?",
-        "If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection.",
-        "Please use this chat if you have any questions that are not related to the exam content. I will now release your exam.",
-        "You can click the “Hide Chat” button on the side or the X at the top-right to begin your exam."
-      ]
-    },
-    {
-      title: "7. Miscellaneous",
-      category: "Misc",
-      spiels: [
-        "Breaks are not allowed for this exam.",
-        "You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules.",
-        "Please wait briefly while we investigate this issue.",
-        "Sorry, but we cannot assist with content-related questions.",
-        "You can email support@certiverse.com for further assistance with rescheduling.",
-        "Please adjust your camera. Your head and shoulders must remain fully visible during the exam.",
-        "Welcome back!",
-        "Thank you. You may resume now."
-      ]
-    },
-    {
-      title: "8. Warnings",
-      category: "Warnings",
-      spiels: [
-        "Please refrain from talking aloud.",
-        "Please ensure your face is always within camera view.",
-        "Please keep your attention forward.",
-        "Please ask all others to leave the room.",
-        "Please remain on the exam environment tab only.",
-        "Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."
-      ]
-    },
-    {
-      title: "9. Technical Support",
-      category: "Support",
-      spiels: [
-        "Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open.",
-        "Please click the refresh button on the top left side of the screen.",
-        "Please try to reboot your machine and launch the exam again.",
-        "Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?",
-        "I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared.",
-        "Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser.",
-        "Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs.",
-        "It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network.",
-        "I understand. Are you currently on a company network?",
-        "Are you currently using a docking station?",
-        "Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled.",
-        "It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.",
-        "You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed.",
-        "Please check the following before starting the exam: Use the latest version of Google Chrome or Microsoft Edge. Ensure you have a stable internet connection. Disable any browser extensions or add-ons. Clear your browser cache. Make sure any VPN or proxy connection is turned off. Disconnect any external or extended monitors and use only one screen. Verify that the exam application is allowed in both your system and browser settings, and that all required permissions are enabled (such as camera, microphone, and screen sharing).",
-        "If the issue persists after checking the following, please restart your device and relaunch the exam."
-      ]
-    },
-    {
-      title: "11. Non-SEB Exams",
-      category: "Browser",
-      spiels: [
-        "Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat.",
-        "You may hide or move the pop-up screen-sharing message at the bottom center of your screen."
-      ]
-    },
-    {
-      title: "12. Termination Messages",
-      category: "Termination",
-      spiels: [
-        "Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
-        "The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
-        "We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
-        "Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com.",
-        "The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance."
-      ]
-    },
-    {
-      title: "13. SEB — Secure Exam Browser",
-      category: "SEB",
-      spiels: [
-        "You may exit the Secure Exam Browser to resolve the issue. Once it is fixed, re-entering SEB will reconnect you so the exam can continue.",
-        "To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen.",
-        "To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen.",
-        "Please try to refresh the SEB and choose a different audio/video input.",
-        "There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."
-      ]
+(function(){
+  "use strict";
+
+  /* ============================================================
+     CATEGORIES Taxonomy
+     ============================================================ */
+  var CATEGORIES = [
+    {id:"1",  label:"Welcome",                     icon:"🌅"},
+    {id:"2",  label:"Identification Verification", icon:"🪪"},
+    {id:"3",  label:"System Verification",         icon:"🖥️"},
+    {id:"4",  label:"Clear Desk",                  icon:"🧹"},
+    {id:"5",  label:"Room Scan",                   icon:"🔍"},
+    {id:"6",  label:"Exam Release",                icon:"🚪"},
+    {id:"7",  label:"Miscellaneous",               icon:"🗂️"},
+    {id:"8",  label:"Warnings",                    icon:"⚠️"},
+    {id:"9",  label:"Technical Support",           icon:"🛠️"},
+    {id:"11", label:"Non-SEB Exams",               icon:"🔐"},
+    {id:"12", label:"Termination Messages",        icon:"⛔"},
+    {id:"13", label:"SEB",                         icon:"🧭"}
+  ];
+
+  function catLabel(id){
+    for (var i=0;i<CATEGORIES.length;i++){ if (CATEGORIES[i].id===id) return CATEGORIES[i].label; }
+    return id;
+  }
+
+  /* ============================================================
+     MESSAGES Data (Exact Wording Preserved)
+     ============================================================ */
+  var MESSAGES = [
+    // 1. Welcome
+    {id:"m1_1", cat:"1", tags:[], text:"Hello and welcome! I will be your proctor for this exam."},
+    {id:"m1_2", cat:"1", tags:[], text:"We have a few steps to complete before your exam begins. This time does not count against your exam time limit."},
+    {id:"m1_3", cat:"1", tags:[], text:"Please hold while we prepare your exam. Thank you for waiting."},
+
+    // 2. Identification Verification
+    {id:"m2_1", cat:"2", tags:[], text:"We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible."},
+    {id:"m2_2", cat:"2", tags:[], text:"Please bring your ID closer to the camera view."},
+    {id:"m2_3", cat:"2", tags:[], text:"Please hold your ID steady."},
+    {id:"m2_4", cat:"2", tags:[], text:"Please flip your ID."},
+    {id:"m2_5", cat:"2", tags:[], text:"Please show the expiration date."},
+    {id:"m2_6", cat:"2", tags:[], text:"Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment."},
+    {id:"m2_7", cat:"2", tags:["critical"], text:"You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling."},
+    {id:"m2_8", cat:"2", tags:["critical"], text:"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com."},
+    {id:"m2_9", cat:"2", tags:["critical"], text:"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To assist you in reaching out to the exam sponsor who will process the name change, please contact support@certiverse.com."},
+    {id:"m2_10", cat:"2", tags:[], text:"Once completed, you can re-enter the reservation and we will continue."},
+    {id:"m2_11", cat:"2", tags:[], text:"Thank you. You may keep your ID away now."},
+
+    // 3. System Verification
+    {id:"m3_1", cat:"3", tags:[], text:"[ALL] Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam."},
+    {id:"m3_2", cat:"3", tags:[], text:"[ALL] Please also close the other Certiverse tab, leaving only this one open."},
+    {id:"m3_3", cat:"3", tags:["win"], text:"[WINDOWS] Please open your Task Manager then scroll down slowly until you reach the end of the list."},
+    {id:"m3_4", cat:"3", tags:["win"], text:"Thank you. You may close the Task Manager now."},
+    {id:"m3_5", cat:"3", tags:["win"], text:"[WINDOWS] Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option."},
+    {id:"m3_6", cat:"3", tags:["mac"], text:"[MAC] Please open your Activity Monitor then scroll down slowly until you reach the end of the list."},
+    {id:"m3_7", cat:"3", tags:["mac"], text:"Thank you. You may close the Activity Monitor now."},
+    {id:"m3_8", cat:"3", tags:["mac"], text:"[MAC] Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed."},
+    {id:"m3_9", cat:"3", tags:["linux"], text:"[LINUX] Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list."},
+    {id:"m3_10", cat:"3", tags:["linux"], text:"Thank you. You may close the System Monitor now."},
+    {id:"m3_11", cat:"3", tags:["linux"], text:"[LINUX] Please close or force quit any applications not related to the exam. If needed, select the application and choose “End Process” or “Kill Process."},
+
+    // 4. Clear Desk
+    {id:"m4_1", cat:"4", tags:[], text:"Thank you. If there are any items on your desk surface, please remove them now."},
+    {id:"m4_2", cat:"4", tags:[], text:"Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, smart glasses, and any other electronic device."},
+    {id:"m4_3", cat:"4", tags:[], text:"Headphones are not allowed during the exam. Please remove them and put them away."},
+    {id:"m4_4", cat:"4", tags:[], text:"Hats are not allowed during the exam. Please remove your hat and put it away."},
+    {id:"m4_5", cat:"4", tags:[], text:"Please remove your smartwatch and place it out of reach."},
+    {id:"m4_6", cat:"4", tags:[], text:"As outlined in the exam policies, only one laptop or computer without extra screens is allowed. Please remove or cover any additional monitors so they are not facing you directly."},
+
+    // 5. Room Scan
+    {id:"m5_1", cat:"5", tags:[], text:"Thank you. We will now scan the room to confirm that all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk."},
+    {id:"m5_2", cat:"5", tags:[], text:"When doing the room scan, please hold your laptop or webcam in a way that allows the camera to clearly capture the room. Rotate it slowly and make sure nothing blocks the view, so we can see all areas of your workspace, including the desk, floor, walls, and surrounding environment."},
+    {id:"m5_3", cat:"5", tags:[], text:"Please show us the desk area."},
+    {id:"m5_4", cat:"5", tags:[], text:"Please show the area under the desk."},
+    {id:"m5_5", cat:"5", tags:[], text:"All electronics should be out of reach and turned off."},
+    {id:"m5_6", cat:"5", tags:[], text:"Please ensure your desk is clear of all items."},
+    {id:"m5_7", cat:"5", tags:[], text:"Please direct your camera around the room one more time."},
+    {id:"m5_8", cat:"5", tags:[], text:"Please make sure to capture all corners and edges of your desk during the room scan."},
+    {id:"m5_9", cat:"5", tags:[], text:"Is it possible for you to improve the lighting in your testing area?"},
+    {id:"m5_10", cat:"5", tags:[], text:"The window behind you is creating a backlight effect. Adjusting the lighting or moving slightly would help us proceed."},
+    {id:"m5_11", cat:"5", tags:["critical"], text:"Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination."},
+
+    // 6. Exam Release
+    {id:"m6_1", cat:"6", tags:[], text:"Thank you for your cooperation. You may now click the “Hide Video” button on the side of this chat box."},
+    {id:"m6_2", cat:"6", tags:[], text:"Thank you. Do you have any questions before beginning your exam?"},
+    {id:"m6_3", cat:"6", tags:[], text:"If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection."},
+    {id:"m6_4", cat:"6", tags:[], text:"Please use this chat if you have any questions that are not related to the exam content. I will now release your exam."},
+    {id:"m6_5", cat:"6", tags:[], text:"You can click the “Hide Chat” button on the side or the X at the top-right to begin your exam."},
+
+    // 7. Miscellaneous
+    {id:"m7_1", cat:"7", tags:[], text:"Breaks are not allowed for this exam."},
+    {id:"m7_2", cat:"7", tags:[], text:"You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules."},
+    {id:"m7_3", cat:"7", tags:[], text:"Please wait briefly while we investigate this issue."},
+    {id:"m7_4", cat:"7", tags:[], text:"Sorry, but we cannot assist with content-related questions."},
+    {id:"m7_5", cat:"7", tags:[], text:"You can email support@certiverse.com for further assistance with rescheduling."},
+    {id:"m7_6", cat:"7", tags:[], text:"Please adjust your camera. Your head and shoulders must remain fully visible during the exam."},
+    {id:"m7_7", cat:"7", tags:[], text:"Welcome back!"},
+    {id:"m7_8", cat:"7", tags:[], text:"Thank you. You may resume now."},
+
+    // 8. Warnings
+    {id:"m8_1", cat:"8", tags:[], text:"Please refrain from talking aloud."},
+    {id:"m8_2", cat:"8", tags:[], text:"Please ensure your face is always within camera view."},
+    {id:"m8_3", cat:"8", tags:[], text:"Please keep your attention forward."},
+    {id:"m8_4", cat:"8", tags:["critical"], text:"Please ask all others to leave the room."},
+    {id:"m8_5", cat:"8", tags:[], text:"Please remain on the exam environment tab only."},
+    {id:"m8_6", cat:"8", tags:["critical"], text:"Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."},
+    {id:"m8_7", cat:"8", tags:["critical"], text:"Unfortunately, we are not allowed to release the exam unless all requirements are met."},
+
+    // 9. Technical Support
+    {id:"m9_1", cat:"9", tags:[], text:"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."},
+    {id:"m9_2", cat:"9", tags:[], text:"Please click the refresh button on the top left side of the screen."},
+    {id:"m9_3", cat:"9", tags:[], text:"Please try to reboot your machine and launch the exam again."},
+    {id:"m9_4", cat:"9", tags:[], text:"Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?"},
+    {id:"m9_5", cat:"9", tags:[], text:"I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared."},
+    {id:"m9_6", cat:"9", tags:[], text:"Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser."},
+    {id:"m9_7", cat:"9", tags:[], text:"Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs."},
+    {id:"m9_8", cat:"9", tags:[], text:"It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network."},
+    {id:"m9_9", cat:"9", tags:[], text:"I understand. Are you currently on a company network?"},
+    {id:"m9_10", cat:"9", tags:[], text:"Are you currently using a docking station?"},
+    {id:"m9_11", cat:"9", tags:[], text:"Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled."},
+    {id:"m9_12", cat:"9", tags:[], text:"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."},
+    {id:"m9_13", cat:"9", tags:["critical"], text:"You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed."},
+    {id:"m9_14", cat:"9", tags:[], text:"Please check the following before starting the exam:\n\n• Use the latest version of Google Chrome or Microsoft Edge.\n• Ensure you have a stable internet connection.\n• Disable any browser extensions or add-ons.\n• Clear your browser cache.\n• Make sure any VPN or proxy connection is turned off.\n• Disconnect any external or extended monitors and use only one screen.\n• Verify that the exam application is allowed in both your system and browser settings, and that all required permissions are enabled (such as camera, microphone, and screen sharing).\n\nIf the issue persists after checking the following, please restart your device and relaunch the exam."},
+
+    // 11. Non-SEB Exams
+    {id:"m11_1", cat:"11", tags:[], text:"Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat."},
+    {id:"m11_2", cat:"11", tags:[], text:"You may hide or move the pop-up screen-sharing message at the bottom center of your screen."},
+
+    // 12. Termination Messages
+    {id:"m12_1", cat:"12", tags:["critical"], term:"prohibited-app", text:"Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_2", cat:"12", tags:["critical"], term:"prohibited-device", text:"The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_3", cat:"12", tags:["critical"], term:"break-overage", text:"We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_4", cat:"12", tags:["critical"], term:"foul-language", text:"Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_5", cat:"12", tags:["critical"], term:"integrity-compromised", text:"The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance."},
+
+    // 13. SEB — Secure Exam Browser
+    {id:"m13_1", cat:"13", tags:[], text:"You may exit the Secure Exam Browser to resolve the issue. Once it is fixed, re-entering SEB will reconnect you so the exam can continue."},
+    {id:"m13_2", cat:"13", tags:[], text:"To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen."},
+    {id:"m13_3", cat:"13", tags:[], text:"To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen."},
+    {id:"m13_4", cat:"13", tags:[], text:"Please try to refresh the SEB and choose a different audio/video input."},
+    {id:"m13_5", cat:"13", tags:["critical"], text:"There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."}
+  ];
+
+  function findMessageById(id){
+    for (var i=0;i<MESSAGES.length;i++){ if (MESSAGES[i].id===id) return MESSAGES[i]; }
+    return null;
+  }
+  function findByTerm(term){
+    for (var i=0;i<MESSAGES.length;i++){ if (MESSAGES[i].term===term) return MESSAGES[i]; }
+    return null;
+  }
+
+  /* ============================================================
+     POLICIES Data
+     ============================================================ */
+  var POLICIES = [
+    ["Akylade","Allowed","One (1) five (5) minute break","Name must match govt. ID","SEB","Not allowed"],
+    ["Atlassian","Not allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["Blue Prism","Allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["BMC","Not allowed","One (1) five (5) minute break","Name must match govt. ID","SEB","Allowed"],
+    ["Camunda","Not allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["Casbo","Not allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["Docusign","Not allowed","None","Nicknames allowed","SEB","Not allowed"],
+    ["Hashicorp","Not allowed","None (Vault Prof: one (1) fifteen (15) minute break)","Name must match govt. ID","Non-SEB","Not allowed"],
+    ["Intersystems","Not allowed","One (1) ten (10) minute break","Nicknames allowed","SEB","Depends on the exam"],
+    ["NRPP","Allowed","One (1) fifteen (15) minute break","Nicknames allowed","SEB","Allowed"],
+    ["NVIDIA","Allowed","None (Beta 180: two (2) five (5) minute breaks)","Name must match govt. ID","SEB","Allowed"],
+    ["Open Text","Not allowed","None","Name must match govt. ID","SEB","Allowed"],
+    ["Project Success Incorporated","Allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["SideFX","Allowed","None","Name must match govt. ID","SEB","Textbooks allowed"],
+    ["VastData","Allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["WellSky","Allowed","Unlimited breaks (10-20 minutes per break)","Name must match govt. ID","SEB","Textbooks allowed"]
+  ];
+
+  /* ============================================================
+     INFRACTIONS Data
+     ============================================================ */
+  var INFRACTIONS = [
+    ["Another person in the room","Check in, Testing","Prohibited Behavior","Minor",2,"person",null],
+    ["Books / Supplemental Materials","Check in, Testing","Prohibited Items","Minor",2,"paper materials",null],
+    ["Camera","Check in, Testing","Prohibited Electronic Device","Minor",2,"camera",null],
+    ["Desk is not cleared off (only)","Check in","Check in","Minor",2,"desk",null],
+    ["Does not do complete scan: 360 room scan, desk/table top, under desk/table","Check in","Check in","Minor",1,"scan",null],
+    ["Eating/drinking without approved special accommodation","Testing","Prohibited Behavior","Minor",1,"beverages",null],
+    ["Environment or camera view too dark / candidate not visible","Check in, Testing","Check in","Minor",2,"lighting",null],
+    ["Face coverings","Check in","Check in","Minor",2,"",null],
+    ["Face out of view","Testing","Prohibited Behavior","Minor",2,"head and shoulders",null],
+    ["Failure to return from break","Testing","Prohibited Behavior","Major",0,"break","break-overage"],
+    ["Headphones/Earbuds","Check in","Prohibited Electronic Device","Minor",1,"headphones",null],
+    ["Headwear (unless allowed via accommodation/religious exempt)","Check in","Prohibited Items","Minor",1,"hat",null],
+    ["Internal environment too loud","Check in, Testing","Prohibited Behavior","Minor",2,"environment",null],
+    ["Leaves testing area","Testing","Prohibited Behavior","Minor",1,"permission",null],
+    ["Looking elsewhere","Testing","Prohibited Behavior","Major",4,"attention forward",null],
+    ["Mobile phone in use","Testing","Prohibited Electronic Device","Major",0,"mobile phone","prohibited-device"],
+    ["Mobile phone visible","Check in","Prohibited Electronic Device","Minor",1,"electronic devices",null],
+    ["Not following proctor instructions","Check in, Testing","Prohibited Behavior","Minor",2,"cooperation",null],
+    ["Proctor harassment (disrespectful, name calling)","Check in, Testing","Prohibited Behavior","Major",0,"disrespectful","foul-language"],
+    ["Proper clothing","Check in","Prohibited Behavior","Minor",1,"dressed appropriately",null],
+    ["Remote Desktop Applications","Check in","Prohibited Electronic Device","Minor",1,"Remote Desktop","prohibited-app"],
+    ["Secondary device (computer, laptop, calculator)","Check in","Prohibited Electronic Device","Minor",1,"electronic",null],
+    ["Smart Watch","Check in","Prohibited Electronic Device","Minor",0,"smartwatch",null],
+    ["Smoking or Vaping","Check in, Testing","Prohibited Behavior","Minor",2,"",null],
+    ["Suspicious behavior","Testing","Prohibited Behavior","Minor",2,"attention forward",null],
+    ["Talking aloud","Testing","Prohibited Behavior","Minor",2,"aloud",null],
+    ["Talking to others","Testing","Prohibited Behavior","Minor",2,"no one else",null],
+    ["Whiteboard/bulletin board with writing","Check in, Testing","Prohibited Items","Minor",2,"desk",null]
+  ];
+
+  /* ============================================================
+     QUICK ACTIONS
+     ============================================================ */
+  var QUICK_ACTIONS = [
+    {icon:"🪪", label:"Blurry / Unclear ID", query:"blurry"},
+    {icon:"❗", label:"Name Mismatch",        query:"not the name registered"},
+    {icon:"📱", label:"Mobile Phone",          query:"mobile phone"},
+    {icon:"👀", label:"Face Out of View",      query:"head and shoulders"},
+    {icon:"⏱️", label:"Break Violation",      query:"break"},
+    {icon:"🖥️", label:"Task Manager / Apps",   query:"Task Manager"}
+  ];
+
+  /* ============================================================
+     UTILITIES
+     ============================================================ */
+  function escapeHtml(str){
+    return String(str)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function loadSet(key){
+    try {
+      var raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : [];
+    } catch(e){ return []; }
+  }
+  function saveSet(key, arr){
+    try { localStorage.setItem(key, JSON.stringify(arr)); } catch(e){}
+  }
+  function toggleInSet(key, id, cap){
+    var arr = loadSet(key);
+    var idx = arr.indexOf(id);
+    if (idx === -1){
+      arr.unshift(id);
+      if (cap){ arr = arr.slice(0, cap); }
+    } else {
+      arr.splice(idx, 1);
     }
-  ];
+    saveSet(key, arr);
+    return arr;
+  }
+  function addToRecent(key, id, cap){
+    var arr = loadSet(key);
+    var idx = arr.indexOf(id);
+    if (idx !== -1){ arr.splice(idx,1); }
+    arr.unshift(id);
+    arr = arr.slice(0, cap || 10);
+    saveSet(key, arr);
+    return arr;
+  }
+  function isIn(key, id){ return loadSet(key).indexOf(id) !== -1; }
 
-  const cannedMessagesData = [
-    { category: "warning", tags: ["face", "camera"], text: "Please ensure your face is always within camera view." },
-    { category: "warning", tags: ["talking", "audio"], text: "Please refrain from talking aloud." },
-    { category: "warning", tags: ["phone", "device"], text: "The use of mobile phones is prohibited. Please put your phone away out of arm's reach immediately." },
-    { category: "support", tags: ["email", "help"], text: "You can email support@certiverse.com for further assistance with rescheduling." },
-    { category: "termination", tags: ["violation", "code"], text: "The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance." },
-    { category: "warning", tags: ["eyes", "focus"], text: "Please keep your attention forward." },
-    { category: "support", tags: ["connection", "reconnect"], text: "You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted." },
-    { category: "warning", tags: ["tab", "browser"], text: "Please remain on the exam environment tab only." }
-  ];
+  window.copyDirectText = function(btn, text) {
+    function showCopied(){
+      var original = btn.textContent;
+      btn.textContent = "✓ Technique Acquired";
+      btn.classList.add("copied");
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
+    }
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(showCopied, function(){ fallbackCopy(text, showCopied); });
+    } else {
+      fallbackCopy(text, showCopied);
+    }
+  };
 
-  const infractionsData = [
-    { name: "Another person in the room", context: "Check-in, Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 },
-    { name: "Books / Supplemental Materials", context: "Check-in, Testing", category: "Prohibited Items", severity: "minor", threshold: 2 },
-    { name: "Camera obstruction / issues", context: "Check-in, Testing", category: "Prohibited Device", severity: "minor", threshold: 2 },
-    { name: "Desk is not cleared off", context: "Check-in, Testing", category: "Check-in", severity: "minor", threshold: 2 },
-    { name: "Does not do complete scan (360, desk, under)", context: "Check-in", category: "Check-in", severity: "minor", threshold: 1 },
-    { name: "Eating/drinking without approved Special Accom", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 1 },
-    { name: "Environment or camera view too dark", context: "Check-in", category: "Check-in", severity: "minor", threshold: 2 },
-    { name: "Face coverings", context: "Check-in", category: "Check-in", severity: "minor", threshold: 2 },
-    { name: "Face out of view", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 },
-    { name: "Failure to return from break", context: "Testing", category: "Prohibited Behavior", severity: "major", threshold: 0 },
-    { name: "Headphones/Earbuds", context: "Check-in", category: "Prohibited Device", severity: "minor", threshold: 1 },
-    { name: "Headwear", context: "Check-in", category: "Prohibited Items", severity: "minor", threshold: 1 },
-    { name: "Internal environment too loud", context: "Check-in, Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 },
-    { name: "Leaves testing area", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 1 },
-    { name: "Looking elsewhere / wandering eyes", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 4 },
-    { name: "Mobile phone in use", context: "Testing", category: "Prohibited Device", severity: "major", threshold: 0 },
-    { name: "Mobile phone visible", context: "Check-in", category: "Prohibited Device", severity: "minor", threshold: 1 },
-    { name: "Not following proctor instructions", context: "Check-in, Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 },
-    { name: "Proctor harassment", context: "Check-in, Testing", category: "Prohibited Behavior", severity: "major", threshold: 0 },
-    { name: "Remote Desktop Applications", context: "Check-in, Testing", category: "Prohibited Device", severity: "major", threshold: 0 },
-    { name: "Secondary device (computer, laptop)", context: "Check-in", category: "Prohibited Device", severity: "minor", threshold: 1 },
-    { name: "Smart Watch", context: "Check-in", category: "Prohibited Device", severity: "minor", threshold: 1 },
-    { name: "Talking aloud / to others", context: "Testing", category: "Prohibited Behavior", severity: "minor", threshold: 2 }
-  ];
+  var TAG_LABELS = {win:"Windows", mac:"macOS", linux:"Linux", critical:"Termination risk", hashi:"Hashicorp"};
 
-  const clientPoliciesData = [
-    { name: "AKYLADE", nameMatch: "Govt ID Match", breakPolicy: "One (1) 5-min break", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "ATLASSIAN", nameMatch: "Nicknames Allowed", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "BLUE PRISM", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "BMC", nameMatch: "Govt ID Match", breakPolicy: "One (1) 5-min break", seb: "SEB Required", notes: "Documentation Allowed" },
-    { name: "CAMUNDA", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "CASBO", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "DOCUSIGN", nameMatch: "Nicknames Allowed", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "HASHICORP", nameMatch: "Govt ID Match", breakPolicy: "None (Vault Prof: 1x 15-min break)", seb: "Non-SEB", notes: "Documentation Not Allowed" },
-    { name: "INTERSYSTEMS", nameMatch: "Nicknames Allowed", breakPolicy: "One (1) 10-min break", seb: "SEB Required", notes: "Depends on Exam" },
-    { name: "NRPP", nameMatch: "Nicknames Allowed", breakPolicy: "One (1) 15-min break", seb: "SEB Required", notes: "Documentation Allowed" },
-    { name: "NVIDIA", nameMatch: "Govt ID Match", breakPolicy: "None (Beta 180: Two 5-min breaks)", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "OPEN TEXT", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Allowed" },
-    { name: "PROJECT SUCCESS", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "SIDEFX", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Textbooks Allowed" },
-    { name: "VASTDATA", nameMatch: "Govt ID Match", breakPolicy: "None", seb: "SEB Required", notes: "Documentation Not Allowed" },
-    { name: "WELLSKY", nameMatch: "Govt ID Match", breakPolicy: "Unlimited (10-20 mins)", seb: "SEB Required", notes: "Textbooks Allowed" }
-  ];
-
-  const faqData = [
-    { category: "ID Verification", question: "What forms of ID are accepted during check-in?", answer: "A valid government-issued photo ID (Passport, Driver's License, or National ID) that clearly displays your full legal name matching your exam reservation." },
-    { category: "Room Scans", question: "How should a candidate conduct a 360-degree room scan?", answer: "The candidate must slowly pan their webcam or laptop around the entire room, showing all four walls, the desk surface, underneath the desk, and chair." },
-    { category: "Technical Issues", question: "What should I do if a candidate experiences severe technical disconnection?", answer: "Candidates who miss their appointment or face unresolvable drop-offs must contact support@certiverse.com to request rescheduling or ticket review." },
-    { category: "SEB", question: "What is Secure Exam Browser (SEB) mode?", answer: "SEB is a hardened browser environment that locks down the candidate workstation, preventing access to unauthorized websites, files, and system shortcuts." },
-    { category: "Technical Issues", question: "What are the minimum system requirements?", answer: "A working webcam, microphone, stable high-speed internet connection, and a compatible modern web browser or Secure Exam Browser." },
-    { category: "ID Verification", question: "What if the candidate's name on ID differs slightly?", answer: "Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com." }
-  ];
-
-  /* INTERFACE LOGIC */
-  window.addEventListener('DOMContentLoaded', () => {
-    initClock();
-    renderCheckin(checkinData);
-    renderCanned(cannedMessagesData);
-    renderInfractions(infractionsData);
-    renderClients();
-    renderFaq(faqData);
-    populateTacticalSelect();
-    new LivingWorldEngine('dbz-living-world');
-  });
-
-  function initClock() {
-    setInterval(() => {
-      const now = new Date();
-      const options = { timeZone: 'Asia/Manila', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-      const phtString = new Intl.DateTimeFormat('en-GB', options).format(now) + ' PHT';
-      document.getElementById('ph-clock').innerHTML = `<span>🕒 ${phtString}</span>`;
-    }, 1000);
+  function renderTags(tags){
+    if (!tags || !tags.length) return "";
+    var out = "";
+    for (var i=0;i<tags.length;i++){
+      var t = tags[i];
+      out += '<span class="card-tag ' + t + '">' + (TAG_LABELS[t] || t) + '</span>';
+    }
+    return '<div class="card-tags">' + out + '</div>';
   }
 
-  function switchPage(pageId, navElement) {
-    document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-    document.getElementById(`page-${pageId}`).classList.add('active');
-    if (navElement) navElement.classList.add('active');
-
-    const titles = {
-      home: ["🏯 Home / Command Center", "Operational dashboard and real-time proctoring metrics."],
-      checkin: ["📜 Check-In Steps", "Exact proctor verification spiels and OS specific instructions."],
-      canned: ["💬 Canned Messages", "Universal message repository for fast proctor communication."],
-      infractions: ["⚖ Infraction Threshold Center", "Tactical decision matrix for violations and threshold monitoring."],
-      policies: ["🏛 Client Policy Library", "Source of truth for client name match, breaks, and SEB requirements."],
-      faq: ["📖 Wisdom Library (FAQ)", "Centralized Certiverse knowledge base and searchable archives."]
-    };
-
-    document.getElementById('current-page-title').innerText = titles[pageId][0];
-    document.getElementById('current-page-desc').innerText = titles[pageId][1];
+  function renderMessageCard(msg, opts){
+    opts = opts || {};
+    var pinned = isIn("ph_pins", msg.id);
+    var faved  = isIn("ph_favs", msg.id);
+    var progressBox = "";
+    if (opts.progress){
+      var done = isIn("ph_progress", msg.id);
+      progressBox = '<input type="checkbox" class="progress-check" title="Mark reviewed" ' +
+        (done ? "checked" : "") + ' onchange="toggleProgress(\'' + msg.id + '\')">';
+    }
+    return (
+      '<div class="card' + (pinned ? " is-pinned" : "") + '" data-id="' + msg.id + '" data-cat="' + msg.cat + '">' +
+        (progressBox ? '<div>' + progressBox + '</div>' : '') +
+        '<div class="card-body">' +
+          renderTags(msg.tags) +
+          '<p class="message-text">' + escapeHtml(msg.text) + '</p>' +
+        '</div>' +
+        '<div class="card-actions">' +
+          '<div class="icon-row">' +
+            '<button class="icon-btn' + (faved ? " on" : "") + '" title="Favorite" onclick="toggleFav(\'' + msg.id + '\')">' + (faved ? "★" : "☆") + '</button>' +
+            '<button class="icon-btn' + (pinned ? " on" : "") + '" title="Pin" onclick="togglePin(\'' + msg.id + '\')">📌</button>' +
+          '</div>' +
+          '<button class="seal-btn" onclick="copyMessage(this,\'' + msg.id + '\')">⚜ Copy Scroll</button>' +
+        '</div>' +
+      '</div>'
+    );
   }
 
-  function renderCheckin(data) {
-    const container = document.getElementById('checkin-container');
-    container.innerHTML = data.map((item, index) => `
-      <div class="accordion-section ${index === 0 ? 'expanded' : ''}" id="checkin-sec-${index}">
-        <div class="accordion-header" onclick="toggleAccordion('checkin-sec-${index}')">
-          <div class="accordion-title">
-            <span>${item.title}</span>
-            <span class="tag" style="background:rgba(255,255,255,0.1);">${item.category}</span>
-          </div>
-          <span class="chevron">▼</span>
-        </div>
-        <div class="accordion-content">
-          ${item.spiels.map(spiel => `
-            <div class="spiel-item">
-              <div class="spiel-text">${spiel}</div>
-              <button class="action-btn" onclick="copyText(this, \`${spiel}\`)">📋 Copy</button>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `).join('');
-  }
+  /* ============================================================
+     CHECK-IN STEPS & OS SUB-FILTERING
+     ============================================================ */
+  var activeOsFilter = "all";
 
-  function toggleAccordion(id) {
-    document.getElementById(id).classList.toggle('expanded');
-  }
-
-  function filterCheckin(query) {
-    const q = query.toLowerCase();
-    const filtered = checkinData.map(sec => {
-      const matchingSpiels = sec.spiels.filter(s => s.toLowerCase().includes(q));
-      if (sec.title.toLowerCase().includes(q) || matchingSpiels.length > 0) {
-        return { ...sec, spiels: sec.title.toLowerCase().includes(q) ? sec.spiels : matchingSpiels };
+  function renderCheckin(){
+    var wrap = document.getElementById("checkinAccordions");
+    var html = "";
+    for (var i=0;i<CATEGORIES.length;i++){
+      var cat = CATEGORIES[i];
+      var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
+      
+      html += '<details class="accordion" id="accordion-' + cat.id + '"' + (i===0 ? " open" : "") + '>' +
+        '<summary onclick="handleAccordionToggle(event, \'' + cat.id + '\')">' +
+          '<span class="cat-left"><span class="cat-num">' + cat.id + '</span>' + cat.icon + '&nbsp; ' + cat.label + '</span>' +
+          '<span class="cat-progress" id="progress-' + cat.id + '"></span>' +
+          '<span class="chevron">&#10148;</span>' +
+        '</summary>' +
+        '<div class="accordion-body" id="body-' + cat.id + '">';
+      
+      // Inject OS Sub-Filter for Category 3 (System Verification)
+      if (cat.id === "3") {
+        html += '<div class="os-subfilter-row">' +
+          '<button class="os-subchip' + (activeOsFilter==="all" ? " active" : "") + '" onclick="setOsSubFilter(\'all\')">All Platforms</button>' +
+          '<button class="os-subchip' + (activeOsFilter==="win" ? " active" : "") + '" onclick="setOsSubFilter(\'win\')">Windows</button>' +
+          '<button class="os-subchip' + (activeOsFilter==="mac" ? " active" : "") + '" onclick="setOsSubFilter(\'mac\')">macOS</button>' +
+          '<button class="os-subchip' + (activeOsFilter==="linux" ? " active" : "") + '" onclick="setOsSubFilter(\'linux\')">Linux</button>' +
+        '</div>';
       }
-      return null;
-    }).filter(Boolean);
-    renderCheckin(filtered.length > 0 ? filtered : checkinData);
+
+      if (msgs.length === 0){
+        html += '<div class="empty-state">No scripted messages on file for this category yet.</div>';
+      } else {
+        for (var j=0;j<msgs.length;j++){ 
+          var m = msgs[j];
+          // Filter Category 3 by OS tags if active
+          if (cat.id === "3" && activeOsFilter !== "all") {
+            if (m.tags.length > 0 && m.tags.indexOf(activeOsFilter) === -1) continue;
+          }
+          html += renderMessageCard(m, {progress:true}); 
+        }
+      }
+      html += '</div></details>';
+    }
+    wrap.innerHTML = html;
+    updateProgressLabels();
+
+    var anchorList = document.getElementById("checkinAnchors");
+    var aHtml = "";
+    for (var k=0;k<CATEGORIES.length;k++){
+      var c = CATEGORIES[k];
+      var count = MESSAGES.filter(function(m){ return m.cat === c.id; }).length;
+      aHtml += '<li><button onclick="goToCategory(\'' + c.id + '\')">' + c.id + '. ' + c.label + ' <span class="cnt">' + count + '</span></button></li>';
+    }
+    anchorList.innerHTML = aHtml;
   }
 
-  function renderCanned(data) {
-    const container = document.getElementById('canned-messages-container');
-    container.innerHTML = data.map(item => `
-      <div class="dojo-card">
-        <div class="card-header-row">
-          <div class="card-tags">
-            <span class="tag">${item.category}</span>
-            ${item.tags.map(t => `<span class="tag" style="background:rgba(255,255,255,0.1);">#${t}</span>`).join('')}
-          </div>
-          <button class="action-btn" onclick="copyText(this, \`${item.text}\`)">📋 Copy Spiel</button>
-        </div>
-        <p style="font-size:0.9rem; line-height:1.6; color:#e4e4e7;">${item.text}</p>
-      </div>
-    `).join('');
-  }
+  window.setOsSubFilter = function(osKey) {
+    activeOsFilter = osKey;
+    renderCheckin();
+  };
 
-  function filterCannedMessages(query) {
-    const q = query.toLowerCase();
-    renderCanned(cannedMessagesData.filter(i => i.text.toLowerCase().includes(q) || i.tags.some(t => t.includes(q)) || i.category.includes(q)));
-  }
-
-  function filterCannedCategory(category, el) {
-    document.querySelectorAll('#canned-filters .filter-pill').forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
-    renderCanned(category === 'all' ? cannedMessagesData : cannedMessagesData.filter(i => i.category === category));
-  }
-
-  function renderInfractions(data) {
-    document.getElementById('infractions-tbody').innerHTML = data.map(i => `
-      <tr>
-        <td><strong>${i.name}</strong></td>
-        <td>${i.context}</td>
-        <td>${i.category}</td>
-        <td><span class="tag ${i.severity}">${i.severity}</span></td>
-        <td style="text-align:center; font-family:monospace; font-weight:700;">${i.threshold}</td>
-      </tr>
-    `).join('');
-  }
-
-  function filterInfractionsTable(query) {
-    const q = query.toLowerCase();
-    renderInfractions(infractionsData.filter(i => i.name.toLowerCase().includes(q) || i.category.toLowerCase().includes(q)));
-  }
-
-  function filterInfractionSeverity(severity, el) {
-    document.querySelectorAll('#page-infractions .filter-pill').forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
-    renderInfractions(severity === 'all' ? infractionsData : infractionsData.filter(i => i.severity === severity));
-  }
-
-  function populateTacticalSelect() {
-    const select = document.getElementById('tactical-select');
-    select.innerHTML = infractionsData.map((i, index) => `<option value="${index}">${i.name} (${i.severity.toUpperCase()})</option>`).join('');
-    updateTacticalSimulation();
-  }
-
-  function updateTacticalSimulation() {
-    const idx = document.getElementById('tactical-select').value;
-    const item = infractionsData[idx];
-    document.getElementById('tactical-summary-text').innerHTML = `Violation: <strong>${item.name}</strong> | Severity: <span style="color:${item.severity === 'major' ? '#fca5a5' : '#fde68a'}">${item.severity.toUpperCase()}</span> | Threshold: ${item.threshold} | Action: ${item.threshold === 0 ? 'Immediate Escalation / Termination' : 'Issue Warning & Track Count'}`;
-  }
-
-  function renderClients() {
-    const sidebar = document.getElementById('client-sidebar-list');
-    sidebar.innerHTML = clientPoliciesData.map((c, index) => `
-      <div class="client-item ${index === 0 ? 'active' : ''}" onclick="selectClient(${index}, this)">${c.name}</div>
-    `).join('');
-    selectClient(0, sidebar.children[0]);
-  }
-
-  function selectClient(index, el) {
-    document.querySelectorAll('.client-item').forEach(i => i.classList.remove('active'));
-    if (el) el.classList.add('active');
-    const client = clientPoliciesData[index];
-    document.getElementById('client-details-pane').innerHTML = `
-      <div class="section-heading" style="margin-bottom:20px;">
-        <span>🏛 Client Clan Record: ${client.name}</span>
-        <button class="action-btn" onclick="copyText(this, 'Client: ${client.name}\\nName Match: ${client.nameMatch}\\nBreak Policy: ${client.breakPolicy}\\nSEB: ${client.seb}\\nNotes: ${client.notes}')">📋 Copy Policy Record</button>
-      </div>
-      <div class="policy-property-row"><div class="property-key">Client Name</div><div class="property-val">${client.name}</div></div>
-      <div class="policy-property-row"><div class="property-key">Name Match Rules</div><div class="property-val">${client.nameMatch}</div></div>
-      <div class="policy-property-row"><div class="property-key">Break Policy</div><div class="property-val">${client.breakPolicy}</div></div>
-      <div class="policy-property-row"><div class="property-key">SEB Requirements</div><div class="property-val">${client.seb}</div></div>
-      <div class="policy-property-row"><div class="property-key">Special Notes</div><div class="property-val">${client.notes}</div></div>
-    `;
-  }
-
-  function filterClientList(query) {
-    const q = query.toLowerCase();
-    document.getElementById('client-sidebar-list').innerHTML = clientPoliciesData.filter(c => c.name.toLowerCase().includes(q)).map(c => `
-      <div class="client-item" onclick="selectClientByName('${c.name}', this)">${c.name}</div>
-    `).join('');
-  }
-
-  function selectClientByName(name, el) {
-    selectClient(clientPoliciesData.findIndex(c => c.name === name), el);
-  }
-
-  function renderFaq(data) {
-    document.getElementById('faq-container').innerHTML = data.map(item => `
-      <div class="dojo-card">
-        <div class="card-header-row"><span class="tag">${item.category}</span></div>
-        <h4 style="font-size:1rem; font-weight:700; color:#fff; margin-bottom:8px;">${item.question}</h4>
-        <p style="font-size:0.85rem; line-height:1.6; color:var(--text-muted);">${item.answer}</p>
-      </div>
-    `).join('');
-  }
-
-  function filterFaq(query) {
-    const q = query.toLowerCase();
-    renderFaq(faqData.filter(i => i.question.toLowerCase().includes(q) || i.answer.toLowerCase().includes(q) || i.category.toLowerCase().includes(q)));
-  }
-
-  function filterFaqCategory(cat, el) {
-    document.querySelectorAll('#faq-filters .filter-pill').forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
-    renderFaq(cat === 'all' ? faqData : faqData.filter(i => i.category === cat));
-  }
-
-  function copyText(btn, text) {
-    navigator.clipboard.writeText(text).then(() => {
-      const orig = btn.innerHTML;
-      btn.innerHTML = '✓ Copied';
-      btn.classList.add('copied');
-      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 1500);
+  // Single-Accordion Open Logic
+  window.handleAccordionToggle = function(e, currentId) {
+    var accordions = document.querySelectorAll("#checkinAccordions .accordion");
+    accordions.forEach(function(acc) {
+      if (acc.id !== "accordion-" + currentId) {
+        acc.removeAttribute("open");
+      }
     });
+  };
+
+  function updateProgressLabels(){
+    var progressAll = loadSet("ph_progress");
+    for (var i=0;i<CATEGORIES.length;i++){
+      var cat = CATEGORIES[i];
+      var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
+      var done = 0;
+      for (var j=0;j<msgs.length;j++){ if (progressAll.indexOf(msgs[j].id) !== -1) done++; }
+      var el = document.getElementById("progress-" + cat.id);
+      if (el){ el.textContent = msgs.length ? (done + " / " + msgs.length + " reviewed") : ""; }
+    }
   }
 
-  function copyEmergencySpiel(type) {
-    const spiel = type === 'support' 
-      ? "You can email support@certiverse.com for further assistance with rescheduling."
-      : "The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance.";
-    navigator.clipboard.writeText(spiel);
-    alert("Emergency Spiel Copied to Clipboard.");
+  window.toggleProgress = function(id){
+    toggleInSet("ph_progress", id);
+    updateProgressLabels();
+  };
+
+  window.resetProgress = function(){
+    saveSet("ph_progress", []);
+    renderCheckin();
+    filterAll();
+  };
+
+  window.goToCategory = function(catId){
+    var viewBtn = document.querySelector('.view-btn[data-view="view-checkin"]');
+    switchView("view-checkin", viewBtn);
+    
+    var accordions = document.querySelectorAll("#checkinAccordions .accordion");
+    accordions.forEach(function(acc) {
+      acc.removeAttribute("open");
+    });
+
+    var el = document.getElementById("accordion-" + catId);
+    if (el){
+      el.open = true;
+      el.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+  };
+
+  /* ============================================================
+     CANNED MESSAGE LIBRARY
+     ============================================================ */
+  var libraryActiveCat = "all";
+
+  function renderLibraryFilters(){
+    var wrap = document.getElementById("libraryFilters");
+    var html = '<button class="filter-chip' + (libraryActiveCat==="all" ? " active" : "") + '" onclick="setLibraryFilter(\'all\')">All (' + MESSAGES.length + ')</button>';
+    for (var i=0;i<CATEGORIES.length;i++){
+      var cat = CATEGORIES[i];
+      var count = MESSAGES.filter(function(m){ return m.cat === cat.id; }).length;
+      html += '<button class="filter-chip' + (libraryActiveCat===cat.id ? " active" : "") + '" onclick="setLibraryFilter(\'' + cat.id + '\')">' + cat.icon + ' ' + cat.label + ' (' + count + ')</button>';
+    }
+    wrap.innerHTML = html;
   }
 
-  /* 4K LIVING DRAGON BALL BACKDROP ENGINE */
-  class LivingWorldEngine {
-    constructor(canvasId) {
-      this.canvas = document.getElementById(canvasId);
-      this.ctx = this.canvas.getContext('2d');
-      this.width = window.innerWidth;
-      this.height = window.innerHeight;
-      this.time = 0;
-      this.cycleDuration = 120000;
-      this.clouds = [];
-      this.particles = [];
-      this.nimbusEvent = { active: false, x: -200, y: 0, speedX: 0, scale: 1, direction: 1 };
-      this.init();
+  window.setLibraryFilter = function(catId){
+    libraryActiveCat = catId;
+    renderLibraryFilters();
+    renderLibraryList();
+    filterAll();
+  };
+
+  function renderLibraryList(){
+    var wrap = document.getElementById("libraryList");
+    var msgs = libraryActiveCat === "all" ? MESSAGES : MESSAGES.filter(function(m){ return m.cat === libraryActiveCat; });
+    if (msgs.length === 0){
+      wrap.innerHTML = '<div class="empty-state">No scripted messages on file for this category yet.</div>';
+      return;
+    }
+    var html = "";
+    for (var i=0;i<msgs.length;i++){ html += renderMessageCard(msgs[i], {progress:false}); }
+    wrap.innerHTML = html;
+  }
+
+  /* ============================================================
+     FAVORITES, PINS, & COPY ACTIONS
+     ============================================================ */
+  window.toggleFav = function(id){ toggleInSet("ph_favs", id); renderAllInteractive(); };
+  window.togglePin = function(id){ toggleInSet("ph_pins", id); renderAllInteractive(); };
+
+  window.copyMessage = function(btn, id){
+    var msg = findMessageById(id);
+    if (!msg) return;
+    var text = msg.text;
+
+    function showCopied(){
+      var original = btn.textContent;
+      btn.textContent = "✓ Technique Acquired";
+      btn.classList.add("copied");
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
+    }
+    function afterCopy(){
+      addToRecent("ph_recent", id, 10);
+      showCopied();
+      renderHomeLists();
     }
 
-    init() {
-      this.resize();
-      window.addEventListener('resize', () => this.resize());
-      for (let i = 0; i < 12; i++) {
-        this.clouds.push({
-          x: Math.random() * this.width,
-          y: Math.random() * (this.height * 0.4),
-          scale: 0.6 + Math.random() * 0.8,
-          speed: 0.15 + Math.random() * 0.2
-        });
-      }
-      for (let i = 0; i < 40; i++) {
-        this.particles.push({
-          x: Math.random() * this.width,
-          y: Math.random() * this.height,
-          radius: 1 + Math.random() * 2,
-          speedY: -0.2 - Math.random() * 0.3,
-          speedX: (Math.random() - 0.5) * 0.2
-        });
-      }
-      setInterval(() => this.triggerGokuNimbus(), 30000);
-      setTimeout(() => this.triggerGokuNimbus(), 3000);
-      requestAnimationFrame((t) => this.render(t));
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(afterCopy, function(){ fallbackCopy(text, afterCopy); });
+    } else {
+      fallbackCopy(text, afterCopy);
     }
+  };
 
-    resize() {
-      this.width = window.innerWidth;
-      this.height = window.innerHeight;
-      this.canvas.width = this.width;
-      this.canvas.height = this.height;
+  function fallbackCopy(text, cb){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px";
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand("copy"); } catch(e){}
+    document.body.removeChild(ta);
+    if (cb) cb();
+  }
+
+  function renderAllInteractive(){
+    renderCheckin();
+    renderLibraryList();
+    renderHomeLists();
+    filterAll();
+  }
+
+  /* ============================================================
+     HOME DASHBOARD (PHILIPPINE STANDARD TIME - PST / UTC+8)
+     ============================================================ */
+  function tickClock(){
+    var now = new Date();
+    var optsTime = { timeZone: "Asia/Manila", hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" };
+    var optsDate = { timeZone: "Asia/Manila", weekday: "long", year: "numeric", month: "long", day: "numeric" };
+    
+    document.getElementById("clockTime").textContent = now.toLocaleTimeString("en-US", optsTime) + " PST";
+    document.getElementById("clockDate").textContent = now.toLocaleDateString("en-US", optsDate);
+  }
+
+  function renderStats(){
+    var stats = [
+      {num: MESSAGES.length, lbl:"Canned Messages"},
+      {num: CATEGORIES.length, lbl:"Check-In Categories"},
+      {num: POLICIES.length, lbl:"Client Policies"},
+      {num: INFRACTIONS.length, lbl:"Infractions"},
+      {num: 0, lbl:"FAQ Entries"}
+    ];
+    var html = "";
+    for (var i=0;i<stats.length;i++){
+      html += '<div class="stat-card"><div class="num">' + stats[i].num + '</div><div class="lbl">' + stats[i].lbl + '</div></div>';
     }
+    document.getElementById("statGrid").innerHTML = html;
+  }
 
-    triggerGokuNimbus() {
-      const side = Math.random() > 0.5 ? 'left' : 'right';
-      this.nimbusEvent.active = true;
-      this.nimbusEvent.y = this.height * 0.22 + Math.random() * (this.height * 0.28);
-      this.nimbusEvent.scale = 0.7 + Math.random() * 0.4;
-      if (side === 'left') {
-        this.nimbusEvent.x = -150;
-        this.nimbusEvent.speedX = 1.8 + Math.random() * 0.8;
-        this.nimbusEvent.direction = 1;
+  function renderQuickActions(){
+    var html = "";
+    for (var i=0;i<QUICK_ACTIONS.length;i++){
+      var q = QUICK_ACTIONS[i];
+      html += '<button class="quick-btn" onclick="runQuickAction(\'' + q.query.replace(/'/g,"\\'") + '\')"><span class="qi">' + q.icon + '</span>' + q.label + '</button>';
+    }
+    document.getElementById("quickGrid").innerHTML = html;
+  }
+
+  window.runQuickAction = function(query){
+    var viewBtn = document.querySelector('.view-btn[data-view="view-library"]');
+    switchView("view-library", viewBtn);
+    setLibraryFilter("all");
+    var input = document.getElementById("globalSearch");
+    input.value = query;
+    filterAll();
+    window.scrollTo({top:0, behavior:"smooth"});
+  };
+
+  function renderMiniList(containerId, countId, ids, emptyText){
+    var container = document.getElementById(containerId);
+    document.getElementById(countId).textContent = ids.length ? String(ids.length) : "";
+    if (!ids.length){
+      container.innerHTML = '<div class="empty-state">' + emptyText + '</div>';
+      return;
+    }
+    var html = "";
+    for (var i=0;i<ids.length;i++){
+      var msg = findMessageById(ids[i]);
+      if (!msg) continue;
+      html += '<div class="mini-item">' +
+        '<span class="txt">' + escapeHtml(msg.text) + '</span>' +
+        '<span class="cat-chip">' + catLabel(msg.cat) + '</span>' +
+        '<button class="seal-btn" style="min-width:auto;padding:6px 12px;" onclick="copyMessage(this,\'' + msg.id + '\')">⚜</button>' +
+      '</div>';
+    }
+    container.innerHTML = html;
+  }
+
+  function renderHomeLists(){
+    renderMiniList("favList", "favCount", loadSet("ph_favs"), "No favorites yet — tap the star on any scroll to pin it here.");
+    renderMiniList("pinList", "pinCount", loadSet("ph_pins"), "Nothing pinned yet — tap 📌 on any scroll to keep it close at hand.");
+    renderMiniList("recentList", "recentCount", loadSet("ph_recent"), "Nothing copied yet this session.");
+  }
+
+  /* ============================================================
+     THRESHOLD CENTER
+     ============================================================ */
+  var thresholdActiveFilter = "all";
+
+  function riskTier(severity, threshold){
+    var sev = severity.toLowerCase();
+    if (sev === "major" && threshold === 0) return {cls:"risk-red", label:"Immediate"};
+    if (sev === "major") return {cls:"risk-orange", label:"Critical"};
+    if (sev === "minor" && threshold <= 1) return {cls:"risk-yellow", label:"Elevated"};
+    return {cls:"risk-green", label:"Standard"};
+  }
+
+  function renderThresholdFilters(){
+    var wrap = document.getElementById("thresholdFilters");
+    var counts = {all:INFRACTIONS.length, minor:0, major:0};
+    for (var i=0;i<INFRACTIONS.length;i++){ counts[INFRACTIONS[i][3].toLowerCase()]++; }
+    wrap.innerHTML =
+      '<button class="filter-chip' + (thresholdActiveFilter==="all" ? " active" : "") + '" onclick="setThresholdFilter(\'all\')">All (' + counts.all + ')</button>' +
+      '<button class="filter-chip' + (thresholdActiveFilter==="minor" ? " active" : "") + '" onclick="setThresholdFilter(\'minor\')">Minor (' + counts.minor + ')</button>' +
+      '<button class="filter-chip' + (thresholdActiveFilter==="major" ? " active" : "") + '" onclick="setThresholdFilter(\'major\')">Major (' + counts.major + ')</button>';
+  }
+
+  window.setThresholdFilter = function(f){
+    thresholdActiveFilter = f;
+    renderThresholdFilters();
+    renderInfractions();
+    filterAll();
+  };
+
+  function renderInfractions(){
+    var grid = document.getElementById("infractionGrid");
+    var html = "";
+    var shown = 0;
+    for (var i=0;i<INFRACTIONS.length;i++){
+      var r = INFRACTIONS[i];
+      var sevLower = r[3].toLowerCase();
+      if (thresholdActiveFilter !== "all" && thresholdActiveFilter !== sevLower) continue;
+      shown++;
+      var tier = riskTier(r[3], r[4]);
+      var badgeClass = sevLower === "major" ? "badge-major" : "badge-minor";
+      var detail = "";
+      if (r[6]){
+        var termMsg = findByTerm(r[6]);
+        if (termMsg){
+          detail = '<strong>Closest matching termination script:</strong><br>' + escapeHtml(termMsg.text) +
+            '<br><button class="seal-btn" style="margin-top:8px;" onclick="event.stopPropagation();copyMessage(this,\'' + termMsg.id + '\')">⚜ Copy Scroll</button>';
+        }
+      } else if (r[5]){
+        detail = 'No dedicated termination script. <button class="filter-chip" onclick="event.stopPropagation();runQuickAction(\'' + r[5].replace(/'/g,"\\'") + '\')">Search library for &ldquo;' + escapeHtml(r[5]) + '&rdquo;</button>';
       } else {
-        this.nimbusEvent.x = this.width + 150;
-        this.nimbusEvent.speedX = -(1.8 + Math.random() * 0.8);
-        this.nimbusEvent.direction = -1;
+        detail = 'No scripted response on file &mdash; apply proctor judgment and document the incident per policy.';
       }
-      const toast = document.getElementById('dbz-event-toast');
-      if (toast) {
-        toast.style.opacity = '1';
-        setTimeout(() => { toast.style.opacity = '0'; }, 4000);
-      }
+      html += '<div class="infr-card ' + tier.cls + '" data-severity="' + sevLower + '" onclick="this.classList.toggle(\'expanded\')">' +
+        '<div class="infr-name">' + escapeHtml(r[0]) + '</div>' +
+        '<div class="infr-meta"><span>' + escapeHtml(r[2]) + '</span><span>&middot;</span><span>' + escapeHtml(r[1]) + '</span></div>' +
+        '<div class="infr-meta"><span class="badge ' + badgeClass + '">' + escapeHtml(r[3]) + '</span><span class="infr-threshold">Threshold: ' + r[4] + ' / 1000 &middot; Risk: ' + tier.label + '</span></div>' +
+        '<div class="infr-detail">' + detail + '</div>' +
+      '</div>';
     }
-
-    getSkyGradients() {
-      const progress = (Math.sin(this.time * Math.PI * 2) + 1) / 2; 
-      const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
-      if (progress < 0.4) {
-        gradient.addColorStop(0, '#f97316'); gradient.addColorStop(0.4, '#fbbf24'); gradient.addColorStop(1, '#1e293b');
-      } else if (progress < 0.8) {
-        gradient.addColorStop(0, '#0284c7'); gradient.addColorStop(0.5, '#38bdf8'); gradient.addColorStop(1, '#0f172a');
-      } else {
-        gradient.addColorStop(0, '#581c87'); gradient.addColorStop(0.4, '#c026d3'); gradient.addColorStop(1, '#020617');
-      }
-      return { gradient, progress };
-    }
-
-    render(timestamp) {
-      this.time = (timestamp % this.cycleDuration) / this.cycleDuration;
-      this.ctx.clearRect(0, 0, this.width, this.height);
-
-      const skyInfo = this.getSkyGradients();
-      this.ctx.fillStyle = skyInfo.gradient;
-      this.ctx.fillRect(0, 0, this.width, this.height);
-
-      // Kami's Lookout
-      const lx = this.width * 0.78, ly = this.height * 0.18;
-      this.ctx.save();
-      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-      this.ctx.beginPath(); this.ctx.arc(lx, ly, 45, 0, Math.PI * 2); this.ctx.fill();
-      this.ctx.fillStyle = 'rgba(240, 240, 250, 0.8)';
-      this.ctx.beginPath(); this.ctx.arc(lx, ly, 35, Math.PI, 0); this.ctx.fill();
-      this.ctx.fillStyle = 'rgba(200, 200, 220, 0.6)';
-      this.ctx.fillRect(lx - 6, ly, 12, 60);
-      this.ctx.restore();
-
-      // Shenron Silhouette
-      const visibility = skyInfo.progress > 0.7 ? 0.35 : 0.12;
-      const sx = this.width * 0.3 + Math.sin(this.time * 4) * 40;
-      const sy = this.height * 0.22 + Math.cos(this.time * 3) * 20;
-      this.ctx.save();
-      this.ctx.strokeStyle = `rgba(16, 185, 129, ${visibility})`;
-      this.ctx.lineWidth = 14; this.ctx.lineCap = 'round';
-      this.ctx.beginPath(); this.ctx.moveTo(sx, sy);
-      this.ctx.bezierCurveTo(sx + 80, sy - 40, sx + 160, sy + 40, sx + 240, sy - 20);
-      this.ctx.stroke(); this.ctx.restore();
-
-      // Clouds
-      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-      this.clouds.forEach(c => {
-        c.x += c.speed; if (c.x > this.width + 100) c.x = -100;
-        this.ctx.save(); this.ctx.translate(c.x, c.y); this.ctx.scale(c.scale, c.scale);
-        this.ctx.beginPath(); this.ctx.arc(0, 0, 30, 0, Math.PI * 2);
-        this.ctx.arc(25, -10, 25, 0, Math.PI * 2); this.ctx.arc(-25, -10, 25, 0, Math.PI * 2);
-        this.ctx.fill(); this.ctx.restore();
-      });
-
-      // Mountains & Hills
-      this.ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';
-      this.ctx.beginPath(); this.ctx.moveTo(0, this.height); this.ctx.lineTo(0, this.height * 0.65);
-      this.ctx.lineTo(this.width * 0.25, this.height * 0.52); this.ctx.lineTo(this.width * 0.55, this.height * 0.68);
-      this.ctx.lineTo(this.width * 0.85, this.height * 0.55); this.ctx.lineTo(this.width, this.height * 0.62);
-      this.ctx.lineTo(this.width, this.height); this.ctx.fill();
-
-      this.ctx.fillStyle = 'rgba(6, 78, 59, 0.85)';
-      this.ctx.beginPath(); this.ctx.moveTo(0, this.height); this.ctx.lineTo(0, this.height * 0.78);
-      this.ctx.quadraticCurveTo(this.width * 0.35, this.height * 0.68, this.width * 0.65, this.height * 0.82);
-      this.ctx.quadraticCurveTo(this.width * 0.85, this.height * 0.90, this.width, this.height * 0.75);
-      this.ctx.lineTo(this.width, this.height); this.ctx.fill();
-
-      // Goku's House Silhouette
-      const hx = this.width * 0.22, hy = this.height * 0.72;
-      this.ctx.fillStyle = 'rgba(251, 191, 36, 0.9)';
-      this.ctx.beginPath(); this.ctx.arc(hx, hy, 22, Math.PI, 0); this.ctx.fill();
-      this.ctx.fillStyle = '#1e293b'; this.ctx.fillRect(hx - 18, hy, 36, 20);
-
-      // Goku Riding Flying Nimbus Event
-      if (this.nimbusEvent.active) {
-        this.nimbusEvent.x += this.nimbusEvent.speedX;
-        if (this.nimbusEvent.x > this.width + 200 || this.nimbusEvent.x < -200) this.nimbusEvent.active = false;
-
-        const { x, y, scale, direction } = this.nimbusEvent;
-        this.ctx.save(); this.ctx.translate(x, y); this.ctx.scale(direction * scale, scale);
-
-        // Nimbus
-        this.ctx.fillStyle = '#facc15'; this.ctx.shadowColor = '#eab308'; this.ctx.shadowBlur = 20;
-        this.ctx.beginPath();
-        this.ctx.arc(0, 0, 25, 0, Math.PI * 2); this.ctx.arc(-20, 5, 18, 0, Math.PI * 2); this.ctx.arc(20, 5, 18, 0, Math.PI * 2);
-        this.ctx.fill();
-
-        // Goku
-        this.ctx.fillStyle = '#0f172a'; this.ctx.shadowBlur = 0;
-        this.ctx.beginPath(); this.ctx.arc(0, -35, 10, 0, Math.PI * 2); this.ctx.fill();
-        this.ctx.beginPath(); this.ctx.moveTo(-8, -40); this.ctx.lineTo(-18, -48); this.ctx.lineTo(-4, -44);
-        this.ctx.moveTo(8, -40); this.ctx.lineTo(18, -48); this.ctx.lineTo(4, -44); this.ctx.fill();
-
-        // Power Pole
-        this.ctx.strokeStyle = '#ef4444'; this.ctx.lineWidth = 4;
-        this.ctx.beginPath(); this.ctx.moveTo(-18, -20); this.ctx.lineTo(18, -45); this.ctx.stroke();
-        this.ctx.restore();
-      }
-
-      // Particles
-      this.ctx.fillStyle = 'rgba(251, 191, 36, 0.4)';
-      this.particles.forEach(p => {
-        p.y += p.speedY; p.x += p.speedX;
-        if (p.y < 0) { p.y = this.height; p.x = Math.random() * this.width; }
-        this.ctx.beginPath(); this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); this.ctx.fill();
-      });
-
-      requestAnimationFrame((t) => this.render(t));
-    }
+    grid.innerHTML = html;
+    document.getElementById("infractionEmpty").style.display = shown === 0 ? "" : "none";
   }
+
+  /* ============================================================
+     CLIENT POLICIES
+     ============================================================ */
+  function renderPolicies(){
+    var body = document.getElementById("policiesBody");
+    var rows = "";
+    for (var i=0;i<POLICIES.length;i++){
+      var p = POLICIES[i];
+      rows += "<tr>" +
+        "<td>" + escapeHtml(p[0]) + "</td><td>" + escapeHtml(p[1]) + "</td><td>" + escapeHtml(p[2]) + "</td>" +
+        "<td>" + escapeHtml(p[3]) + "</td><td>" + escapeHtml(p[4]) + "</td><td>" + escapeHtml(p[5]) + "</td>" +
+      "</tr>";
+    }
+    body.innerHTML = rows;
+    document.getElementById("policiesCount").textContent = POLICIES.length + " clients";
+
+    var select = document.getElementById("policySelect");
+    var opts = "";
+    for (var j=0;j<POLICIES.length;j++){ opts += '<option value="' + j + '">' + escapeHtml(POLICIES[j][0]) + '</option>'; }
+    select.innerHTML = opts;
+  }
+
+  window.renderGenerator = function(){
+    var idx = parseInt(document.getElementById("policySelect").value, 10) || 0;
+    var p = POLICIES[idx];
+    if (!p) return;
+    var client = p[0], nameChange = p[1], breaks = p[2], namePolicy = p[3], seb = p[4], docs = p[5];
+
+    // Determine Break Text
+    var breakText = "";
+    if (nameChange.toLowerCase() === "allowed" || breaks.toLowerCase().indexOf("none") === -1) {
+      breakText = "You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules.";
+    } else {
+      breakText = "Breaks are not allowed for this exam.";
+    }
+
+    // Determine Name Change Text
+    var nameText = "";
+    var certiverseReq = "Per Certiverse rules, the name on your ID must fully match the exam reservation.\n\n";
+    if (nameChange.toLowerCase() === "not allowed") {
+      nameText = certiverseReq + "Unfortunately we will need to cancel this session. You can email support@certiverse.com for further assistance with rescheduling. Please confirm.";
+    } else {
+      nameText = certiverseReq + "To proceed, please request a name change by contacting support@certiverse.com. Once completed, you can re-enter the reservation and we will continue.";
+    }
+
+    var cards = [
+      {title:"Name Policy & Change Response", text: nameText},
+      {title:"Break Policy Response", text: breakText + " (" + client + " Policy: " + breaks + ")"},
+      {title:"SEB Response", text: client + " exams run under " + seb + " conditions."},
+      {title:"Documentation Response", text: "Documentation policy for " + client + ": " + docs + "."}
+    ];
+
+    var html = "";
+    for (var i=0;i<cards.length;i++){
+      var safeText = cards[i].text.replace(/'/g,"\\'").replace(/\n/g,"\\n");
+      html += '<div class="gen-card"><div><h4>' + cards[i].title + '</h4><p>' + escapeHtml(cards[i].text) + '</p></div>' +
+        '<button class="seal-btn" onclick="copyGenerated(this,\'' + safeText.replace(/"/g,"&quot;") + '\')">⚜ Copy Scroll</button></div>';
+    }
+    document.getElementById("generatorCards").innerHTML = html;
+  };
+
+  window.copyGenerated = function(btn, text){
+    var unescapedText = text.replace(/\\n/g, "\n");
+    function showCopied(){
+      var original = btn.textContent;
+      btn.textContent = "✓ Technique Acquired";
+      btn.classList.add("copied");
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
+    }
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(unescapedText).then(showCopied, function(){ fallbackCopy(unescapedText, showCopied); });
+    } else {
+      fallbackCopy(unescapedText, showCopied);
+    }
+  };
+
+  /* ============================================================
+     HOLLYWOOD MULTI-LAYER CINEMATIC CANVAS ENGINE
+     ============================================================ */
+  function initHollywoodFxEngine(){
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var canvas = document.getElementById("fxCanvas");
+    if (!canvas) return;
+    var ctx = canvas.getContext("2d");
+
+    var width = canvas.width = window.innerWidth;
+    var height = canvas.height = window.innerHeight;
+
+    window.addEventListener("resize", function(){
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    // 1. Dandelion & Sakura Petals
+    var petals = [];
+    var petalCount = 45;
+    for (var i = 0; i < petalCount; i++) {
+      petals.push({
+        x: Math.random() * width,
+        y: Math.random() * height - height,
+        size: Math.random() * 7 + 4,
+        speedY: Math.random() * 1.1 + 0.5,
+        speedX: Math.random() * 0.8 - 0.4,
+        rotation: Math.random() * 360,
+        rotSpeed: Math.random() * 1.4 - 0.7,
+        opacity: Math.random() * 0.45 + 0.25
+      });
+    }
+
+    // 2. Rising Golden Dandelion Seeds / Light Particles
+    var embers = [];
+    var emberCount = 35;
+    for (var j = 0; j < emberCount; j++) {
+      embers.push({
+        x: Math.random() * width,
+        y: Math.random() * height + height * 0.5,
+        radius: Math.random() * 2 + 1,
+        speedY: -(Math.random() * 0.8 + 0.3),
+        speedX: Math.random() * 0.6 - 0.3,
+        opacity: Math.random() * 0.5 + 0.25,
+        pulse: Math.random() * 0.05
+      });
+    }
+
+    function drawPetal(p) {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rotation * Math.PI) / 180);
+      ctx.globalAlpha = p.opacity;
+
+      var grad = ctx.createLinearGradient(0, 0, p.size, p.size);
+      grad.addColorStop(0, "#ffddaa");
+      grad.addColorStop(1, "#f26522");
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(p.size, -p.size / 2, p.size * 1.2, p.size / 2, 0, p.size * 1.5);
+      ctx.bezierCurveTo(-p.size * 1.2, p.size / 2, -p.size, -p.size / 2, 0, 0);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawEmber(e) {
+      ctx.save();
+      ctx.globalAlpha = e.opacity;
+      ctx.fillStyle = "#ffcc00";
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = "#ff8800";
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Render Seeds
+      for (var k = 0; k < embers.length; k++) {
+        var e = embers[k];
+        e.y += e.speedY;
+        e.x += e.speedX + Math.sin(e.y * 0.01) * 0.4;
+        e.opacity += Math.sin(Date.now() * 0.005 + k) * 0.01;
+
+        if (e.y < -20) {
+          e.y = height + 20;
+          e.x = Math.random() * width;
+        }
+        drawEmber(e);
+      }
+
+      // Render Petals
+      for (var i = 0; i < petals.length; i++) {
+        var p = petals[i];
+        p.y += p.speedY;
+        p.x += p.speedX + Math.sin(p.y * 0.008);
+        p.rotation += p.rotSpeed;
+
+        if (p.y > height + 20) {
+          p.y = -20;
+          p.x = Math.random() * width;
+        }
+        drawPetal(p);
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  }
+
+  /* ============================================================
+     VIEW SWITCHING
+     ============================================================ */
+  window.switchView = function(viewId, btn){
+    var views = document.querySelectorAll(".dashboard-view");
+    for (var i=0;i<views.length;i++){ views[i].classList.remove("active"); }
+    var target = document.getElementById(viewId);
+    if (target){ target.classList.add("active"); }
+
+    var btns = document.querySelectorAll(".view-btn");
+    for (var j=0;j<btns.length;j++){ btns[j].classList.remove("active"); }
+    if (btn){ btn.classList.add("active"); }
+
+    var isCheckin = viewId === "view-checkin";
+    document.getElementById("checkinAnchors").style.display = isCheckin ? "" : "none";
+    document.querySelector(".nav-label").style.display = isCheckin ? "" : "none";
+
+    filterAll();
+  };
+
+  /* ============================================================
+     GLOBAL SEARCH ENGINE
+     ============================================================ */
+  function filterAll(){
+    var query = document.getElementById("globalSearch").value.trim().toLowerCase();
+    var matches = 0, total = 0;
+
+    // Accordions
+    var accordions = document.querySelectorAll("#checkinAccordions .accordion");
+    for (var a=0;a<accordions.length;a++){
+      var acc = accordions[a];
+      var cards = acc.querySelectorAll(".card");
+      var visible = 0;
+      for (var c=0;c<cards.length;c++){
+        total++;
+        var card = cards[c];
+        var text = card.textContent.toLowerCase();
+        var show = !query || text.indexOf(query) !== -1;
+        card.style.display = show ? "" : "none";
+        if (show){ visible++; matches++; }
+      }
+      acc.style.display = (cards.length === 0 || visible > 0) ? "" : "none";
+      if (query){ acc.open = visible > 0; }
+    }
+
+    // Library
+    var libCards = document.querySelectorAll("#libraryList .card");
+    for (var l=0;l<libCards.length;l++){
+      total++;
+      var lc = libCards[l];
+      var ltext = lc.textContent.toLowerCase();
+      var lshow = !query || ltext.indexOf(query) !== -1;
+      lc.style.display = lshow ? "" : "none";
+      if (lshow){ matches++; }
+    }
+
+    // Policies
+    var policyRows = document.querySelectorAll("#policiesBody tr");
+    var visiblePolicies = 0;
+    for (var pr=0;pr<policyRows.length;pr++){
+      total++;
+      var row = policyRows[pr];
+      var rtext = row.textContent.toLowerCase();
+      var showRow = !query || rtext.indexOf(query) !== -1;
+      row.style.display = showRow ? "" : "none";
+      if (showRow){ visiblePolicies++; matches++; }
+    }
+    var polEmpty = document.getElementById("policiesEmpty");
+    if (polEmpty){ polEmpty.style.display = (policyRows.length && visiblePolicies === 0) ? "" : "none"; }
+
+    // Infractions
+    var infrCards = document.querySelectorAll("#infractionGrid .infr-card");
+    var visibleInfr = 0;
+    for (var ir=0;ir<infrCards.length;ir++){
+      total++;
+      var icard = infrCards[ir];
+      var itext = icard.textContent.toLowerCase();
+      var ishow = !query || itext.indexOf(query) !== -1;
+      icard.style.display = ishow ? "" : "none";
+      if (ishow){ visibleInfr++; matches++; }
+    }
+    var infrEmpty = document.getElementById("infractionEmpty");
+    if (infrEmpty && infrCards.length){ infrEmpty.style.display = visibleInfr === 0 ? "" : "none"; }
+
+    var countLabel = document.getElementById("searchCount");
+    countLabel.textContent = query ? ("Showing " + matches + " of " + total + " matching items across the dojo") : "";
+  }
+  window.filterAll = filterAll;
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  document.addEventListener("DOMContentLoaded", function(){
+    renderStats();
+    renderQuickActions();
+    renderHomeLists();
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    renderCheckin();
+    renderLibraryFilters();
+    renderLibraryList();
+
+    renderThresholdFilters();
+    renderInfractions();
+
+    renderPolicies();
+    renderGenerator();
+
+    initHollywoodFxEngine();
+    filterAll();
+  });
+})();
 </script>
-
 </body>
 </html>
