@@ -3,26 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveActs Proctor Dojo — Kyoto Edition</title>
+<title>FiveActs Proctor Dojo — Cinematic Kyoto Edition</title>
 <style>
   :root {
-    --ink: #0a0807;
-    --slate: #13171a;
-    --slate-2: #1b2126;
-    --parchment: #f3ebd9;
-    --parchment-dim: #d3c5a5;
-    --parchment-faint: #a39577;
+    --ink: #070504;
+    --slate: #111518;
+    --slate-2: #192026;
+    --parchment: #f5edd8;
+    --parchment-dim: #d8c8a3;
+    --parchment-faint: #a89975;
     --blue: #324b5c;
     --blue-bright: #527d9a;
     --bamboo: #3d5943;
     --bamboo-bright: #618c69;
-    --gold: #cb9b39;
-    --gold-bright: #ebd080;
-    --crimson: #8a2424;
-    --crimson-bright: #be413b;
-    --line: rgba(203, 155, 57, 0.25);
-    --line-soft: rgba(243, 235, 217, 0.08);
-    --shadow: rgba(0, 0, 0, 0.75);
+    --gold: #d4a338;
+    --gold-bright: #f3d785;
+    --crimson: #9e2828;
+    --crimson-bright: #d94b43;
+    --line: rgba(212, 163, 56, 0.28);
+    --line-soft: rgba(245, 237, 216, 0.08);
+    --shadow: rgba(0, 0, 0, 0.85);
     --font-head: Georgia, "Iowan Old Style", "Palatino Linotype", "Hiragino Mincho ProN", serif;
     --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   }
@@ -39,54 +39,72 @@
     overflow-x: hidden;
   }
 
-  /* ================= ATMOSPHERIC SCENE (KYOTO SAMURAI PERIOD) ================= */
+  /* ================= ATMOSPHERIC SCENE (HOLLYWOOD CINEMATIC KYOTO) ================= */
   .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  
   .scene-sky {
     position: absolute; inset: 0;
     background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(138, 36, 36, 0.45), transparent 75%),
-      radial-gradient(circle at 80% 25%, rgba(235, 208, 128, 0.12), transparent 45%),
-      linear-gradient(180deg, #140d0b 0%, #101417 35%, #0b0f12 70%, #050504 100%);
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(158, 40, 40, 0.5), transparent 75%),
+      radial-gradient(circle at 85% 20%, rgba(243, 215, 133, 0.18), transparent 40%),
+      radial-gradient(circle at 15% 80%, rgba(212, 163, 56, 0.08), transparent 50%),
+      linear-gradient(180deg, #100907 0%, #0d1216 35%, #080c0f 70%, #030302 100%);
   }
   
   .scene-sun {
-    position: absolute; top: 6%; right: 10%; width: 320px; height: 320px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(203, 155, 57, 0.2) 0%, rgba(138, 36, 36, 0.12) 50%, transparent 75%);
-    filter: blur(25px);
+    position: absolute; top: 2%; right: 8%; width: 380px; height: 380px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(243, 215, 133, 0.25) 0%, rgba(158, 40, 40, 0.15) 45%, transparent 75%);
+    filter: blur(30px);
+    animation: sunPulse 12s ease-in-out infinite alternate;
+  }
+  @keyframes sunPulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.15); opacity: 1; } }
+
+  .lens-flare {
+    position: absolute; top: 0; right: 15%; width: 60%; height: 100%;
+    background: linear-gradient(135deg, transparent 40%, rgba(243, 215, 133, 0.05) 48%, rgba(217, 75, 67, 0.04) 52%, transparent 60%);
+    transform: rotate(-15deg);
   }
 
-  .scene-fog {
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(211, 197, 165, 0.04) 30%, rgba(211, 197, 165, 0.08) 60%, transparent 90%);
-    background-size: 200% 200%;
-    animation: driftFog 60s ease-in-out infinite alternate;
-  }
-  @keyframes driftFog { 0% { background-position: 0% 30%; } 100% { background-position: 100% 70%; } }
-
-  .scene-mountains { position: absolute; left: 0; right: 0; bottom: 18%; height: 42%; opacity: 0.7; }
+  .scene-mountains { position: absolute; left: 0; right: 0; bottom: 15%; height: 45%; opacity: 0.75; }
   .scene-mountains svg { width: 100%; height: 100%; display: block; }
   
-  .scene-pagoda { position: absolute; right: 4%; bottom: 22%; width: 230px; opacity: 0.5; filter: drop-shadow(0 0 15px rgba(0,0,0,0.85)); }
+  .scene-pagoda { position: absolute; right: 6%; bottom: 20%; width: 220px; opacity: 0.55; filter: drop-shadow(0 0 20px rgba(0,0,0,0.9)); }
   .scene-pagoda svg { width: 100%; height: auto; display: block; }
 
-  .scene-torii { position: absolute; left: 5%; bottom: 20%; width: 150px; opacity: 0.4; filter: drop-shadow(0 0 12px rgba(0,0,0,0.9)); }
+  .scene-torii { position: absolute; left: 8%; bottom: 18%; width: 160px; opacity: 0.45; filter: drop-shadow(0 0 15px rgba(0,0,0,0.95)); }
   .scene-torii svg { width: 100%; height: auto; display: block; }
 
-  .scene-bamboo { position: absolute; left: 0; right: 0; bottom: 0; height: 35%; opacity: 0.55; }
+  /* GUARDIAN SILHOUETTES */
+  .guardian-tiger {
+    position: absolute; left: -2%; bottom: 12%; width: 340px; height: 500px; opacity: 0.38;
+    filter: drop-shadow(0 0 25px rgba(212, 163, 56, 0.3));
+    transition: opacity 0.5s;
+  }
+  .guardian-tiger svg { width: 100%; height: 100%; }
+
+  .guardian-dragon {
+    position: absolute; right: -2%; top: 5%; width: 380px; height: 600px; opacity: 0.35;
+    filter: drop-shadow(0 0 30px rgba(158, 40, 40, 0.4));
+    transition: opacity 0.5s;
+  }
+  .guardian-dragon svg { width: 100%; height: 100%; }
+
+  .scene-bamboo { position: absolute; left: 0; right: 0; bottom: 0; height: 38%; opacity: 0.6; }
   .scene-bamboo svg { width: 100%; height: 100%; display: block; }
 
-  .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 250px 80px rgba(0,0,0,0.8); }
-
-  #sakuraCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+  .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 280px 100px rgba(0,0,0,0.85); }
+  
+  #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
   /* ================= SIDEBAR ================= */
   .sidebar {
     position: relative; z-index: 2;
     width: 290px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
-    background: linear-gradient(180deg, rgba(19, 23, 26, 0.94), rgba(10, 8, 7, 0.96));
+    background: linear-gradient(180deg, rgba(17, 21, 24, 0.92), rgba(7, 5, 4, 0.96));
     border-right: 1px solid var(--line);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     display: flex; flex-direction: column; padding: 0;
+    box-shadow: 10px 0 30px rgba(0,0,0,0.5);
   }
   .sidebar::before {
     content: ""; display: block; height: 4px; width: 100%; flex-shrink: 0;
@@ -94,11 +112,11 @@
   }
   .sidebar-header { padding: 22px 18px 18px; text-align: center; border-bottom: 1px solid var(--line); }
   .brand-mark {
-    width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 55%, #6e5019 100%);
+    width: 62px; height: 62px; margin: 0 auto 12px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 55%, #5e4312 100%);
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.65rem; box-shadow: 0 0 0 3px rgba(203, 155, 57, 0.22), 0 8px 24px rgba(0,0,0,0.7);
-    color: #1a1205; font-family: var(--font-head); font-weight: 700;
+    font-size: 1.7rem; box-shadow: 0 0 0 3px rgba(212, 163, 56, 0.25), 0 8px 25px rgba(0,0,0,0.8);
+    color: #140d04; font-family: var(--font-head); font-weight: 700;
   }
   .sidebar-header h1 {
     font-family: var(--font-head); font-size: 1.1rem; letter-spacing: 0.08em; color: var(--parchment);
@@ -114,8 +132,8 @@
     font-family: var(--font-body);
   }
   .view-btn .vi { font-size: 1rem; width: 1.3em; text-align: center; }
-  .view-btn:hover { background-color: rgba(203, 155, 57, 0.1); color: var(--parchment); }
-  .view-btn.active { background-color: rgba(203, 155, 57, 0.16); color: var(--gold-bright); border-color: var(--line); }
+  .view-btn:hover { background-color: rgba(212, 163, 56, 0.12); color: var(--parchment); }
+  .view-btn.active { background-color: rgba(212, 163, 56, 0.18); color: var(--gold-bright); border-color: var(--line); box-shadow: inset 0 0 12px rgba(212,163,56,0.15); }
 
   .nav-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--parchment-faint); margin: 14px 16px 6px; font-weight: 700; }
   .nav-links { list-style: none; padding: 0 8px; overflow-y: auto; flex-grow: 1; }
@@ -126,7 +144,7 @@
     padding: 7px 10px; color: var(--parchment-dim); border-radius: 4px; font-size: 0.78rem;
     transition: all 0.12s ease; font-family: var(--font-body);
   }
-  .nav-links button:hover { background-color: rgba(203, 155, 57, 0.1); color: var(--gold-bright); padding-left: 14px; }
+  .nav-links button:hover { background-color: rgba(212, 163, 56, 0.12); color: var(--gold-bright); padding-left: 14px; }
   .nav-links .cnt { color: var(--parchment-faint); font-size: 0.7rem; }
 
   .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--line); font-size: 0.66rem; color: var(--parchment-faint); text-align: center; letter-spacing: 0.05em; }
@@ -135,21 +153,22 @@
   .main-content { position: relative; z-index: 2; flex-grow: 1; padding: 26px 32px 50px; min-width: 0; }
   .search-wrapper {
     position: sticky; top: 0; z-index: 50; padding: 4px 0 16px;
-    background: linear-gradient(180deg, var(--ink) 78%, transparent);
+    background: linear-gradient(180deg, var(--ink) 80%, transparent);
   }
   .search-input {
     width: 100%; padding: 13px 20px; font-size: 0.95rem; border-radius: 10px;
-    border: 1px solid var(--line); background: rgba(19, 23, 26, 0.85); backdrop-filter: blur(8px);
+    border: 1px solid var(--line); background: rgba(17, 21, 24, 0.85); backdrop-filter: blur(12px);
     color: var(--parchment); outline: none; transition: border-color 0.15s, box-shadow 0.15s; font-family: var(--font-body);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
   }
   .search-input::placeholder { color: var(--parchment-faint); }
-  .search-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(203, 155, 57, 0.16); }
+  .search-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 163, 56, 0.2); }
   .search-count { font-size: 0.74rem; color: var(--parchment-faint); margin-top: 8px; min-height: 1em; }
 
   .dashboard-view { display: none; }
   .dashboard-view.active { display: block; }
 
-  .page-title { font-family: var(--font-head); font-size: 1.55rem; color: var(--parchment); margin-bottom: 4px; letter-spacing: 0.02em; }
+  .page-title { font-family: var(--font-head); font-size: 1.6rem; color: var(--parchment); margin-bottom: 4px; letter-spacing: 0.02em; text-shadow: 0 2px 8px rgba(0,0,0,0.7); }
   .page-sub { font-size: 0.85rem; color: var(--parchment-faint); margin-bottom: 22px; }
 
   .section-container { margin-bottom: 26px; scroll-margin-top: 90px; }
@@ -164,23 +183,24 @@
   /* ================= CARDS & SCROLLS ================= */
   .card {
     position: relative;
-    background: linear-gradient(180deg, rgba(243, 235, 217, 0.05), rgba(243, 235, 217, 0.02));
+    background: linear-gradient(180deg, rgba(245, 237, 216, 0.06), rgba(245, 237, 216, 0.02));
     border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: 4px 10px 10px 4px;
     padding: 14px 16px; margin-bottom: 10px;
     display: flex; justify-content: space-between; align-items: center; gap: 16px;
-    transition: border-color 0.15s, transform 0.15s, background 0.15s;
-    backdrop-filter: blur(4px);
+    transition: all 0.15s ease;
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
   }
-  .card:hover { background: linear-gradient(180deg, rgba(243, 235, 217, 0.08), rgba(243, 235, 217, 0.03)); border-left-color: var(--gold-bright); }
+  .card:hover { background: linear-gradient(180deg, rgba(245, 237, 216, 0.09), rgba(245, 237, 216, 0.04)); border-left-color: var(--gold-bright); transform: translateY(-1px); }
   .card.is-pinned { border-left-color: var(--blue-bright); }
   .card-body { flex-grow: 1; min-width: 0; }
   .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
   .card-tag { display: inline-block; font-size: 0.6rem; font-weight: 700; padding: 2px 7px; border-radius: 3px; background: rgba(255,255,255,0.06); color: var(--parchment); letter-spacing: 0.04em; text-transform: uppercase; }
-  .card-tag.win { background: rgba(50, 75, 92, 0.45); color: #b9d4e6; }
-  .card-tag.mac { background: rgba(120, 86, 163, 0.38); color: #dcc9f2; }
-  .card-tag.linux { background: rgba(61, 89, 67, 0.45); color: #c3e0c9; }
-  .card-tag.critical { background: rgba(138, 36, 36, 0.5); color: #f0b8b4; }
-  .card-tag.hashi { background: rgba(203, 155, 57, 0.3); color: var(--gold-bright); }
+  .card-tag.win { background: rgba(50, 75, 92, 0.5); color: #b9d4e6; }
+  .card-tag.mac { background: rgba(120, 86, 163, 0.45); color: #dcc9f2; }
+  .card-tag.linux { background: rgba(61, 89, 67, 0.5); color: #c3e0c9; }
+  .card-tag.critical { background: rgba(158, 40, 40, 0.55); color: #f0b8b4; }
+  .card-tag.hashi { background: rgba(212, 163, 56, 0.35); color: var(--gold-bright); }
 
   .message-text { font-size: 0.93rem; line-height: 1.6; white-space: pre-line; color: #efe9dc; font-family: var(--font-body); }
 
@@ -190,28 +210,28 @@
     border-radius: 6px; padding: 5px 8px; font-size: 0.85rem; cursor: pointer; line-height: 1;
     transition: all 0.15s ease;
   }
-  .icon-btn:hover { background: rgba(203, 155, 57, 0.15); color: var(--gold-bright); }
-  .icon-btn.on { color: var(--gold-bright); border-color: var(--gold); background: rgba(203, 155, 57, 0.18); }
+  .icon-btn:hover { background: rgba(212, 163, 56, 0.18); color: var(--gold-bright); }
+  .icon-btn.on { color: var(--gold-bright); border-color: var(--gold); background: rgba(212, 163, 56, 0.22); }
   .icon-row { display: flex; gap: 6px; }
 
   .seal-btn {
-    background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 60%, #6e5019 100%);
-    color: #1a1205; border: none; padding: 9px 14px; border-radius: 50px;
+    background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 60%, #5e4312 100%);
+    color: #140d04; border: none; padding: 9px 14px; border-radius: 50px;
     cursor: pointer; font-size: 0.78rem; font-weight: 700; white-space: nowrap; min-width: 128px;
-    transition: transform 0.12s, box-shadow 0.15s; box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    transition: transform 0.12s, box-shadow 0.15s; box-shadow: 0 3px 12px rgba(0,0,0,0.5);
     font-family: var(--font-body); letter-spacing: 0.02em; text-align: center;
   }
-  .seal-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.55); }
-  .seal-btn.copied { background: linear-gradient(180deg, #f3ebd9, #d3c5a5); color: #211a10; }
+  .seal-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(0,0,0,0.65); }
+  .seal-btn.copied { background: linear-gradient(180deg, #f5edd8, #d8c8a3); color: #211a10; }
   .seal-btn:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
 
   .progress-check { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; flex-shrink: 0; }
 
   /* ================= ACCORDION ================= */
-  .accordion { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-bottom: 14px; background: rgba(255,255,255,0.015); backdrop-filter: blur(4px); }
+  .accordion { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-bottom: 14px; background: rgba(255,255,255,0.015); backdrop-filter: blur(6px); box-shadow: 0 4px 18px rgba(0,0,0,0.3); }
   .accordion summary {
     list-style: none; cursor: pointer; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    background: linear-gradient(180deg, rgba(203, 155, 57, 0.08), rgba(203, 155, 57, 0.02));
+    background: linear-gradient(180deg, rgba(212, 163, 56, 0.09), rgba(212, 163, 56, 0.02));
     font-family: var(--font-head); font-size: 1.02rem; color: var(--parchment);
   }
   .accordion summary::-webkit-details-marker { display: none; }
@@ -227,11 +247,11 @@
 
   /* ================= DASHBOARD COMPONENTS ================= */
   .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 26px; }
-  .stat-card { border: 1px solid var(--line); border-radius: 10px; padding: 16px; background: rgba(255,255,255,0.03); text-align: center; backdrop-filter: blur(4px); }
+  .stat-card { border: 1px solid var(--line); border-radius: 10px; padding: 16px; background: rgba(255,255,255,0.03); text-align: center; backdrop-filter: blur(6px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
   .stat-card .num { font-family: var(--font-head); font-size: 1.7rem; color: var(--gold-bright); }
   .stat-card .lbl { font-size: 0.72rem; color: var(--parchment-faint); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
 
-  .clock-card { border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 26px; flex-wrap: wrap; backdrop-filter: blur(4px); }
+  .clock-card { border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 26px; flex-wrap: wrap; backdrop-filter: blur(6px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
   .clock-time { font-family: var(--font-head); font-size: 1.6rem; color: var(--parchment); letter-spacing: 0.03em; }
   .clock-date { font-size: 0.75rem; color: var(--parchment-faint); }
 
@@ -239,33 +259,33 @@
   .quick-btn {
     border: 1px solid var(--line); border-radius: 8px; padding: 14px; background: rgba(255,255,255,0.03);
     color: var(--parchment); cursor: pointer; text-align: left; font-size: 0.85rem; font-weight: 600;
-    transition: all 0.15s ease; font-family: var(--font-body); backdrop-filter: blur(4px);
+    transition: all 0.15s ease; font-family: var(--font-body); backdrop-filter: blur(6px); box-shadow: 0 4px 16px rgba(0,0,0,0.3);
   }
-  .quick-btn:hover { background: rgba(203, 155, 57, 0.12); border-color: var(--gold); }
+  .quick-btn:hover { background: rgba(212, 163, 56, 0.14); border-color: var(--gold); transform: translateY(-1px); }
   .quick-btn .qi { display: block; font-size: 1.2rem; margin-bottom: 6px; }
 
   .mini-list { display: flex; flex-direction: column; gap: 8px; }
   .mini-item {
     display: flex; justify-content: space-between; align-items: center; gap: 10px;
-    border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: rgba(255,255,255,0.02); font-size: 0.82rem; backdrop-filter: blur(4px);
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: rgba(255,255,255,0.02); font-size: 0.82rem; backdrop-filter: blur(6px);
   }
   .mini-item .txt { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #efe9dc; }
   .mini-item .cat-chip { font-size: 0.65rem; color: var(--parchment-faint); border: 1px solid var(--line); border-radius: 8px; padding: 1px 7px; flex-shrink: 0; }
 
   /* ================= TABLES ================= */
-  .table-responsive { width: 100%; overflow-x: auto; background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 10px; backdrop-filter: blur(4px); }
+  .table-responsive { width: 100%; overflow-x: auto; background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 10px; backdrop-filter: blur(6px); box-shadow: 0 4px 18px rgba(0,0,0,0.3); }
   table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.83rem; min-width: 820px; }
-  th { background: rgba(203, 155, 57, 0.1); color: var(--parchment); padding: 12px; border-bottom: 1px solid var(--line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; }
+  th { background: rgba(212, 163, 56, 0.12); color: var(--parchment); padding: 12px; border-bottom: 1px solid var(--line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; }
   td { padding: 10px 12px; border-bottom: 1px solid var(--line-soft); color: #efe9dc; }
-  tbody tr:hover td { background: rgba(203, 155, 57, 0.05); }
+  tbody tr:hover td { background: rgba(212, 163, 56, 0.05); }
   tbody tr:last-child td { border-bottom: none; }
   .badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
   .badge-minor { background: rgba(255,255,255,0.06); color: #efe9dc; }
-  .badge-major { background: rgba(138, 36, 36, 0.45); color: #f0b8b4; }
+  .badge-major { background: rgba(158, 40, 40, 0.5); color: #f0b8b4; }
 
   /* ================= POLICY GENERATOR & THRESHOLDS ================= */
-  .gen-panel { border: 1px solid var(--line); border-radius: 10px; padding: 18px; background: rgba(255,255,255,0.03); margin-bottom: 26px; backdrop-filter: blur(4px); }
-  .gen-select { width: 100%; max-width: 420px; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line); background: rgba(10, 8, 7, 0.7); color: var(--parchment); font-size: 0.9rem; margin-bottom: 14px; font-family: var(--font-body); }
+  .gen-panel { border: 1px solid var(--line); border-radius: 10px; padding: 18px; background: rgba(255,255,255,0.03); margin-bottom: 26px; backdrop-filter: blur(6px); box-shadow: 0 4px 18px rgba(0,0,0,0.3); }
+  .gen-select { width: 100%; max-width: 420px; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line); background: rgba(7, 5, 4, 0.75); color: var(--parchment); font-size: 0.9rem; margin-bottom: 14px; font-family: var(--font-body); }
   .gen-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
   .gen-card { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; background: rgba(255,255,255,0.02); display: flex; flex-direction: column; justify-content: space-between; }
   .gen-card h4 { font-family: var(--font-head); font-size: 0.85rem; color: var(--gold-bright); margin-bottom: 6px; }
@@ -277,15 +297,15 @@
     padding: 7px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; font-family: var(--font-body);
   }
   .filter-chip:hover { border-color: var(--gold); }
-  .filter-chip.active { background: rgba(203, 155, 57, 0.18); color: var(--gold-bright); border-color: var(--gold); }
+  .filter-chip.active { background: rgba(212, 163, 56, 0.2); color: var(--gold-bright); border-color: var(--gold); }
 
   .infraction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
-  .infr-card { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: rgba(255,255,255,0.03); cursor: pointer; transition: all 0.15s ease; border-left: 4px solid var(--parchment-faint); backdrop-filter: blur(4px); }
+  .infr-card { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: rgba(255,255,255,0.03); cursor: pointer; transition: all 0.15s ease; border-left: 4px solid var(--parchment-faint); backdrop-filter: blur(6px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
   .infr-card:hover { background: rgba(255,255,255,0.05); }
   .infr-card.risk-green { border-left-color: #618c69; }
-  .infr-card.risk-yellow { border-left-color: #cb9b39; }
+  .infr-card.risk-yellow { border-left-color: #d4a338; }
   .infr-card.risk-orange { border-left-color: #d17538; }
-  .infr-card.risk-red { border-left-color: #be413b; }
+  .infr-card.risk-red { border-left-color: #d94b43; }
   .infr-name { font-weight: 700; color: var(--parchment); margin-bottom: 6px; font-size: 0.92rem; }
   .infr-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.7rem; color: var(--parchment-faint); margin-bottom: 6px; }
   .infr-threshold { font-size: 0.72rem; color: var(--parchment-faint); }
@@ -297,6 +317,7 @@
   /* ================= RESPONSIVE ================= */
   @media (max-width: 960px) {
     .sidebar { width: 240px; }
+    .guardian-tiger, .guardian-dragon { opacity: 0.18; }
   }
   @media (max-width: 640px) {
     body { flex-direction: column; }
@@ -309,8 +330,8 @@
 
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(203, 155, 57, 0.28); border-radius: 6px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(203, 155, 57, 0.45); }
+  ::-webkit-scrollbar-thumb { background: rgba(212, 163, 56, 0.32); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(212, 163, 56, 0.5); }
 </style>
 </head>
 <body>
@@ -319,19 +340,20 @@
   <div class="scene" aria-hidden="true">
     <div class="scene-sky"></div>
     <div class="scene-sun"></div>
+    <div class="lens-flare"></div>
     
     <!-- Mountain Ridges -->
     <div class="scene-mountains">
       <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
-        <polygon points="0,300 0,160 120,70 280,180 450,80 620,190 800,60 980,170 1200,100 1200,300" fill="#080b0e"/>
-        <polygon points="0,300 0,210 180,130 380,210 580,140 820,220 1020,150 1200,190 1200,300" fill="#0f1418" opacity=".85"/>
+        <polygon points="0,300 0,160 120,70 280,180 450,80 620,190 800,60 980,170 1200,100 1200,300" fill="#06080a"/>
+        <polygon points="0,300 0,210 180,130 380,210 580,140 820,220 1020,150 1200,190 1200,300" fill="#0d1114" opacity=".88"/>
       </svg>
     </div>
 
     <!-- Pagoda Silhouette -->
     <div class="scene-pagoda">
       <svg viewBox="0 0 100 160" preserveAspectRatio="xMidYMax meet">
-        <g fill="#06080a">
+        <g fill="#040607">
           <polygon points="50,5 47,15 53,15"/>
           <polygon points="20,35 50,20 80,35 72,38 50,28 28,38"/>
           <rect x="36" y="38" width="28" height="15"/>
@@ -348,7 +370,7 @@
     <!-- Torii Gate Silhouette -->
     <div class="scene-torii">
       <svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMax meet">
-        <g fill="#06080a">
+        <g fill="#040607">
           <path d="M5,15 Q60,5 115,15 L112,22 Q60,14 8,22 Z"/>
           <rect x="12" y="25" width="96" height="6"/>
           <rect x="28" y="31" width="10" height="89"/>
@@ -359,10 +381,34 @@
       </svg>
     </div>
 
+    <!-- CELESTIAL TIGER (LEFT GUARDIAN) -->
+    <div class="guardian-tiger">
+      <svg viewBox="0 0 200 300" preserveAspectRatio="xMidYMax meet">
+        <g fill="none" stroke="#d4a338" stroke-width="1.5" opacity="0.6">
+          <path d="M30,280 C40,240 20,200 40,160 C50,140 70,130 80,100 C90,70 85,40 110,20 C130,35 150,25 160,50 C140,65 150,90 135,115 C120,140 145,170 130,200 C120,225 140,260 120,290" />
+          <path d="M50,180 Q80,170 100,195 M60,140 Q90,130 110,155 M75,100 Q105,95 125,115" stroke="#f3d785" stroke-width="2"/>
+          <circle cx="115" cy="42" r="3" fill="#f3d785" />
+          <circle cx="135" cy="38" r="3" fill="#f3d785" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- STORM DRAGON (RIGHT GUARDIAN) -->
+    <div class="guardian-dragon">
+      <svg viewBox="0 0 240 380" preserveAspectRatio="xMidYMin meet">
+        <g fill="none" stroke="#9e2828" stroke-width="1.8" opacity="0.65">
+          <path d="M210,20 C170,40 150,80 180,120 C210,160 140,200 110,240 C80,280 120,320 90,360" />
+          <path d="M195,35 Q160,70 185,105 M165,135 Q130,170 145,210 M120,225 Q85,260 105,300" stroke="#d94b43" stroke-width="1.2"/>
+          <path d="M180,25 L160,10 M195,15 L185,0 M170,35 L145,25" stroke="#f3d785" stroke-width="2"/>
+          <circle cx="188" cy="28" r="3" fill="#d94b43" />
+        </g>
+      </svg>
+    </div>
+
     <!-- Bamboo Grove -->
     <div class="scene-bamboo">
       <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
-        <g stroke="#06080a" stroke-width="7" opacity=".9">
+        <g stroke="#040607" stroke-width="8" opacity=".95">
           <line x1="30" y1="200" x2="30" y2="10"/><line x1="75" y1="200" x2="75" y2="50"/>
           <line x1="140" y1="200" x2="140" y2="0"/><line x1="210" y1="200" x2="210" y2="60"/>
           <line x1="940" y1="200" x2="940" y2="20"/><line x1="1010" y1="200" x2="1010" y2="60"/>
@@ -373,7 +419,7 @@
 
     <div class="scene-fog"></div>
     <div class="scene-vignette"></div>
-    <canvas id="sakuraCanvas"></canvas>
+    <canvas id="fxCanvas"></canvas>
   </div>
 
   <!-- ================= SIDEBAR ================= -->
@@ -464,9 +510,9 @@
       <p class="page-sub">Tactical response reference. Risk color is derived from each infraction's severity and remaining threshold.</p>
       <div class="risk-legend">
         <span><span class="dot" style="background:#618c69;"></span>Standard</span>
-        <span><span class="dot" style="background:#cb9b39;"></span>Elevated</span>
+        <span><span class="dot" style="background:#d4a338;"></span>Elevated</span>
         <span><span class="dot" style="background:#d17538;"></span>Critical</span>
-        <span><span class="dot" style="background:#be413b;"></span>Immediate</span>
+        <span><span class="dot" style="background:#d94b43;"></span>Immediate</span>
       </div>
       <div class="filter-row" id="thresholdFilters"></div>
       <div class="infraction-grid" id="infractionGrid"></div>
@@ -538,119 +584,119 @@
   }
 
   /* ============================================================
-     MESSAGES Data
+     EXPANDED HIGH-ACCURACY MESSAGES Data
      ============================================================ */
   var MESSAGES = [
     // 1. Welcome
-    {id:"m1_1", cat:"1", tags:[], text:"Hello and welcome! I will be your proctor for this exam."},
-    {id:"m1_2", cat:"1", tags:[], text:"We have a few steps to complete before your exam begins. This time does not count against your exam time limit."},
-    {id:"m1_3", cat:"1", tags:[], text:"Please hold while we prepare your exam. Thank you for waiting."},
+    {id:"m1_1", cat:"1", tags:[], text:"Hello and welcome! I will be your proctor for this examination session today. I am here to assist you through the mandatory security check-in and ensure a secure, fair environment throughout your exam."},
+    {id:"m1_2", cat:"1", tags:[], text:"Before we initiate your examination, we must complete several standard security verification procedures. Please be assured that this preparation time is entirely separate and does not count against your official exam time limit."},
+    {id:"m1_3", cat:"1", tags:[], text:"Please hold momentarily while we prepare your exam environment and complete system synchronization. Thank you for your patience and cooperation."},
 
     // 2. Identification Verification
-    {id:"m2_1", cat:"2", tags:[], text:"We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible."},
-    {id:"m2_2", cat:"2", tags:[], text:"Please bring your ID closer to the camera view."},
-    {id:"m2_3", cat:"2", tags:[], text:"Please hold your ID steady."},
-    {id:"m2_4", cat:"2", tags:[], text:"Please flip your ID."},
-    {id:"m2_5", cat:"2", tags:[], text:"Please show the expiration date."},
-    {id:"m2_6", cat:"2", tags:[], text:"Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment."},
-    {id:"m2_7", cat:"2", tags:["critical"], text:"You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling."},
-    {id:"m2_8", cat:"2", tags:["critical"], text:"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com."},
-    {id:"m2_9", cat:"2", tags:["critical"], text:"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To assist you in reaching out to the exam sponsor who will process the name change, please contact support@certiverse.com."},
-    {id:"m2_10", cat:"2", tags:[], text:"Once completed, you can re-enter the reservation and we will continue."},
-    {id:"m2_11", cat:"2", tags:[], text:"Thank you. You may keep your ID away now."},
+    {id:"m2_1", cat:"2", tags:[], text:"We are required to perform a full identity verification before releasing your exam. Please present the front of your original, valid government-issued photo identification directly to the camera. You may utilize the live camera preview on your screen as a visual guide to ensure your photo, full name, and details are completely visible, crisp, and fully framed."},
+    {id:"m2_2", cat:"2", tags:[], text:"Please bring your identification card closer to the webcam lens so that all printed details, text, and photos are clearly legible in the video frame."},
+    {id:"m2_3", cat:"2", tags:[], text:"Please hold your identification completely steady for a moment so the camera can auto-focus and capture a clear image."},
+    {id:"m2_4", cat:"2", tags:[], text:"Please turn your identification document over and display the reverse side to the camera."},
+    {id:"m2_5", cat:"2", tags:[], text:"Please position your identification so that the expiration date is clearly visible and legible on screen."},
+    {id:"m2_6", cat:"2", tags:[], text:"Your identification document currently appears blurry or unreadable on screen. Please adjust your positioning—you may try increasing ambient lighting, placing the ID flat on your desk surface, or resting your hand to eliminate shaking."},
+    {id:"m2_7", cat:"2", tags:["critical"], text:"You are strictly required to present an unaltered, original government-issued photo identification to proceed with testing today. If you do not have an acceptable ID available, we cannot release the exam. You may contact support@certiverse.com for assistance in rescheduling your appointment."},
+    {id:"m2_8", cat:"2", tags:["critical"], text:"Unfortunately, the full legal name presented on your ID document does not match the candidate reservation name registered in our system. Per Certiverse security rules, the name on your government-issued ID must precisely match your exam registration. To proceed, please request a formal name match update by reaching out to support@certiverse.com."},
+    {id:"m2_9", cat:"2", tags:["critical"], text:"Unfortunately, the name on your identification does not match the reservation in our system. Per Certiverse security standards, the name on your ID must fully match the exam record. To assist you in reaching out to the official exam sponsor who will review and process your legal name update, please contact support@certiverse.com."},
+    {id:"m2_10", cat:"2", tags:[], text:"Once your registration details have been updated, you may re-enter the reservation session and we will proceed with your security verification."},
+    {id:"m2_11", cat:"2", tags:[], text:"Thank you for completing identity verification. You may now safely store your identification document away from your desk area."},
 
     // 3. System Verification
-    {id:"m3_1", cat:"3", tags:[], text:"Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam."},
-    {id:"m3_2", cat:"3", tags:[], text:"Please also close the other Certiverse tab, leaving only this one open."},
-    {id:"m3_3", cat:"3", tags:["win"], text:"Please open your Task Manager then scroll down slowly until you reach the end of the list."},
-    {id:"m3_4", cat:"3", tags:["win"], text:"Thank you. You may close the Task Manager now."},
-    {id:"m3_5", cat:"3", tags:["win"], text:"Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option."},
-    {id:"m3_6", cat:"3", tags:["mac"], text:"Please open your Activity Monitor then scroll down slowly until you reach the end of the list."},
-    {id:"m3_7", cat:"3", tags:["mac"], text:"Thank you. You may close the Activity Monitor now."},
-    {id:"m3_8", cat:"3", tags:["mac"], text:"Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed."},
-    {id:"m3_9", cat:"3", tags:["linux"], text:"Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list."},
-    {id:"m3_10", cat:"3", tags:["linux"], text:"Thank you. You may close the System Monitor now."},
-    {id:"m3_11", cat:"3", tags:["linux"], text:"Please close or force quit any applications not related to the exam. If needed, select the application and choose “End Process” or “Kill Process."},
+    {id:"m3_1", cat:"3", tags:[], text:"Please verify that all unauthorized applications, background processes, and browser windows are completely closed on your system. This includes shutting down all browser tabs other than this active examination tab."},
+    {id:"m3_2", cat:"3", tags:[], text:"Please locate and close any duplicate or secondary Certiverse browser tabs, ensuring only this active exam tab remains open on your computer."},
+    {id:"m3_3", cat:"3", tags:["win"], text:"[WINDOWS] Please launch your Task Manager (Ctrl + Shift + Esc) and slowly scroll down through the entire list of running processes from top to bottom so we can verify no unauthorized software is running."},
+    {id:"m3_4", cat:"3", tags:["win"], text:"Thank you for verifying your system processes. You may now close Task Manager."},
+    {id:"m3_5", cat:"3", tags:["win"], text:"[WINDOWS] Please expand your System Tray by clicking the upward arrow icon (^) located at the bottom-right corner of your taskbar. Right-click each active icon and select 'Quit', 'Exit', or 'Close' for any secondary application."},
+    {id:"m3_6", cat:"3", tags:["mac"], text:"[MAC] Please launch Activity Monitor (Cmd + Space, search 'Activity Monitor') and slowly scroll down from top to bottom through the process list so we can confirm all background applications are terminated."},
+    {id:"m3_7", cat:"3", tags:["mac"], text:"Thank you for verifying your active system tasks. You may now close Activity Monitor."},
+    {id:"m3_8", cat:"3", tags:["mac"], text:"[MAC] Please press Option + Command + Escape simultaneously on your keyboard to display the Force Quit Applications window, and verify that no applications other than your web browser are running."},
+    {id:"m3_9", cat:"3", tags:["linux"], text:"[LINUX] Please open your System Monitor, navigate to the Processes tab, and scroll slowly from top to bottom through the active list so we can confirm no unauthorized tools are running."},
+    {id:"m3_10", cat:"3", tags:["linux"], text:"Thank you for verifying your running environment. You may now close System Monitor."},
+    {id:"m3_11", cat:"3", tags:["linux"], text:"[LINUX] Please force quit or kill any non-essential background processes or utilities not required for this exam session by selecting the entry and clicking 'End Process' or 'Kill Process'."},
 
     // 4. Clear Desk
-    {id:"m4_1", cat:"4", tags:[], text:"Thank you. If there are any items on your desk surface, please remove them now."},
-    {id:"m4_2", cat:"4", tags:[], text:"Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, smart glasses, and any other electronic device."},
-    {id:"m4_3", cat:"4", tags:[], text:"Headphones are not allowed during the exam. Please remove them and put them away."},
-    {id:"m4_4", cat:"4", tags:[], text:"Hats are not allowed during the exam. Please remove your hat and put it away."},
-    {id:"m4_5", cat:"4", tags:[], text:"Please remove your smartwatch and place it out of reach."},
-    {id:"m4_6", cat:"4", tags:[], text:"As outlined in the exam policies, only one laptop or computer without extra screens is allowed. Please remove or cover any additional monitors so they are not facing you directly."},
+    {id:"m4_1", cat:"4", tags:[], text:"Thank you. If there are any non-permitted materials or personal belongings on your desk surface or workspace, please remove them completely now."},
+    {id:"m4_2", cat:"4", tags:[], text:"Please ensure all secondary electronic equipment and smart devices are powered off and stored completely out of arm's reach. This policy applies to smartphones, smartwatches, wireless/wired headphones, fitness trackers, smart glasses, and auxiliary hardware."},
+    {id:"m4_3", cat:"4", tags:[], text:"Headphones, earbuds, and audio headsets are strictly prohibited during this examination. Please remove them immediately and place them away from your testing station."},
+    {id:"m4_4", cat:"4", tags:[], text:"Hats, caps, and non-religious headwear are not permitted during the examination. Please remove your headwear and place it away from your workspace."},
+    {id:"m4_5", cat:"4", tags:[], text:"Please unbuckle your smartwatch or wrist wearable and store it completely outside your physical testing area."},
+    {id:"m4_6", cat:"4", tags:[], text:"As outlined in testing security guidelines, candidate stations are restricted to a single primary monitor display. Please disconnect, power down, or turn around any secondary monitors so they are facing completely away from you."},
 
     // 5. Room Scan
-    {id:"m5_1", cat:"5", tags:[], text:"Thank you. We will now scan the room to confirm that all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk."},
-    {id:"m5_2", cat:"5", tags:[], text:"When doing the room scan, please hold your laptop or webcam in a way that allows the camera to clearly capture the room. Rotate it slowly and make sure nothing blocks the view, so we can see all areas of your workspace, including the desk, floor, walls, and surrounding environment."},
-    {id:"m5_3", cat:"5", tags:[], text:"Please show us the desk area."},
-    {id:"m5_4", cat:"5", tags:[], text:"Please show the area under the desk."},
-    {id:"m5_5", cat:"5", tags:[], text:"All electronics should be out of reach and turned off."},
-    {id:"m5_6", cat:"5", tags:[], text:"Please ensure your desk is clear of all items."},
-    {id:"m5_7", cat:"5", tags:[], text:"Please direct your camera around the room one more time."},
-    {id:"m5_8", cat:"5", tags:[], text:"Please make sure to capture all corners and edges of your desk during the room scan."},
-    {id:"m5_9", cat:"5", tags:[], text:"Is it possible for you to improve the lighting in your testing area?"},
-    {id:"m5_10", cat:"5", tags:[], text:"The window behind you is creating a backlight effect. Adjusting the lighting or moving slightly would help us proceed."},
-    {id:"m5_11", cat:"5", tags:["critical"], text:"Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination."},
+    {id:"m5_1", cat:"5", tags:[], text:"Thank you. We will now proceed with a full environmental room scan to confirm all testing security rules are met. Please slowly rotate your webcam or laptop camera 360 degrees around the entire room, ensuring a clear visual sweep of your physical desk surface, floor space, walls, and surrounding area."},
+    {id:"m5_2", cat:"5", tags:[], text:"During your 360-degree room scan, please hold your webcam or laptop firmly and tilt it to give us a clear view of your workspace. Rotate smoothly without obstructing the camera lens so we can verify your full desktop surface, under-desk area, walls, and immediate testing boundaries."},
+    {id:"m5_3", cat:"5", tags:[], text:"Please tilt your camera downward to show a direct, unobstructed view of your entire main desk surface."},
+    {id:"m5_4", cat:"5", tags:[], text:"Please point your camera downward beneath your desk structure so we can inspect the footwell and floor area."},
+    {id:"m5_5", cat:"5", tags:[], text:"Please verify that all extraneous electronics, cables, secondary computers, and mobile equipment are powered off and positioned far out of reach."},
+    {id:"m5_6", cat:"5", tags:[], text:"Please perform a final check to ensure your desk surface is clear of all paper, books, sticky notes, writing utensils, and unapproved objects."},
+    {id:"m5_7", cat:"5", tags:[], text:"Please perform one more slow, continuous 360-degree camera rotation around your entire room environment."},
+    {id:"m5_8", cat:"5", tags:[], text:"Please make sure to capture every corner, outer edge, and side of your desk workspace during your room scan sweep."},
+    {id:"m5_9", cat:"5", tags:[], text:"Is it possible for you to adjust or brighten the lighting in your room? The proctor needs a clear, crisp view of your face and environment to maintain exam compliance."},
+    {id:"m5_10", cat:"5", tags:[], text:"The window or light source directly behind you is creating a backlighting glare. Adjusting your light placement or window blinds will help us proceed with your session."},
+    {id:"m5_11", cat:"5", tags:["critical"], text:"Please confirm that you are alone in a private room. No other individuals (or pets) may enter or remain in your testing area during the exam session. Any unauthorized presence or interruption violates Certiverse rules and will result in session termination."},
 
     // 6. Exam Release
-    {id:"m6_1", cat:"6", tags:[], text:"Thank you for your cooperation. You may now click the “Hide Video” button on the side of this chat box."},
-    {id:"m6_2", cat:"6", tags:[], text:"Thank you. Do you have any questions before beginning your exam?"},
-    {id:"m6_3", cat:"6", tags:[], text:"If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection."},
-    {id:"m6_4", cat:"6", tags:[], text:"Please use this chat if you have any questions that are not related to the exam content. I will now release your exam."},
-    {id:"m6_5", cat:"6", tags:[], text:"You can click the “Hide Chat” button on the side or the X at the top-right to begin your exam."},
+    {id:"m6_1", cat:"6", tags:[], text:"Thank you for your patience and cooperation. You may now click the 'Hide Video' control button located on the side panel of this proctoring window."},
+    {id:"m6_2", cat:"6", tags:[], text:"Security check-in is complete. Do you have any procedural or non-content questions before I release your exam?"},
+    {id:"m6_3", cat:"6", tags:[], text:"If your connection drops or experiences a technical disruption at any time, please log back into your session immediately. Please be aware that a brief security re-verification of your workspace will be required upon reconnection."},
+    {id:"m6_4", cat:"6", tags:[], text:"Please utilize this chat window if you need non-technical proctor support during your exam. I am now releasing your exam session. Good luck!"},
+    {id:"m6_5", cat:"6", tags:[], text:"You may click the 'Hide Chat' button on the side panel or click the 'X' icon at the top-right corner to minimize this chat and view your exam questions."},
 
     // 7. Miscellaneous
-    {id:"m7_1", cat:"7", tags:[], text:"Breaks are not allowed for this exam."},
-    {id:"m7_2", cat:"7", tags:[], text:"You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules."},
-    {id:"m7_3", cat:"7", tags:[], text:"Please wait briefly while we investigate this issue."},
-    {id:"m7_4", cat:"7", tags:[], text:"Sorry, but we cannot assist with content-related questions."},
-    {id:"m7_5", cat:"7", tags:[], text:"You can email support@certiverse.com for further assistance with rescheduling."},
-    {id:"m7_6", cat:"7", tags:[], text:"Please adjust your camera. Your head and shoulders must remain fully visible during the exam."},
-    {id:"m7_7", cat:"7", tags:[], text:"Welcome back!"},
-    {id:"m7_8", cat:"7", tags:[], text:"Thank you. You may resume now."},
+    {id:"m7_1", cat:"7", tags:[], text:"Please be advised that unscheduled breaks are strictly prohibited during this examination per client rules."},
+    {id:"m7_2", cat:"7", tags:[], text:"You are permitted one 5-minute break during this exam. Your session timer will be paused while you are away and resumed upon your return. Please return within 5 minutes, as exceeding the allotted break duration violates Certiverse rules and will trigger session termination."},
+    {id:"m7_3", cat:"7", tags:[], text:"Please hold momentarily while we investigate this system issue and consult our technical team."},
+    {id:"m7_4", cat:"7", tags:[], text:"I apologize, but proctors are strictly forbidden from clarifying, discussing, or answering questions related to exam content or specific questions."},
+    {id:"m7_5", cat:"7", tags:[], text:"You may contact support@certiverse.com for further administrative assistance, ticket logging, and exam rescheduling."},
+    {id:"m7_6", cat:"7", tags:[], text:"Please re-adjust your camera angle. Your full face, head, and shoulders must remain centered and completely visible throughout your exam."},
+    {id:"m7_7", cat:"7", tags:[], text:"Welcome back! We will now perform a brief re-scan before resuming your exam session."},
+    {id:"m7_8", cat:"7", tags:[], text:"Thank you for completing the check. I have resumed your exam session."},
 
     // 8. Warnings
-    {id:"m8_1", cat:"8", tags:[], text:"Please refrain from talking aloud."},
-    {id:"m8_2", cat:"8", tags:[], text:"Please ensure your face is always within camera view."},
-    {id:"m8_3", cat:"8", tags:[], text:"Please keep your attention forward."},
-    {id:"m8_4", cat:"8", tags:["critical"], text:"Please ask all others to leave the room."},
-    {id:"m8_5", cat:"8", tags:[], text:"Please remain on the exam environment tab only."},
-    {id:"m8_6", cat:"8", tags:["critical"], text:"Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."},
+    {id:"m8_1", cat:"8", tags:[], text:"Please refrain from reading questions aloud, mouthing words, or speaking during your exam session."},
+    {id:"m8_2", cat:"8", tags:[], text:"Please adjust your posture to ensure your entire face remains centered within the webcam view frame at all times."},
+    {id:"m8_3", cat:"8", tags:[], text:"Please keep your eyes and focus directed straight forward at your exam monitor display."},
+    {id:"m8_4", cat:"8", tags:["critical"], text:"Please request that all other individuals immediately exit your private testing area to avoid triggering exam termination."},
+    {id:"m8_5", cat:"8", tags:[], text:"Please keep your browser locked to the secure active examination environment tab only."},
+    {id:"m8_6", cat:"8", tags:["critical"], text:"Candidate warning: Leaving your designated camera view or testing area without explicit proctor acknowledgment is a violation of Certiverse security standards and will result in exam termination."},
 
     // 9. Technical Support
-    {id:"m9_1", cat:"9", tags:[], text:"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."},
-    {id:"m9_2", cat:"9", tags:[], text:"Please click the refresh button on the top left side of the screen."},
-    {id:"m9_3", cat:"9", tags:[], text:"Please try to reboot your machine and launch the exam again."},
-    {id:"m9_4", cat:"9", tags:[], text:"Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?"},
-    {id:"m9_5", cat:"9", tags:[], text:"I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared."},
-    {id:"m9_6", cat:"9", tags:[], text:"Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser."},
-    {id:"m9_7", cat:"9", tags:[], text:"Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs."},
-    {id:"m9_8", cat:"9", tags:[], text:"It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network."},
-    {id:"m9_9", cat:"9", tags:[], text:"I understand. Are you currently on a company network?"},
-    {id:"m9_10", cat:"9", tags:[], text:"Are you currently using a docking station?"},
-    {id:"m9_11", cat:"9", tags:[], text:"Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled."},
-    {id:"m9_12", cat:"9", tags:[], text:"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."},
-    {id:"m9_13", cat:"9", tags:["critical"], text:"You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed."},
-    {id:"m9_14", cat:"9", tags:[], text:"Please check the following before starting the exam:\n\n• Use the latest version of Google Chrome or Microsoft Edge.\n• Ensure you have a stable internet connection.\n• Disable any browser extensions or add-ons.\n• Clear your browser cache.\n• Make sure any VPN or proxy connection is turned off.\n• Disconnect any external or extended monitors and use only one screen.\n• Verify that the exam application is allowed in both your system and browser settings, and that all required permissions are enabled (such as camera, microphone, and screen sharing).\n\nIf the issue persists after checking the following, please restart your device and relaunch the exam."},
+    {id:"m9_1", cat:"9", tags:[], text:"Please inspect your device hardware for a physical camera toggle switch, privacy slider, or dedicated camera function key (e.g., F10/Fn combo). Ensure the lens cover is fully slid open and the hardware switch is in the 'ON' position before relaunching video permissions."},
+    {id:"m9_2", cat:"9", tags:[], text:"Please click the browser refresh button located in the upper-left navigation bar to reload your web session."},
+    {id:"m9_3", cat:"9", tags:[], text:"Please perform a full computer restart, open a fresh browser instance, and relaunch your exam reservation from your user dashboard."},
+    {id:"m9_4", cat:"9", tags:[], text:"It appears your media feed is unresponsive. Please close this browser window completely, re-log into your main exam dashboard, and relaunch the test environment."},
+    {id:"m9_5", cat:"9", tags:[], text:"We have lost your audio/video stream. Please refresh your browser tab now to reset media permissions and re-verify your camera, microphone, and screen-sharing selections on the pre-flight screen."},
+    {id:"m9_6", cat:"9", tags:[], text:"Please verify that your web browser has been granted explicit operating system permissions to access your camera, microphone, and screen recording. Look for a pad-lock icon near the browser URL bar."},
+    {id:"m9_7", cat:"9", tags:[], text:"Please open your task manager or system tray and ensure no secondary conferencing apps (such as Zoom, Teams, Skype, Webex, or Discord) are using your media hardware in the background."},
+    {id:"m9_8", cat:"9", tags:[], text:"We are detecting severe network latency and packet loss on your stream. If you prefer, we can cancel this session now so you can reschedule and test on a more stable connection."},
+    {id:"m9_9", cat:"9", tags:[], text:"Are you currently connected through a corporate network, office enterprise Wi-Fi, or managed firewall?"},
+    {id:"m9_10", cat:"9", tags:[], text:"Are you using a hardware docking station, external USB hub, or secondary display extension?"},
+    {id:"m9_11", cat:"9", tags:[], text:"Please temporarily disable active VPN clients, corporate proxies, or security software (such as ZScaler or Cisco AnyConnect) that may block encrypted WebRTC media streams."},
+    {id:"m9_12", cat:"9", tags:[], text:"Since technical issues persist, please reach out directly to support@certiverse.com so our technical support specialists can assist with environment troubleshooting."},
+    {id:"m9_13", cat:"9", tags:["critical"], text:"You have up to 30 minutes from the time of disconnection to log back in and restore your session. Your completed responses are auto-saved. If reconnection exceeds 30 minutes, your reservation will close automatically. Contact support@certiverse.com if further technical support is required."},
+    {id:"m9_14", cat:"9", tags:[], text:"Please run through this technical pre-flight checklist prior to launching your session:\n\n• Ensure you are running the latest version of Google Chrome or Microsoft Edge.\n• Connect via a stable, high-speed internet connection (wired ethernet recommended).\n• Disable all non-essential browser extensions and ad-blockers.\n• Clear your browser cache and cookies.\n• Fully disconnect VPN software, proxy configurations, or corporate firewalls.\n• Disconnect extra displays—only one monitor is permitted.\n• Confirm browser lock/permissions permit camera, microphone, and desktop screen sharing.\n\nIf technical errors persist after verifying these requirements, please restart your computer system and relaunch the session."},
 
     // 11. Non-SEB Exams
-    {id:"m11_1", cat:"11", tags:[], text:"Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat."},
-    {id:"m11_2", cat:"11", tags:[], text:"You may hide or move the pop-up screen-sharing message at the bottom center of your screen."},
+    {id:"m11_1", cat:"11", tags:[], text:"Please click the 'Enter Full Screen' button positioned at the bottom center of your display after minimizing this chat box."},
+    {id:"m11_2", cat:"11", tags:[], text:"You may click and drag or hide the floating screen-sharing browser banner situated at the bottom of your screen so it does not block exam elements."},
 
     // 12. Termination Messages
-    {id:"m12_1", cat:"12", tags:["critical"], term:"prohibited-app", text:"Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
-    {id:"m12_2", cat:"12", tags:["critical"], term:"prohibited-device", text:"The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
-    {id:"m12_3", cat:"12", tags:["critical"], term:"break-overage", text:"We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
-    {id:"m12_4", cat:"12", tags:["critical"], term:"foul-language", text:"Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
-    {id:"m12_5", cat:"12", tags:["critical"], term:"integrity-compromised", text:"The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance."},
+    {id:"m12_1", cat:"12", tags:["critical"], term:"prohibited-app", text:"Unauthorized Remote Desktop Applications or remote assistance tools have been detected during this active examination session. Under strict Certiverse security rules, we are required to terminate your exam session immediately. If you wish to appeal or inquire about this action, please email support@certiverse.com."},
+    {id:"m12_2", cat:"12", tags:["critical"], term:"prohibited-device", text:"The presence or use of an unapproved mobile device or unauthorized hardware has been confirmed within your testing area. Per Certiverse testing regulations, we must immediately terminate this examination session. For further administrative review, contact support@certiverse.com."},
+    {id:"m12_3", cat:"12", tags:["critical"], term:"break-overage", text:"Our monitoring logs confirm a failure to return within the mandatory 5-minute break limit. Under Certiverse policy, exceeding break time requires immediate termination of your examination session. You may direct further questions to support@certiverse.com."},
+    {id:"m12_4", cat:"12", tags:["critical"], term:"foul-language", text:"Profanity, abusive language, or inappropriate behavior towards testing proctors is prohibited under our candidate code of conduct. As a result of this policy violation, your exam session is terminated. For escalation inquiries, contact support@certiverse.com."},
+    {id:"m12_5", cat:"12", tags:["critical"], term:"integrity-compromised", text:"The security or integrity of this examination environment has been compromised due to non-compliance with security protocols. We are obligated to terminate your testing session immediately. Please contact support@certiverse.com for assistance."},
 
     // 13. SEB
-    {id:"m13_1", cat:"13", tags:[], text:"You may exit the Secure Exam Browser to resolve the issue. Once it is fixed, re-entering SEB will reconnect you so the exam can continue."},
-    {id:"m13_2", cat:"13", tags:[], text:"To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen."},
-    {id:"m13_3", cat:"13", tags:[], text:"To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen."},
-    {id:"m13_4", cat:"13", tags:[], text:"Please try to refresh the SEB and choose a different audio/video input."},
-    {id:"m13_5", cat:"13", tags:["critical"], text:"There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."}
+    {id:"m13_1", cat:"13", tags:[], text:"You may close and exit the Secure Exam Browser (SEB) application to resolve this error. Once your system configuration is updated, relaunching SEB will restore your connection so your exam can continue."},
+    {id:"m13_2", cat:"13", tags:[], text:"To safely exit Secure Exam Browser, locate and click the Red Power Icon in the lower-right control taskbar of SEB."},
+    {id:"m13_3", cat:"13", tags:[], text:"To reload your current session inside Secure Exam Browser, please click the Refresh Icon located in the upper-left navigation bar."},
+    {id:"m13_4", cat:"13", tags:[], text:"Please attempt to refresh SEB and select a different active webcam/microphone hardware input source from the media selection dialog."},
+    {id:"m13_5", cat:"13", tags:["critical"], text:"An incompatible or outdated Secure Exam Browser (SEB) configuration has been detected. Please contact support@certiverse.com so our team can help configure the appropriate SEB build for your device."}
   ];
 
   function findMessageById(id){
@@ -719,7 +765,7 @@
   ];
 
   /* ============================================================
-     QUICK ACTIONS (Home Dashboard)
+     QUICK ACTIONS
      ============================================================ */
   var QUICK_ACTIONS = [
     {icon:"🪪", label:"Blurry / Unclear ID", query:"blurry"},
@@ -1098,7 +1144,7 @@
   }
 
   /* ============================================================
-     CLIENT POLICIES (DYNAMIC TEMPLATES)
+     CLIENT POLICIES
      ============================================================ */
   function renderPolicies(){
     var body = document.getElementById("policiesBody");
@@ -1130,23 +1176,23 @@
     if (nameChange.toLowerCase() === "allowed" || breaks.toLowerCase().indexOf("none") === -1) {
       breakText = "You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules.";
     } else {
-      breakText = "Breaks are not allowed for this exam.";
+      breakText = "Please be advised that unscheduled breaks are strictly prohibited during this examination per client rules.";
     }
 
-    // Determine Name Change Text (Includes Certiverse requirement spiel)
+    // Determine Name Change Text
     var nameText = "";
-    var certiverseReq = "Per Certiverse rules, the name on your ID must fully match the exam reservation.\n\n";
+    var certiverseReq = "Per Certiverse security rules, the name on your ID document must fully and precisely match your exam registration.\n\n";
     if (nameChange.toLowerCase() === "not allowed") {
-      nameText = certiverseReq + "Unfortunately we will need to cancel this session. You can email support@certiverse.com for further assistance with rescheduling. Please confirm.";
+      nameText = certiverseReq + "Unfortunately, we will need to cancel this examination session today. You can email support@certiverse.com for further administrative assistance with rescheduling. Please confirm when you are ready.";
     } else {
-      nameText = certiverseReq + "To proceed with a name update, please request a name change by contacting support@certiverse.com. Once completed, you can re-enter the reservation and we will continue.";
+      nameText = certiverseReq + "To proceed with updating your candidate reservation name, please request a formal name update by contacting support@certiverse.com. Once completed, you can re-enter the reservation session and we will continue.";
     }
 
     var cards = [
       {title:"Name Policy & Change Response", text: nameText},
-      {title:"Break Policy Response", text: breakText + " (" + client + " Rule: " + breaks + ")"},
-      {title:"SEB Response", text: client + " exams run under " + seb + " conditions."},
-      {title:"Documentation Response", text: "Documentation/resource policy for " + client + ": " + docs + "."}
+      {title:"Break Policy Response", text: breakText + " (" + client + " Policy: " + breaks + ")"},
+      {title:"SEB Response", text: client + " examination sessions run under " + seb + " secure browser parameters."},
+      {title:"Documentation Response", text: "Documentation and external resource policy for " + client + ": " + docs + "."}
     ];
 
     var html = "";
@@ -1174,11 +1220,11 @@
   };
 
   /* ============================================================
-     KYOTO SAKURA CANVAS ENGINE
+     HOLLYWOOD MULTI-LAYER CINEMATIC CANVAS ENGINE
      ============================================================ */
-  function initSakuraEngine(){
+  function initHollywoodFxEngine(){
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    var canvas = document.getElementById("sakuraCanvas");
+    var canvas = document.getElementById("fxCanvas");
     if (!canvas) return;
     var ctx = canvas.getContext("2d");
 
@@ -1190,19 +1236,34 @@
       height = canvas.height = window.innerHeight;
     });
 
+    // 1. Sakura Petals Particles
     var petals = [];
-    var petalCount = 40;
-
+    var petalCount = 45;
     for (var i = 0; i < petalCount; i++) {
       petals.push({
         x: Math.random() * width,
         y: Math.random() * height - height,
-        size: Math.random() * 7 + 4,
+        size: Math.random() * 8 + 4,
         speedY: Math.random() * 1.2 + 0.6,
         speedX: Math.random() * 0.8 - 0.4,
         rotation: Math.random() * 360,
         rotSpeed: Math.random() * 1.5 - 0.75,
-        opacity: Math.random() * 0.4 + 0.3
+        opacity: Math.random() * 0.45 + 0.25
+      });
+    }
+
+    // 2. Rising Fire/Spirit Embers
+    var embers = [];
+    var emberCount = 30;
+    for (var j = 0; j < emberCount; j++) {
+      embers.push({
+        x: Math.random() * width,
+        y: Math.random() * height + height * 0.5,
+        radius: Math.random() * 2 + 1,
+        speedY: -(Math.random() * 0.9 + 0.4),
+        speedX: Math.random() * 0.6 - 0.3,
+        opacity: Math.random() * 0.6 + 0.3,
+        pulse: Math.random() * 0.05
       });
     }
 
@@ -1213,8 +1274,8 @@
       ctx.globalAlpha = p.opacity;
 
       var grad = ctx.createLinearGradient(0, 0, p.size, p.size);
-      grad.addColorStop(0, "#e8b4b4");
-      grad.addColorStop(1, "#c47a7a");
+      grad.addColorStop(0, "#f3c2c2");
+      grad.addColorStop(1, "#c97373");
 
       ctx.fillStyle = grad;
       ctx.beginPath();
@@ -1225,9 +1286,36 @@
       ctx.restore();
     }
 
+    function drawEmber(e) {
+      ctx.save();
+      ctx.globalAlpha = e.opacity;
+      ctx.fillStyle = "#f3d785";
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = "#d4a338";
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
     function animate() {
       ctx.clearRect(0, 0, width, height);
 
+      // Render Embers
+      for (var k = 0; k < embers.length; k++) {
+        var e = embers[k];
+        e.y += e.speedY;
+        e.x += e.speedX + Math.sin(e.y * 0.01) * 0.4;
+        e.opacity += Math.sin(Date.now() * 0.005 + k) * 0.01;
+
+        if (e.y < -20) {
+          e.y = height + 20;
+          e.x = Math.random() * width;
+        }
+        drawEmber(e);
+      }
+
+      // Render Sakura
       for (var i = 0; i < petals.length; i++) {
         var p = petals[i];
         p.y += p.speedY;
@@ -1238,7 +1326,6 @@
           p.y = -20;
           p.x = Math.random() * width;
         }
-
         drawPetal(p);
       }
 
@@ -1357,7 +1444,7 @@
     renderPolicies();
     renderGenerator();
 
-    initSakuraEngine();
+    initHollywoodFxEngine();
     filterAll();
   });
 })();
