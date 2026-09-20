@@ -77,6 +77,16 @@
   .scene-torii { position: absolute; left: 10%; bottom: 16%; width: 180px; opacity: 0.88; filter: drop-shadow(0 0 20px rgba(0,0,0,0.95)); }
   .scene-torii svg { width: 100%; height: auto; display: block; }
 
+  /* SAKURA TREES (LEFT & RIGHT SILHOUETTES) */
+  .sakura-tree-left {
+    position: absolute; left: -2%; top: -5%; width: 420px; height: 600px; opacity: 0.9;
+    filter: drop-shadow(0 0 20px rgba(243, 194, 194, 0.25));
+  }
+  .sakura-tree-right {
+    position: absolute; right: -2%; top: -2%; width: 450px; height: 650px; opacity: 0.9;
+    filter: drop-shadow(0 0 20px rgba(243, 194, 194, 0.25));
+  }
+
   /* SAMURAI SILHOUETTES */
   .samurai-left {
     position: absolute; left: 24%; bottom: 18%; width: 90px; height: 130px; opacity: 0.92;
@@ -330,6 +340,7 @@
     .sidebar { width: 240px; }
     .guardian-tiger, .guardian-dragon { opacity: 0.45; }
     .samurai-left, .samurai-right { opacity: 0.6; }
+    .sakura-tree-left, .sakura-tree-right { opacity: 0.6; }
   }
   @media (max-width: 640px) {
     body { flex-direction: column; }
@@ -362,7 +373,7 @@
       </svg>
     </div>
 
-    <!-- Pagoda Silhouette -->
+    <!-- Kyoto Pagoda -->
     <div class="scene-pagoda">
       <svg viewBox="0 0 100 160" preserveAspectRatio="xMidYMax meet">
         <g fill="#080c0f">
@@ -379,7 +390,7 @@
       </svg>
     </div>
 
-    <!-- Torii Gate Silhouette -->
+    <!-- Kyoto Torii Gate -->
     <div class="scene-torii">
       <svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMax meet">
         <g fill="#080c0f">
@@ -393,20 +404,73 @@
       </svg>
     </div>
 
+    <!-- LEFT SAKURA TREE -->
+    <div class="sakura-tree-left">
+      <svg viewBox="0 0 300 450" preserveAspectRatio="xMidYMin meet">
+        <!-- Trunk & Main Branches -->
+        <path d="M-20,450 Q40,300 80,200 Q110,120 70,30 Q120,80 150,140 Q180,200 240,250 M80,200 Q140,150 200,100" fill="none" stroke="#080c0f" stroke-width="14" stroke-linecap="round"/>
+        <path d="M80,200 Q140,150 200,100 M70,30 Q110,-10 160,-20" fill="none" stroke="#080c0f" stroke-width="8" stroke-linecap="round"/>
+        <!-- Cherry Blossom Clusters -->
+        <g fill="#f3c2c2" opacity="0.85">
+          <circle cx="70" cy="30" r="28"/>
+          <circle cx="50" cy="15" r="22"/>
+          <circle cx="90" cy="20" r="25"/>
+          <circle cx="150" cy="140" r="32"/>
+          <circle cx="180" cy="120" r="26"/>
+          <circle cx="200" cy="100" r="30"/>
+          <circle cx="230" cy="90" r="24"/>
+          <circle cx="240" cy="250" r="35"/>
+          <circle cx="220" cy="270" r="28"/>
+          <circle cx="130" cy="-10" r="30"/>
+        </g>
+        <g fill="#c97373" opacity="0.75">
+          <circle cx="65" cy="35" r="18"/>
+          <circle cx="145" cy="145" r="22"/>
+          <circle cx="195" cy="105" r="20"/>
+          <circle cx="235" cy="255" r="22"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- RIGHT SAKURA TREE -->
+    <div class="sakura-tree-right">
+      <svg viewBox="0 0 300 450" preserveAspectRatio="xMidYMin meet">
+        <!-- Trunk & Main Branches -->
+        <path d="M320,450 Q260,280 220,180 Q190,100 230,20 Q180,70 140,130 Q90,200 30,240 M220,180 Q150,130 90,90" fill="none" stroke="#080c0f" stroke-width="15" stroke-linecap="round"/>
+        <path d="M220,180 Q150,130 90,90 M230,20 Q180,-20 120,-30" fill="none" stroke="#080c0f" stroke-width="9" stroke-linecap="round"/>
+        <!-- Cherry Blossom Clusters -->
+        <g fill="#f3c2c2" opacity="0.85">
+          <circle cx="230" cy="20" r="30"/>
+          <circle cx="250" cy="10" r="24"/>
+          <circle cx="210" cy="10" r="26"/>
+          <circle cx="140" cy="130" r="34"/>
+          <circle cx="110" cy="110" r="28"/>
+          <circle cx="90" cy="90" r="32"/>
+          <circle cx="60" cy="80" r="25"/>
+          <circle cx="30" cy="240" r="38"/>
+          <circle cx="50" cy="260" r="30"/>
+          <circle cx="140" cy="-20" r="32"/>
+        </g>
+        <g fill="#c97373" opacity="0.75">
+          <circle cx="225" cy="25" r="20"/>
+          <circle cx="135" cy="135" r="24"/>
+          <circle cx="85" cy="95" r="22"/>
+          <circle cx="25" cy="245" r="25"/>
+        </g>
+      </svg>
+    </div>
+
     <!-- SAMURAI SILHOUETTES -->
     <div class="samurai-left">
       <svg viewBox="0 0 100 150" preserveAspectRatio="xMidYMax meet">
         <g fill="#080c0f">
-          <!-- Helmet & Horns -->
           <polygon points="50,15 35,30 65,30"/>
           <path d="M50,12 Q30,0 20,18 L32,25 Z" fill="#d4a338"/>
           <path d="M50,12 Q70,0 80,18 L68,25 Z" fill="#d4a338"/>
           <circle cx="50" cy="35" r="12"/>
-          <!-- Body Armor & Katana -->
           <path d="M30,48 L70,48 L78,95 L22,95 Z"/>
           <rect x="28" y="95" width="20" height="45"/>
           <rect x="52" y="95" width="20" height="45"/>
-          <!-- Katana Sword -->
           <path d="M25,60 L-10,110 L-7,113 L30,63 Z" fill="#f3d785"/>
         </g>
       </svg>
@@ -415,12 +479,10 @@
     <div class="samurai-right">
       <svg viewBox="0 0 100 150" preserveAspectRatio="xMidYMax meet">
         <g fill="#080c0f">
-          <!-- Helmet & Crest -->
           <polygon points="50,12 32,28 68,28"/>
           <path d="M50,10 Q25,-5 15,15 L28,22 Z" fill="#c91818"/>
           <path d="M50,10 Q75,-5 85,15 L72,22 Z" fill="#c91818"/>
           <circle cx="50" cy="32" r="11"/>
-          <!-- Body & Sheathed Katana -->
           <path d="M28,45 L72,45 L80,92 L20,92 Z"/>
           <rect x="26" y="92" width="21" height="48"/>
           <rect x="53" y="92" width="21" height="48"/>
