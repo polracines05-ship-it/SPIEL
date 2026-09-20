@@ -357,13 +357,17 @@
 
   /* ================= TROUBLESHOOTING FLOW STYLES ================= */
   .trouble-section { margin-bottom: 28px; }
+  .trouble-mode-header {
+    font-family: var(--font-head); font-size: 1.25rem; color: var(--gold-bright); border-bottom: 1px stroke var(--gold);
+    padding-bottom: 6px; margin: 20px 0 14px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
   .trouble-card {
-    border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 14px;
+    border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 16px;
     background: rgba(255,255,255,0.03); backdrop-filter: blur(8px); box-shadow: 0 4px 18px rgba(0,0,0,0.4);
   }
-  .trouble-card h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--gold-bright); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .trouble-card h3 { font-family: var(--font-head); font-size: 1.1rem; color: var(--parchment); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
   .flow-step {
-    border-left: 2px stroke var(--line); padding-left: 14px; margin-bottom: 12px; position: relative;
+    border-left: 2px solid var(--line); padding-left: 14px; margin-bottom: 14px; position: relative;
   }
   .flow-step-num { font-size: 0.72rem; font-weight: 700; color: var(--gold-bright); text-transform: uppercase; letter-spacing: 0.05em; }
   .flow-step-title { font-size: 0.92rem; font-weight: 600; color: var(--parchment); margin: 2px 0 4px; }
@@ -661,98 +665,170 @@
 
     <!-- TROUBLESHOOTING VIEW -->
     <div id="view-troubleshooting" class="dashboard-view">
-      <h2 class="page-title">Hardware & System Troubleshooting</h2>
-      <p class="page-sub">Guided workflows for candidate audio, video, and screen sharing issues across SEB &amp; Non-SEB environments.</p>
+      <h2 class="page-title">Hardware &amp; System Troubleshooting</h2>
+      <p class="page-sub">Step-by-step diagnostic workflows for candidate Audio, Screen Sharing, and Camera issues across Non-SEB and SEB environments.</p>
 
       <div class="trouble-section">
+        <div class="trouble-mode-header">🔐 NON-SEB (STANDARD BROWSER EXAMS)</div>
+
+        <!-- Non-SEB Microphone -->
         <div class="trouble-card">
-          <h3>🎤 Microphone Troubleshooting</h3>
+          <h3>🎤 Audio &mdash; Microphone Not Working (Non-SEB)</h3>
           
           <div class="flow-step">
-            <div class="flow-step-num">Step 1 — Browser Check</div>
-            <div class="flow-step-title">Verify Compatible Browser</div>
-            <div class="flow-step-action">Check if candidate is on Google Chrome or Microsoft Edge. If No, instruct to switch.</div>
+            <div class="flow-step-num">Step 1 &amp; 2 &mdash; Browser Compatibility Check</div>
+            <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
+            <div class="flow-step-action">Check if candidate is on Chrome or Edge. If No &rarr; Instruct candidate to switch browser.</div>
             <div class="flow-step-spiel">
-              <span>"Please ensure you are using the latest version of Google Chrome or Microsoft Edge for this exam."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please ensure you are using the latest version of Google Chrome or Microsoft Edge for this exam.')">⚜ Copy</button>
+              <span>"Please check the following before starting the exam:\nUse the latest version of Google Chrome or Microsoft Edge."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check the following before starting the exam:\nUse the latest version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 2 — Device Mute &amp; Permissions</div>
-            <div class="flow-step-title">Hardware Mute &amp; OS Permissions</div>
-            <div class="flow-step-action">Verify mic hardware toggle and OS Privacy Settings (Windows Sound Settings / macOS Privacy &amp; Security).</div>
+            <div class="flow-step-num">Step 3 &mdash; Hardware Device Switch / Mute</div>
+            <div class="flow-step-title">Check Physical Mute Switch or Slider</div>
+            <div class="flow-step-action">Inspect headset/laptop mute switch. Unmute in hardware settings.</div>
             <div class="flow-step-spiel">
-              <span>"Please check if your microphone has a physical mute switch. Also verify in your system settings that microphone access is allowed for your browser."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check if your microphone has a physical mute switch. Also verify in your system settings that microphone access is allowed for your browser.')">⚜ Copy</button>
+              <span>"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 3 — Input Selection &amp; Network</div>
-            <div class="flow-step-title">Select Correct Input &amp; Disable VPN</div>
-            <div class="flow-step-action">Confirm correct microphone is chosen on pre-flight screen and disable active VPN/ZScaler.</div>
+            <div class="flow-step-num">Step 4 &amp; 5 &mdash; Browser &amp; OS Permissions</div>
+            <div class="flow-step-title">Allow Microphone Access in Browser Lock Icon &amp; OS Settings</div>
+            <div class="flow-step-action">Check lock icon near URL bar and system sound privacy settings. Enable permissions.</div>
             <div class="flow-step-spiel">
-              <span>"Please refresh your tab to access the pre-flight screen and ensure the correct microphone device is selected. Please also disable any active VPN or proxy."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please refresh your tab to access the pre-flight screen and ensure the correct microphone device is selected. Please also disable any active VPN or proxy.')">⚜ Copy</button>
+              <span>"Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 4 — Reboot &amp; Fallback</div>
-            <div class="flow-step-title">Restart Device / Alternate Hardware</div>
-            <div class="flow-step-action">If mic remains unresponsive, request full reboot to reset audio drivers or switch to fallback device.</div>
+            <div class="flow-step-num">Step 6 &amp; 7 &mdash; Pre-Flight Selection &amp; Network/VPN</div>
+            <div class="flow-step-title">Select Device Input &amp; Disable Active Corporate VPN/ZScaler</div>
+            <div class="flow-step-action">Refresh tab to pre-flight screen to pick correct microphone. Disable VPN software.</div>
             <div class="flow-step-spiel">
-              <span>"Please perform a full restart of your computer to reset your audio drivers, then relaunch your exam reservation. If the issue persists, you may need to use a secondary computer."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please perform a full restart of your computer to reset your audio drivers, then relaunch your exam reservation. If the issue persists, you may need to use a secondary computer.')">⚜ Copy</button>
+              <span>"Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 8 &amp; 9 &mdash; Rejoin &amp; Computer Reboot</div>
+            <div class="flow-step-title">Re-enter Session / Full Device Restart</div>
+            <div class="flow-step-action">Ask candidate to rejoin session. If still failing, request full system reboot to clear driver locks.</div>
+            <div class="flow-step-spiel">
+              <span>"Please try to reboot your machine and launch the exam again."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please try to reboot your machine and launch the exam again.')">⚜ Copy</button>
             </div>
           </div>
         </div>
 
+        <!-- Non-SEB Screen Sharing -->
         <div class="trouble-card">
-          <h3>🖥️ Screen Sharing Troubleshooting</h3>
+          <h3>🖥️ Screen Sharing &mdash; Can't Share Screen (Non-SEB)</h3>
           
           <div class="flow-step">
-            <div class="flow-step-num">Step 1 — Display &amp; OS Permissions</div>
-            <div class="flow-step-title">Disconnect Dual Displays &amp; Enable Recording</div>
-            <div class="flow-step-action">Disconnect secondary monitors and confirm macOS Screen Recording / Windows Graphics permissions.</div>
+            <div class="flow-step-num">Step 1, 2 &amp; 3 &mdash; Permissions &amp; Monitored Displays</div>
+            <div class="flow-step-title">OS Permissions &amp; Disconnect Secondary Displays</div>
+            <div class="flow-step-action">Disconnect extra screens. On Mac, check System Preferences &gt; Privacy &gt; Screen Recording.</div>
             <div class="flow-step-spiel">
-              <span>"Please disconnect all external or secondary monitors. Only one screen is allowed. For Mac users, ensure browser Screen Recording is allowed in System Preferences > Privacy."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please disconnect all external or secondary monitors. Only one screen is allowed. For Mac users, ensure browser Screen Recording is allowed in System Preferences > Privacy.')">⚜ Copy</button>
+              <span>"Disconnect any external or extended monitors and use only one screen."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Disconnect any external or extended monitors and use only one screen.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 2 — Network &amp; Session Reset</div>
-            <div class="flow-step-title">Switch Connection or Rejoin</div>
-            <div class="flow-step-action">Switch to personal Wi-Fi or mobile hotspot if corporate network blocks WebRTC streams. Rejoin session.</div>
+            <div class="flow-step-num">Step 4 &amp; 5 &mdash; VPN &amp; Network Hotspot</div>
+            <div class="flow-step-title">Disable Managed VPN / Switch to Alternate Wi-Fi</div>
+            <div class="flow-step-action">Disable VPN or proxy. Switch to personal Wi-Fi or mobile hotspot if corporate Wi-Fi blocks streaming.</div>
             <div class="flow-step-spiel">
-              <span>"It appears your network is blocking screen sharing. Please try disabling any VPN or switching to a mobile hotspot or personal Wi-Fi connection, then refresh your page."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It appears your network is blocking screen sharing. Please try disabling any VPN or switching to a mobile hotspot or personal Wi-Fi connection, then refresh your page.')">⚜ Copy</button>
+              <span>"Make sure any VPN or proxy connection is turned off."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Make sure any VPN or proxy connection is turned off.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 6 &amp; 7 &mdash; Dashboard Relaunch &amp; Reboot</div>
+            <div class="flow-step-title">Relaunch Session / Restart Computer</div>
+            <div class="flow-step-action">Relaunch exam from candidate dashboard. If still failing, restart machine to reset display cache.</div>
+            <div class="flow-step-spiel">
+              <span>"Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?"</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?')">⚜ Copy</button>
             </div>
           </div>
         </div>
 
+        <!-- Non-SEB Video -->
         <div class="trouble-card">
-          <h3>📷 Camera Troubleshooting</h3>
+          <h3>📷 Video &mdash; Camera Not Working (Non-SEB)</h3>
           
           <div class="flow-step">
-            <div class="flow-step-num">Step 1 — Physical Lens &amp; OS Permissions</div>
-            <div class="flow-step-title">Check Privacy Cover &amp; Camera Permissions</div>
-            <div class="flow-step-action">Inspect physical webcam slider/switch and verify browser pad-lock camera permissions.</div>
+            <div class="flow-step-num">Step 1 &amp; 2 &mdash; Camera Lock Icon &amp; Applications</div>
+            <div class="flow-step-title">Verify Lock Icon &amp; Close Secondary Camera Apps</div>
+            <div class="flow-step-action">Ensure Zoom, Teams, or Skype are closed and Chrome/Edge has camera permission allowed.</div>
             <div class="flow-step-spiel">
-              <span>"Please check if your camera has a physical sliding cover or hardware switch and ensure it is open. Verify that browser camera access is set to 'Allow'."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check if your camera has a physical sliding cover or hardware switch and ensure it is open. Verify that browser camera access is set to \'Allow\'.')">⚜ Copy</button>
+              <span>"Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 2 — Driver Reset &amp; Escalation</div>
-            <div class="flow-step-title">Reboot System or Contact Support</div>
-            <div class="flow-step-action">Reboot system to clear video capture locks. If persistent, escalate to support@certiverse.com.</div>
+            <div class="flow-step-num">Step 3 &amp; 4 &mdash; Refresh &amp; Reconnection Rules</div>
+            <div class="flow-step-title">Refresh Tab &amp; Explain 30-Minute Window</div>
+            <div class="flow-step-action">Refresh browser tab. Remind candidate of 30-minute auto-save reconnection window.</div>
             <div class="flow-step-spiel">
-              <span>"Please restart your computer to reset your video capture drivers and relaunch the exam. If the issue persists, please contact support@certiverse.com for rescheduling."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please restart your computer to reset your video capture drivers and relaunch the exam. If the issue persists, please contact support@certiverse.com for rescheduling.')">⚜ Copy</button>
+              <span>"You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed.')">⚜ Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="trouble-mode-header">🧭 SEB (SECURE EXAM BROWSER) EXAMS</div>
+
+        <!-- SEB Troubleshooting -->
+        <div class="trouble-card">
+          <h3>🔐 Secure Exam Browser &mdash; SEB Hardware &amp; Media Diagnostics</h3>
+          
+          <div class="flow-step">
+            <div class="flow-step-num">Step 1 &mdash; Top-Left SEB Refresh</div>
+            <div class="flow-step-title">Refresh Safe Exam Browser Navigation</div>
+            <div class="flow-step-action">Instruct candidate to click the SEB refresh icon located in the upper-left corner of the window.</div>
+            <div class="flow-step-spiel">
+              <span>"To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 2 &mdash; SEB Input Device Switching</div>
+            <div class="flow-step-title">Re-select Audio/Video Devices in SEB Bar</div>
+            <div class="flow-step-action">Refresh SEB media selector dialog and choose an alternate active webcam or microphone device.</div>
+            <div class="flow-step-spiel">
+              <span>"Please try to refresh the SEB and choose a different audio/video input."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please try to refresh the SEB and choose a different audio/video input.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 3 &mdash; Bottom-Right Power Icon Exit</div>
+            <div class="flow-step-title">Exit SEB Application to Reset Environment</div>
+            <div class="flow-step-action">Instruct candidate to exit SEB by clicking the bottom-right power icon, fix device settings, and re-enter.</div>
+            <div class="flow-step-spiel">
+              <span>"To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 4 &mdash; SEB Re-entry &amp; Support Escalation</div>
+            <div class="flow-step-title">Re-launch SEB or Escalate to Support</div>
+            <div class="flow-step-action">Re-launch SEB session. If version error persists, refer candidate to support@certiverse.com.</div>
+            <div class="flow-step-spiel">
+              <span>"There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam.')">⚜ Copy</button>
             </div>
           </div>
         </div>
