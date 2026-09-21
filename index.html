@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveActs Proctor Dojo — Kyoto Samurai Estate (PST)</title>
+<title>FiveActs Proctor Dojo — Mount Paozu Command Deck (PST)</title>
 <style>
   :root {
     /* Ghost of Tsushima & Edo Kyoto Samurai Palette */
@@ -44,7 +44,7 @@
   }
 
   /* ============================================================
-     20-SECOND DAY-NIGHT & 4-SEASONS ENGINE (SPRING -> SUMMER -> AUTUMN -> WINTER)
+     DYNAMIC 20-SECOND DAY-NIGHT SKY ENGINE
      ============================================================ */
   .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
   
@@ -54,24 +54,12 @@
   }
 
   @keyframes celestialCycle {
-    0%, 100% { /* Spring / Dawn - Pink Tinted Sunrise */
-      background: linear-gradient(180deg, #2a0f28 0%, #4a1d3d 35%, #8c3b4f 70%, #d96b43 100%);
-    }
-    16.6% { /* Summer / Morning & Afternoon - Clear Bright Sky */
-      background: linear-gradient(180deg, #103c61 0%, #1e6992 35%, #4ea3c8 70%, #9be1eb 100%);
-    }
-    33.3% { /* Summer / High Sun - Golden Hour Sky */
-      background: linear-gradient(180deg, #092c48 0%, #114b73 35%, #2a87b3 70%, #76d0f0 100%);
-    }
-    50% { /* Autumn / Twilight - Rich Crimson Sunset */
-      background: linear-gradient(180deg, #1a0822 0%, #4a1228 35%, #8a2522 70%, #e65c19 100%);
-    }
-    66.6% { /* Winter / Night - Cold Deep Frost */
-      background: linear-gradient(180deg, #040914 0%, #081526 35%, #0b2238 70%, #0a1829 100%);
-    }
-    83.3% { /* Midnight - Deep Sky with Stars */
-      background: linear-gradient(180deg, #010308 0%, #030712 35%, #050d1f 70%, #020610 100%);
-    }
+    0%, 100% { background: linear-gradient(180deg, #1d0f28 0%, #4a2143 35%, #8c3b4f 70%, #d96b43 100%); }
+    16.6%    { background: linear-gradient(180deg, #103c61 0%, #1e6992 35%, #4ea3c8 70%, #9be1eb 100%); }
+    33.3%    { background: linear-gradient(180deg, #092c48 0%, #114b73 35%, #2a87b3 70%, #76d0f0 100%); }
+    50%      { background: linear-gradient(180deg, #160a24 0%, #451034 35%, #822234 70%, #df5720 100%); }
+    66.6%    { background: linear-gradient(180deg, #040914 0%, #081526 35%, #0b2238 70%, #0a1829 100%); }
+    83.3%    { background: linear-gradient(180deg, #010308 0%, #030712 35%, #050d1f 70%, #020610 100%); }
   }
 
   /* Heavenly Sun Sync */
@@ -96,7 +84,6 @@
     transform: rotate(-12deg);
   }
 
-  /* Drifting Clouds */
   .sky-clouds {
     position: absolute; inset: 0;
     background: 
@@ -109,9 +96,26 @@
     100% { transform: translateX(40px) scale(1.05); }
   }
 
-  /* Distant Mount Hiei & Kyoto Mountain Ranges */
+  /* Distant Mountain Ranges */
   .scene-mountains { position: absolute; left: 0; right: 0; bottom: 10%; height: 52%; opacity: 0.92; }
   .scene-mountains svg { width: 100%; height: 100%; display: block; }
+
+  /* Moving Ocean Wave Base */
+  .scene-ocean {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 48%; opacity: 0.95;
+  }
+  .ocean-water {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0, 80, 120, 0.6) 0%, rgba(3, 20, 35, 0.95) 100%);
+  }
+  .ocean-waves {
+    position: absolute; left: 0; right: 0; top: 0; height: 40px;
+    animation: waveSway 4s ease-in-out infinite alternate;
+  }
+  @keyframes waveSway {
+    0% { transform: translateY(0) scaleY(1); }
+    100% { transform: translateY(6px) scaleY(1.15); }
+  }
 
   /* Floating Kami's Lookout */
   .lookout-floating {
@@ -142,7 +146,7 @@
     100% { transform: translateX(calc(100vw + 350px)) translateY(-60px); opacity: 0; }
   }
 
-  /* PURE EDO KYOTO MACHIYA HOUSES, SAMURAI COMPOUND & LANTERNS */
+  /* EDO KYOTO MACHIYA HOUSES & LANTERN POSTS */
   .kyoto-streetscape {
     position: absolute; left: 0; right: 0; bottom: 0; height: 320px; opacity: 0.96;
     filter: drop-shadow(0 0 25px rgba(0,0,0,0.9));
@@ -419,7 +423,7 @@
   }
   .search-count { font-size: 0.78rem; color: var(--imperial-gold); margin-top: 8px; min-height: 1em; font-weight: 700; }
 
-  /* ================= ORGANIZATIONAL CHART STYLES (NAME & ROLE ONLY) ================= */
+  /* ================= ORGANIZATIONAL CHART STYLES (CLEAN NAME & ROLE CARDS) ================= */
   .org-chart-container {
     border: 1px solid var(--border-line); border-radius: 14px; padding: 28px 20px;
     background: var(--panel-bg); backdrop-filter: blur(12px); box-shadow: 0 8px 30px rgba(0,0,0,0.7);
@@ -527,16 +531,6 @@
         <polygon points="0,300 0,205 190,120 390,205 600,130 840,215 1040,140 1200,185 1200,300" fill="#133128" opacity=".92"/>
         <path d="M600,130 L605,300 L595,300 Z" fill="#00d2ff" opacity="0.65"/>
       </svg>
-    </div>
-
-    <!-- Moving Ocean Wave Base -->
-    <div class="scene-ocean">
-      <div class="ocean-water"></div>
-      <div class="ocean-waves">
-        <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
-          <path d="M0,20 Q150,5 300,20 T600,20 T900,20 T1200,20 L1200,40 L0,40 Z" fill="rgba(0, 210, 255, 0.3)"/>
-        </svg>
-      </div>
     </div>
 
     <!-- Floating Kami's Lookout -->
