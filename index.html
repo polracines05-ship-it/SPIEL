@@ -223,7 +223,7 @@
 
   /* TOP HEADER BAR WITH RELOCATED CLOCK AND FIVEACTS BADGE */
   .top-header-bar {
-    display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 22px;
+    display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 14px;
     background: rgba(18, 14, 12, 0.85); border: 1px solid var(--border-line); border-radius: 12px;
     padding: 10px 20px; backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.6);
   }
@@ -246,6 +246,59 @@
     color: #ffffff; letter-spacing: 0.06em; margin-left: 8px; text-transform: uppercase;
   }
 
+  /* ================= FLASH NEWS ANNOUNCEMENT TICKER ================= */
+  .news-ticker-bar {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(26, 20, 16, 0.95);
+    border: 1px solid var(--clan-red);
+    border-left: 4px solid var(--clan-red-bright);
+    border-radius: 8px;
+    padding: 6px 12px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 15px rgba(178, 34, 34, 0.35);
+    overflow: hidden;
+  }
+  .news-ticker-badge {
+    background: linear-gradient(135deg, var(--clan-red-bright), var(--clan-red));
+    color: #ffffff;
+    font-family: var(--font-head);
+    font-size: 0.72rem;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px rgba(217, 43, 43, 0.5);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .news-ticker-badge::before {
+    content: "⚡";
+    animation: flashPulse 1s infinite alternate;
+  }
+  @keyframes flashPulse { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+
+  .news-ticker-wrap {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+  }
+  .news-ticker-text {
+    display: inline-block;
+    padding-left: 100%;
+    animation: tickerMove 28s linear infinite;
+    font-size: 0.88rem;
+    color: var(--rice-paper);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+  .news-ticker-text:hover { animation-play-state: paused; }
+  @keyframes tickerMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+
   .dashboard-view { display: none; }
   .dashboard-view.active { display: block; }
 
@@ -257,7 +310,7 @@
     background: var(--panel-bg);
     border: 1px solid var(--border-line);
     border-radius: 12px;
-    padding: 24px;
+    padding: 28px 20px;
     margin-bottom: 28px;
     backdrop-filter: blur(12px);
     box-shadow: 0 8px 30px rgba(0,0,0,0.7);
@@ -266,57 +319,158 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
     width: 100%;
     overflow-x: auto;
     padding: 10px 0;
   }
+
   .org-node {
     background: var(--card-bg);
     border: 1px solid var(--border-line);
     border-left: 4px solid var(--imperial-gold);
     border-radius: 8px;
-    padding: 12px 18px;
+    padding: 10px 16px;
     text-align: center;
-    min-width: 180px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     transition: all 0.2s ease;
   }
   .org-node:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(244, 197, 66, 0.25);
+    border-color: var(--imperial-gold);
   }
   .org-node.root {
     border-left-color: var(--clan-red);
-    background: linear-gradient(135deg, rgba(36, 28, 22, 0.95), rgba(178, 34, 34, 0.25));
+    background: linear-gradient(135deg, rgba(36, 28, 22, 0.95), rgba(178, 34, 34, 0.3));
+    min-width: 260px;
   }
-  .org-node.lead {
+  .org-node.sub-root {
     border-left-color: var(--lantern-orange);
+    background: linear-gradient(135deg, rgba(36, 28, 22, 0.95), rgba(217, 119, 6, 0.2));
+    min-width: 240px;
   }
+
   .org-title {
     font-family: var(--font-head);
-    font-size: 0.95rem;
+    font-size: 0.78rem;
     color: var(--imperial-gold);
-    font-weight: 700;
-    letter-spacing: 0.04em;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
   }
   .org-name {
-    font-size: 0.85rem;
+    font-size: 0.92rem;
     color: var(--text-main);
-    font-weight: 600;
+    font-weight: 700;
   }
-  .org-connector-v {
+
+  .org-badge {
+    background: rgba(244, 197, 66, 0.18);
+    border: 1px solid var(--border-line);
+    color: var(--imperial-gold);
+    font-size: 0.68rem;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 800;
+  }
+
+  .org-line-v {
+    width: 2px;
+    height: 22px;
+    background: var(--border-line);
+  }
+
+  .org-teams-branch {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    position: relative;
+    padding-top: 20px;
+  }
+  .org-teams-branch::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: var(--border-line);
+  }
+
+  .org-team-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+  .org-team-column::before {
+    content: "";
+    position: absolute;
+    top: -20px;
     width: 2px;
     height: 20px;
     background: var(--border-line);
   }
-  .org-level-row {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
+
+  .org-card-group {
+    background: rgba(18, 14, 12, 0.75);
+    border: 1px solid var(--border-line);
+    border-radius: 10px;
+    padding: 14px;
     width: 100%;
+    box-shadow: inset 0 0 12px rgba(0,0,0,0.5);
+  }
+  .org-group-header {
+    font-family: var(--font-head);
+    font-size: 0.8rem;
+    color: var(--imperial-gold);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border-line);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .org-member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .org-member-list.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 8px;
+  }
+  .org-member-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-soft);
+    border-left: 3px solid var(--imperial-gold);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.84rem;
+    color: var(--text-main);
+    font-weight: 600;
+    text-align: left;
+    transition: all 0.2s ease;
+  }
+  .org-member-item:hover {
+    background: rgba(36, 28, 22, 0.95);
+    border-left-color: var(--clan-red);
+    transform: translateX(3px);
   }
 
   .section-container { margin-bottom: 30px; scroll-margin-top: 90px; }
@@ -516,10 +670,33 @@
     font-size: 0.84rem; color: #F8EFD5; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
   }
 
+  /* ================= MODAL UPDATE DIALOG ================= */
+  .dojo-modal-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .dojo-modal {
+    background: var(--panel-bg); border: 2px solid var(--imperial-gold);
+    border-radius: 12px; padding: 24px; max-width: 500px; width: 100%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9); text-align: left;
+  }
+  .dojo-modal h3 { font-family: var(--font-head); color: var(--imperial-gold); margin-bottom: 12px; font-size: 1.2rem; }
+  .dojo-modal textarea {
+    width: 100%; height: 100px; padding: 12px; border-radius: 8px;
+    border: 1px solid var(--border-line); background: rgba(18,14,12,0.9);
+    color: var(--text-main); font-family: var(--font-body); font-size: 0.9rem;
+    margin-bottom: 16px; outline: none; resize: vertical;
+  }
+  .dojo-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
   /* ================= RESPONSIVE ================= */
   @media (max-width: 960px) {
     .sidebar { width: 260px; }
     .shenron-clouds { opacity: 0.25; width: 400px; }
+    .org-teams-branch { flex-direction: column; align-items: center; gap: 16px; }
+    .org-teams-branch::before { display: none; }
+    .org-team-column::before { display: none; }
   }
   @media (max-width: 640px) {
     body { flex-direction: column; }
@@ -650,6 +827,8 @@
       <button class="view-btn" data-view="view-threshold" onclick="switchView('view-threshold', this)"><span class="vi">⚠️</span> Threshold Center</button>
       <button class="view-btn" data-view="view-policies" onclick="switchView('view-policies', this)"><span class="vi">🗝️</span> Client Policies</button>
       <button class="view-btn" data-view="view-faq" onclick="switchView('view-faq', this)"><span class="vi">🎋</span> FAQ Archive</button>
+      <!-- PROTECTED UPDATE TICKER BUTTON -->
+      <button class="view-btn" style="border-color:var(--clan-red);" onclick="openTickerAdmin()"><span class="vi">⚡</span> Update Ticker</button>
     </div>
 
     <div class="nav-label" id="sidebarSublabel">Navigation Details</div>
@@ -676,6 +855,16 @@
       </div>
     </div>
 
+    <!-- FLASH NEWS ANNOUNCEMENT TICKER -->
+    <div class="news-ticker-bar">
+      <div class="news-ticker-badge">FLASH UPDATE</div>
+      <div class="news-ticker-wrap">
+        <div class="news-ticker-text" id="tickerDisplay">
+          Welcome to FiveActs Proctor Dojo! Ensure all candidates complete environment & ID verifications before releasing exams. For urgent technical escalations, contact support@certiverse.com.
+        </div>
+      </div>
+    </div>
+
     <!-- HOME VIEW -->
     <div id="view-home" class="dashboard-view active">
       <h2 class="page-title">Operations Hall</h2>
@@ -683,43 +872,101 @@
 
       <!-- ORGANIZATIONAL CHART -->
       <div class="org-chart-container">
-        <h3 class="section-title" style="border:none;margin-bottom:16px;">⛩️ FiveActs Dojo Command Hierarchy</h3>
+        <h3 class="section-title" style="border:none;margin-bottom:20px;justify-content:center;">⛩️ FiveActs Dojo Command Hierarchy</h3>
+        
         <div class="org-tree">
+          <!-- TOP EXECUTIVE LEADERSHIP -->
           <div class="org-node root">
-            <div class="org-title">Account Lead</div>
-            <div class="org-name">Master Command</div>
+            <div class="org-title">President</div>
+            <div class="org-name">Erick Cruz</div>
           </div>
-          <div class="org-connector-v"></div>
-          <div class="org-node lead">
-            <div class="org-title">Operations Supervisor</div>
-            <div class="org-name">Dojo Supervisor</div>
+
+          <div class="org-line-v"></div>
+
+          <div class="org-node sub-root">
+            <div class="org-title">Operations Manager</div>
+            <div class="org-name">Jodel Cruz</div>
           </div>
-          <div class="org-connector-v"></div>
-          <div class="org-level-row">
-            <div class="org-node">
-              <div class="org-title">Senior Proctor</div>
-              <div class="org-name">Team Alpha</div>
+
+          <div class="org-line-v"></div>
+
+          <!-- TEAMS BRANCH -->
+          <div class="org-teams-branch">
+            
+            <!-- COLUMN 1: CANDIDATE SUPPORT TEAM -->
+            <div class="org-team-column">
+              <div class="org-card-group">
+                <div class="org-group-header">
+                  Candidate Support Team <span class="org-badge">5</span>
+                </div>
+                <div class="org-member-list">
+                  <div class="org-member-item">Jane Austria</div>
+                  <div class="org-member-item">Gian Garcia</div>
+                  <div class="org-member-item">Dianne Candano</div>
+                  <div class="org-member-item">Ralph Soriano</div>
+                  <div class="org-member-item">Ralph Maullion</div>
+                </div>
+              </div>
             </div>
-            <div class="org-node">
-              <div class="org-title">Senior Proctor</div>
-              <div class="org-name">Team Beta</div>
+
+            <!-- COLUMN 2: ACCOUNTANT -->
+            <div class="org-team-column">
+              <div class="org-card-group">
+                <div class="org-group-header">
+                  Accountant <span class="org-badge">1</span>
+                </div>
+                <div class="org-member-list">
+                  <div class="org-member-item">Bryan Mark Adan</div>
+                </div>
+              </div>
             </div>
-            <div class="org-node">
-              <div class="org-title">Technical Specialist</div>
-              <div class="org-name">Support Vanguard</div>
+
+            <!-- COLUMN 3: HR & PROCTOR MANAGER -->
+            <div class="org-team-column">
+              <div class="org-card-group">
+                <div class="org-group-header">Management</div>
+                <div class="org-member-list">
+                  <div class="org-node" style="border-left-color:var(--lantern-orange);">
+                    <div class="org-title">HR Manager &amp; Proctor Manager</div>
+                    <div class="org-name">Dyanne Cruz</div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="org-connector-v"></div>
-          <div class="org-level-row">
-            <div class="org-node">
-              <div class="org-title">Proctor Cohort</div>
-              <div class="org-name">Active Operators</div>
+
+            <!-- COLUMN 4: PROCTOR MANAGER & PROCTORS -->
+            <div class="org-team-column" style="flex:1.5;">
+              <div class="org-card-group">
+                <div class="org-group-header">Management &amp; Proctors</div>
+                <div class="org-member-list" style="margin-bottom:12px;">
+                  <div class="org-node" style="border-left-color:var(--lantern-orange);">
+                    <div class="org-title">Proctor Manager</div>
+                    <div class="org-name">Jeffrey Macapagal</div>
+                  </div>
+                </div>
+
+                <div class="org-group-header" style="border-top:1px solid var(--border-line);padding-top:8px;">
+                  Proctors <span class="org-badge">13</span>
+                </div>
+                <div class="org-member-list grid-2">
+                  <div class="org-member-item">Sebastian Tamayo</div>
+                  <div class="org-member-item">Bobzer San Juan</div>
+                  <div class="org-member-item">Keenan Handugan</div>
+                  <div class="org-member-item">Sunshine Faith Broñosa</div>
+                  <div class="org-member-item">Grace Remolacio</div>
+                  <div class="org-member-item">Mark Pesico</div>
+                  <div class="org-member-item">Rachelle Raymundo</div>
+                  <div class="org-member-item">John Paul Racines</div>
+                  <div class="org-member-item">Khate Cyrelle Amil</div>
+                  <div class="org-member-item">Romina Marie Dumlao</div>
+                  <div class="org-member-item">Kathy Lyn Leonar</div>
+                  <div class="org-member-item">Moses Cawil</div>
+                  <div class="org-member-item">Rose Ann Parafina</div>
+                </div>
+              </div>
             </div>
-            <div class="org-node">
-              <div class="org-title">Proctor Cohort</div>
-              <div class="org-name">Trainees / Apprentices</div>
-            </div>
-          </div>
+
+          </div><!-- END TEAMS BRANCH -->
         </div>
       </div>
 
@@ -1370,6 +1617,19 @@
 
   </div>
 
+  <!-- PROTECTED UPDATE TICKER MODAL DIALOG -->
+  <div class="dojo-modal-overlay" id="tickerModal">
+    <div class="dojo-modal">
+      <h3>⚡ Update Flash Announcement</h3>
+      <p style="font-size:0.8rem;color:var(--text-dim);margin-bottom:12px;">Type the new update message below. It will immediately stream across the flash ticker on top.</p>
+      <textarea id="tickerInput" placeholder="Type news/update message here..."></textarea>
+      <div class="dojo-modal-actions">
+        <button class="path-btn" onclick="closeTickerModal()">Cancel</button>
+        <button class="seal-btn" style="min-width:auto;padding:8px 16px;" onclick="saveTickerUpdate()">Publish Flash Update</button>
+      </div>
+    </div>
+  </div>
+
 <script>
 (function(){
   "use strict";
@@ -1454,11 +1714,11 @@
     {id:"m5_11", cat:"5", tags:["critical"], text:"Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination."},
 
     // 6. Exam Release
-    {id:"m6_1", cat:"6", tags:[], text:"Thank you for your cooperation. You may now click the “Hide Video” button on the side of this chat box."},
+    {id:"m6_1", cat:"6", tags:[], text:"Thank you for your cooperation. You may now click the “Hide Video” button on the left side of this chat box, under the \"Hide Chat” button."},
     {id:"m6_2", cat:"6", tags:[], text:"Thank you. Do you have any questions before beginning your exam?"},
     {id:"m6_3", cat:"6", tags:[], text:"If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection."},
     {id:"m6_4", cat:"6", tags:[], text:"Please use this chat if you have any questions that are not related to the exam content. I will now release your exam."},
-    {id:"m6_5", cat:"6", tags:[], text:"You can click the “Hide Chat” button on the side or the X at the top-right to begin your exam."},
+    {id:"m6_5", cat:"6", tags:[], text:"You can click the “Hide Chat” button on the left side of the chat box or the X at the top-right to begin your exam."},
 
     // 7. Miscellaneous
     {id:"m7_1", cat:"7", tags:[], text:"Breaks are not allowed for this exam."},
@@ -1898,6 +2158,32 @@
       select.value = index;
       renderGenerator();
       select.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  /* ============================================================
+     PROTECTED UPDATE TICKER LOGIC (PASSCODE: 789456)
+     ============================================================ */
+  window.openTickerAdmin = function() {
+    var pwd = prompt("⛩️ Dojo Security Verification\nPlease enter admin passcode:");
+    if (pwd === "789456") {
+      var currentText = document.getElementById("tickerDisplay").textContent.trim();
+      document.getElementById("tickerInput").value = currentText;
+      document.getElementById("tickerModal").style.display = "flex";
+    } else if (pwd !== null) {
+      alert("❌ Access Denied: Incorrect Passcode.");
+    }
+  };
+
+  window.closeTickerModal = function() {
+    document.getElementById("tickerModal").style.display = "none";
+  };
+
+  window.saveTickerUpdate = function() {
+    var text = document.getElementById("tickerInput").value.trim();
+    if (text) {
+      document.getElementById("tickerDisplay").textContent = text;
+      closeTickerModal();
     }
   };
 
