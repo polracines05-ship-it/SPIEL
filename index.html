@@ -3,30 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveActs Proctor Dojo — Mount Paozu Command Deck (PST)</title>
+<title>FiveActs Proctor Dojo — West City Capsule Command (PST)</title>
 <style>
   :root {
-    /* Paozu & Dragon Ball Z Palette */
-    --paozu-sky: #0b1d33;
-    --paozu-sun: #ffd000;
-    --paozu-green: #2a5a3b;
-    --paozu-moss: #1b3d26;
-    --paozu-parchment: #fcf7e8;
-    --paozu-parchment-dim: #d8cba9;
-    --paozu-gold: #e6a100;
-    --paozu-gold-bright: #ffcc00;
-    --paozu-orange: #f26522;
-    --paozu-crimson: #a82020;
-    --paozu-azure: #00d2ff;
+    --capsule-cyan: #00f0ff;
+    --capsule-cyan-glow: rgba(0, 240, 255, 0.45);
+    --saiyan-orange: #ff7700;
+    --saiyan-gold: #ffd700;
+    --saiyan-glow: rgba(255, 119, 0, 0.55);
+    --ki-crimson: #ff1e56;
+    --radar-green: #00ff66;
+    
+    --bg-dark: #03070d;
+    --card-bg: rgba(10, 20, 32, 0.88);
+    --panel-bg: rgba(14, 26, 40, 0.92);
+    --border-line: rgba(0, 240, 255, 0.35);
+    --border-soft: rgba(240, 246, 252, 0.12);
 
-    --panel-bg: rgba(13, 27, 24, 0.92);
-    --card-bg: rgba(20, 38, 32, 0.88);
-    --border-line: rgba(230, 161, 0, 0.35);
-    --border-soft: rgba(252, 247, 232, 0.12);
-
-    --text-main: #fcf7e8;
-    --text-dim: #cad1be;
-    --text-muted: #7d8e75;
+    --text-main: #f0f6fc;
+    --text-dim: #a3b8cc;
+    --text-muted: #647a8e;
 
     --font-head: Georgia, "Iowan Old Style", "Palatino Linotype", "Hiragino Mincho ProN", serif;
     --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -37,7 +33,7 @@
   body {
     font-family: var(--font-body);
     color: var(--text-main);
-    background-color: #060e14;
+    background-color: #03070d;
     display: flex;
     min-height: 100vh;
     position: relative;
@@ -45,25 +41,37 @@
   }
 
   /* ============================================================
-     DYNAMIC 20-SECOND DAY-NIGHT SKY ENGINE
+     4-SEASONS & WEATHER DYNAMIC SKY ENGINE (SPRING/SUMMER/AUTUMN/WINTER/SUNNY/RAINY)
      ============================================================ */
   .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
   
   .scene-sky {
     position: absolute; inset: 0;
-    animation: celestialCycle 20s ease-in-out infinite;
+    animation: seasonsCycle 20s ease-in-out infinite;
   }
 
-  @keyframes celestialCycle {
-    0%, 100% { background: linear-gradient(180deg, #1d0f28 0%, #4a213e 35%, #8c3b4f 70%, #d96b43 100%); }
-    16.6%    { background: linear-gradient(180deg, #103c61 0%, #1e6992 35%, #4ea3c8 70%, #9be1eb 100%); }
-    33.3%    { background: linear-gradient(180deg, #092c48 0%, #114b73 35%, #2a87b3 70%, #76d0f0 100%); }
-    50%      { background: linear-gradient(180deg, #160a24 0%, #421032 35%, #822234 70%, #df5720 100%); }
-    66.6%    { background: linear-gradient(180deg, #040914 0%, #081526 35%, #0b2238 70%, #0a1829 100%); }
-    83.3%    { background: linear-gradient(180deg, #010308 0%, #030712 35%, #050d1f 70%, #020610 100%); }
+  @keyframes seasonsCycle {
+    0%, 100% { /* Spring / Dawn (Cherry Blossom Tint) */
+      background: linear-gradient(180deg, #1d0f28 0%, #4a213e 35%, #8c3b4f 70%, #d96b43 100%);
+    }
+    16.6% { /* Summer / Sunny (Bright Azure Sky) */
+      background: linear-gradient(180deg, #092c48 0%, #114b73 35%, #2a87b3 70%, #76d0f0 100%);
+    }
+    33.3% { /* Rainy / Stormy (Overcast Dark Blue) */
+      background: linear-gradient(180deg, #050d18 0%, #0c1a2b 35%, #13273a 70%, #1c364c 100%);
+    }
+    50% { /* Autumn / Twilight (Golden Orange Glow) */
+      background: linear-gradient(180deg, #180822 0%, #4a1228 35%, #8a2522 70%, #e65c19 100%);
+    }
+    66.6% { /* Winter / Frost (Pale Cold Slate) */
+      background: linear-gradient(180deg, #07101c 0%, #122234 35%, #21384a 70%, #466275 100%);
+    }
+    83.3% { /* Midnight (Starry Night Sky) */
+      background: linear-gradient(180deg, #010308 0%, #030712 35%, #050d1f 70%, #020610 100%);
+    }
   }
 
-  /* Heavenly Sun Sync */
+  /* Sun Glow */
   .sun-glow {
     position: absolute; top: 2%; right: 12%; width: 420px; height: 420px; border-radius: 50%;
     animation: sunGlowCycle 20s ease-in-out infinite;
@@ -71,26 +79,20 @@
   }
 
   @keyframes sunGlowCycle {
-    0%, 100% { background: radial-gradient(circle, rgba(255, 140, 0, 0.4) 0%, rgba(217, 107, 67, 0.2) 50%, transparent 75%); }
-    16.6%    { background: radial-gradient(circle, rgba(255, 230, 100, 0.5) 0%, rgba(155, 225, 235, 0.2) 50%, transparent 75%); }
-    33.3%    { background: radial-gradient(circle, rgba(255, 255, 180, 0.6) 0%, rgba(118, 208, 240, 0.2) 50%, transparent 75%); }
-    50%      { background: radial-gradient(circle, rgba(223, 87, 32, 0.6) 0%, rgba(130, 34, 52, 0.25) 50%, transparent 75%); }
-    66.6%    { background: radial-gradient(circle, rgba(0, 210, 255, 0.25) 0%, rgba(11, 34, 56, 0.15) 50%, transparent 75%); }
-    83.3%    { background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, rgba(5, 13, 31, 0.08) 50%, transparent 75%); }
-  }
-
-  .sun-rays {
-    position: absolute; top: 0; right: 10%; width: 70%; height: 100%;
-    background: linear-gradient(135deg, transparent 35%, rgba(255, 208, 0, 0.05) 48%, rgba(255, 255, 255, 0.03) 52%, transparent 65%);
-    transform: rotate(-12deg);
+    0%, 100% { background: radial-gradient(circle, rgba(255, 140, 0, 0.5) 0%, rgba(217, 107, 67, 0.25) 50%, transparent 75%); }
+    16.6%    { background: radial-gradient(circle, rgba(255, 230, 100, 0.8) 0%, rgba(155, 225, 235, 0.4) 50%, transparent 75%); }
+    33.3%    { background: radial-gradient(circle, rgba(100, 150, 200, 0.2) 0%, transparent 60%); }
+    50%      { background: radial-gradient(circle, rgba(230, 92, 25, 0.8) 0%, rgba(138, 37, 34, 0.3) 50%, transparent 75%); }
+    66.6%    { background: radial-gradient(circle, rgba(200, 230, 255, 0.3) 0%, transparent 70%); }
+    83.3%    { background: radial-gradient(circle, rgba(0, 240, 255, 0.2) 0%, transparent 75%); }
   }
 
   /* Drifting Clouds */
   .sky-clouds {
     position: absolute; inset: 0;
     background: 
-      radial-gradient(ellipse 65% 22% at 20% 18%, rgba(252, 247, 232, 0.1), transparent 70%),
-      radial-gradient(ellipse 85% 32% at 75% 28%, rgba(252, 247, 232, 0.06), transparent 75%);
+      radial-gradient(ellipse 65% 22% at 20% 18%, rgba(240, 246, 252, 0.12), transparent 70%),
+      radial-gradient(ellipse 85% 32% at 75% 28%, rgba(240, 246, 252, 0.08), transparent 75%);
     animation: floatClouds 55s ease-in-out infinite alternate;
   }
   @keyframes floatClouds {
@@ -98,36 +100,46 @@
     100% { transform: translateX(40px) scale(1.05); }
   }
 
-  /* Distant Mountain Ranges */
-  .scene-mountains { position: absolute; left: 0; right: 0; bottom: 10%; height: 52%; opacity: 0.92; }
-  .scene-mountains svg { width: 100%; height: 100%; display: block; }
+  /* Rain Effect Layer (Triggered during Rainy Phase) */
+  .rain-layer {
+    position: absolute; inset: 0; opacity: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(0, 240, 255, 0.15) 45%, transparent 50%);
+    background-size: 200% 200%;
+    animation: rainCycle 20s infinite, rainFall 0.8s linear infinite;
+  }
+  @keyframes rainCycle {
+    0%, 30% { opacity: 0; }
+    33.3%, 45% { opacity: 0.7; }
+    48%, 100% { opacity: 0; }
+  }
+  @keyframes rainFall { 0% { background-position: 0 0; } 100% { background-position: 100% 100%; } }
+
+  /* WEST CITY SKYLINE & DOME BUILDINGS */
+  .west-city-skyline {
+    position: absolute; left: 0; right: 0; bottom: 8%; height: 42%; opacity: 0.92;
+  }
+  .west-city-skyline svg { width: 100%; height: 100%; display: block; }
 
   /* Floating Kami's Lookout */
   .lookout-floating {
-    position: absolute; right: 12%; top: 8%; width: 260px; height: 180px; opacity: 0.85;
-    filter: drop-shadow(0 0 15px rgba(255, 208, 0, 0.25));
+    position: absolute; right: 12%; top: 6%; width: 240px; height: 160px; opacity: 0.85;
+    filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.25));
     animation: lookoutDrift 16s ease-in-out infinite alternate;
   }
-  @keyframes lookoutDrift {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-14px); }
-  }
+  @keyframes lookoutDrift { 0% { transform: translateY(0); } 100% { transform: translateY(-14px); } }
 
-  /* Guardian Shenron in Clouds */
+  /* Shenron in Clouds */
   .shenron-clouds {
-    position: absolute; left: 15%; top: 6%; width: 620px; height: 320px; opacity: 0.45;
-    filter: drop-shadow(0 0 20px rgba(0, 210, 255, 0.25));
+    position: absolute; left: 10%; top: 4%; width: 580px; height: 300px; opacity: 0.45;
+    filter: drop-shadow(0 0 20px rgba(0, 255, 102, 0.25));
     animation: shenronGlide 30s ease-in-out infinite alternate;
   }
-  @keyframes shenronGlide {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-20px) scale(1.04); }
-  }
+  @keyframes shenronGlide { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-20px) scale(1.04); } }
 
-  /* Flying Nimbus & Goku */
-  .nimbus-goku {
-    position: absolute; left: -160px; top: 22%; width: 150px; height: 75px; opacity: 0.9;
-    filter: drop-shadow(0 0 12px rgba(255, 208, 0, 0.6));
+  /* Floating DBZ Characters (Goku, Gohan, Trunks, Vegeta) */
+  .char-goku-nimbus {
+    position: absolute; left: -160px; top: 18%; width: 140px; height: 70px; opacity: 0.95;
+    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.6));
     animation: nimbusSailing 38s linear infinite;
   }
   @keyframes nimbusSailing {
@@ -137,22 +149,27 @@
     100% { transform: translateX(calc(100vw + 350px)) translateY(-60px); opacity: 0; }
   }
 
-  /* Goku & Chi-Chi's House */
-  .paozu-house {
-    position: absolute; right: 4%; bottom: 8%; width: 320px; height: 260px; opacity: 0.92;
-    filter: drop-shadow(0 0 20px rgba(0,0,0,0.85));
+  .char-gohan-fly {
+    position: absolute; right: -120px; top: 28%; width: 90px; height: 50px; opacity: 0.85;
+    animation: gohanFlight 42s linear infinite 10s;
+  }
+  @keyframes gohanFlight {
+    0% { transform: translateX(0); opacity: 0; }
+    10% { opacity: 0.85; }
+    90% { opacity: 0.85; }
+    100% { transform: translateX(calc(-100vw - 250px)); opacity: 0; }
   }
 
-  .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 220px 60px rgba(3, 8, 14, 0.75); }
+  .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 220px 60px rgba(3, 7, 13, 0.75); }
   #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
   /* ============================================================
-     SIDEBAR & NAVIGATION
+     SIDEBAR
      ============================================================ */
   .sidebar {
     position: relative; z-index: 10;
     width: 310px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
-    background: linear-gradient(180deg, rgba(13, 27, 24, 0.95), rgba(6, 14, 20, 0.98));
+    background: linear-gradient(180deg, rgba(14, 26, 40, 0.94), rgba(3, 7, 13, 0.98));
     border-right: 1px solid var(--border-line);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     display: flex; flex-direction: column; padding: 0;
@@ -160,18 +177,18 @@
   }
   .sidebar::before {
     content: ""; display: block; height: 4px; width: 100%; flex-shrink: 0;
-    background: linear-gradient(90deg, transparent, var(--paozu-gold-bright), var(--paozu-orange), transparent);
+    background: linear-gradient(90deg, transparent, var(--capsule-cyan), var(--saiyan-orange), transparent);
   }
 
   /* 8 DRAGON BALLS (F-I-V-E-A-C-T-S) */
-  .sidebar-header { padding: 22px 14px 18px; text-align: center; border-bottom: 1px solid var(--border-line); }
-  .dragon-balls-brand { display: flex; justify-content: center; align-items: center; gap: 4px; margin-bottom: 12px; }
+  .sidebar-header { padding: 22px 12px 18px; text-align: center; border-bottom: 1px solid var(--border-line); }
+  .dragon-balls-brand { display: flex; justify-content: center; align-items: center; gap: 3px; margin-bottom: 12px; }
   .dball {
-    width: 28px; height: 28px; border-radius: 50%;
+    width: 27px; height: 28px; border-radius: 50%;
     background: radial-gradient(circle at 35% 30%, #ffea00, #f26522 75%, #882200 100%);
     box-shadow: 0 0 6px rgba(255, 119, 0, 0.4), inset 0 -2px 4px rgba(0,0,0,0.6);
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; font-weight: 900; color: #110500; font-family: var(--font-body);
+    font-size: 0.78rem; font-weight: 900; color: #110500; font-family: var(--font-body);
     transition: all 0.2s ease; cursor: pointer;
   }
   .dball:hover {
@@ -183,26 +200,26 @@
     font-family: var(--font-head); font-size: 1.25rem; letter-spacing: 0.08em; color: var(--text-main);
     text-transform: uppercase;
   }
-  .sidebar-header .subtitle { font-size: 0.7rem; color: var(--paozu-gold-bright); margin-top: 4px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; }
+  .sidebar-header .subtitle { font-size: 0.7rem; color: var(--capsule-cyan); margin-top: 4px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; }
 
   .view-selectors { padding: 14px 12px; border-bottom: 1px solid var(--border-line); }
   .view-btn {
-    width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(252, 247, 232, 0.03); border: 1px solid rgba(230, 161, 0, 0.2);
-    color: var(--paozu-parchment-dim); text-align: left; padding: 11px 14px; font-size: 0.86rem; font-weight: 600;
+    width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(0, 240, 255, 0.03); border: 1px solid rgba(0, 240, 255, 0.18);
+    color: var(--text-dim); text-align: left; padding: 11px 14px; font-size: 0.86rem; font-weight: 600;
     border-radius: 8px; cursor: pointer; margin-bottom: 6px; transition: all 0.2s ease;
     font-family: var(--font-body); position: relative; overflow: hidden;
   }
-  .view-btn .vi { font-size: 1.1rem; width: 1.4em; text-align: center; color: var(--paozu-gold-bright); }
+  .view-btn .vi { font-size: 1.1rem; width: 1.4em; text-align: center; color: var(--capsule-cyan); }
   .view-btn:hover {
-    background: rgba(230, 161, 0, 0.12); color: var(--text-main); border-color: var(--paozu-gold);
+    background: rgba(0, 240, 255, 0.12); color: var(--text-main); border-color: var(--capsule-cyan);
     transform: translateX(4px);
   }
   .view-btn.active {
-    background: linear-gradient(90deg, rgba(230, 161, 0, 0.25), rgba(242, 101, 34, 0.1));
-    color: var(--paozu-gold-bright); border-color: var(--paozu-gold);
+    background: linear-gradient(90deg, rgba(0, 240, 255, 0.22), rgba(0, 119, 255, 0.1));
+    color: var(--capsule-cyan); border-color: var(--capsule-cyan);
   }
   .view-btn.active::before {
-    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--paozu-gold-bright);
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--capsule-cyan);
   }
 
   .nav-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin: 16px 16px 8px; font-weight: 800; }
@@ -215,10 +232,10 @@
     transition: all 0.18s ease; font-family: var(--font-body);
   }
   .nav-links button:hover {
-    background: rgba(0, 210, 255, 0.12); color: var(--paozu-azure); border-color: rgba(0, 210, 255, 0.3);
+    background: rgba(0, 240, 255, 0.12); color: var(--capsule-cyan); border-color: rgba(0, 240, 255, 0.3);
     padding-left: 14px;
   }
-  .nav-links .cnt { color: var(--paozu-gold-bright); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); font-weight: 700; }
+  .nav-links .cnt { color: var(--capsule-cyan); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); font-weight: 700; }
 
   .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
 
@@ -239,24 +256,22 @@
     border-bottom: 1px solid var(--border-line); padding-bottom: 10px; margin-bottom: 18px;
     display: flex; align-items: center; gap: 12px; flex-wrap: wrap; letter-spacing: 0.03em;
   }
-  .section-count { font-size: 0.75rem; font-weight: 800; color: var(--paozu-gold-bright); background: rgba(230, 161, 0, 0.15); border: 1px solid var(--border-line); padding: 2px 10px; border-radius: 12px; font-family: var(--font-body); }
-  .empty-state { color: var(--text-dim); font-size: 0.88rem; padding: 28px 20px; text-align: center; border: 1px dashed var(--border-line); border-radius: 10px; background: rgba(10, 20, 28, 0.6); backdrop-filter: blur(8px); }
+  .section-count { font-size: 0.75rem; font-weight: 800; color: var(--capsule-cyan); background: rgba(0, 240, 255, 0.12); border: 1px solid var(--border-line); padding: 2px 10px; border-radius: 12px; font-family: var(--font-body); }
+  .empty-state { color: var(--text-dim); font-size: 0.88rem; padding: 28px 20px; text-align: center; border: 1px dashed var(--border-line); border-radius: 10px; background: rgba(10, 20, 32, 0.6); backdrop-filter: blur(8px); }
 
-  /* ============================================================
-     CARDS & SCROLLS
-     ============================================================ */
+  /* CARDS & SCROLLS */
   .card {
     position: relative; background: var(--card-bg);
-    border: 1px solid var(--border-line); border-left: 4px solid var(--paozu-gold); border-radius: 6px 12px 12px 6px;
+    border: 1px solid var(--border-line); border-left: 4px solid var(--capsule-cyan); border-radius: 6px 12px 12px 6px;
     padding: 16px 18px; margin-bottom: 14px;
     display: flex; justify-content: space-between; align-items: center; gap: 18px;
     transition: all 0.22s ease; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 6px 22px rgba(0,0,0,0.6);
   }
   .card:hover, .card.highlighted {
-    background: rgba(20, 42, 34, 0.92); border-left-color: var(--paozu-gold-bright); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(230, 161, 0, 0.25);
+    background: rgba(20, 38, 52, 0.92); border-left-color: var(--capsule-cyan); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 240, 255, 0.25);
   }
-  .card.is-pinned { border-left-color: var(--paozu-orange); }
+  .card.is-pinned { border-left-color: var(--saiyan-orange); }
   .card-body { flex-grow: 1; min-width: 0; }
   .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
   .card-tag { display: inline-block; font-size: 0.62rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-main); letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.12); }
@@ -264,22 +279,22 @@
   .card-tag.mac { background: rgba(153, 51, 255, 0.25); color: #e0b3ff; border-color: rgba(153, 51, 255, 0.4); }
   .card-tag.linux { background: rgba(42, 90, 59, 0.4); color: #b3ffcc; border-color: rgba(42, 90, 59, 0.6); }
   .card-tag.critical { background: rgba(168, 32, 32, 0.35); color: #ff99aa; border-color: rgba(168, 32, 32, 0.6); }
-  .card-tag.hashi { background: rgba(242, 101, 34, 0.3); color: var(--paozu-gold-bright); border-color: rgba(242, 101, 34, 0.5); }
+  .card-tag.hashi { background: rgba(242, 101, 34, 0.3); color: var(--saiyan-gold); border-color: rgba(242, 101, 34, 0.5); }
 
-  .message-text { font-size: 0.94rem; line-height: 1.65; white-space: pre-line; color: #fcf7e8; font-family: var(--font-body); font-weight: 500; }
+  .message-text { font-size: 0.94rem; line-height: 1.65; white-space: pre-line; color: #f0f6fc; font-family: var(--font-body); font-weight: 500; }
 
   .card-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; align-items: stretch; }
   .icon-btn {
     background: rgba(255,255,255,0.05); border: 1px solid var(--border-line); color: var(--text-dim);
     border-radius: 6px; padding: 6px 10px; font-size: 0.88rem; cursor: pointer; line-height: 1; transition: all 0.2s ease;
   }
-  .icon-btn:hover { background: rgba(230, 161, 0, 0.2); color: var(--paozu-gold-bright); border-color: var(--paozu-gold); }
-  .icon-btn.on { color: var(--paozu-gold-bright); border-color: var(--paozu-orange); background: rgba(242, 101, 34, 0.25); }
+  .icon-btn:hover { background: rgba(0, 240, 255, 0.2); color: var(--capsule-cyan); border-color: var(--capsule-cyan); }
+  .icon-btn.on { color: var(--saiyan-gold); border-color: var(--saiyan-orange); background: rgba(242, 101, 34, 0.25); }
   .icon-row { display: flex; gap: 6px; }
 
-  /* PAOZU SEAL BUTTONS */
+  /* CAPSULE SEAL BUTTONS */
   .seal-btn {
-    background: linear-gradient(135deg, var(--paozu-orange) 0%, var(--paozu-gold-bright) 100%);
+    background: linear-gradient(135deg, var(--saiyan-orange) 0%, var(--saiyan-gold) 100%);
     color: #1a0800; border: none; padding: 10px 18px; border-radius: 50px;
     cursor: pointer; font-size: 0.82rem; font-weight: 900; white-space: nowrap; min-width: 150px;
     transition: all 0.2s ease; box-shadow: 0 4px 18px rgba(242, 101, 34, 0.35);
@@ -287,9 +302,9 @@
   }
   .seal-btn:hover { transform: translateY(-2px) scale(1.03); filter: brightness(1.15); }
   .seal-btn.copied { background: linear-gradient(135deg, #00ff88 0%, #00aa44 100%); color: #021208; }
-  .seal-btn:focus-visible { outline: 2px solid var(--paozu-gold-bright); outline-offset: 2px; }
+  .seal-btn:focus-visible { outline: 2px solid var(--capsule-cyan); outline-offset: 2px; }
 
-  .progress-check { width: 20px; height: 20px; accent-color: var(--paozu-gold); cursor: pointer; flex-shrink: 0; }
+  .progress-check { width: 20px; height: 20px; accent-color: var(--capsule-cyan); cursor: pointer; flex-shrink: 0; }
 
   /* OS SUB-DROPDOWN FILTER FOR SYSTEM VERIFICATION */
   .os-subfilter-row { display: flex; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px dashed var(--border-line); }
@@ -297,34 +312,34 @@
     border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
     padding: 5px 12px; border-radius: 14px; font-size: 0.74rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease;
   }
-  .os-subchip:hover { border-color: var(--paozu-gold-bright); color: var(--text-main); }
-  .os-subchip.active { background: rgba(230, 161, 0, 0.25); color: var(--paozu-gold-bright); border-color: var(--paozu-gold); }
+  .os-subchip:hover { border-color: var(--capsule-cyan); color: var(--text-main); }
+  .os-subchip.active { background: rgba(0, 240, 255, 0.25); color: var(--capsule-cyan); border-color: var(--capsule-cyan); }
 
   /* CHECK-IN QUICK PATH SELECTOR */
   .path-selector-box {
-    display: flex; gap: 10px; margin-bottom: 18px; padding: 12px 16px; background: rgba(10, 20, 28, 0.65);
+    display: flex; gap: 10px; margin-bottom: 18px; padding: 12px 16px; background: rgba(10, 20, 32, 0.65);
     border: 1px solid var(--border-line); border-radius: 10px; flex-wrap: wrap; align-items: center;
   }
   .path-btn {
     border: 1px solid var(--border-line); background: rgba(255,255,255,0.05); color: var(--text-main);
     padding: 8px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease;
   }
-  .path-btn:hover, .path-btn.active { background: rgba(230, 161, 0, 0.25); border-color: var(--paozu-gold-bright); color: var(--paozu-gold-bright); }
+  .path-btn:hover, .path-btn.active { background: rgba(0, 240, 255, 0.25); border-color: var(--capsule-cyan); color: var(--capsule-cyan); }
 
   /* SEARCH INPUT IN CANNED MESSAGES */
   .library-search-box { position: relative; margin-bottom: 22px; }
   .search-input {
     width: 100%; padding: 15px 24px; font-size: 0.98rem; border-radius: 12px;
-    border: 1px solid var(--border-line); background: rgba(10, 20, 28, 0.92); backdrop-filter: blur(14px);
+    border: 1px solid var(--border-line); background: rgba(10, 20, 32, 0.92); backdrop-filter: blur(14px);
     color: var(--text-main); outline: none; transition: all 0.25s ease; font-family: var(--font-body); font-weight: 600;
-    box-shadow: 0 6px 25px rgba(0,0,0,0.8), inset 0 0 12px rgba(230, 161, 0, 0.08);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.8), inset 0 0 12px rgba(0, 240, 255, 0.08);
   }
   .search-input::placeholder { color: var(--text-muted); letter-spacing: 0.05em; font-weight: 500; }
-  .search-input:focus { border-color: var(--paozu-gold-bright); box-shadow: 0 0 20px rgba(255, 208, 0, 0.35); }
+  .search-input:focus { border-color: var(--capsule-cyan); box-shadow: 0 0 20px rgba(0, 240, 255, 0.35); }
 
   .suggestions-dropdown {
     position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
-    background: rgba(10, 20, 28, 0.96); border: 1px solid var(--paozu-gold-bright);
+    background: rgba(10, 20, 32, 0.96); border: 1px solid var(--capsule-cyan);
     border-radius: 0 0 12px 12px; backdrop-filter: blur(16px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.9);
     max-height: 280px; overflow-y: auto; display: none; margin-top: 4px;
@@ -334,34 +349,34 @@
     display: flex; justify-content: space-between; align-items: center; gap: 10px;
     transition: all 0.18s ease; font-size: 0.85rem; color: var(--text-main);
   }
-  .suggestion-item:hover { background: rgba(230, 161, 0, 0.2); color: var(--paozu-gold-bright); padding-left: 22px; }
+  .suggestion-item:hover { background: rgba(0, 240, 255, 0.2); color: var(--capsule-cyan); padding-left: 22px; }
   .suggestion-item .sug-cat {
-    font-size: 0.68rem; color: var(--paozu-gold); border: 1px solid var(--border-line);
+    font-size: 0.68rem; color: var(--capsule-cyan); border: 1px solid var(--border-line);
     border-radius: 8px; padding: 2px 7px; flex-shrink: 0; font-weight: 700;
   }
-  .search-count { font-size: 0.78rem; color: var(--paozu-gold-bright); margin-top: 8px; min-height: 1em; font-weight: 700; }
+  .search-count { font-size: 0.78rem; color: var(--capsule-cyan); margin-top: 8px; min-height: 1em; font-weight: 700; }
 
   /* ================= ACCORDION & DASHBOARD ================= */
   .accordion { border: 1px solid var(--border-line); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
   .accordion summary {
     list-style: none; cursor: pointer; padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    background: linear-gradient(180deg, rgba(230, 161, 0, 0.12), rgba(230, 161, 0, 0.02));
+    background: linear-gradient(180deg, rgba(0, 240, 255, 0.12), rgba(0, 240, 255, 0.02));
     font-family: var(--font-head); font-size: 1.1rem; color: var(--text-main); letter-spacing: 0.04em;
   }
   .accordion summary::-webkit-details-marker { display: none; }
   .accordion summary .cat-left { display: flex; align-items: center; gap: 12px; }
   .accordion summary .cat-num {
-    width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--paozu-gold); color: var(--paozu-gold-bright);
+    width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--capsule-cyan); color: var(--capsule-cyan);
     display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-family: var(--font-body); font-weight: 900; flex-shrink: 0;
   }
   .accordion summary .cat-progress { font-size: 0.76rem; color: var(--text-dim); font-family: var(--font-body); font-weight: 700; }
-  .accordion summary .chevron { transition: transform 0.25s ease; color: var(--paozu-gold-bright); }
+  .accordion summary .chevron { transition: transform 0.25s ease; color: var(--capsule-cyan); }
   .accordion[open] summary .chevron { transform: rotate(90deg); }
   .accordion-body { padding: 18px 20px 20px; }
 
   .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 28px; }
   .stat-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 18px; background: var(--panel-bg); text-align: center; backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
-  .stat-card .num { font-family: var(--font-head); font-size: 2rem; color: var(--paozu-gold-bright); font-weight: 700; }
+  .stat-card .num { font-family: var(--font-head); font-size: 2rem; color: var(--capsule-cyan); font-weight: 700; }
   .stat-card .lbl { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; font-weight: 800; }
 
   .clock-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 18px 24px; background: var(--panel-bg); display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 28px; flex-wrap: wrap; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
@@ -374,47 +389,47 @@
     color: var(--text-main); cursor: pointer; text-align: left; font-size: 0.9rem; font-weight: 800;
     transition: all 0.2s ease; font-family: var(--font-body); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6);
   }
-  .quick-btn:hover { background: rgba(230, 161, 0, 0.15); border-color: var(--paozu-gold-bright); transform: translateY(-2px); }
-  .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--paozu-gold-bright); }
+  .quick-btn:hover { background: rgba(0, 240, 255, 0.15); border-color: var(--capsule-cyan); transform: translateY(-2px); }
+  .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--capsule-cyan); }
 
   .mini-list { display: flex; flex-direction: column; gap: 10px; }
   .mini-item {
     display: flex; justify-content: space-between; align-items: center; gap: 12px;
     border: 1px solid var(--border-line); border-radius: 10px; padding: 12px 14px; background: var(--card-bg); font-size: 0.85rem; backdrop-filter: blur(10px);
   }
-  .mini-item .txt { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #fcf7e8; }
-  .mini-item .cat-chip { font-size: 0.68rem; color: var(--paozu-gold-bright); border: 1px solid var(--border-line); border-radius: 10px; padding: 2px 8px; flex-shrink: 0; font-weight: 700; }
+  .mini-item .txt { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #f0f6fc; }
+  .mini-item .cat-chip { font-size: 0.68rem; color: var(--capsule-cyan); border: 1px solid var(--border-line); border-radius: 10px; padding: 2px 8px; flex-shrink: 0; font-weight: 700; }
 
   /* ================= TABLES & GENERATOR ================= */
   .table-responsive { width: 100%; overflow-x: auto; background: var(--panel-bg); border: 1px solid var(--border-line); border-radius: 12px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
   table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.86rem; min-width: 840px; }
-  th { background: rgba(230, 161, 0, 0.15); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.05em; }
-  td { padding: 12px 14px; border-bottom: 1px solid var(--border-soft); color: #fcf7e8; }
-  tbody tr:hover td { background: rgba(230, 161, 0, 0.08); }
+  th { background: rgba(0, 240, 255, 0.15); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.05em; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border-soft); color: #f0f6fc; }
+  tbody tr:hover td { background: rgba(0, 240, 255, 0.08); }
   tbody tr:last-child td { border-bottom: none; }
   .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
-  .badge-minor { background: rgba(255,255,255,0.08); color: #fcf7e8; border: 1px solid rgba(255,255,255,0.18); }
+  .badge-minor { background: rgba(255,255,255,0.08); color: #f0f6fc; border: 1px solid rgba(255,255,255,0.18); }
   .badge-major { background: rgba(168, 32, 32, 0.35); color: #ff99aa; border: 1px solid rgba(168, 32, 32, 0.6); }
 
   .gen-panel { border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; background: var(--panel-bg); margin-bottom: 28px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
   .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-line); background: rgba(6, 14, 20, 0.95); color: var(--text-main); font-size: 0.92rem; margin-bottom: 16px; font-family: var(--font-body); outline: none; font-weight: 600; }
-  .gen-select:focus { border-color: var(--paozu-gold-bright); box-shadow: 0 0 15px rgba(255, 208, 0, 0.3); }
+  .gen-select:focus { border-color: var(--capsule-cyan); box-shadow: 0 0 15px rgba(0, 240, 255, 0.35); }
   .gen-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
   .gen-card { border: 1px solid var(--border-line); border-radius: 10px; padding: 14px 16px; background: var(--card-bg); display: flex; flex-direction: column; justify-content: space-between; }
-  .gen-card h4 { font-family: var(--font-head); font-size: 0.9rem; color: var(--paozu-gold-bright); margin-bottom: 8px; letter-spacing: 0.03em; }
-  .gen-card p { font-size: 0.86rem; line-height: 1.55; color: #fcf7e8; margin-bottom: 12px; white-space: pre-line; }
+  .gen-card h4 { font-family: var(--font-head); font-size: 0.9rem; color: var(--capsule-cyan); margin-bottom: 8px; letter-spacing: 0.03em; }
+  .gen-card p { font-size: 0.86rem; line-height: 1.55; color: #f0f6fc; margin-bottom: 12px; white-space: pre-line; }
 
   .filter-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
   .filter-chip {
     border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
     padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease; font-family: var(--font-body);
   }
-  .filter-chip:hover { border-color: var(--paozu-gold-bright); color: var(--text-main); }
-  .filter-chip.active { background: rgba(230, 161, 0, 0.25); color: var(--paozu-gold-bright); border-color: var(--paozu-gold); }
+  .filter-chip:hover { border-color: var(--capsule-cyan); color: var(--text-main); }
+  .filter-chip.active { background: rgba(0, 240, 255, 0.25); color: var(--capsule-cyan); border-color: var(--capsule-cyan); }
 
   .infraction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
   .infr-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 16px 18px; background: var(--card-bg); cursor: pointer; transition: all 0.2s ease; border-left: 4px solid var(--text-dim); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
-  .infr-card:hover { background: rgba(20, 42, 34, 0.92); transform: translateY(-2px); }
+  .infr-card:hover { background: rgba(20, 38, 52, 0.92); transform: translateY(-2px); }
   .infr-card.risk-green { border-left-color: #00ff88; }
   .infr-card.risk-yellow { border-left-color: var(--paozu-gold-bright); }
   .infr-card.risk-orange { border-left-color: var(--paozu-orange); }
@@ -430,7 +445,7 @@
   /* ================= TROUBLESHOOTING FLOW STYLES ================= */
   .trouble-section { margin-bottom: 30px; }
   .trouble-mode-header {
-    font-family: var(--font-head); font-size: 1.3rem; color: var(--paozu-gold-bright); border-bottom: 2px solid var(--border-line);
+    font-family: var(--font-head); font-size: 1.3rem; color: var(--capsule-cyan); border-bottom: 2px solid var(--border-line);
     padding-bottom: 8px; margin: 24px 0 16px; text-transform: uppercase; letter-spacing: 0.06em;
   }
   .trouble-card {
@@ -439,15 +454,21 @@
   }
   .trouble-card h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; letter-spacing: 0.03em; }
   .flow-step {
-    border-left: 2px solid var(--paozu-gold-bright); padding-left: 16px; margin-bottom: 16px; position: relative;
+    border-left: 2px solid var(--capsule-cyan); padding-left: 16px; margin-bottom: 16px; position: relative;
   }
-  .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--paozu-gold-bright); text-transform: uppercase; letter-spacing: 0.06em; }
+  .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--capsule-cyan); text-transform: uppercase; letter-spacing: 0.06em; }
   .flow-step-title { font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin: 3px 0 5px; }
   .flow-step-action { font-size: 0.86rem; color: var(--text-dim); line-height: 1.45; margin-bottom: 8px; font-weight: 500; }
   .flow-step-spiel {
     background: rgba(6, 14, 20, 0.75); border: 1px solid var(--border-line); border-radius: 8px; padding: 10px 12px;
     font-size: 0.84rem; color: #fcf7e8; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
   }
+
+  /* WEST CITY BUILDINGS SILHOUETTE */
+  .west-city-skyline {
+    position: absolute; left: 0; right: 0; bottom: 8%; height: 38%; opacity: 0.88;
+  }
+  .west-city-skyline svg { width: 100%; height: 100%; display: block; }
 
   /* ================= RESPONSIVE ================= */
   @media (max-width: 960px) {
@@ -466,8 +487,8 @@
 
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(230, 161, 0, 0.35); border-radius: 6px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(230, 161, 0, 0.6); }
+  ::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.35); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0, 240, 255, 0.6); }
 </style>
 </head>
 <body>
@@ -478,13 +499,28 @@
     <div class="sky-clouds"></div>
     <div class="sun-glow"></div>
     <div class="sun-rays"></div>
+    <div class="rain-layer"></div>
     
-    <!-- Mount Paozu Layered Mountains -->
-    <div class="scene-mountains">
-      <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
-        <polygon points="0,300 0,160 140,65 310,180 480,75 660,190 840,55 1020,165 1200,95 1200,300" fill="#0c231e"/>
-        <polygon points="0,300 0,205 190,120 390,205 600,130 840,215 1040,140 1200,185 1200,300" fill="#133128" opacity=".92"/>
-        <path d="M600,130 L605,300 L595,300 Z" fill="#00d2ff" opacity="0.65"/>
+    <!-- West City Capsule Corp Buildings & Houses -->
+    <div class="west-city-skyline">
+      <svg viewBox="0 0 1200 280" preserveAspectRatio="none">
+        <g fill="#071524" opacity="0.95">
+          <!-- Capsule Corp Headquarters Main Dome -->
+          <ellipse cx="600" cy="220" rx="140" ry="80"/>
+          <circle cx="600" cy="140" r="45"/>
+          <rect x="585" y="80" width="30" height="60"/>
+          
+          <!-- Surrounding Dome Houses & High Rise Towers -->
+          <ellipse cx="200" cy="240" rx="80" ry="40"/>
+          <rect x="280" y="160" width="50" height="120"/>
+          <ellipse cx="380" cy="230" rx="70" ry="35"/>
+          <rect x="100" y="180" width="60" height="100"/>
+          
+          <ellipse cx="980" cy="240" rx="85" ry="45"/>
+          <rect x="860" y="150" width="55" height="130"/>
+          <ellipse cx="780" cy="235" rx="65" ry="35"/>
+          <rect x="1080" y="170" width="65" height="110"/>
+        </g>
       </svg>
     </div>
 
@@ -518,7 +554,14 @@
       </svg>
     </div>
 
-    <!-- Goku & Chi-Chi's House (Mount Paozu Foreground) -->
+    <!-- Gohan Flying Silhouette -->
+    <div class="char-gohan-fly">
+      <svg viewBox="0 0 80 40" preserveAspectRatio="xMidYMid meet">
+        <path d="M10,20 L50,15 L75,22 L45,25 Z" fill="#00f0ff" opacity="0.8"/>
+      </svg>
+    </div>
+
+    <!-- Goku & Chi-Chi's House -->
     <div class="paozu-house">
       <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMax meet">
         <g fill="#091814">
@@ -707,19 +750,23 @@
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 3 &amp; 4 &mdash; Permissions &amp; Dual Monitors</div>
+            <div class="flow-step-num">Step 3, 4 &amp; 5 &mdash; Permissions, Displays &amp; Devices</div>
             <div class="flow-step-title">OS Screen Permissions &amp; Disconnect Secondary Displays</div>
-            <div class="flow-step-action">3. Browser permissions enabled? &bull; No &rarr; Enable in OS settings. &bull; Yes &rarr; Continue.<br>4. Using dual monitors? &bull; Yes &rarr; Disconnect 2nd monitor. &bull; No &rarr; Continue.</div>
+            <div class="flow-step-action">3. Browser permissions enabled? &bull; No &rarr; Enable in OS settings.<br>4. Using dual monitors? &bull; Yes &rarr; Disconnect 2nd monitor.<br>5. Device Settings Enabled Check.</div>
             <div class="flow-step-spiel">
+              <span>"Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled.')">⚜ Copy</button>
+            </div>
+            <div class="flow-step-spiel" style="margin-top:6px;">
               <span>"Disconnect any external or extended monitors and use only one screen."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Disconnect any external or extended monitors and use only one screen.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 5 &amp; 6 &mdash; VPN &amp; Network Switching</div>
+            <div class="flow-step-num">Step 6 &amp; 7 &mdash; VPN &amp; Network Switching</div>
             <div class="flow-step-title">Disable Corporate VPN / Try Alternate Wi-Fi or Hotspot</div>
-            <div class="flow-step-action">5. VPN or company device? &bull; Yes &rarr; Disable VPN or use personal machine. &bull; No &rarr; Continue.<br>6. Try a different network (switch to hotspot or Wi-Fi). &bull; Yes &rarr; Switch to hotspot/Wi-Fi. &bull; Still failing &rarr; Continue.</div>
+            <div class="flow-step-action">5. VPN or company device? &bull; Yes &rarr; Disable VPN or use personal machine.<br>6. Try a different network (switch to hotspot or Wi-Fi).</div>
             <div class="flow-step-spiel">
               <span>"Make sure any VPN or proxy connection is turned off."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Make sure any VPN or proxy connection is turned off.')">⚜ Copy</button>
@@ -731,9 +778,9 @@
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 7, 8, 9 &amp; 10 &mdash; Rejoin, Reboot &amp; Fallback</div>
+            <div class="flow-step-num">Step 8, 9, 10 &amp; 11 &mdash; Rejoin, Reboot &amp; Fallback</div>
             <div class="flow-step-title">Re-enter Session / Full Device Restart / Alternate Hardware</div>
-            <div class="flow-step-action">7. Ask candidate to rejoin (leave and re-enter session). &bull; Still failing &rarr; Continue.<br>8. Ask candidate to restart device (full reboot clears permission caches). &bull; Done &rarr; Restart &amp; rejoin. &bull; Still failing &rarr; Continue.<br>9. Use a different device.<br>10. End Goal: Screen sharing resolved ✓</div>
+            <div class="flow-step-action">7. Ask candidate to rejoin.<br>8. Ask candidate to restart device.<br>9. Use a different device.<br>10. End Goal: Screen sharing resolved ✓</div>
             <div class="flow-step-spiel">
               <span>"Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?"</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?')">⚜ Copy</button>
@@ -762,8 +809,12 @@
           <div class="flow-step">
             <div class="flow-step-num">Step 4, 5 &amp; 6 &mdash; Permissions &amp; VPN Check</div>
             <div class="flow-step-title">Browser &amp; OS Camera Permissions / Close Secondary Apps</div>
-            <div class="flow-step-action">4. Browser camera permission enabled? &bull; No &rarr; Allow camera in browser.<br>5. OS camera permission enabled? &bull; No &rarr; Enable in OS settings.<br>6. VPN or company device? &bull; Yes &rarr; Disable VPN or use personal machine.</div>
+            <div class="flow-step-action">4. Browser camera permission enabled?<br>5. OS camera permission enabled?<br>6. VPN or company device?</div>
             <div class="flow-step-spiel">
+              <span>"Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled.')">⚜ Copy</button>
+            </div>
+            <div class="flow-step-spiel" style="margin-top:6px;">
               <span>"Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs.')">⚜ Copy</button>
             </div>
@@ -771,8 +822,8 @@
 
           <div class="flow-step">
             <div class="flow-step-num">Step 7, 8, 9, 10 &amp; 11 &mdash; Rejoin, Reboot &amp; Fallback</div>
-            <div class="flow-step-title">Refresh Browser / Reboot System / 30-Min Policy</div>
-            <div class="flow-step-action">7. Try a different network (switch to hotspot or Wi-Fi).<br>8. Ask candidate to rejoin.<br>9. Ask candidate to restart device (full reboot resets camera drivers).<br>10. Use a different device.<br>11. End Goal: Camera issue resolved ✓</div>
+            <div class="flow-step-title">Refresh Browser / Reboot System / Escalation</div>
+            <div class="flow-step-action">7. Try a different network.<br>8. Ask candidate to rejoin.<br>9. Ask candidate to restart device.<br>10. Use a different device.<br>11. End Goal: Camera issue resolved ✓</div>
             <div class="flow-step-spiel">
               <span>"Please click the refresh button on the top left side of the screen."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please click the refresh button on the top left side of the screen.')">⚜ Copy</button>
@@ -898,7 +949,7 @@
         <h3>🛠️ Technical Requirements &amp; Troubleshooting</h3>
         <div class="flow-step">
           <div class="flow-step-title">Does my computer meet the necessary requirements?</div>
-          <div class="flow-step-action">Candidates can access the Certiverse System Requirements &amp; Hardware Guide to check the pre-flight requirements. It is highly recommended to run the specific compatibility tool provided for your exam ahead of time. [1, 2]</div>
+          <div class="flow-step-action">Candidates can access the Certiverse System Requirements &amp; Hardware Guide to check the pre-flight requirements. It is highly recommended to run the specific compatibility tool provided for your exam ahead of time.</div>
           <div class="flow-step-spiel">
             <span>"Please verify that your computer meets all system requirements by using the pre-exam compatibility tool on your Certiverse dashboard. It is highly recommended to run the compatibility tool provided for your exam ahead of time."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your computer meets all system requirements by using the pre-exam compatibility tool on your Certiverse dashboard. It is highly recommended to run the compatibility tool provided for your exam ahead of time.')">⚜ Copy</button>
@@ -907,7 +958,7 @@
 
         <div class="flow-step">
           <div class="flow-step-title">Am I able to use a Chromebook?</div>
-          <div class="flow-step-action">No, the test environment does not support Chromebooks. You must use a device that meets the full hardware specifications. [1]</div>
+          <div class="flow-step-action">No, the test environment does not support Chromebooks. You must use a device that meets the full hardware specifications.</div>
           <div class="flow-step-spiel">
             <span>"No, the test environment does not support Chromebooks. You must use a desktop or laptop device that meets full system requirements."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'No, the test environment does not support Chromebooks. You must use a desktop or laptop device that meets full system requirements.')">⚜ Copy</button>
@@ -916,7 +967,7 @@
 
         <div class="flow-step">
           <div class="flow-step-title">Why do I see a blank page when navigating to Certiverse.com?</div>
-          <div class="flow-step-action">Certain corporate networks or VPNs block the platform. Candidates experiencing this should switch to a personal machine and connection. [1]</div>
+          <div class="flow-step-action">Certain corporate networks or VPNs block the platform. Candidates experiencing this should switch to a personal machine and connection.</div>
           <div class="flow-step-spiel">
             <span>"Certain corporate networks or VPNs block the platform. If you see a blank page, please switch to a personal machine and personal network connection."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Certain corporate networks or VPNs block the platform. If you see a blank page, please switch to a personal machine and personal network connection.')">⚜ Copy</button>
@@ -925,7 +976,7 @@
 
         <div class="flow-step">
           <div class="flow-step-title">What should I do if my camera isn't working?</div>
-          <div class="flow-step-action">Check for a physical camera switch or privacy button on your device. Ensure it is toggled to the "on" position before launching the session so the platform can detect it. [1]</div>
+          <div class="flow-step-action">Check for a physical camera switch or privacy button on your device. Ensure it is toggled to the "on" position before launching the session so the platform can detect it.</div>
           <div class="flow-step-spiel">
             <span>"Please check for a physical camera switch or privacy button on your device and ensure it is toggled to the 'on' position before launching the session."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check for a physical camera switch or privacy button on your device and ensure it is toggled to the \'on\' position before launching the session.')">⚜ Copy</button>
@@ -937,7 +988,7 @@
         <h3>📝 Booking, Vouchers, &amp; Exam Management</h3>
         <div class="flow-step">
           <div class="flow-step-title">What are voucher codes and how do I use them?</div>
-          <div class="flow-step-action">Vouchers are prepaid codes issued by authorized Test Sponsors. They allow you to pay for and schedule your exam directly through the portal. [1, 2]</div>
+          <div class="flow-step-action">Vouchers are prepaid codes issued by authorized Test Sponsors. They allow you to pay for and schedule your exam directly through the portal.</div>
           <div class="flow-step-spiel">
             <span>"Vouchers are prepaid codes issued by authorized Test Sponsors. You can enter your voucher code at checkout to pay for and schedule your exam."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Vouchers are prepaid codes issued by authorized Test Sponsors. You can enter your voucher code at checkout to pay for and schedule your exam.')">⚜ Copy</button>
@@ -946,7 +997,7 @@
 
         <div class="flow-step">
           <div class="flow-step-title">Where can I manage my scheduled exams?</div>
-          <div class="flow-step-action">Once logged in, all activities are centralized in the My Exams dashboard (certiverse.com/#/dashboard). This is where you go to review, launch, cancel, or reschedule your tests. [1]</div>
+          <div class="flow-step-action">Once logged in, all activities are centralized in the My Exams dashboard (certiverse.com/#/dashboard). This is where you go to review, launch, cancel, or reschedule your tests.</div>
           <div class="flow-step-spiel">
             <span>"You can manage all scheduled exams directly from your My Exams dashboard at certiverse.com/#/dashboard to review, launch, cancel, or reschedule your session."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'You can manage all scheduled exams directly from your My Exams dashboard at certiverse.com/#/dashboard to review, launch, cancel, or reschedule your session.')">⚜ Copy</button>
@@ -958,7 +1009,7 @@
         <h3>🛡️ Online Proctoring &amp; AI Monitoring</h3>
         <div class="flow-step">
           <div class="flow-step-title">What happens if I get disconnected during the exam?</div>
-          <div class="flow-step-action">If you lose connectivity, you can immediately rejoin the session from your dashboard. Candidates have up to 60 minutes to relaunch an abandoned exam before it autocompletes. If a disconnection exceeds a 30-minute threshold, you must contact support to reschedule. [1, 2]</div>
+          <div class="flow-step-action">If you lose connectivity, you can immediately rejoin the session from your dashboard. Candidates have up to 60 minutes to relaunch an abandoned exam before it autocompletes. If a disconnection exceeds a 30-minute threshold, you must contact support to reschedule.</div>
           <div class="flow-step-spiel">
             <span>"If you get disconnected, you can rejoin directly from your dashboard. You have up to 60 minutes to relaunch before autocompletion, but if disconnected for over 30 minutes, please contact support@certiverse.com."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you get disconnected, you can rejoin directly from your dashboard. You have up to 60 minutes to relaunch before autocompletion, but if disconnected for over 30 minutes, please contact support@certiverse.com.')">⚜ Copy</button>
@@ -967,7 +1018,7 @@
 
         <div class="flow-step">
           <div class="flow-step-title">How do proctors communicate with candidates?</div>
-          <div class="flow-step-action">Communication is conducted entirely over text chat or email via support@certiverse.com. Support staff can also offer remote control assistance if necessary, but phone support is not available. [1]</div>
+          <div class="flow-step-action">Communication is conducted entirely over text chat or email via support@certiverse.com. Support staff can also offer remote control assistance if necessary, but phone support is not available.</div>
           <div class="flow-step-spiel">
             <span>"All proctor communication is conducted over text chat inside the platform or via email at support@certiverse.com. Phone support is not available."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'All proctor communication is conducted over text chat inside the platform or via email at support@certiverse.com. Phone support is not available.')">⚜ Copy</button>
@@ -976,7 +1027,7 @@
 
         <div class="flow-step">
           <div class="flow-step-title">What triggers an exam pause?</div>
-          <div class="flow-step-action">The AI-assisted proctoring system monitors your webcam. It will automatically pause your test and alert a human proctor if it flags an anomaly, such as your face leaving the camera frame or another person walking into view. [1, 2]</div>
+          <div class="flow-step-action">The AI-assisted proctoring system monitors your webcam. It will automatically pause your test and alert a human proctor if it flags an anomaly, such as your face leaving the camera frame or another person walking into view.</div>
           <div class="flow-step-spiel">
             <span>"The proctoring system monitors your webcam and will automatically pause your test if your face leaves the view frame or another person enters the room."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'The proctoring system monitors your webcam and will automatically pause your test if your face leaves the view frame or another person enters the room.')">⚜ Copy</button>
@@ -985,7 +1036,7 @@
 
         <div class="flow-step">
           <div class="flow-step-title">What are the core testing rules?</div>
-          <div class="flow-step-action">You must test in a private, well-lit room completely alone. External monitors must be disconnected, and taking screenshots, photos, or copying and pasting text is strictly prohibited. [1, 2]</div>
+          <div class="flow-step-action">You must test in a private, well-lit room completely alone. External monitors must be disconnected, and taking screenshots, photos, or copying and pasting text is strictly prohibited.</div>
           <div class="flow-step-spiel">
             <span>"You must test in a private, well-lit room alone. External monitors must be disconnected, and taking screenshots or copying text is strictly prohibited."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'You must test in a private, well-lit room alone. External monitors must be disconnected, and taking screenshots or copying text is strictly prohibited.')">⚜ Copy</button>
@@ -997,7 +1048,7 @@
         <h3>📞 Candidate Support Contact Information</h3>
         <div class="flow-step">
           <div class="flow-step-title">How do I get in touch for help? What are support hours?</div>
-          <div class="flow-step-action">For account issues, general questions, or registration problems, open a ticket at the Certiverse Support Portal or email support@certiverse.com. Support operates 24/7 with typical responses within 24 hours. [1, 2]</div>
+          <div class="flow-step-action">For account issues, general questions, or registration problems, open a ticket at the Certiverse Support Portal or email support@certiverse.com. Support operates 24/7 with typical responses within 24 hours.</div>
           <div class="flow-step-spiel">
             <span>"For help, open a ticket at the Certiverse Support Portal or email support@certiverse.com. Support operates 24/7 with a typical response time within 24 hours."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'For help, open a ticket at the Certiverse Support Portal or email support@certiverse.com. Support operates 24/7 with a typical response time within 24 hours.')">⚜ Copy</button>
@@ -1009,7 +1060,7 @@
         <h3>🕒 Scheduling &amp; Timelines</h3>
         <div class="flow-step">
           <div class="flow-step-title">Booking advance time, grace period, and proctor wait times</div>
-          <div class="flow-step-action">Sessions must be booked 24h in advance (no same-day booking). 30-minute check-in grace period applies. Proctor wait times average 5 to 10 minutes. [1]</div>
+          <div class="flow-step-action">Sessions must be booked 24h in advance (no same-day booking). 30-minute check-in grace period applies. Proctor wait times average 5 to 10 minutes.</div>
           <div class="flow-step-spiel">
             <span>"Exams must be scheduled at least 24 hours in advance. You have a 30-minute grace period from your start time to check in. Proctor connection wait times are typically 5 to 10 minutes."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Exams must be scheduled at least 24 hours in advance. You have a 30-minute grace period from your start time to check in. Proctor connection wait times are typically 5 to 10 minutes.')">⚜ Copy</button>
@@ -1021,7 +1072,7 @@
         <h3>🎟️ Voucher &amp; Expiration Rules</h3>
         <div class="flow-step">
           <div class="flow-step-title">What happens if a voucher expires or an exam is abandoned?</div>
-          <div class="flow-step-action">Expired vouchers or launched/abandoned exams mark the voucher as used and it cannot be reinstated or recycled. [1]</div>
+          <div class="flow-step-action">Expired vouchers or launched/abandoned exams mark the voucher as used and it cannot be reinstated or recycled.</div>
           <div class="flow-step-spiel">
             <span>"Vouchers must be used before their designated expiration date. If an exam is launched and abandoned, the voucher is marked as used and cannot be reinstated."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Vouchers must be used before their designated expiration date. If an exam is launched and abandoned, the voucher is marked as used and cannot be reinstated.')">⚜ Copy</button>
@@ -1033,7 +1084,7 @@
         <h3>🪟 Workspace Setup &amp; Desk Compliance</h3>
         <div class="flow-step">
           <div class="flow-step-title">Drinks, desk items, and dual-monitor rules</div>
-          <div class="flow-step-action">Drinks permitted only in clear, label-free containers. Desk must be clear within arm's reach. Secondary monitors must be physically disconnected. [1]</div>
+          <div class="flow-step-action">Drinks permitted only in clear, label-free containers. Desk must be clear within arm's reach. Secondary monitors must be physically disconnected.</div>
           <div class="flow-step-spiel">
             <span>"Drinks are permitted only in clear, label-free containers. Remove all non-essential items within arm's reach, and physically unplug any secondary monitors."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Drinks are permitted only in clear, label-free containers. Remove all non-essential items within arm\'s reach, and physically unplug any secondary monitors.')">⚜ Copy</button>
@@ -1045,7 +1096,7 @@
         <h3>🌐 System Preferences &amp; Languages</h3>
         <div class="flow-step">
           <div class="flow-step-title">Can I change the interface language?</div>
-          <div class="flow-step-action">Yes, Certiverse supports Japanese, Spanish, and Simplified Chinese via the top-right language dropdown. [1]</div>
+          <div class="flow-step-action">Yes, Certiverse supports Japanese, Spanish, and Simplified Chinese via the top-right language dropdown.</div>
           <div class="flow-step-spiel">
             <span>"You can switch the platform language (including Japanese, Spanish, and Simplified Chinese) using the language dropdown in the upper right-hand corner."</span>
             <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'You can switch the platform language (including Japanese, Spanish, and Simplified Chinese) using the language dropdown in the upper right-hand corner.')">⚜ Copy</button>
@@ -1164,6 +1215,8 @@
     {id:"m8_5", cat:"8", tags:[], text:"Please remain on the exam environment tab only."},
     {id:"m8_6", cat:"8", tags:["critical"], text:"Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."},
     {id:"m8_7", cat:"8", tags:["critical"], text:"Unfortunately, we are not allowed to release the exam unless all requirements are met."},
+    {id:"m8_8", cat:"8", tags:[], text:"One moment. Kindly lower the angle of your camera so that we can see your head down to your shoulders."},
+    {id:"m8_9", cat:"8", tags:[], text:"One moment. Please adjust your camera angle or position so that your face and shoulders are centered and fully visible on the screen."},
 
     // 9. Technical Support
     {id:"m9_1", cat:"9", tags:[], text:"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."},
