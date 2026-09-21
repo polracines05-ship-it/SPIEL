@@ -3,30 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveActs Proctor Dojo — Mount Paozu Command Deck (PST)</title>
+<title>FiveActs Proctor Dojo — Ocean Sanctuary Operations (PST)</title>
 <style>
   :root {
-    /* Paozu & Dragon Ball Z Palette */
-    --paozu-sky: #0b1d33;
-    --paozu-sun: #ffd000;
-    --paozu-green: #2a5a3b;
-    --paozu-moss: #1b3d26;
-    --paozu-parchment: #fcf7e8;
-    --paozu-parchment-dim: #d8cba9;
-    --paozu-gold: #e6a100;
-    --paozu-gold-bright: #ffcc00;
-    --paozu-orange: #f26522;
-    --paozu-crimson: #a82020;
-    --paozu-azure: #00d2ff;
+    /* Ocean Sanctuary Palette */
+    --ocean-sky: #0a1826;
+    --ocean-azure: #00d2ff;
+    --ocean-teal: #00f0ff;
+    --ocean-deep: #030d17;
+    --sand-parchment: #fcf7e8;
+    --sand-gold: #ffcc00;
+    --sand-gold-bright: #ffea00;
+    --coral-orange: #f26522;
+    --coral-crimson: #a82020;
 
-    --panel-bg: rgba(13, 27, 24, 0.92);
-    --card-bg: rgba(20, 38, 32, 0.88);
-    --border-line: rgba(230, 161, 0, 0.35);
+    --panel-bg: rgba(8, 20, 32, 0.9);
+    --card-bg: rgba(14, 30, 48, 0.88);
+    --border-line: rgba(0, 210, 255, 0.35);
     --border-soft: rgba(252, 247, 232, 0.12);
 
     --text-main: #fcf7e8;
-    --text-dim: #cad1be;
-    --text-muted: #7d8e75;
+    --text-dim: #b0c4de;
+    --text-muted: #62788e;
 
     --font-head: Georgia, "Iowan Old Style", "Palatino Linotype", "Hiragino Mincho ProN", serif;
     --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -37,7 +35,7 @@
   body {
     font-family: var(--font-body);
     color: var(--text-main);
-    background-color: #060e14;
+    background-color: #02060a;
     display: flex;
     min-height: 100vh;
     position: relative;
@@ -45,7 +43,7 @@
   }
 
   /* ============================================================
-     DYNAMIC 20-SECOND DAY-NIGHT SKY ENGINE
+     DYNAMIC 20-SECOND DAY-NIGHT & CELESTIAL WEATHER SKY ENGINE
      ============================================================ */
   .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
   
@@ -55,42 +53,59 @@
   }
 
   @keyframes celestialCycle {
-    0%, 100% { background: linear-gradient(180deg, #1d0f28 0%, #4a213e 35%, #8c3b4f 70%, #d96b43 100%); }
-    16.6%    { background: linear-gradient(180deg, #103c61 0%, #1e6992 35%, #4ea3c8 70%, #9be1eb 100%); }
-    33.3%    { background: linear-gradient(180deg, #092c48 0%, #114b73 35%, #2a87b3 70%, #76d0f0 100%); }
-    50%      { background: linear-gradient(180deg, #160a24 0%, #421032 35%, #822234 70%, #df5720 100%); }
-    66.6%    { background: linear-gradient(180deg, #040914 0%, #081526 35%, #0b2238 70%, #0a1829 100%); }
-    83.3%    { background: linear-gradient(180deg, #010308 0%, #030712 35%, #050d1f 70%, #020610 100%); }
+    0%, 100% { /* Dawn */
+      background: linear-gradient(180deg, #1f102e 0%, #4a2143 35%, #8c3b54 70%, #d96b43 100%);
+    }
+    16.6% { /* Morning */
+      background: linear-gradient(180deg, #0f3d61 0%, #1e6e96 35%, #4ea9ce 70%, #9be1eb 100%);
+    }
+    33.3% { /* Afternoon / Sunny */
+      background: linear-gradient(180deg, #082944 0%, #104a75 35%, #2a88b5 70%, #76d2f2 100%);
+    }
+    50% { /* Twilight / Sunset */
+      background: linear-gradient(180deg, #180924 0%, #451034 35%, #8a2236 70%, #df5720 100%);
+    }
+    66.6% { /* Night */
+      background: linear-gradient(180deg, #030812 0%, #061324 35%, #092036 70%, #091828 100%);
+    }
+    83.3% { /* Midnight */
+      background: linear-gradient(180deg, #010206 0%, #020610 35%, #040c1d 70%, #01050e 100%);
+    }
   }
 
-  /* Heavenly Sun Sync */
-  .sun-glow {
-    position: absolute; top: 2%; right: 12%; width: 420px; height: 420px; border-radius: 50%;
-    animation: sunGlowCycle 20s ease-in-out infinite;
-    filter: blur(30px);
+  /* RISING SUN & RISING MOON ANAMORPHIC ENGINE */
+  .celestial-sun {
+    position: absolute; width: 280px; height: 280px; border-radius: 50%;
+    animation: sunOrbit 20s ease-in-out infinite;
+    filter: blur(20px);
+  }
+  .celestial-moon {
+    position: absolute; width: 220px; height: 220px; border-radius: 50%;
+    animation: moonOrbit 20s ease-in-out infinite;
+    filter: blur(15px);
   }
 
-  @keyframes sunGlowCycle {
-    0%, 100% { background: radial-gradient(circle, rgba(255, 140, 0, 0.4) 0%, rgba(217, 107, 67, 0.2) 50%, transparent 75%); }
-    16.6%    { background: radial-gradient(circle, rgba(255, 230, 100, 0.5) 0%, rgba(155, 225, 235, 0.2) 50%, transparent 75%); }
-    33.3%    { background: radial-gradient(circle, rgba(255, 255, 180, 0.6) 0%, rgba(118, 208, 240, 0.2) 50%, transparent 75%); }
-    50%      { background: radial-gradient(circle, rgba(223, 87, 32, 0.6) 0%, rgba(130, 34, 52, 0.25) 50%, transparent 75%); }
-    66.6%    { background: radial-gradient(circle, rgba(0, 210, 255, 0.25) 0%, rgba(11, 34, 56, 0.15) 50%, transparent 75%); }
-    83.3%    { background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, rgba(5, 13, 31, 0.08) 50%, transparent 75%); }
+  @keyframes sunOrbit {
+    0%   { top: 55%; left: 80%; opacity: 0; background: radial-gradient(circle, rgba(255, 140, 0, 0.8), transparent 70%); }
+    16.6%{ top: 15%; left: 70%; opacity: 1; background: radial-gradient(circle, rgba(255, 230, 100, 0.9), transparent 70%); }
+    33.3%{ top: 5%; left: 50%; opacity: 1; background: radial-gradient(circle, rgba(255, 255, 200, 1), transparent 70%); }
+    50%  { top: 50%; left: 15%; opacity: 0.6; background: radial-gradient(circle, rgba(223, 87, 32, 0.9), transparent 70%); }
+    66.6%, 100% { top: 90%; left: 0%; opacity: 0; }
   }
 
-  .sun-rays {
-    position: absolute; top: 0; right: 10%; width: 70%; height: 100%;
-    background: linear-gradient(135deg, transparent 35%, rgba(255, 208, 0, 0.05) 48%, rgba(255, 255, 255, 0.03) 52%, transparent 65%);
-    transform: rotate(-12deg);
+  @keyframes moonOrbit {
+    0%, 50% { top: 90%; left: 100%; opacity: 0; }
+    66.6% { top: 20%; left: 75%; opacity: 0.8; background: radial-gradient(circle, rgba(0, 210, 255, 0.8), transparent 70%); }
+    83.3% { top: 8%; left: 50%; opacity: 1; background: radial-gradient(circle, rgba(220, 240, 255, 0.9), transparent 70%); }
+    100% { top: 60%; left: 10%; opacity: 0; }
   }
 
-  /* Drifting Clouds */
+  /* Drifting Sky Clouds */
   .sky-clouds {
     position: absolute; inset: 0;
     background: 
-      radial-gradient(ellipse 65% 22% at 20% 18%, rgba(252, 247, 232, 0.1), transparent 70%),
-      radial-gradient(ellipse 85% 32% at 75% 28%, rgba(252, 247, 232, 0.06), transparent 75%);
+      radial-gradient(ellipse 65% 22% at 20% 18%, rgba(252, 247, 232, 0.12), transparent 70%),
+      radial-gradient(ellipse 85% 32% at 75% 28%, rgba(252, 247, 232, 0.08), transparent 75%);
     animation: floatClouds 55s ease-in-out infinite alternate;
   }
   @keyframes floatClouds {
@@ -98,111 +113,111 @@
     100% { transform: translateX(40px) scale(1.05); }
   }
 
-  /* Distant Mountain Ranges */
-  .scene-mountains { position: absolute; left: 0; right: 0; bottom: 10%; height: 52%; opacity: 0.92; }
-  .scene-mountains svg { width: 100%; height: 100%; display: block; }
+  /* Dynamic Rain Overlay */
+  .rain-layer {
+    position: absolute; inset: 0; opacity: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(0, 240, 255, 0.2) 45%, transparent 50%);
+    background-size: 200% 200%;
+    animation: rainCycle 20s infinite, rainFall 0.8s linear infinite;
+  }
+  @keyframes rainCycle {
+    0%, 30% { opacity: 0; }
+    33.3%, 45% { opacity: 0.75; }
+    48%, 100% { opacity: 0; }
+  }
+  @keyframes rainFall { 0% { background-position: 0 0; } 100% { background-position: 100% 100%; } }
 
-  /* Floating Kami's Lookout */
-  .lookout-floating {
-    position: absolute; right: 12%; top: 8%; width: 260px; height: 180px; opacity: 0.85;
-    filter: drop-shadow(0 0 15px rgba(255, 208, 0, 0.25));
-    animation: lookoutDrift 16s ease-in-out infinite alternate;
+  /* MOVING OCEAN WAVES & HORIZON */
+  .scene-ocean {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 48%; opacity: 0.95;
   }
-  @keyframes lookoutDrift {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-14px); }
+  .ocean-water {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0, 80, 120, 0.6) 0%, rgba(3, 20, 35, 0.95) 100%);
   }
-
-  /* Guardian Shenron in Clouds */
-  .shenron-clouds {
-    position: absolute; left: 15%; top: 6%; width: 620px; height: 320px; opacity: 0.45;
-    filter: drop-shadow(0 0 20px rgba(0, 210, 255, 0.25));
-    animation: shenronGlide 30s ease-in-out infinite alternate;
+  .ocean-waves {
+    position: absolute; left: 0; right: 0; top: 0; height: 40px;
+    animation: waveSway 4s ease-in-out infinite alternate;
   }
-  @keyframes shenronGlide {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-20px) scale(1.04); }
-  }
-
-  /* Flying Nimbus & Goku Silhouette */
-  .nimbus-goku {
-    position: absolute; left: -160px; top: 22%; width: 150px; height: 75px; opacity: 0.9;
-    filter: drop-shadow(0 0 12px rgba(255, 208, 0, 0.6));
-    animation: nimbusSailing 38s linear infinite;
-  }
-  @keyframes nimbusSailing {
-    0% { transform: translateX(0) translateY(0); opacity: 0; }
-    5% { opacity: 0.95; }
-    90% { opacity: 0.95; }
-    100% { transform: translateX(calc(100vw + 350px)) translateY(-60px); opacity: 0; }
+  @keyframes waveSway {
+    0% { transform: translateY(0) scaleY(1); }
+    100% { transform: translateY(6px) scaleY(1.15); }
   }
 
-  /* Goku & Chi-Chi's House */
-  .paozu-house {
-    position: absolute; right: 4%; bottom: 8%; width: 320px; height: 260px; opacity: 0.92;
-    filter: drop-shadow(0 0 20px rgba(0,0,0,0.85));
+  /* OCEAN HOUSE & COASTAL TREES SILHOUETTE */
+  .ocean-house-structure {
+    position: absolute; right: 8%; bottom: 12%; width: 420px; height: 320px; opacity: 0.95;
+    filter: drop-shadow(0 0 25px rgba(0,0,0,0.85));
+  }
+  .swaying-trees {
+    transform-origin: bottom center;
+    animation: treeWind 6s ease-in-out infinite alternate;
+  }
+  @keyframes treeWind {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(2.5deg); }
   }
 
-  .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 220px 60px rgba(3, 8, 14, 0.75); }
+  .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 220px 60px rgba(2, 6, 10, 0.8); }
   #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
   /* ============================================================
-     SIDEBAR & NAVIGATION
+     SIDEBAR
      ============================================================ */
   .sidebar {
     position: relative; z-index: 10;
     width: 310px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
-    background: linear-gradient(180deg, rgba(13, 27, 24, 0.95), rgba(6, 14, 20, 0.98));
+    background: linear-gradient(180deg, rgba(8, 20, 32, 0.94), rgba(3, 10, 18, 0.98));
     border-right: 1px solid var(--border-line);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     display: flex; flex-direction: column; padding: 0;
-    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.7);
+    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.75);
   }
   .sidebar::before {
     content: ""; display: block; height: 4px; width: 100%; flex-shrink: 0;
-    background: linear-gradient(90deg, transparent, var(--paozu-gold-bright), var(--paozu-orange), transparent);
+    background: linear-gradient(90deg, transparent, var(--ocean-teal), var(--sand-gold), transparent);
   }
 
-  /* 8 DRAGON BALLS (F-I-V-E-A-C-T-S) */
+  /* 8 SPHERES (F-I-V-E-A-C-T-S) BRANDING */
   .sidebar-header { padding: 22px 14px 18px; text-align: center; border-bottom: 1px solid var(--border-line); }
   .dragon-balls-brand { display: flex; justify-content: center; align-items: center; gap: 4px; margin-bottom: 12px; }
   .dball {
     width: 28px; height: 28px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #ffea00, #f26522 75%, #882200 100%);
-    box-shadow: 0 0 6px rgba(255, 119, 0, 0.4), inset 0 -2px 4px rgba(0,0,0,0.6);
+    background: radial-gradient(circle at 35% 30%, #00f0ff, #0077ff 70%, #002266 100%);
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.5), inset 0 -2px 4px rgba(0,0,0,0.6);
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; font-weight: 900; color: #110500; font-family: var(--font-body);
-    transition: all 0.2s ease; cursor: pointer;
+    font-size: 0.8rem; font-weight: 900; color: #ffffff; font-family: var(--font-body);
+    transition: all 0.2s ease; cursor: pointer; text-shadow: 0 1px 2px rgba(0,0,0,0.8);
   }
   .dball:hover {
     transform: translateY(-3px) scale(1.15);
-    box-shadow: 0 0 12px #ffea00, inset 0 -1px 3px #ffffff;
+    box-shadow: 0 0 14px #00f0ff, inset 0 -1px 3px #ffffff;
   }
 
   .sidebar-header h1 {
     font-family: var(--font-head); font-size: 1.25rem; letter-spacing: 0.08em; color: var(--text-main);
     text-transform: uppercase;
   }
-  .sidebar-header .subtitle { font-size: 0.7rem; color: var(--paozu-gold-bright); margin-top: 4px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; }
+  .sidebar-header .subtitle { font-size: 0.7rem; color: var(--ocean-teal); margin-top: 4px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; }
 
   .view-selectors { padding: 14px 12px; border-bottom: 1px solid var(--border-line); }
   .view-btn {
-    width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(252, 247, 232, 0.03); border: 1px solid rgba(230, 161, 0, 0.2);
-    color: var(--paozu-parchment-dim); text-align: left; padding: 11px 14px; font-size: 0.86rem; font-weight: 600;
+    width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(252, 247, 232, 0.03); border: 1px solid rgba(0, 210, 255, 0.2);
+    color: var(--sand-parchment); text-align: left; padding: 11px 14px; font-size: 0.86rem; font-weight: 600;
     border-radius: 8px; cursor: pointer; margin-bottom: 6px; transition: all 0.2s ease;
     font-family: var(--font-body); position: relative; overflow: hidden;
   }
-  .view-btn .vi { font-size: 1.1rem; width: 1.4em; text-align: center; color: var(--paozu-gold-bright); }
+  .view-btn .vi { font-size: 1.1rem; width: 1.4em; text-align: center; color: var(--ocean-teal); }
   .view-btn:hover {
-    background: rgba(230, 161, 0, 0.12); color: var(--text-main); border-color: var(--paozu-gold);
+    background: rgba(0, 210, 255, 0.12); color: var(--text-main); border-color: var(--ocean-teal);
     transform: translateX(4px);
   }
   .view-btn.active {
-    background: linear-gradient(90deg, rgba(230, 161, 0, 0.25), rgba(242, 101, 34, 0.1));
-    color: var(--paozu-gold-bright); border-color: var(--paozu-gold);
+    background: linear-gradient(90deg, rgba(0, 210, 255, 0.25), rgba(0, 119, 255, 0.1));
+    color: var(--ocean-teal); border-color: var(--ocean-teal);
   }
   .view-btn.active::before {
-    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--paozu-gold-bright);
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--ocean-teal);
   }
 
   .nav-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin: 16px 16px 8px; font-weight: 800; }
@@ -215,10 +230,10 @@
     transition: all 0.18s ease; font-family: var(--font-body);
   }
   .nav-links button:hover {
-    background: rgba(0, 210, 255, 0.12); color: var(--paozu-azure); border-color: rgba(0, 210, 255, 0.3);
+    background: rgba(0, 210, 255, 0.12); color: var(--ocean-teal); border-color: rgba(0, 210, 255, 0.3);
     padding-left: 14px;
   }
-  .nav-links .cnt { color: var(--paozu-gold-bright); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); font-weight: 700; }
+  .nav-links .cnt { color: var(--ocean-teal); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); font-weight: 700; }
 
   .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
 
@@ -239,24 +254,24 @@
     border-bottom: 1px solid var(--border-line); padding-bottom: 10px; margin-bottom: 18px;
     display: flex; align-items: center; gap: 12px; flex-wrap: wrap; letter-spacing: 0.03em;
   }
-  .section-count { font-size: 0.75rem; font-weight: 800; color: var(--paozu-gold-bright); background: rgba(230, 161, 0, 0.15); border: 1px solid var(--border-line); padding: 2px 10px; border-radius: 12px; font-family: var(--font-body); }
-  .empty-state { color: var(--text-dim); font-size: 0.88rem; padding: 28px 20px; text-align: center; border: 1px dashed var(--border-line); border-radius: 10px; background: rgba(10, 20, 28, 0.6); backdrop-filter: blur(8px); }
+  .section-count { font-size: 0.75rem; font-weight: 800; color: var(--ocean-teal); background: rgba(0, 210, 255, 0.15); border: 1px solid var(--border-line); padding: 2px 10px; border-radius: 12px; font-family: var(--font-body); }
+  .empty-state { color: var(--text-dim); font-size: 0.88rem; padding: 28px 20px; text-align: center; border: 1px dashed var(--border-line); border-radius: 10px; background: rgba(8, 20, 32, 0.65); backdrop-filter: blur(8px); }
 
   /* ============================================================
      CARDS & SCROLLS
      ============================================================ */
   .card {
     position: relative; background: var(--card-bg);
-    border: 1px solid var(--border-line); border-left: 4px solid var(--paozu-gold); border-radius: 6px 12px 12px 6px;
+    border: 1px solid var(--border-line); border-left: 4px solid var(--ocean-teal); border-radius: 6px 12px 12px 6px;
     padding: 16px 18px; margin-bottom: 14px;
     display: flex; justify-content: space-between; align-items: center; gap: 18px;
     transition: all 0.22s ease; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 6px 22px rgba(0,0,0,0.6);
   }
   .card:hover, .card.highlighted {
-    background: rgba(20, 42, 34, 0.92); border-left-color: var(--paozu-gold-bright); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(230, 161, 0, 0.25);
+    background: rgba(18, 42, 60, 0.92); border-left-color: var(--sand-gold); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 210, 255, 0.25);
   }
-  .card.is-pinned { border-left-color: var(--paozu-orange); }
+  .card.is-pinned { border-left-color: var(--coral-orange); }
   .card-body { flex-grow: 1; min-width: 0; }
   .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
   .card-tag { display: inline-block; font-size: 0.62rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-main); letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.12); }
@@ -264,7 +279,7 @@
   .card-tag.mac { background: rgba(153, 51, 255, 0.25); color: #e0b3ff; border-color: rgba(153, 51, 255, 0.4); }
   .card-tag.linux { background: rgba(42, 90, 59, 0.4); color: #b3ffcc; border-color: rgba(42, 90, 59, 0.6); }
   .card-tag.critical { background: rgba(168, 32, 32, 0.35); color: #ff99aa; border-color: rgba(168, 32, 32, 0.6); }
-  .card-tag.hashi { background: rgba(242, 101, 34, 0.3); color: var(--paozu-gold-bright); border-color: rgba(242, 101, 34, 0.5); }
+  .card-tag.hashi { background: rgba(242, 101, 34, 0.3); color: var(--sand-gold); border-color: rgba(242, 101, 34, 0.5); }
 
   .message-text { font-size: 0.94rem; line-height: 1.65; white-space: pre-line; color: #fcf7e8; font-family: var(--font-body); font-weight: 500; }
 
@@ -273,23 +288,23 @@
     background: rgba(255,255,255,0.05); border: 1px solid var(--border-line); color: var(--text-dim);
     border-radius: 6px; padding: 6px 10px; font-size: 0.88rem; cursor: pointer; line-height: 1; transition: all 0.2s ease;
   }
-  .icon-btn:hover { background: rgba(230, 161, 0, 0.2); color: var(--paozu-gold-bright); border-color: var(--paozu-gold); }
-  .icon-btn.on { color: var(--paozu-gold-bright); border-color: var(--paozu-orange); background: rgba(242, 101, 34, 0.25); }
+  .icon-btn:hover { background: rgba(0, 210, 255, 0.2); color: var(--ocean-teal); border-color: var(--ocean-teal); }
+  .icon-btn.on { color: var(--sand-gold); border-color: var(--coral-orange); background: rgba(242, 101, 34, 0.25); }
   .icon-row { display: flex; gap: 6px; }
 
-  /* PAOZU SEAL BUTTONS */
+  /* SEAL BUTTONS */
   .seal-btn {
-    background: linear-gradient(135deg, var(--paozu-orange) 0%, var(--paozu-gold-bright) 100%);
-    color: #1a0800; border: none; padding: 10px 18px; border-radius: 50px;
+    background: linear-gradient(135deg, var(--ocean-teal) 0%, #0077ff 100%);
+    color: #020e1a; border: none; padding: 10px 18px; border-radius: 50px;
     cursor: pointer; font-size: 0.82rem; font-weight: 900; white-space: nowrap; min-width: 150px;
-    transition: all 0.2s ease; box-shadow: 0 4px 18px rgba(242, 101, 34, 0.35);
+    transition: all 0.2s ease; box-shadow: 0 4px 18px rgba(0, 210, 255, 0.35);
     font-family: var(--font-body); letter-spacing: 0.05em; text-align: center; text-transform: uppercase;
   }
-  .seal-btn:hover { transform: translateY(-2px) scale(1.03); filter: brightness(1.15); }
+  .seal-btn:hover { transform: translateY(-2px) scale(1.03); filter: brightness(1.15); box-shadow: 0 6px 24px rgba(0, 210, 255, 0.55); }
   .seal-btn.copied { background: linear-gradient(135deg, #00ff88 0%, #00aa44 100%); color: #021208; }
-  .seal-btn:focus-visible { outline: 2px solid var(--paozu-gold-bright); outline-offset: 2px; }
+  .seal-btn:focus-visible { outline: 2px solid var(--ocean-teal); outline-offset: 2px; }
 
-  .progress-check { width: 20px; height: 20px; accent-color: var(--paozu-gold); cursor: pointer; flex-shrink: 0; }
+  .progress-check { width: 20px; height: 20px; accent-color: var(--ocean-teal); cursor: pointer; flex-shrink: 0; }
 
   /* OS SUB-DROPDOWN FILTER FOR SYSTEM VERIFICATION */
   .os-subfilter-row { display: flex; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px dashed var(--border-line); }
@@ -297,34 +312,34 @@
     border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
     padding: 5px 12px; border-radius: 14px; font-size: 0.74rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease;
   }
-  .os-subchip:hover { border-color: var(--paozu-gold-bright); color: var(--text-main); }
-  .os-subchip.active { background: rgba(230, 161, 0, 0.25); color: var(--paozu-gold-bright); border-color: var(--paozu-gold); }
+  .os-subchip:hover { border-color: var(--ocean-teal); color: var(--text-main); }
+  .os-subchip.active { background: rgba(0, 210, 255, 0.25); color: var(--ocean-teal); border-color: var(--ocean-teal); }
 
   /* CHECK-IN QUICK PATH SELECTOR */
   .path-selector-box {
-    display: flex; gap: 10px; margin-bottom: 18px; padding: 12px 16px; background: rgba(10, 20, 28, 0.65);
+    display: flex; gap: 10px; margin-bottom: 18px; padding: 12px 16px; background: rgba(8, 20, 32, 0.65);
     border: 1px solid var(--border-line); border-radius: 10px; flex-wrap: wrap; align-items: center;
   }
   .path-btn {
     border: 1px solid var(--border-line); background: rgba(255,255,255,0.05); color: var(--text-main);
     padding: 8px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease;
   }
-  .path-btn:hover, .path-btn.active { background: rgba(230, 161, 0, 0.25); border-color: var(--paozu-gold-bright); color: var(--paozu-gold-bright); }
+  .path-btn:hover, .path-btn.active { background: rgba(0, 210, 255, 0.25); border-color: var(--ocean-teal); color: var(--ocean-teal); }
 
   /* SEARCH INPUT IN CANNED MESSAGES */
   .library-search-box { position: relative; margin-bottom: 22px; }
   .search-input {
     width: 100%; padding: 15px 24px; font-size: 0.98rem; border-radius: 12px;
-    border: 1px solid var(--border-line); background: rgba(10, 20, 28, 0.92); backdrop-filter: blur(14px);
+    border: 1px solid var(--border-line); background: rgba(8, 20, 32, 0.92); backdrop-filter: blur(14px);
     color: var(--text-main); outline: none; transition: all 0.25s ease; font-family: var(--font-body); font-weight: 600;
-    box-shadow: 0 6px 25px rgba(0,0,0,0.8), inset 0 0 12px rgba(230, 161, 0, 0.08);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.8), inset 0 0 12px rgba(0, 210, 255, 0.08);
   }
   .search-input::placeholder { color: var(--text-muted); letter-spacing: 0.05em; font-weight: 500; }
-  .search-input:focus { border-color: var(--paozu-gold-bright); box-shadow: 0 0 20px rgba(255, 208, 0, 0.35); }
+  .search-input:focus { border-color: var(--ocean-teal); box-shadow: 0 0 20px rgba(0, 210, 255, 0.35); }
 
   .suggestions-dropdown {
     position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
-    background: rgba(10, 20, 28, 0.96); border: 1px solid var(--paozu-gold-bright);
+    background: rgba(8, 20, 32, 0.96); border: 1px solid var(--ocean-teal);
     border-radius: 0 0 12px 12px; backdrop-filter: blur(16px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.9);
     max-height: 280px; overflow-y: auto; display: none; margin-top: 4px;
@@ -334,34 +349,34 @@
     display: flex; justify-content: space-between; align-items: center; gap: 10px;
     transition: all 0.18s ease; font-size: 0.85rem; color: var(--text-main);
   }
-  .suggestion-item:hover { background: rgba(230, 161, 0, 0.2); color: var(--paozu-gold-bright); padding-left: 22px; }
+  .suggestion-item:hover { background: rgba(0, 210, 255, 0.2); color: var(--ocean-teal); padding-left: 22px; }
   .suggestion-item .sug-cat {
-    font-size: 0.68rem; color: var(--paozu-gold); border: 1px solid var(--border-line);
+    font-size: 0.68rem; color: var(--ocean-teal); border: 1px solid var(--border-line);
     border-radius: 8px; padding: 2px 7px; flex-shrink: 0; font-weight: 700;
   }
-  .search-count { font-size: 0.78rem; color: var(--paozu-gold-bright); margin-top: 8px; min-height: 1em; font-weight: 700; }
+  .search-count { font-size: 0.78rem; color: var(--ocean-teal); margin-top: 8px; min-height: 1em; font-weight: 700; }
 
   /* ================= ACCORDION & DASHBOARD ================= */
   .accordion { border: 1px solid var(--border-line); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); scroll-margin-top: 100px; }
   .accordion summary {
     list-style: none; cursor: pointer; padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    background: linear-gradient(180deg, rgba(230, 161, 0, 0.12), rgba(230, 161, 0, 0.02));
+    background: linear-gradient(180deg, rgba(0, 210, 255, 0.12), rgba(0, 210, 255, 0.02));
     font-family: var(--font-head); font-size: 1.1rem; color: var(--text-main); letter-spacing: 0.04em;
   }
   .accordion summary::-webkit-details-marker { display: none; }
   .accordion summary .cat-left { display: flex; align-items: center; gap: 12px; }
   .accordion summary .cat-num {
-    width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--paozu-gold); color: var(--paozu-gold-bright);
+    width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--ocean-teal); color: var(--ocean-teal);
     display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-family: var(--font-body); font-weight: 900; flex-shrink: 0;
   }
   .accordion summary .cat-progress { font-size: 0.76rem; color: var(--text-dim); font-family: var(--font-body); font-weight: 700; }
-  .accordion summary .chevron { transition: transform 0.25s ease; color: var(--paozu-gold-bright); }
+  .accordion summary .chevron { transition: transform 0.25s ease; color: var(--ocean-teal); }
   .accordion[open] summary .chevron { transform: rotate(90deg); }
   .accordion-body { padding: 18px 20px 20px; }
 
   .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 28px; }
   .stat-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 18px; background: var(--panel-bg); text-align: center; backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
-  .stat-card .num { font-family: var(--font-head); font-size: 2rem; color: var(--paozu-gold-bright); font-weight: 700; }
+  .stat-card .num { font-family: var(--font-head); font-size: 2rem; color: var(--ocean-teal); font-weight: 700; }
   .stat-card .lbl { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; font-weight: 800; }
 
   .clock-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 18px 24px; background: var(--panel-bg); display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 28px; flex-wrap: wrap; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
@@ -374,8 +389,8 @@
     color: var(--text-main); cursor: pointer; text-align: left; font-size: 0.9rem; font-weight: 800;
     transition: all 0.2s ease; font-family: var(--font-body); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6);
   }
-  .quick-btn:hover { background: rgba(230, 161, 0, 0.15); border-color: var(--paozu-gold-bright); transform: translateY(-2px); }
-  .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--paozu-gold-bright); }
+  .quick-btn:hover { background: rgba(0, 210, 255, 0.15); border-color: var(--ocean-teal); transform: translateY(-2px); }
+  .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--ocean-teal); }
 
   .mini-list { display: flex; flex-direction: column; gap: 10px; }
   .mini-item {
@@ -383,25 +398,25 @@
     border: 1px solid var(--border-line); border-radius: 10px; padding: 12px 14px; background: var(--card-bg); font-size: 0.85rem; backdrop-filter: blur(10px);
   }
   .mini-item .txt { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #fcf7e8; }
-  .mini-item .cat-chip { font-size: 0.68rem; color: var(--paozu-gold-bright); border: 1px solid var(--border-line); border-radius: 10px; padding: 2px 8px; flex-shrink: 0; font-weight: 700; }
+  .mini-item .cat-chip { font-size: 0.68rem; color: var(--ocean-teal); border: 1px solid var(--border-line); border-radius: 10px; padding: 2px 8px; flex-shrink: 0; font-weight: 700; }
 
   /* ================= TABLES & GENERATOR ================= */
   .table-responsive { width: 100%; overflow-x: auto; background: var(--panel-bg); border: 1px solid var(--border-line); border-radius: 12px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
   table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.86rem; min-width: 840px; }
-  th { background: rgba(230, 161, 0, 0.15); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.05em; }
+  th { background: rgba(0, 210, 255, 0.15); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.05em; }
   td { padding: 12px 14px; border-bottom: 1px solid var(--border-soft); color: #fcf7e8; }
-  tbody tr:hover td { background: rgba(230, 161, 0, 0.08); }
+  tbody tr:hover td { background: rgba(0, 210, 255, 0.08); }
   tbody tr:last-child td { border-bottom: none; }
   .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
   .badge-minor { background: rgba(255,255,255,0.08); color: #fcf7e8; border: 1px solid rgba(255,255,255,0.18); }
   .badge-major { background: rgba(168, 32, 32, 0.35); color: #ff99aa; border: 1px solid rgba(168, 32, 32, 0.6); }
 
   .gen-panel { border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; background: var(--panel-bg); margin-bottom: 28px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
-  .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-line); background: rgba(6, 14, 20, 0.95); color: var(--text-main); font-size: 0.92rem; margin-bottom: 16px; font-family: var(--font-body); outline: none; font-weight: 600; }
-  .gen-select:focus { border-color: var(--paozu-gold-bright); box-shadow: 0 0 15px rgba(255, 208, 0, 0.3); }
+  .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-line); background: rgba(8, 20, 32, 0.95); color: var(--text-main); font-size: 0.92rem; margin-bottom: 16px; font-family: var(--font-body); outline: none; font-weight: 600; }
+  .gen-select:focus { border-color: var(--ocean-teal); box-shadow: 0 0 15px rgba(0, 210, 255, 0.3); }
   .gen-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
   .gen-card { border: 1px solid var(--border-line); border-radius: 10px; padding: 14px 16px; background: var(--card-bg); display: flex; flex-direction: column; justify-content: space-between; }
-  .gen-card h4 { font-family: var(--font-head); font-size: 0.9rem; color: var(--paozu-gold-bright); margin-bottom: 8px; letter-spacing: 0.03em; }
+  .gen-card h4 { font-family: var(--font-head); font-size: 0.9rem; color: var(--ocean-teal); margin-bottom: 8px; letter-spacing: 0.03em; }
   .gen-card p { font-size: 0.86rem; line-height: 1.55; color: #fcf7e8; margin-bottom: 12px; white-space: pre-line; }
 
   .filter-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
@@ -409,15 +424,15 @@
     border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
     padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease; font-family: var(--font-body);
   }
-  .filter-chip:hover { border-color: var(--paozu-gold-bright); color: var(--text-main); }
-  .filter-chip.active { background: rgba(230, 161, 0, 0.25); color: var(--paozu-gold-bright); border-color: var(--paozu-gold); }
+  .filter-chip:hover { border-color: var(--ocean-teal); color: var(--text-main); }
+  .filter-chip.active { background: rgba(0, 210, 255, 0.25); color: var(--ocean-teal); border-color: var(--ocean-teal); }
 
   .infraction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
   .infr-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 16px 18px; background: var(--card-bg); cursor: pointer; transition: all 0.2s ease; border-left: 4px solid var(--text-dim); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
-  .infr-card:hover { background: rgba(20, 42, 34, 0.92); transform: translateY(-2px); }
+  .infr-card:hover { background: rgba(18, 42, 60, 0.92); transform: translateY(-2px); }
   .infr-card.risk-green { border-left-color: #00ff88; }
-  .infr-card.risk-yellow { border-left-color: var(--paozu-gold-bright); }
-  .infr-card.risk-orange { border-left-color: var(--paozu-orange); }
+  .infr-card.risk-yellow { border-left-color: var(--sand-gold); }
+  .infr-card.risk-orange { border-left-color: var(--coral-orange); }
   .infr-card.risk-red { border-left-color: #ff3b30; }
   .infr-name { font-weight: 800; color: var(--text-main); margin-bottom: 6px; font-size: 0.95rem; }
   .infr-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 6px; font-weight: 700; }
@@ -430,7 +445,7 @@
   /* ================= TROUBLESHOOTING FLOW STYLES ================= */
   .trouble-section { margin-bottom: 30px; }
   .trouble-mode-header {
-    font-family: var(--font-head); font-size: 1.3rem; color: var(--paozu-gold-bright); border-bottom: 2px solid var(--border-line);
+    font-family: var(--font-head); font-size: 1.3rem; color: var(--ocean-teal); border-bottom: 2px solid var(--border-line);
     padding-bottom: 8px; margin: 24px 0 16px; text-transform: uppercase; letter-spacing: 0.06em;
   }
   .trouble-card {
@@ -439,13 +454,13 @@
   }
   .trouble-card h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; letter-spacing: 0.03em; }
   .flow-step {
-    border-left: 2px solid var(--paozu-gold-bright); padding-left: 16px; margin-bottom: 16px; position: relative;
+    border-left: 2px solid var(--ocean-teal); padding-left: 16px; margin-bottom: 16px; position: relative;
   }
-  .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--paozu-gold-bright); text-transform: uppercase; letter-spacing: 0.06em; }
+  .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--ocean-teal); text-transform: uppercase; letter-spacing: 0.06em; }
   .flow-step-title { font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin: 3px 0 5px; }
   .flow-step-action { font-size: 0.86rem; color: var(--text-dim); line-height: 1.45; margin-bottom: 8px; font-weight: 500; }
   .flow-step-spiel {
-    background: rgba(6, 14, 20, 0.75); border: 1px solid var(--border-line); border-radius: 8px; padding: 10px 12px;
+    background: rgba(8, 20, 32, 0.75); border: 1px solid var(--border-line); border-radius: 8px; padding: 10px 12px;
     font-size: 0.84rem; color: #fcf7e8; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
   }
 
@@ -466,8 +481,8 @@
 
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(230, 161, 0, 0.35); border-radius: 6px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(230, 161, 0, 0.6); }
+  ::-webkit-scrollbar-thumb { background: rgba(0, 210, 255, 0.35); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0, 210, 255, 0.6); }
 </style>
 </head>
 <body>
@@ -477,15 +492,28 @@
     <div class="scene-sky"></div>
     <div class="sky-clouds"></div>
     <div class="sun-glow"></div>
+    <div class="celestial-sun"></div>
+    <div class="celestial-moon"></div>
     <div class="sun-rays"></div>
+    <div class="rain-layer"></div>
     
-    <!-- Mount Paozu Layered Mountains -->
+    <!-- Mount Paozu Layered Mountains & Ocean -->
     <div class="scene-mountains">
       <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
         <polygon points="0,300 0,160 140,65 310,180 480,75 660,190 840,55 1020,165 1200,95 1200,300" fill="#0c231e"/>
         <polygon points="0,300 0,205 190,120 390,205 600,130 840,215 1040,140 1200,185 1200,300" fill="#133128" opacity=".92"/>
         <path d="M600,130 L605,300 L595,300 Z" fill="#00d2ff" opacity="0.65"/>
       </svg>
+    </div>
+
+    <!-- Moving Ocean Wave Base -->
+    <div class="scene-ocean">
+      <div class="ocean-water"></div>
+      <div class="ocean-waves">
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
+          <path d="M0,20 Q150,5 300,20 T600,20 T900,20 T1200,20 L1200,40 L0,40 Z" fill="rgba(0, 210, 255, 0.3)"/>
+        </svg>
+      </div>
     </div>
 
     <!-- Floating Kami's Lookout -->
@@ -518,16 +546,25 @@
       </svg>
     </div>
 
-    <!-- Goku & Chi-Chi's House (Mount Paozu Foreground) -->
-    <div class="paozu-house">
-      <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMax meet">
-        <g fill="#091814">
-          <path d="M30,130 Q100,40 170,130 Z" fill="#1b3d26"/>
-          <path d="M40,130 Q100,50 160,130 Z" fill="#0d2117"/>
-          <rect x="135" y="55" width="12" height="28" fill="#091814"/>
-          <path d="M141,50 Q148,35 142,20 Q150,10 145,0" stroke="rgba(252, 247, 232, 0.4)" stroke-width="3" fill="none"/>
-          <circle cx="100" cy="85" r="14" fill="#ffcc00" opacity="0.85"/>
-          <rect x="88" y="108" width="24" height="22" fill="#040e0b"/>
+    <!-- Ocean House & Swaying Trees (Foreground) -->
+    <div class="ocean-house-structure">
+      <svg viewBox="0 0 300 240" preserveAspectRatio="xMidYMax meet">
+        <!-- Swaying Coastal Trees -->
+        <g class="swaying-trees" stroke="#06121a" stroke-width="8" fill="none">
+          <path d="M40,240 Q30,170 10,100 M10,100 Q4,70 -10,40 M10,100 Q30,60 50,20"/>
+          <path d="M260,240 Q270,160 290,90 M290,90 Q300,50 310,10"/>
+        </g>
+        <g fill="#00ff88" opacity="0.4">
+          <circle cx="10" cy="40" r="30"/>
+          <circle cx="50" cy="20" r="25"/>
+          <circle cx="290" cy="90" r="35"/>
+        </g>
+        <!-- Coastal Sanctuary House -->
+        <g fill="#06121a">
+          <rect x="90" y="140" width="120" height="90" rx="4"/>
+          <polygon points="75,140 150,80 225,140"/>
+          <circle cx="150" cy="115" r="16" fill="#ffcc00" opacity="0.85"/>
+          <rect x="138" y="180" width="24" height="50" fill="#02070c"/>
         </g>
       </svg>
     </div>
@@ -638,113 +675,227 @@
           <h3>🎤 Audio &mdash; Microphone Not Working (Non-SEB)</h3>
           
           <div class="flow-step">
-            <div class="flow-step-num">Step 1 &amp; 2 &mdash; Start &amp; Browser Check</div>
+            <div class="flow-step-num">Step 1 &mdash; Browser Version Check</div>
             <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
-            <div class="flow-step-action">1. Start: Microphone not working.<br>2. Using Chrome or Edge? &bull; No &rarr; Switch browser. &bull; Yes &rarr; Continue to next step.</div>
+            <div class="flow-step-action">Check if candidate is on the latest version of Chrome or Edge.</div>
             <div class="flow-step-spiel">
-              <span>"Step 1: Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.\n\nStep 2: If you are using Google Chrome, and you are experiencing this issue, please switch to Microsoft Edge. If you are experiencing issues in Microsoft Edge, please switch to Google Chrome."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Step 1: Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.\n\nStep 2: If you are using Google Chrome, and you are experiencing this issue, please switch to Microsoft Edge. If you are experiencing issues in Microsoft Edge, please switch to Google Chrome.')">⚜ Copy</button>
+              <span>"Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 3 &mdash; Device Mute Settings</div>
-            <div class="flow-step-title">Mic Muted in Device Settings?</div>
-            <div class="flow-step-action">3. Mic muted in device settings? &bull; Yes &rarr; Unmute mic in settings. &bull; No &rarr; Continue to next step.</div>
+            <div class="flow-step-num">Step 2 &mdash; Company Device Check</div>
+            <div class="flow-step-title">Confirm Corporate vs. Personal Hardware Restrictions</div>
+            <div class="flow-step-action">Inquire whether candidate is using a company-issued device.</div>
             <div class="flow-step-spiel">
-              <span>"Please check for a microphone switch or button on your device or headset and make sure it is unmuted."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check for a microphone switch or button on your device or headset and make sure it is unmuted.')">⚜ Copy</button>
+              <span>"May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 4 &amp; 5 &mdash; Browser &amp; OS Permissions</div>
-            <div class="flow-step-title">Browser &amp; OS Microphone Permissions</div>
-            <div class="flow-step-action">4. Browser mic permission enabled? &bull; No &rarr; Allow mic in browser. &bull; Yes &rarr; Continue.<br>5. OS mic permission enabled? &bull; No &rarr; Enable in OS settings. &bull; Yes &rarr; Continue.</div>
+            <div class="flow-step-num">Step 3 &mdash; Browser Switch Test</div>
+            <div class="flow-step-title">Alternate Browser Isolation</div>
+            <div class="flow-step-action">Instruct candidate to switch between Chrome and Edge.</div>
             <div class="flow-step-spiel">
-              <span>"Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled.')">⚜ Copy</button>
+              <span>"If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 6 &amp; 7 &mdash; Input Device &amp; Corporate VPN</div>
-            <div class="flow-step-title">Select Correct Mic &amp; VPN / Company Device Check</div>
-            <div class="flow-step-action">6. Correct mic selected in browser? &bull; No &rarr; Select correct input device. &bull; Yes &rarr; Continue.<br>7. VPN or company device? &bull; Yes &rarr; Disable VPN or use personal machine. &bull; No &rarr; Continue.</div>
+            <div class="flow-step-num">Step 4 &mdash; Check Mute Settings</div>
+            <div class="flow-step-title">Hardware Switch &amp; Mute Inspection</div>
+            <div class="flow-step-action">Check physical headset switch or device mute setting.</div>
             <div class="flow-step-spiel">
-              <span>"Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled.')">⚜ Copy</button>
+              <span>"Please check your device and headset for any microphone mute buttons or switches and ensure that your microphone is unmuted."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check your device and headset for any microphone mute buttons or switches and ensure that your microphone is unmuted.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 8, 9, 10 &amp; 11 &mdash; Rejoin, Reboot &amp; Fallback</div>
-            <div class="flow-step-title">Rejoin Session, Reboot Machine, or Alternate Device</div>
-            <div class="flow-step-action">8. Ask candidate to rejoin (leave &amp; re-enter). &bull; Still failing &rarr; Continue.<br>9. Ask candidate to restart device (full reboot resets audio drivers). &bull; Done &rarr; Restart &amp; rejoin. &bull; Still failing &rarr; Continue.<br>10. Use a different device.<br>11. End Goal: Microphone issue resolved ✓</div>
+            <div class="flow-step-num">Step 5 &mdash; Browser Permission Check</div>
+            <div class="flow-step-title">Verify Lock Icon Browser Access</div>
+            <div class="flow-step-action">Check browser pad-lock permissions for microphone.</div>
             <div class="flow-step-spiel">
-              <span>"I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'I\'m no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared.')">⚜ Copy</button>
+              <span>"Please verify that your browser has permission to access your microphone."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your browser has permission to access your microphone.')">⚜ Copy</button>
             </div>
-            <div class="flow-step-spiel" style="margin-top:6px;">
-              <span>"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.')">⚜ Copy</button>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 6 &mdash; Operating System Permission Check</div>
+            <div class="flow-step-title">Verify System Privacy Settings</div>
+            <div class="flow-step-action">Confirm OS level microphone access settings.</div>
+            <div class="flow-step-spiel">
+              <span>"Please verify that your operating system allows applications and websites to access your microphone."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your operating system allows applications and websites to access your microphone.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 7 &mdash; Correct Microphone Selected</div>
+            <div class="flow-step-title">Hardware Device Selection</div>
+            <div class="flow-step-action">Ensure primary microphone input is selected.</div>
+            <div class="flow-step-spiel">
+              <span>"Please ensure that the correct microphone is selected in both your browser and system audio settings."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please ensure that the correct microphone is selected in both your browser and system audio settings.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 8 &mdash; VPN/Security Software Check</div>
+            <div class="flow-step-title">Disable Corporate Proxy &amp; ZScaler</div>
+            <div class="flow-step-action">Disable active network filtering software.</div>
+            <div class="flow-step-spiel">
+              <span>"Please disable any VPN, ZScaler, proxy, or similar security software that may be interfering with microphone access."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please disable any VPN, ZScaler, proxy, or similar security software that may be interfering with microphone access.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 9 &mdash; Rejoin Session</div>
+            <div class="flow-step-title">Re-enter Session from Dashboard</div>
+            <div class="flow-step-action">Re-launch exam session to trigger device re-detection.</div>
+            <div class="flow-step-spiel">
+              <span>"Please leave the session and rejoin from the exam dashboard so the system can re-detect your microphone settings."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please leave the session and rejoin from the exam dashboard so the system can re-detect your microphone settings.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 10 &mdash; Restart Device</div>
+            <div class="flow-step-title">Full Computer Reboot</div>
+            <div class="flow-step-action">Restart system to reset media drivers.</div>
+            <div class="flow-step-spiel">
+              <span>"Please perform a full restart of your device and rejoin the exam session."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please perform a full restart of your device and rejoin the exam session.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 11 &mdash; Alternate Device / Escalation</div>
+            <div class="flow-step-title">Secondary Hardware or Support Ticket</div>
+            <div class="flow-step-action">Use fallback machine or contact support@certiverse.com.</div>
+            <div class="flow-step-spiel">
+              <span>"If available, please try using another personal device. If the issue continues, please contact support@certiverse.com for further assistance."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If available, please try using another personal device. If the issue continues, please contact support@certiverse.com for further assistance.')">⚜ Copy</button>
             </div>
           </div>
         </div>
 
         <!-- Non-SEB Screen Sharing -->
         <div class="trouble-card">
-          <h3>🖥️ Screen Sharing &mdash; Can't Share Screen (Non-SEB)</h3>
+          <h3>🖥️ Screen Sharing &mdash; Unable to Share Screen (Non-SEB)</h3>
           
           <div class="flow-step">
-            <div class="flow-step-num">Step 1 &amp; 2 &mdash; Start &amp; Browser Compatibility</div>
-            <div class="flow-step-title">Browser Verification</div>
-            <div class="flow-step-action">1. Start: Can't share screen.<br>2. Using Chrome or Edge? &bull; No &rarr; Switch browser. &bull; Yes &rarr; Continue.</div>
+            <div class="flow-step-num">Step 1 &mdash; Browser Version Check</div>
+            <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
+            <div class="flow-step-action">Confirm browser version compatibility.</div>
             <div class="flow-step-spiel">
-              <span>"Step 1: Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.\n\nStep 2: If you are using Google Chrome, and you are experiencing this issue, please switch to Microsoft Edge. If you are experiencing issues in Microsoft Edge, please switch to Google Chrome."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Step 1: Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.\n\nStep 2: If you are using Google Chrome, and you are experiencing this issue, please switch to Microsoft Edge. If you are experiencing issues in Microsoft Edge, please switch to Google Chrome.')">⚜ Copy</button>
+              <span>"Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 3, 4 &amp; 5 &mdash; Permissions, Displays &amp; Devices</div>
-            <div class="flow-step-title">OS Screen Permissions &amp; Disconnect Secondary Displays</div>
-            <div class="flow-step-action">3. Browser permissions enabled? &bull; No &rarr; Enable in OS settings.<br>4. Using dual monitors? &bull; Yes &rarr; Disconnect 2nd monitor.<br>5. Device Settings Enabled Check.</div>
+            <div class="flow-step-num">Step 2 &mdash; Company Device Check</div>
+            <div class="flow-step-title">Confirm Corporate Security Restrictions</div>
+            <div class="flow-step-action">Check if device is managed by corporate policies.</div>
+            <div class="flow-step-spiel">
+              <span>"May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 3 &mdash; Browser Switch Test</div>
+            <div class="flow-step-title">Alternate Browser Test</div>
+            <div class="flow-step-action">Switch from Chrome to Edge or vice versa.</div>
+            <div class="flow-step-spiel">
+              <span>"If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 4 &mdash; Screen-Sharing Permissions</div>
+            <div class="flow-step-title">Browser &amp; OS Screen Recording Settings</div>
+            <div class="flow-step-action">Check macOS Privacy Screen Recording or Windows permissions.</div>
+            <div class="flow-step-spiel">
+              <span>"Please verify that screen-sharing permissions are enabled in both your browser and operating system settings."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that screen-sharing permissions are enabled in both your browser and operating system settings.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 5 &mdash; Multiple Monitor Check</div>
+            <div class="flow-step-title">Disconnect Secondary Monitors</div>
+            <div class="flow-step-action">Physically unplug external displays.</div>
+            <div class="flow-step-spiel">
+              <span>"If you are using multiple monitors or external displays, please disconnect them and use only one monitor during the exam."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are using multiple monitors or external displays, please disconnect them and use only one monitor during the exam.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 6 &mdash; Device Permission Verification</div>
+            <div class="flow-step-title">All System Permissions Check</div>
+            <div class="flow-step-action">Confirm full device permission access.</div>
             <div class="flow-step-spiel">
               <span>"Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled."</span>
               <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled.')">⚜ Copy</button>
             </div>
-            <div class="flow-step-spiel" style="margin-top:6px;">
-              <span>"Disconnect any external or extended monitors and use only one screen."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Disconnect any external or extended monitors and use only one screen.')">⚜ Copy</button>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 7 &mdash; VPN/Security Software Check</div>
+            <div class="flow-step-title">Disable Blocking VPN Software</div>
+            <div class="flow-step-action">Turn off VPNs or proxies.</div>
+            <div class="flow-step-spiel">
+              <span>"Please disable any VPN, proxy, ZScaler, or corporate security software that may be preventing screen sharing."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please disable any VPN, proxy, ZScaler, or corporate security software that may be preventing screen sharing.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 6 &amp; 7 &mdash; VPN &amp; Network Switching</div>
-            <div class="flow-step-title">Disable Corporate VPN / Try Alternate Wi-Fi or Hotspot</div>
-            <div class="flow-step-action">5. VPN or company device? &bull; Yes &rarr; Disable VPN or use personal machine.<br>6. Try a different network (switch to hotspot or Wi-Fi).</div>
+            <div class="flow-step-num">Step 8 &mdash; Network Test</div>
+            <div class="flow-step-title">Switch Network / Mobile Hotspot</div>
+            <div class="flow-step-action">Try connecting to an alternate network or mobile hotspot.</div>
             <div class="flow-step-spiel">
-              <span>"Make sure any VPN or proxy connection is turned off."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Make sure any VPN or proxy connection is turned off.')">⚜ Copy</button>
-            </div>
-            <div class="flow-step-spiel" style="margin-top:6px;">
-              <span>"It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network.')">⚜ Copy</button>
+              <span>"If possible, please switch to a different internet connection, such as another Wi-Fi network or a mobile hotspot."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If possible, please switch to a different internet connection, such as another Wi-Fi network or a mobile hotspot.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 8, 9, 10 &amp; 11 &mdash; Rejoin, Reboot &amp; Fallback</div>
-            <div class="flow-step-title">Re-enter Session / Full Device Restart / Alternate Hardware</div>
-            <div class="flow-step-action">7. Ask candidate to rejoin.<br>8. Ask candidate to restart device.<br>9. Use a different device.<br>10. End Goal: Screen sharing resolved ✓</div>
+            <div class="flow-step-num">Step 9 &mdash; Rejoin Session</div>
+            <div class="flow-step-title">Close &amp; Relaunch Session</div>
+            <div class="flow-step-action">Relaunch exam from candidate dashboard.</div>
             <div class="flow-step-spiel">
-              <span>"Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?"</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?')">⚜ Copy</button>
+              <span>"Please close the session and launch it again from the exam dashboard."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please close the session and launch it again from the exam dashboard.')">⚜ Copy</button>
             </div>
-            <div class="flow-step-spiel" style="margin-top:6px;">
-              <span>"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.')">⚜ Copy</button>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 10 &mdash; Restart Device</div>
+            <div class="flow-step-title">Restart System &amp; Rejoin</div>
+            <div class="flow-step-action">Restart machine to clear display permissions.</div>
+            <div class="flow-step-spiel">
+              <span>"Please restart your device and attempt screen sharing again after rejoining the exam."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please restart your device and attempt screen sharing again after rejoining the exam.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 11 &mdash; Alternate Device / Escalation</div>
+            <div class="flow-step-title">Secondary Machine or Support Contact</div>
+            <div class="flow-step-action">Use another personal device or contact support@certiverse.com.</div>
+            <div class="flow-step-spiel">
+              <span>"If another personal device is available, please test from that device. If the issue persists, please contact support@certiverse.com for further assistance."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If another personal device is available, please test from that device. If the issue persists, please contact support@certiverse.com for further assistance.')">⚜ Copy</button>
             </div>
           </div>
         </div>
@@ -754,40 +905,112 @@
           <h3>📷 Video &mdash; Camera Not Working (Non-SEB)</h3>
           
           <div class="flow-step">
-            <div class="flow-step-num">Step 1, 2 &amp; 3 &mdash; Physical Switch &amp; Shutter</div>
-            <div class="flow-step-title">Hardware Camera Switch or Slider Privacy Cover</div>
-            <div class="flow-step-action">1. Start: Camera not working.<br>2. Using Chrome or Edge? &bull; No &rarr; Switch browser.<br>3. Camera covered or physically off? &bull; Yes &rarr; Uncover or enable camera switch. &bull; No &rarr; Continue.</div>
+            <div class="flow-step-num">Step 1 &mdash; Browser Version Check</div>
+            <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
+            <div class="flow-step-action">Confirm browser compatibility.</div>
             <div class="flow-step-spiel">
-              <span>"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open.')">⚜ Copy</button>
+              <span>"Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 4, 5 &amp; 6 &mdash; Permissions &amp; VPN Check</div>
-            <div class="flow-step-title">Browser &amp; OS Camera Permissions / Close Secondary Apps</div>
-            <div class="flow-step-action">4. Browser camera permission enabled?<br>5. OS camera permission enabled?<br>6. VPN or company device?</div>
+            <div class="flow-step-num">Step 2 &mdash; Company Device Check</div>
+            <div class="flow-step-title">Confirm Corporate Device Restrictions</div>
+            <div class="flow-step-action">Check for corporate policy restrictions.</div>
             <div class="flow-step-spiel">
-              <span>"Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled.')">⚜ Copy</button>
-            </div>
-            <div class="flow-step-spiel" style="margin-top:6px;">
-              <span>"Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs.')">⚜ Copy</button>
+              <span>"May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam.')">⚜ Copy</button>
             </div>
           </div>
 
           <div class="flow-step">
-            <div class="flow-step-num">Step 7, 8, 9, 10 &amp; 11 &mdash; Rejoin, Reboot &amp; Fallback</div>
-            <div class="flow-step-title">Refresh Browser / Reboot System / Escalation</div>
-            <div class="flow-step-action">7. Try a different network.<br>8. Ask candidate to rejoin.<br>9. Ask candidate to restart device.<br>10. Use a different device.<br>11. End Goal: Camera issue resolved ✓</div>
+            <div class="flow-step-num">Step 3 &mdash; Browser Switch Test</div>
+            <div class="flow-step-title">Test Alternate Browser</div>
+            <div class="flow-step-action">Switch Chrome &harr; Edge.</div>
             <div class="flow-step-spiel">
-              <span>"Please click the refresh button on the top left side of the screen."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please click the refresh button on the top left side of the screen.')">⚜ Copy</button>
+              <span>"If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again.')">⚜ Copy</button>
             </div>
-            <div class="flow-step-spiel" style="margin-top:6px;">
-              <span>"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.')">⚜ Copy</button>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 4 &mdash; Physical Camera Check</div>
+            <div class="flow-step-title">Check Privacy Shutter &amp; Hardware Switch</div>
+            <div class="flow-step-action">Inspect camera shutter, switch, or function key.</div>
+            <div class="flow-step-spiel">
+              <span>"Please check whether your device has a camera privacy shutter, physical switch, or camera disable button. If it does, make sure the camera is enabled and uncovered."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check whether your device has a camera privacy shutter, physical switch, or camera disable button. If it does, make sure the camera is enabled and uncovered.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 5 &mdash; Browser Camera Permission</div>
+            <div class="flow-step-title">Verify Lock Icon Permissions</div>
+            <div class="flow-step-action">Allow camera in browser permissions popup.</div>
+            <div class="flow-step-spiel">
+              <span>"Please verify that your browser has permission to access your camera."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your browser has permission to access your camera.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 6 &mdash; Operating System Camera Permission</div>
+            <div class="flow-step-title">Verify OS Camera Privacy Access</div>
+            <div class="flow-step-action">Allow camera in Windows/Mac OS privacy settings.</div>
+            <div class="flow-step-spiel">
+              <span>"Please verify that your operating system allows applications and websites to access your camera."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your operating system allows applications and websites to access your camera.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 7 &mdash; Close Other Applications</div>
+            <div class="flow-step-title">Close Conflicting Applications (Zoom, Teams, Skype)</div>
+            <div class="flow-step-action">Close secondary apps utilizing camera hardware.</div>
+            <div class="flow-step-spiel">
+              <span>"Please close any applications that may currently be using your camera, such as Zoom, Microsoft Teams, Google Meet, Skype, Discord, or similar programs."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please close any applications that may currently be using your camera, such as Zoom, Microsoft Teams, Google Meet, Skype, Discord, or similar programs.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 8 &mdash; VPN/Security Software Check</div>
+            <div class="flow-step-title">Disable Network VPN / ZScaler</div>
+            <div class="flow-step-action">Turn off VPN or proxy software.</div>
+            <div class="flow-step-spiel">
+              <span>"Please disable any VPN, proxy, ZScaler, or similar security software that may interfere with camera access."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please disable any VPN, proxy, ZScaler, or similar security software that may interfere with camera access.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 9 &mdash; Network Test</div>
+            <div class="flow-step-title">Switch Wi-Fi Connection / Hotspot</div>
+            <div class="flow-step-action">Connect to an alternate network.</div>
+            <div class="flow-step-spiel">
+              <span>"If possible, please switch to another internet connection and test your camera again."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If possible, please switch to another internet connection and test your camera again.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 10 &mdash; Rejoin / Restart</div>
+            <div class="flow-step-title">Full Computer Reboot &amp; Rejoin</div>
+            <div class="flow-step-action">Restart computer to reset capture drivers.</div>
+            <div class="flow-step-spiel">
+              <span>"Please leave the session, restart your device, and then rejoin the exam from the dashboard."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please leave the session, restart your device, and then rejoin the exam from the dashboard.')">⚜ Copy</button>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">Step 11 &mdash; Alternate Device / Escalation</div>
+            <div class="flow-step-title">Secondary Machine or Support Ticket</div>
+            <div class="flow-step-action">Use fallback machine or contact support@certiverse.com.</div>
+            <div class="flow-step-spiel">
+              <span>"If another personal device is available, please try using it to access the exam. If the issue continues, please contact support@certiverse.com for further assistance."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If another personal device is available, please try using it to access the exam. If the issue continues, please contact support@certiverse.com for further assistance.')">⚜ Copy</button>
             </div>
           </div>
         </div>
@@ -833,8 +1056,8 @@
             <div class="flow-step-title">Re-launch SEB or Escalate to Support</div>
             <div class="flow-step-action">Re-launch SEB session. If version error persists, refer candidate to support@certiverse.com.</div>
             <div class="flow-step-spiel">
-              <span>"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."</span>
-              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.')">⚜ Copy</button>
+              <span>"If another personal device is available, please try using it to access the exam. If the issue continues, please contact support@certiverse.com for further assistance."</span>
+              <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If another personal device is available, please try using it to access the exam. If the issue continues, please contact support@certiverse.com for further assistance.')">⚜ Copy</button>
             </div>
           </div>
         </div>
