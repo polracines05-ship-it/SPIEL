@@ -44,7 +44,7 @@
   }
 
   /* ============================================================
-     BACKGROUND ENGINE — EDO KYOTO SAMURAI DISTRICT
+     DYNAMIC 20-SECOND DAY-NIGHT SKY ENGINE
      ============================================================ */
   .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
   
@@ -54,7 +54,7 @@
   }
 
   @keyframes celestialCycle {
-    0%, 100% { background: linear-gradient(180deg, #1d0f28 0%, #4a2143 35%, #8c3b4f 70%, #d96b43 100%); }
+    0%, 100% { background: linear-gradient(180deg, #1d0f28 0%, #4a2143 35%, #8c3b54 70%, #d96b43 100%); }
     16.6%    { background: linear-gradient(180deg, #103c61 0%, #1e6992 35%, #4ea3c8 70%, #9be1eb 100%); }
     33.3%    { background: linear-gradient(180deg, #092c48 0%, #114b73 35%, #2a87b3 70%, #76d0f0 100%); }
     50%      { background: linear-gradient(180deg, #160a24 0%, #451034 35%, #822234 70%, #df5720 100%); }
@@ -62,6 +62,7 @@
     83.3%    { background: linear-gradient(180deg, #010308 0%, #030712 35%, #050d1f 70%, #020610 100%); }
   }
 
+  /* Heavenly Sun & Moon Sync */
   .sun-glow {
     position: absolute; top: 2%; right: 12%; width: 420px; height: 420px; border-radius: 50%;
     animation: sunGlowCycle 20s ease-in-out infinite;
@@ -77,6 +78,12 @@
     83.3%    { background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, rgba(5, 13, 31, 0.08) 50%, transparent 75%); }
   }
 
+  .sun-rays {
+    position: absolute; top: 0; right: 10%; width: 70%; height: 100%;
+    background: linear-gradient(135deg, transparent 35%, rgba(255, 208, 0, 0.05) 48%, rgba(255, 255, 255, 0.03) 52%, transparent 65%);
+    transform: rotate(-12deg);
+  }
+
   .sky-clouds {
     position: absolute; inset: 0;
     background: 
@@ -89,14 +96,51 @@
     100% { transform: translateX(40px) scale(1.05); }
   }
 
-  .scene-mountains { position: absolute; left: 0; right: 0; bottom: 0; height: 55%; opacity: 0.92; }
+  /* Distant Mountain Ranges */
+  .scene-mountains { position: absolute; left: 0; right: 0; bottom: 10%; height: 52%; opacity: 0.92; }
   .scene-mountains svg { width: 100%; height: 100%; display: block; }
 
+  /* Floating Kami's Lookout */
+  .lookout-floating {
+    position: absolute; right: 12%; top: 8%; width: 260px; height: 180px; opacity: 0.85;
+    filter: drop-shadow(0 0 15px rgba(255, 208, 0, 0.25));
+    animation: lookoutDrift 16s ease-in-out infinite alternate;
+  }
+  @keyframes lookoutDrift { 0% { transform: translateY(0); } 100% { transform: translateY(-14px); } }
+
+  /* Guardian Shenron in Clouds */
+  .shenron-clouds {
+    position: absolute; left: 15%; top: 6%; width: 620px; height: 320px; opacity: 0.45;
+    filter: drop-shadow(0 0 20px rgba(0, 210, 255, 0.25));
+    animation: shenronGlide 30s ease-in-out infinite alternate;
+  }
+  @keyframes shenronGlide { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-20px) scale(1.04); } }
+
+  /* Flying Nimbus & Goku */
+  .nimbus-goku {
+    position: absolute; left: -160px; top: 22%; width: 150px; height: 75px; opacity: 0.9;
+    filter: drop-shadow(0 0 12px rgba(255, 208, 0, 0.6));
+    animation: nimbusSailing 38s linear infinite;
+  }
+  @keyframes nimbusSailing {
+    0% { transform: translateX(0) translateY(0); opacity: 0; }
+    5% { opacity: 0.95; }
+    90% { opacity: 0.95; }
+    100% { transform: translateX(calc(100vw + 350px)) translateY(-60px); opacity: 0; }
+  }
+
+  /* EXPANDED KYOTO MACHIYA HOUSES & LANTERN POSTS (FOREGROUND) */
   .kyoto-streetscape {
-    position: absolute; left: 0; right: 0; bottom: 0; height: 340px; opacity: 0.96;
+    position: absolute; left: 0; right: 0; bottom: 0; height: 320px; opacity: 0.96;
     filter: drop-shadow(0 0 25px rgba(0,0,0,0.9));
   }
   .kyoto-streetscape svg { width: 100%; height: 100%; display: block; }
+
+  .swaying-pines {
+    transform-origin: bottom center;
+    animation: pineWind 6s ease-in-out infinite alternate;
+  }
+  @keyframes pineWind { 0% { transform: rotate(0deg); } 100% { transform: rotate(2.8deg); } }
 
   .scene-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 220px 60px rgba(3, 8, 14, 0.75); }
   #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
@@ -173,12 +217,13 @@
   .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
 
   /* ============================================================
-     MAIN CONTENT & TOP HEADER BAR
+     MAIN CONTENT & TOP HEADER RELOCATED TIME CLOCK
      ============================================================ */
   .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 22px 38px 60px; min-width: 0; }
 
+  /* TOP HEADER BAR WITH RELOCATED CLOCK AND FIVEACTS BADGE */
   .top-header-bar {
-    display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 16px;
+    display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 22px;
     background: rgba(18, 14, 12, 0.85); border: 1px solid var(--border-line); border-radius: 12px;
     padding: 10px 20px; backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.6);
   }
@@ -187,6 +232,7 @@
   .top-clock-time { font-family: var(--font-head); font-size: 1.35rem; color: var(--imperial-gold); letter-spacing: 0.05em; font-weight: 700; }
   .top-clock-date { font-size: 0.82rem; color: var(--text-dim); font-weight: 600; }
 
+  /* FIVEACTS LOGO BADGE */
   .fiveacts-logo-badge { display: flex; align-items: center; flex-shrink: 0; }
   .fiveacts-logo-slant {
     background: #00c853; color: #ffffff; font-family: var(--font-head);
@@ -200,49 +246,77 @@
     color: #ffffff; letter-spacing: 0.06em; margin-left: 8px; text-transform: uppercase;
   }
 
-  .news-ticker-container {
-    display: flex; align-items: center; background: rgba(178, 34, 34, 0.85);
-    border: 1px solid var(--imperial-gold); border-radius: 10px; overflow: hidden;
-    margin-bottom: 22px; backdrop-filter: blur(10px); box-shadow: 0 4px 18px rgba(0,0,0,0.6);
-  }
-  .news-badge {
-    background: var(--imperial-gold); color: #121212; font-family: var(--font-head);
-    font-weight: 900; font-size: 0.85rem; padding: 8px 16px; text-transform: uppercase;
-    letter-spacing: 0.08em; flex-shrink: 0; z-index: 2; box-shadow: 4px 0 12px rgba(0,0,0,0.4);
-  }
-  .news-marquee-wrap { overflow: hidden; flex-grow: 1; position: relative; white-space: nowrap; }
-  .news-marquee-text {
-    display: inline-block; padding-left: 100%; font-size: 0.92rem; font-weight: 700;
-    color: #ffffff; animation: marqueeSideways 22s linear infinite; letter-spacing: 0.04em;
-  }
-  @keyframes marqueeSideways { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-
   .dashboard-view { display: none; }
   .dashboard-view.active { display: block; }
 
   .page-title { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); margin-bottom: 4px; letter-spacing: 0.04em; text-transform: uppercase; }
   .page-sub { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; font-weight: 500; }
 
-  /* CIRCULAR STAT BUTTONS */
-  .stat-grid-circles {
-    display: flex; justify-content: space-around; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 30px;
+  /* ================= ORGANIZATIONAL CHART ================= */
+  .org-chart-container {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-line);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 28px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.7);
   }
-  .stat-circle-btn {
-    background: var(--panel-bg); border: 2px solid var(--border-line); border-radius: 50%;
-    width: 125px; height: 125px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.25s ease; backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-    position: relative; text-decoration: none; padding: 12px;
+  .org-tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    overflow-x: auto;
+    padding: 10px 0;
   }
-  .stat-circle-btn:hover {
-    transform: translateY(-4px) scale(1.06); border-color: var(--imperial-gold);
-    box-shadow: 0 8px 25px rgba(244, 197, 66, 0.4); background: rgba(36, 28, 22, 0.95);
+  .org-node {
+    background: var(--card-bg);
+    border: 1px solid var(--border-line);
+    border-left: 4px solid var(--imperial-gold);
+    border-radius: 8px;
+    padding: 12px 18px;
+    text-align: center;
+    min-width: 180px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: all 0.2s ease;
   }
-  .stat-circle-num {
-    font-family: var(--font-head); font-size: 2rem; color: var(--imperial-gold); font-weight: 700; line-height: 1;
+  .org-node:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(244, 197, 66, 0.25);
   }
-  .stat-circle-lbl {
-    font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px;
-    font-weight: 800; text-align: center; line-height: 1.25;
+  .org-node.root {
+    border-left-color: var(--clan-red);
+    background: linear-gradient(135deg, rgba(36, 28, 22, 0.95), rgba(178, 34, 34, 0.25));
+  }
+  .org-node.lead {
+    border-left-color: var(--lantern-orange);
+  }
+  .org-title {
+    font-family: var(--font-head);
+    font-size: 0.95rem;
+    color: var(--imperial-gold);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .org-name {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    font-weight: 600;
+  }
+  .org-connector-v {
+    width: 2px;
+    height: 20px;
+    background: var(--border-line);
+  }
+  .org-level-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    width: 100%;
   }
 
   .section-container { margin-bottom: 30px; scroll-margin-top: 90px; }
@@ -351,71 +425,6 @@
   }
   .search-count { font-size: 0.78rem; color: var(--imperial-gold); margin-top: 8px; min-height: 1em; font-weight: 700; }
 
-  /* ================= ORGANIZATIONAL CHART STYLES (CLEAN NAME & ROLE CARDS) ================= */
-  .org-chart-container {
-    border: 1px solid var(--border-line); border-radius: 14px; padding: 28px 20px;
-    background: var(--panel-bg); backdrop-filter: blur(12px); box-shadow: 0 8px 30px rgba(0,0,0,0.7);
-    margin-top: 30px; overflow-x: auto;
-  }
-  .org-tree {
-    display: flex; flex-direction: column; align-items: center; gap: 24px; min-width: 900px;
-  }
-  .org-group-title {
-    font-size: 0.72rem; font-weight: 900; color: var(--text-muted); text-transform: uppercase;
-    letter-spacing: 0.14em; text-align: center; margin-bottom: 12px;
-  }
-  .org-card {
-    background: var(--card-bg); border: 1px solid var(--border-line); border-radius: 10px;
-    padding: 12px 18px; display: flex; flex-direction: column; justify-content: center; gap: 3px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5); min-width: 200px; transition: transform 0.2s, border-color 0.2s;
-  }
-  .org-card:hover { transform: translateY(-2px); border-color: var(--imperial-gold); }
-
-  .org-role { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--imperial-gold); }
-  .org-name { font-family: var(--font-head); font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-top: 1px; }
-
-  /* Tree Line Connectors */
-  .org-line-v { width: 2px; height: 20px; background: var(--border-line); }
-  .org-teams-row {
-    display: flex; justify-content: center; gap: 20px; width: 100%; align-items: flex-start; position: relative;
-  }
-  .org-team-box {
-    border: 1px solid var(--border-soft); border-radius: 12px; padding: 16px;
-    background: rgba(18, 14, 12, 0.65); display: flex; flex-direction: column; gap: 8px; flex: 1; max-width: 380px;
-  }
-  .org-team-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .org-team-badge {
-    background: rgba(244, 197, 66, 0.2); border: 1px solid var(--imperial-gold); color: var(--imperial-gold);
-    font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px;
-  }
-  .org-members-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
-  /* INFRACTION THRESHOLD CENTER STYLES */
-  .infraction-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    gap: 14px;
-  }
-  .infr-card {
-    border: 1px solid var(--border-line);
-    border-radius: 12px;
-    padding: 16px 18px;
-    background: var(--card-bg);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-left: 4px solid var(--text-dim);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-  }
-  .infr-card:hover {
-    background: rgba(36, 28, 22, 0.92);
-    transform: translateY(-2px);
-  }
-  .infr-card.risk-green { border-left-color: #00ff88; }
-  .infr-card.risk-yellow { border-left-color: var(--imperial-gold); }
-  .infr-card.risk-orange { border-left-color: var(--lantern-orange); }
-  .infr-card.risk-red { border-left-color: #ff3b30; }
-
   /* ================= ACCORDION & DASHBOARD ================= */
   .accordion { border: 1px solid var(--border-line); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); scroll-margin-top: 100px; }
   .accordion summary {
@@ -443,6 +452,70 @@
   .quick-btn:hover { background: rgba(244, 197, 66, 0.15); border-color: var(--imperial-gold); transform: translateY(-2px); }
   .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--imperial-gold); }
 
+  /* ================= TABLES & GENERATOR ================= */
+  .table-responsive { width: 100%; overflow-x: auto; background: var(--panel-bg); border: 1px solid var(--border-line); border-radius: 12px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.86rem; min-width: 840px; }
+  th { background: rgba(244, 197, 66, 0.15); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.05em; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border-soft); color: #F8EFD5; }
+  tbody tr:hover td { background: rgba(244, 197, 66, 0.08); }
+  tbody tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+  .badge-minor { background: rgba(255,255,255,0.08); color: #F8EFD5; border: 1px solid rgba(255,255,255,0.18); }
+  .badge-major { background: rgba(178, 34, 34, 0.35); color: #ff99aa; border: 1px solid rgba(178, 34, 34, 0.6); }
+
+  .gen-panel { border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; background: var(--panel-bg); margin-bottom: 28px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-line); background: rgba(18, 14, 12, 0.95); color: var(--text-main); font-size: 0.92rem; margin-bottom: 16px; font-family: var(--font-body); outline: none; font-weight: 600; }
+  .gen-select:focus { border-color: var(--imperial-gold); box-shadow: 0 0 15px rgba(244, 197, 66, 0.3); }
+  .gen-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+  .gen-card { border: 1px solid var(--border-line); border-radius: 10px; padding: 14px 16px; background: var(--card-bg); display: flex; flex-direction: column; justify-content: space-between; }
+  .gen-card h4 { font-family: var(--font-head); font-size: 0.9rem; color: var(--imperial-gold); margin-bottom: 8px; letter-spacing: 0.03em; }
+  .gen-card p { font-size: 0.86rem; line-height: 1.55; color: #F8EFD5; margin-bottom: 12px; white-space: pre-line; }
+
+  .filter-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  .filter-chip {
+    border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
+    padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease; font-family: var(--font-body);
+  }
+  .filter-chip:hover { border-color: var(--imperial-gold); color: var(--text-main); }
+  .filter-chip.active { background: rgba(244, 197, 66, 0.25); color: var(--imperial-gold); border-color: var(--imperial-gold); }
+
+  .infraction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
+  .infr-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 16px 18px; background: var(--card-bg); cursor: pointer; transition: all 0.2s ease; border-left: 4px solid var(--text-dim); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+  .infr-card:hover { background: rgba(36, 28, 22, 0.92); transform: translateY(-2px); }
+  .infr-card.risk-green { border-left-color: #00ff88; }
+  .infr-card.risk-yellow { border-left-color: var(--imperial-gold); }
+  .infr-card.risk-orange { border-left-color: var(--lantern-orange); }
+  .infr-card.risk-red { border-left-color: #ff3b30; }
+  .infr-name { font-weight: 800; color: var(--text-main); margin-bottom: 6px; font-size: 0.95rem; }
+  .infr-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 6px; font-weight: 700; }
+  .infr-threshold { font-size: 0.74rem; color: var(--text-dim); }
+  .infr-detail { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-line); font-size: 0.85rem; line-height: 1.55; display: none; }
+  .infr-card.expanded .infr-detail { display: block; }
+  .risk-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.76rem; color: var(--text-dim); margin-bottom: 18px; align-items: center; font-weight: 700; }
+  .risk-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+
+  /* ================= TROUBLESHOOTING FLOW STYLES ================= */
+  .trouble-section { margin-bottom: 30px; }
+  .trouble-mode-header {
+    font-family: var(--font-head); font-size: 1.3rem; color: var(--imperial-gold); border-bottom: 2px solid var(--border-line);
+    padding-bottom: 8px; margin: 24px 0 16px; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .trouble-card {
+    border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; margin-bottom: 18px;
+    background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6);
+  }
+  .trouble-card h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; letter-spacing: 0.03em; }
+  .flow-step {
+    border-left: 2px solid var(--imperial-gold); padding-left: 16px; margin-bottom: 16px; position: relative;
+  }
+  .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--imperial-gold); text-transform: uppercase; letter-spacing: 0.06em; }
+  .flow-step-title { font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin: 3px 0 5px; }
+  .flow-step-action { font-size: 0.86rem; color: var(--text-dim); line-height: 1.45; margin-bottom: 8px; font-weight: 500; }
+  .flow-step-spiel {
+    background: rgba(18, 14, 12, 0.75); border: 1px solid var(--border-line); border-radius: 8px; padding: 10px 12px;
+    font-size: 0.84rem; color: #F8EFD5; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+
   /* ================= RESPONSIVE ================= */
   @media (max-width: 960px) {
     .sidebar { width: 260px; }
@@ -457,7 +530,6 @@
     .seal-btn { width: 100%; }
     .fiveacts-logo-badge { margin-top: 10px; }
     .top-header-bar { flex-direction: column; align-items: flex-start; }
-    .org-members-grid { grid-template-columns: 1fr; }
   }
 
   ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -473,14 +545,57 @@
     <div class="scene-sky"></div>
     <div class="sky-clouds"></div>
     <div class="sun-glow"></div>
+    <div class="celestial-sun"></div>
+    <div class="celestial-moon"></div>
     <div class="sun-rays"></div>
+    <div class="rain-layer"></div>
     
-    <!-- Mount Hiei Layered Mountains -->
+    <!-- Mount Paozu Layered Mountains & Ocean -->
     <div class="scene-mountains">
       <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
         <polygon points="0,300 0,160 140,65 310,180 480,75 660,190 840,55 1020,165 1200,95 1200,300" fill="#0c231e"/>
         <polygon points="0,300 0,205 190,120 390,205 600,130 840,215 1040,140 1200,185 1200,300" fill="#133128" opacity=".92"/>
         <path d="M600,130 L605,300 L595,300 Z" fill="#00d2ff" opacity="0.65"/>
+      </svg>
+    </div>
+
+    <!-- Moving Ocean Wave Base -->
+    <div class="scene-ocean">
+      <div class="ocean-water"></div>
+      <div class="ocean-waves">
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
+          <path d="M0,20 Q150,5 300,20 T600,20 T900,20 T1200,20 L1200,40 L0,40 Z" fill="rgba(0, 210, 255, 0.3)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Floating Kami's Lookout -->
+    <div class="lookout-floating">
+      <svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMax meet">
+        <path d="M20,100 Q100,60 180,100 Z" fill="#091814"/>
+        <circle cx="100" cy="55" r="10" fill="#ffcc00" opacity="0.9"/>
+        <rect x="92" y="70" width="16" height="25" fill="#040b09"/>
+      </svg>
+    </div>
+
+    <!-- Guardian Shenron in Clouds -->
+    <div class="shenron-clouds">
+      <svg viewBox="0 0 500 280" preserveAspectRatio="xMidYMin meet">
+        <g fill="none" stroke="#2a5a3b" stroke-width="4" opacity="0.75">
+          <path d="M480,30 C410,70 370,140 430,190 C490,240 350,280 250,230 C150,180 200,100 140,70 C80,40 50,100 30,150" />
+          <path d="M460,45 Q390,95 410,155 M360,210 Q270,250 210,200" stroke="#ffcc00" stroke-width="2"/>
+          <path d="M470,20 L495,10 M480,32 L500,22" stroke="#f26522" stroke-width="2.5"/>
+          <circle cx="455" cy="25" r="3.5" fill="#ff1e56" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Flying Nimbus & Goku Silhouette -->
+    <div class="nimbus-goku">
+      <svg viewBox="0 0 100 50" preserveAspectRatio="xMidYMid meet">
+        <path d="M10,35 Q20,20 40,25 Q55,10 75,20 Q90,15 95,30 Q100,42 80,45 Q60,48 40,45 Q15,48 10,35 Z" fill="#ffcc00" opacity="0.95"/>
+        <path d="M45,22 Q40,10 50,5 Q55,12 60,8 Q58,18 65,22 Z" fill="#060e14"/>
+        <line x1="30" y1="30" x2="70" y2="2" stroke="#f26522" stroke-width="2.5"/>
       </svg>
     </div>
 
@@ -535,11 +650,10 @@
       <button class="view-btn" data-view="view-threshold" onclick="switchView('view-threshold', this)"><span class="vi">⚠️</span> Threshold Center</button>
       <button class="view-btn" data-view="view-policies" onclick="switchView('view-policies', this)"><span class="vi">🗝️</span> Client Policies</button>
       <button class="view-btn" data-view="view-faq" onclick="switchView('view-faq', this)"><span class="vi">🎋</span> FAQ Archive</button>
-      <button class="view-btn" data-view="view-updates" onclick="switchView('view-updates', this)"><span class="vi">🔒</span> Updates</button>
     </div>
 
-    <div class="nav-label">Check-in categories</div>
-    <ul class="nav-links" id="checkinAnchors"></ul>
+    <div class="nav-label" id="sidebarSublabel">Navigation Details</div>
+    <ul class="nav-links" id="sidebarDynamicLinks"></ul>
 
     <div class="sidebar-footer">Certiverse &middot; Proctor Dojo</div>
   </div>
@@ -562,169 +676,56 @@
       </div>
     </div>
 
-    <!-- FLASH BOX / TV-STYLE NEWS TICKER -->
-    <div class="news-ticker-container">
-      <div class="news-badge">⚡ UPDATES</div>
-      <div class="news-marquee-wrap">
-        <div class="news-marquee-text" id="newsTickerText">
-          Welcome to FiveActs Proctor Dojo! Ensure all browsers are updated to the latest Google Chrome or Microsoft Edge.
-        </div>
-      </div>
-    </div>
-
     <!-- HOME VIEW -->
     <div id="view-home" class="dashboard-view active">
       <h2 class="page-title">Operations Hall</h2>
-      <p class="page-sub">The dojo's main hall — statistics, shortcuts, and organizational leadership.</p>
+      <p class="page-sub">The dojo's main hall — organization structure, shortcuts, and your recent work.</p>
 
-      <!-- CIRCULAR CLICKABLE STAT BUTTONS -->
-      <div class="stat-grid-circles">
-        <button class="stat-circle-btn" onclick="switchView('view-library', document.querySelector('[data-view=\'view-library\']'))">
-          <span class="stat-circle-num" id="stat-num-0">0</span>
-          <span class="stat-circle-lbl">Canned Messages</span>
-        </button>
-        <button class="stat-circle-btn" onclick="switchView('view-checkin', document.querySelector('[data-view=\'view-checkin\']'))">
-          <span class="stat-circle-num" id="stat-num-1">0</span>
-          <span class="stat-circle-lbl">Check-In Categories</span>
-        </button>
-        <button class="stat-circle-btn" onclick="switchView('view-policies', document.querySelector('[data-view=\'view-policies\']'))">
-          <span class="stat-circle-num" id="stat-num-2">0</span>
-          <span class="stat-circle-lbl">Client Policies</span>
-        </button>
-        <button class="stat-circle-btn" onclick="switchView('view-threshold', document.querySelector('[data-view=\'view-threshold\']'))">
-          <span class="stat-circle-num" id="stat-num-3">0</span>
-          <span class="stat-circle-lbl">Infractions</span>
-        </button>
-        <button class="stat-circle-btn" onclick="switchView('view-faq', document.querySelector('[data-view=\'view-faq\']'))">
-          <span class="stat-circle-num" id="stat-num-4">0</span>
-          <span class="stat-circle-lbl">FAQ Entries</span>
-        </button>
+      <!-- ORGANIZATIONAL CHART -->
+      <div class="org-chart-container">
+        <h3 class="section-title" style="border:none;margin-bottom:16px;">⛩️ FiveActs Dojo Command Hierarchy</h3>
+        <div class="org-tree">
+          <div class="org-node root">
+            <div class="org-title">Account Lead</div>
+            <div class="org-name">Master Command</div>
+          </div>
+          <div class="org-connector-v"></div>
+          <div class="org-node lead">
+            <div class="org-title">Operations Supervisor</div>
+            <div class="org-name">Dojo Supervisor</div>
+          </div>
+          <div class="org-connector-v"></div>
+          <div class="org-level-row">
+            <div class="org-node">
+              <div class="org-title">Senior Proctor</div>
+              <div class="org-name">Team Alpha</div>
+            </div>
+            <div class="org-node">
+              <div class="org-title">Senior Proctor</div>
+              <div class="org-name">Team Beta</div>
+            </div>
+            <div class="org-node">
+              <div class="org-title">Technical Specialist</div>
+              <div class="org-name">Support Vanguard</div>
+            </div>
+          </div>
+          <div class="org-connector-v"></div>
+          <div class="org-level-row">
+            <div class="org-node">
+              <div class="org-title">Proctor Cohort</div>
+              <div class="org-name">Active Operators</div>
+            </div>
+            <div class="org-node">
+              <div class="org-title">Proctor Cohort</div>
+              <div class="org-name">Trainees / Apprentices</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="section-container">
         <h2 class="section-title">Quick Actions</h2>
         <div class="quick-grid" id="quickGrid"></div>
-      </div>
-
-      <!-- ORGANIZATIONAL CHART (CLEAN NAME & ROLE CARDS) -->
-      <div class="section-container">
-        <h2 class="section-title">Dojo Hierarchy &amp; Organizational Chart</h2>
-        <div class="org-chart-container">
-          <div class="org-tree">
-            
-            <!-- LEADERSHIP LEVEL -->
-            <div>
-              <div class="org-group-title">Leadership</div>
-              <div class="org-card" style="margin: 0 auto;">
-                <div class="org-role">President</div>
-                <div class="org-name">Erick Cruz</div>
-              </div>
-            </div>
-
-            <div class="org-line-v"></div>
-
-            <div class="org-card" style="margin: 0 auto;">
-              <div class="org-role">Operations Manager</div>
-              <div class="org-name">Jodel Cruz</div>
-            </div>
-
-            <div class="org-line-v"></div>
-
-            <!-- TEAMS LEVEL -->
-            <div>
-              <div class="org-group-title">Teams</div>
-              <div class="org-teams-row">
-                
-                <!-- CANDIDATE SUPPORT TEAM -->
-                <div class="org-team-box">
-                  <div class="org-team-header">
-                    <span class="org-role">Candidate Support Team</span>
-                    <span class="org-team-badge">5</span>
-                  </div>
-                  <div style="display:flex;flex-direction:column;gap:6px;">
-                    <div class="org-card"><div class="org-name">Jane Austria</div></div>
-                    <div class="org-card"><div class="org-name">Gian Garcia</div></div>
-                    <div class="org-card"><div class="org-name">Dianne Candano</div></div>
-                    <div class="org-card"><div class="org-name">Ralph Soriano</div></div>
-                    <div class="org-card"><div class="org-name">Ralph Maullion</div></div>
-                  </div>
-                </div>
-
-                <!-- ACCOUNTANT -->
-                <div class="org-team-box" style="max-width:260px;">
-                  <div class="org-team-header">
-                    <span class="org-role">Accountant</span>
-                    <span class="org-team-badge">1</span>
-                  </div>
-                  <div class="org-card"><div class="org-name">Bryan Mark Adan</div></div>
-                </div>
-
-                <!-- MANAGEMENT & PROCTORS -->
-                <div class="org-team-box" style="flex:2;max-width:540px;">
-                  <div class="org-team-header">
-                    <span class="org-role">Proctor Management &amp; Team</span>
-                    <span class="org-team-badge">15</span>
-                  </div>
-                  
-                  <div style="display:flex;gap:8px;margin-bottom:10px;">
-                    <div class="org-card" style="flex:1;">
-                      <div class="org-role">HR &amp; Proctor Manager</div><div class="org-name">Dyanne Cruz</div>
-                    </div>
-                    <div class="org-card" style="flex:1;">
-                      <div class="org-role">Proctor Manager</div><div class="org-name">Jeffrey Macapagal</div>
-                    </div>
-                  </div>
-
-                  <div class="org-group-title" style="text-align:left;margin-top:6px;">Proctors (13)</div>
-                  <div class="org-members-grid">
-                    <div class="org-card"><div class="org-name">Sebastian Tamayo</div></div>
-                    <div class="org-card"><div class="org-name">Bobzer San Juan</div></div>
-                    <div class="org-card"><div class="org-name">Keenan Handugan</div></div>
-                    <div class="org-card"><div class="org-name">Sunshine Faith Broñosa</div></div>
-                    <div class="org-card"><div class="org-name">Grace Remolacio</div></div>
-                    <div class="org-card"><div class="org-name">Mark Pesico</div></div>
-                    <div class="org-card"><div class="org-name">Rachelle Raymundo</div></div>
-                    <div class="org-card"><div class="org-name">John Paul Racines</div></div>
-                    <div class="org-card"><div class="org-name">Khate Cyrelle Amil</div></div>
-                    <div class="org-card"><div class="org-name">Romina Marie Dumlao</div></div>
-                    <div class="org-card"><div class="org-name">Kathy Lyn Leonar</div></div>
-                    <div class="org-card"><div class="org-name">Moses Cawil</div></div>
-                    <div class="org-card"><div class="org-name">Rose Ann Parafina</div></div>
-                  </div>
-
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- UPDATES VIEW (PASSWORD PROTECTED) -->
-    <div id="view-updates" class="dashboard-view">
-      <h2 class="page-title">Broadcast Updates Manager</h2>
-      <p class="page-sub">Authorized administrator tab to manage the live broadcast ticker on the Operations Hall.</p>
-
-      <div id="updates-lock-panel" class="gen-panel">
-        <h3 style="font-family:var(--font-head);color:var(--imperial-gold);margin-bottom:12px;">🔒 Security Check</h3>
-        <p style="font-size:0.88rem;color:var(--text-dim);margin-bottom:14px;">Please enter the administrator passcode to unlock the Updates editor.</p>
-        <div style="display:flex;gap:10px;max-width:360px;">
-          <input type="password" id="updatesPinInput" class="gen-select" placeholder="Enter PIN" style="margin-bottom:0;" onkeypress="if(event.key==='Enter') unlockUpdates()">
-          <button class="seal-btn" onclick="unlockUpdates()">Unlock</button>
-        </div>
-        <div id="pinErrorMsg" style="color:var(--clan-red-bright);font-size:0.8rem;margin-top:8px;display:none;">Incorrect passcode. Please try again.</div>
-      </div>
-
-      <div id="updates-editor-panel" class="gen-panel" style="display:none;">
-        <h3 style="font-family:var(--font-head);color:var(--imperial-gold);margin-bottom:12px;">✍️ Live Flash Box Editor</h3>
-        <p style="font-size:0.88rem;color:var(--text-dim);margin-bottom:14px;">Update the message below. Once saved, it will immediately scroll on the top Flash Box news ticker.</p>
-        <textarea id="tickerEditorText" class="search-input" rows="4" style="height:auto;margin-bottom:16px;font-family:var(--font-body);"></textarea>
-        <div style="display:flex;gap:12px;">
-          <button class="seal-btn" onclick="saveTickerUpdate()">Broadcast Flash Message</button>
-          <button class="path-btn" onclick="lockUpdates()">Lock Panel</button>
-        </div>
       </div>
     </div>
 
@@ -744,22 +745,20 @@
       <div id="checkinAccordions"></div>
     </div>
 
-    <!-- TROUBLESHOOTING VIEW (WITH INDEPENDENT DROPDOWN ACCORDIONS FOR AUDIO, SCREEN SHARE, AND VIDEO) -->
+    <!-- TROUBLESHOOTING VIEW -->
     <div id="view-troubleshooting" class="dashboard-view">
       <h2 class="page-title">Hardware &amp; System Troubleshooting</h2>
       <p class="page-sub">Step-by-step diagnostic workflows for candidate Audio, Screen Sharing, and Camera issues across Non-SEB and SEB environments.</p>
 
       <div class="trouble-section">
-        <div class="trouble-mode-header">🔐 NON-SEB (STANDARD BROWSER EXAMS)</div>
-
-        <!-- Non-SEB Microphone Dropdown -->
-        <details class="accordion" open>
+        <!-- ACCORDION DROPDOWN 1 -->
+        <details class="accordion" id="trouble-drop-audio" open>
           <summary>
-            <span class="cat-left">🎤 Audio &mdash; Microphone Not Working (Non-SEB)</span>
+            <span class="cat-left">🎤 Audio — Microphone Not Working (Non-SEB)</span>
             <span class="chevron">&#10148;</span>
           </summary>
           <div class="accordion-body">
-            <div class="trouble-card" style="border:none;box-shadow:none;padding:0;background:transparent;">
+            <div class="trouble-card">
               <div class="flow-step">
                 <div class="flow-step-num">Step 1 &mdash; Browser Version Check</div>
                 <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
@@ -863,14 +862,14 @@
           </div>
         </details>
 
-        <!-- Non-SEB Screen Sharing Dropdown -->
-        <details class="accordion">
+        <!-- ACCORDION DROPDOWN 2 -->
+        <details class="accordion" id="trouble-drop-screen">
           <summary>
-            <span class="cat-left">🖥️ Screen Sharing &mdash; Unable to Share Screen (Non-SEB)</span>
+            <span class="cat-left">🖥️ Screen Sharing — Unable to Share Screen (Non-SEB)</span>
             <span class="chevron">&#10148;</span>
           </summary>
           <div class="accordion-body">
-            <div class="trouble-card" style="border:none;box-shadow:none;padding:0;background:transparent;">
+            <div class="trouble-card">
               <div class="flow-step">
                 <div class="flow-step-num">Step 1 &mdash; Browser Version Check</div>
                 <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
@@ -974,14 +973,14 @@
           </div>
         </details>
 
-        <!-- Non-SEB Video Dropdown -->
-        <details class="accordion">
+        <!-- ACCORDION DROPDOWN 3 -->
+        <details class="accordion" id="trouble-drop-video">
           <summary>
-            <span class="cat-left">📷 Video &mdash; Camera Not Working (Non-SEB)</span>
+            <span class="cat-left">📷 Video — Camera Not Working (Non-SEB)</span>
             <span class="chevron">&#10148;</span>
           </summary>
           <div class="accordion-body">
-            <div class="trouble-card" style="border:none;box-shadow:none;padding:0;background:transparent;">
+            <div class="trouble-card">
               <div class="flow-step">
                 <div class="flow-step-num">Step 1 &mdash; Browser Version Check</div>
                 <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
@@ -1095,16 +1094,14 @@
           </div>
         </details>
 
-        <div class="trouble-mode-header">🧭 SEB (SECURE EXAM BROWSER) EXAMS</div>
-
-        <!-- SEB Troubleshooting Dropdown -->
-        <details class="accordion">
+        <!-- ACCORDION DROPDOWN 4 -->
+        <details class="accordion" id="trouble-drop-seb">
           <summary>
-            <span class="cat-left">🔐 Secure Exam Browser &mdash; SEB Hardware &amp; Media Diagnostics</span>
+            <span class="cat-left">🧭 SEB (SECURE EXAM BROWSER) EXAMS</span>
             <span class="chevron">&#10148;</span>
           </summary>
           <div class="accordion-body">
-            <div class="trouble-card" style="border:none;box-shadow:none;padding:0;background:transparent;">
+            <div class="trouble-card">
               <div class="flow-step">
                 <div class="flow-step-num">Step 1 &mdash; Top-Left SEB Refresh</div>
                 <div class="flow-step-title">Refresh Safe Exam Browser Navigation</div>
@@ -1371,32 +1368,6 @@
       </div>
     </div>
 
-    <!-- UPDATES VIEW (PASSWORD PROTECTED) -->
-    <div id="view-updates" class="dashboard-view">
-      <h2 class="page-title">Broadcast Updates Manager</h2>
-      <p class="page-sub">Authorized administrator tab to manage the live broadcast ticker on the Operations Hall.</p>
-
-      <div id="updates-lock-panel" class="gen-panel">
-        <h3 style="font-family:var(--font-head);color:var(--imperial-gold);margin-bottom:12px;">🔒 Security Check</h3>
-        <p style="font-size:0.88rem;color:var(--text-dim);margin-bottom:14px;">Please enter the administrator passcode to unlock the Updates editor.</p>
-        <div style="display:flex;gap:10px;max-width:360px;">
-          <input type="password" id="updatesPinInput" class="gen-select" placeholder="Enter PIN" style="margin-bottom:0;" onkeypress="if(event.key==='Enter') unlockUpdates()">
-          <button class="seal-btn" onclick="unlockUpdates()">Unlock</button>
-        </div>
-        <div id="pinErrorMsg" style="color:var(--clan-red-bright);font-size:0.8rem;margin-top:8px;display:none;">Incorrect passcode. Please try again.</div>
-      </div>
-
-      <div id="updates-editor-panel" class="gen-panel" style="display:none;">
-        <h3 style="font-family:var(--font-head);color:var(--imperial-gold);margin-bottom:12px;">✍️ Live Flash Box Editor</h3>
-        <p style="font-size:0.88rem;color:var(--text-dim);margin-bottom:14px;">Update the message below. Once saved, it will immediately scroll on the top Flash Box news ticker.</p>
-        <textarea id="tickerEditorText" class="search-input" rows="4" style="height:auto;margin-bottom:16px;font-family:var(--font-body);"></textarea>
-        <div style="display:flex;gap:12px;">
-          <button class="seal-btn" onclick="saveTickerUpdate()">Broadcast Flash Message</button>
-          <button class="path-btn" onclick="lockUpdates()">Lock Panel</button>
-        </div>
-      </div>
-    </div>
-
   </div>
 
 <script>
@@ -1407,7 +1378,7 @@
      CATEGORIES Taxonomy
      ============================================================ */
   var CATEGORIES = [
-    {id:"1",  label:"Welcome",                     icon:"🌅"},
+    {id:"1",  label:"Welcome",                 icon:"🌅"},
     {id:"2",  label:"Identification Verification", icon:"🪪"},
     {id:"3",  label:"System Verification",         icon:"🖥️"},
     {id:"4",  label:"Clear Desk",                  icon:"🧹"},
@@ -1616,7 +1587,7 @@
   var QUICK_ACTIONS = [
     {icon:"🪪", label:"Blurry / Unclear ID", query:"blurry"},
     {icon:"❗", label:"Name Mismatch",        query:"not the name registered"},
-    {icon:"📱", label:"Mobile Phone",          query:"mobile phone"},
+    {icon:"📱", label:"Mobile Phone",         query:"mobile phone"},
     {icon:"👀", label:"Face Out of View",      query:"head and shoulders"},
     {icon:"⏱️", label:"Break Violation",      query:"break"},
     {icon:"🖥️", label:"Task Manager / Apps",   query:"Task Manager"}
@@ -1777,14 +1748,9 @@
     wrap.innerHTML = html;
     updateProgressLabels();
 
-    var anchorList = document.getElementById("checkinAnchors");
-    var aHtml = "";
-    for (var k=0;k<displayCategories.length;k++){
-      var c = displayCategories[k];
-      var count = MESSAGES.filter(function(m){ return m.cat === c.id; }).length;
-      aHtml += '<li><button onclick="goToCategory(\'' + c.id + '\')">' + c.id + '. ' + c.label + ' <span class="cnt">' + count + '</span></button></li>';
+    if (document.getElementById("view-checkin").classList.contains("active")) {
+      updateSidebarLinks("view-checkin");
     }
-    anchorList.innerHTML = aHtml;
   }
 
   window.setOsSubFilter = function(osKey) {
@@ -1853,42 +1819,86 @@
   };
 
   /* ============================================================
-     UPDATES BROADCAST MANAGER (PASSWORD: 789456)
+     DYNAMIC SIDEBAR NAVIGATION FOR ALL TAB VIEWS
      ============================================================ */
-  var initialTickerText = "Welcome to FiveActs Proctor Dojo! Ensure all browsers are updated to the latest Google Chrome or Microsoft Edge.";
+  function updateSidebarLinks(viewId) {
+    var labelEl = document.getElementById("sidebarSublabel");
+    var listEl = document.getElementById("sidebarDynamicLinks");
+    if (!labelEl || !listEl) return;
 
-  function initTickerText() {
-    var savedText = localStorage.getItem("ph_live_ticker");
-    var currentText = savedText ? savedText : initialTickerText;
-    document.getElementById("newsTickerText").textContent = currentText;
+    var html = "";
+
+    if (viewId === "view-checkin") {
+      labelEl.textContent = "Check-in Categories";
+      var displayCategories = CATEGORIES.filter(function(cat) {
+        if (activeExamMode === "seb" && cat.id === "3") return false;
+        return true;
+      });
+      for (var k=0; k<displayCategories.length; k++){
+        var c = displayCategories[k];
+        var count = MESSAGES.filter(function(m){ return m.cat === c.id; }).length;
+        html += '<li><button onclick="goToCategory(\'' + c.id + '\')">' + c.id + '. ' + c.label + ' <span class="cnt">' + count + '</span></button></li>';
+      }
+    } else if (viewId === "view-troubleshooting") {
+      labelEl.textContent = "Troubleshooting Flows";
+      var flows = [
+        {id: "trouble-drop-audio", label: "Microphone (Non-SEB)", icon: "🎤"},
+        {id: "trouble-drop-screen", label: "Screen Sharing (Non-SEB)", icon: "🖥️"},
+        {id: "trouble-drop-video", label: "Camera (Non-SEB)", icon: "📷"},
+        {id: "trouble-drop-seb", label: "SEB Diagnostics", icon: "🧭"}
+      ];
+      for (var f=0; f<flows.length; f++){
+        html += '<li><button onclick="scrollToTroubleshooting(\'' + flows[f].id + '\')">' + flows[f].icon + ' ' + flows[f].label + '</button></li>';
+      }
+    } else if (viewId === "view-library") {
+      labelEl.textContent = "Category Filters";
+      html += '<li><button onclick="setLibraryFilter(\'all\')">All Messages <span class="cnt">' + MESSAGES.length + '</span></button></li>';
+      for (var l=0; l<CATEGORIES.length; l++){
+        var catL = CATEGORIES[l];
+        var countL = MESSAGES.filter(function(m){ return m.cat === catL.id; }).length;
+        html += '<li><button onclick="setLibraryFilter(\'' + catL.id + '\')">' + catL.icon + ' ' + catL.label + ' <span class="cnt">' + countL + '</span></button></li>';
+      }
+    } else if (viewId === "view-threshold") {
+      labelEl.textContent = "Severity Filter";
+      html += '<li><button onclick="setThresholdFilter(\'all\')">All Infractions <span class="cnt">' + INFRACTIONS.length + '</span></button></li>';
+      html += '<li><button onclick="setThresholdFilter(\'minor\')">Minor Violations</button></li>';
+      html += '<li><button onclick="setThresholdFilter(\'major\')">Major Violations</button></li>';
+    } else if (viewId === "view-policies") {
+      labelEl.textContent = "Client Quick Select";
+      for (var p=0; p<POLICIES.length; p++){
+        html += '<li><button onclick="selectPolicyClient(' + p + ')">' + escapeHtml(POLICIES[p][0]) + '</button></li>';
+      }
+    } else if (viewId === "view-home") {
+      labelEl.textContent = "Dojo Sections";
+      html += '<li><button onclick="window.scrollTo({top:0, behavior:\'smooth\'})">🏯 Command Hierarchy</button></li>';
+      html += '<li><button onclick="document.getElementById(\'quickGrid\').scrollIntoView({behavior:\'smooth\'})">⚡ Quick Actions</button></li>';
+    } else if (viewId === "view-faq") {
+      labelEl.textContent = "FAQ Topics";
+      html += '<li><button onclick="window.scrollTo({top:0, behavior:\'smooth\'})">🛠️ Technical Requirements</button></li>';
+      html += '<li><button onclick="document.querySelectorAll(\'#view-faq .trouble-card\')[1].scrollIntoView({behavior:\'smooth\'})">📝 Booking & Management</button></li>';
+      html += '<li><button onclick="document.querySelectorAll(\'#view-faq .trouble-card\')[2].scrollIntoView({behavior:\'smooth\'})">🛡️ Online Proctoring</button></li>';
+    }
+
+    listEl.innerHTML = html;
   }
 
-  window.unlockUpdates = function() {
-    var pin = document.getElementById("updatesPinInput").value.trim();
-    if (pin === "789456") {
-      document.getElementById("pinErrorMsg").style.display = "none";
-      document.getElementById("updates-lock-panel").style.display = "none";
-      document.getElementById("updates-editor-panel").style.display = "block";
-      
-      var currentTicker = localStorage.getItem("ph_live_ticker") || initialTickerText;
-      document.getElementById("tickerEditorText").value = currentTicker;
-    } else {
-      document.getElementById("pinErrorMsg").style.display = "block";
+  window.scrollToTroubleshooting = function(targetId) {
+    var accordions = document.querySelectorAll("#view-troubleshooting .accordion");
+    accordions.forEach(function(acc) { acc.removeAttribute("open"); });
+    var target = document.getElementById(targetId);
+    if (target) {
+      target.open = true;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
-  window.saveTickerUpdate = function() {
-    var newText = document.getElementById("tickerEditorText").value.trim();
-    if (!newText) return;
-    localStorage.setItem("ph_live_ticker", newText);
-    document.getElementById("newsTickerText").textContent = newText;
-    alert("Live Flash Box Broadcast Updated Successfully!");
-  };
-
-  window.lockUpdates = function() {
-    document.getElementById("updatesPinInput").value = "";
-    document.getElementById("updates-editor-panel").style.display = "none";
-    document.getElementById("updates-lock-panel").style.display = "block";
+  window.selectPolicyClient = function(index) {
+    var select = document.getElementById("policySelect");
+    if (select) {
+      select.value = index;
+      renderGenerator();
+      select.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   };
 
   /* ============================================================
@@ -2002,7 +2012,6 @@
     function afterCopy(){
       addToRecent("ph_recent", id, 10);
       showCopied();
-      renderHomeLists();
     }
 
     if (navigator.clipboard && window.isSecureContext){
@@ -2024,7 +2033,6 @@
   function renderAllInteractive(){
     renderCheckin();
     renderLibraryList();
-    renderHomeLists();
     filterAll();
   }
 
@@ -2038,20 +2046,6 @@
     
     document.getElementById("clockTime").textContent = now.toLocaleTimeString("en-US", optsTime) + " PST";
     document.getElementById("clockDate").textContent = now.toLocaleDateString("en-US", optsDate);
-  }
-
-  function renderStats(){
-    var counts = [
-      MESSAGES.length,
-      CATEGORIES.length,
-      POLICIES.length,
-      INFRACTIONS.length,
-      0 // FAQ Entries
-    ];
-    for (var i = 0; i < counts.length; i++) {
-      var el = document.getElementById("stat-num-" + i);
-      if (el) el.textContent = counts[i];
-    }
   }
 
   function renderQuickActions(){
@@ -2072,35 +2066,6 @@
     filterAll();
     window.scrollTo({top:0, behavior:"smooth"});
   };
-
-  function renderMiniList(containerId, countId, ids, emptyText){
-    var container = document.getElementById(containerId);
-    if (!container) return;
-    var countEl = document.getElementById(countId);
-    if (countEl) countEl.textContent = ids.length ? String(ids.length) : "";
-    
-    if (!ids.length){
-      container.innerHTML = '<div class="empty-state">' + emptyText + '</div>';
-      return;
-    }
-    var html = "";
-    for (var i=0;i<ids.length;i++){
-      var msg = findMessageById(ids[i]);
-      if (!msg) continue;
-      html += '<div class="mini-item">' +
-        '<span class="txt">' + escapeHtml(msg.text) + '</span>' +
-        '<span class="cat-chip">' + catLabel(msg.cat) + '</span>' +
-        '<button class="seal-btn" style="min-width:auto;padding:6px 12px;" onclick="copyMessage(this,\'' + msg.id + '\')">⚜</button>' +
-      '</div>';
-    }
-    container.innerHTML = html;
-  }
-
-  function renderHomeLists(){
-    renderMiniList("favList", "favCount", loadSet("ph_favs"), "No favorites yet — tap the star on any scroll to pin it here.");
-    renderMiniList("pinList", "pinCount", loadSet("ph_pins"), "Nothing pinned yet — tap 📌 on any scroll to keep it close at hand.");
-    renderMiniList("recentList", "recentCount", loadSet("ph_recent"), "Nothing copied yet this session.");
-  }
 
   /* ============================================================
      THRESHOLD CENTER
@@ -2148,7 +2113,7 @@
         var termMsg = findByTerm(r[6]);
         if (termMsg){
           detail = '<strong>Closest matching termination script:</strong><br>' + escapeHtml(termMsg.text) +
-            '<br><button class="seal-btn" style="margin-top:8px;" onclick="event.stopPropagation();copyMessage(this,\'' + termMsg.id + '\')">⚜ Copy Scroll</button>';
+            '<br><button class="seal-btn" style="margin-top:8px;" onclick="event.stopPropagation();copyMessage(this,\'' + termMsg.id + '\')">com Copy Scroll</button>';
         }
       } else if (r[5]){
         detail = 'No dedicated termination script. <button class="filter-chip" onclick="event.stopPropagation();runQuickAction(\'' + r[5].replace(/'/g,"\\'") + '\')">Search library for &ldquo;' + escapeHtml(r[5]) + '&rdquo;</button>';
@@ -2371,10 +2336,7 @@
     for (var j=0;j<btns.length;j++){ btns[j].classList.remove("active"); }
     if (btn){ btn.classList.add("active"); }
 
-    var isCheckin = viewId === "view-checkin";
-    document.getElementById("checkinAnchors").style.display = isCheckin ? "" : "none";
-    document.querySelector(".nav-label").style.display = isCheckin ? "" : "none";
-
+    updateSidebarLinks(viewId);
     filterAll();
   };
 
@@ -2454,10 +2416,7 @@
      INIT
      ============================================================ */
   document.addEventListener("DOMContentLoaded", function(){
-    initTickerText();
-    renderStats();
     renderQuickActions();
-    renderHomeLists();
     tickClock();
     setInterval(tickClock, 1000);
 
@@ -2472,6 +2431,7 @@
     renderGenerator();
 
     initHollywoodFxEngine();
+    updateSidebarLinks("view-home");
     filterAll();
   });
 })();
