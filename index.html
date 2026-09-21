@@ -462,6 +462,32 @@
   }
   .org-members-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
+  /* INFRACTION THRESHOLD CENTER STYLES */
+  .infraction-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 14px;
+  }
+  .infr-card {
+    border: 1px solid var(--border-line);
+    border-radius: 12px;
+    padding: 16px 18px;
+    background: var(--card-bg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 4px solid var(--text-dim);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+  .infr-card:hover {
+    background: rgba(36, 28, 22, 0.92);
+    transform: translateY(-2px);
+  }
+  .infr-card.risk-green { border-left-color: #00ff88; }
+  .infr-card.risk-yellow { border-left-color: var(--imperial-gold); }
+  .infr-card.risk-orange { border-left-color: var(--lantern-orange); }
+  .infr-card.risk-red { border-left-color: #ff3b30; }
+
   /* ================= ACCORDION & DASHBOARD ================= */
   .accordion { border: 1px solid var(--border-line); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-bg); backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); scroll-margin-top: 100px; }
   .accordion summary {
@@ -531,6 +557,16 @@
         <polygon points="0,300 0,205 190,120 390,205 600,130 840,215 1040,140 1200,185 1200,300" fill="#133128" opacity=".92"/>
         <path d="M600,130 L605,300 L595,300 Z" fill="#00d2ff" opacity="0.65"/>
       </svg>
+    </div>
+
+    <!-- Moving Ocean Wave Base -->
+    <div class="scene-ocean">
+      <div class="ocean-water"></div>
+      <div class="ocean-waves">
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
+          <path d="M0,20 Q150,5 300,20 T600,20 T900,20 T1200,20 L1200,40 L0,40 Z" fill="rgba(0, 210, 255, 0.3)"/>
+        </svg>
+      </div>
     </div>
 
     <!-- Floating Kami's Lookout -->
@@ -1535,7 +1571,7 @@
     {id:"m3_5", cat:"3", tags:["win"], text:"Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option."},
     {id:"m3_6", cat:"3", tags:["mac"], text:"Please open your Activity Monitor then scroll down slowly until you reach the end of the list.\n\nYou can find Activity Monitor on a Mac by using Spotlight Search (Command + Spacebar) and typing \"Activity Monitor,\" or by navigating to Applications > Utilities in Finder and double-clicking the app icon."},
     {id:"m3_7", cat:"3", tags:["mac"], text:"Thank you. You may close the Activity Monitor now."},
-    {id:"m3_8", cat:"3", tags:["mac"], text:"Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed."},
+    {id:"m3_8", cat:"3", tags:["mac"], text:"Press Option + Command + Esc simultaneously to open the Force Force Quit Applications window and ensure all applications not related to the exam are closed."},
     {id:"m3_9", cat:"3", tags:["linux"], text:"Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list.\n\nYou can open the System Monitor in Linux through the graphical menu (search for \"System Monitor\" or \"System Tools\"), by running gnome-system-monitor in the terminal or Alt+F2 dialog, or by setting a custom keyboard shortcut (often Ctrl+Shift+Esc or Ctrl+Alt+Del) in your system's Keyboard settings."},
     {id:"m3_10", cat:"3", tags:["linux"], text:"Thank you. You may close the System Monitor now."},
     {id:"m3_11", cat:"3", tags:["linux"], text:"Please close or force quit any applications not related to the exam. If needed, select the application and choose “End Process” or “Kill Process."},
