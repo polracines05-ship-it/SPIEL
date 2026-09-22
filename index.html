@@ -217,66 +217,106 @@
   .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
 
   /* ============================================================
-     MAIN CONTENT & REDESIGNED HERO / HEADER SECTION
+     MAIN CONTENT & TOP BAR (TIME LEFT, DATE RIGHT)
      ============================================================ */
   .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 22px 38px 60px; min-width: 0; }
 
-  /* CENTRALLY ALIGNED HERO STAGE */
+  /* TOP ROW BANNER FOR TIME (LEFT BESIDE SIDEBAR) AND DATE (UPPER RIGHT) */
+  .top-banner-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  /* TIME BANNER ON THE LEFT (BESIDE SIDEBAR) */
+  .left-clock-box {
+    background: rgba(18, 14, 12, 0.88);
+    border: 1px solid var(--border-line);
+    border-radius: 20px;
+    padding: 6px 18px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.6);
+  }
+  .top-clock-time {
+    font-family: var(--font-head);
+    font-size: 1.2rem;
+    color: var(--imperial-gold);
+    letter-spacing: 0.05em;
+    font-weight: 700;
+  }
+
+  /* DATE BANNER IN THE UPPER RIGHT CORNER */
+  .right-date-box {
+    background: rgba(18, 14, 12, 0.88);
+    border: 1px solid var(--border-line);
+    border-radius: 20px;
+    padding: 6px 18px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.6);
+  }
+  .top-clock-date {
+    font-size: 0.84rem;
+    color: var(--text-dim);
+    font-weight: 600;
+  }
+
+  /* CENTRALLY ALIGNED HERO STAGE WITH BIGGER FIVEACTS LOGO */
   .main-hero-stage {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 24px 20px 20px;
-    margin-bottom: 16px;
+    padding: 28px 20px 24px;
+    margin-bottom: 20px;
     position: relative;
   }
 
-  /* BURNING FURNACE FRAME & AUTHENTIC FIVEACTS BADGE CONTAINER */
+  /* BURNING FURNACE FRAME & ENLARGED LOGO CONTAINER */
   .furnace-frame-container {
     position: relative;
-    padding: 24px 42px;
+    padding: 28px 52px;
     background: linear-gradient(180deg, #241a14 0%, #120d0a 100%);
     border: 3px solid #6b4423;
-    border-radius: 16px;
+    border-radius: 18px;
     box-shadow: 
-      0 0 35px rgba(217, 119, 6, 0.45),
-      0 0 15px rgba(178, 34, 34, 0.6),
-      inset 0 0 25px rgba(0, 0, 0, 0.9);
+      0 0 40px rgba(217, 119, 6, 0.5),
+      0 0 20px rgba(178, 34, 34, 0.65),
+      inset 0 0 30px rgba(0, 0, 0, 0.95);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    margin-bottom: 18px;
-    transform: scale(1.22); /* Scaled focal point */
+    transform: scale(1.45); /* MUCH BIGGER FOCAL POINT */
   }
 
   /* Samurai Cast Iron Corner Brackets */
   .furnace-frame-container::before, .furnace-frame-container::after {
-    content: ""; position: absolute; width: 14px; height: 14px;
+    content: ""; position: absolute; width: 16px; height: 16px;
     border: 2px solid var(--imperial-gold); z-index: 3;
   }
-  .furnace-frame-container::before { top: 4px; left: 4px; border-right: none; border-bottom: none; }
-  .furnace-frame-container::after { bottom: 4px; right: 4px; border-left: none; border-top: none; }
+  .furnace-frame-container::before { top: 5px; left: 5px; border-right: none; border-bottom: none; }
+  .furnace-frame-container::after { bottom: 5px; right: 5px; border-left: none; border-top: none; }
 
   /* FURNACE GLOW & FIRE EFFECT */
   .furnace-fire-glow {
     position: absolute;
     inset: -10px;
-    background: radial-gradient(circle at 50% 120%, rgba(255, 100, 0, 0.75) 0%, rgba(217, 43, 43, 0.4) 40%, transparent 75%);
+    background: radial-gradient(circle at 50% 120%, rgba(255, 100, 0, 0.8) 0%, rgba(217, 43, 43, 0.45) 40%, transparent 75%);
     animation: furnacePulse 2.2s infinite alternate ease-in-out;
     pointer-events: none;
     z-index: 1;
   }
   @keyframes furnacePulse {
     0%   { opacity: 0.65; transform: scale(0.98); filter: blur(4px); }
-    100% { opacity: 1; transform: scale(1.03); filter: blur(8px); }
+    100% { opacity: 1; transform: scale(1.04); filter: blur(8px); }
   }
 
   /* Animated Flame Sparks/Flicker Overlay */
   .furnace-flame-flicker {
     position: absolute; inset: 0; z-index: 1; pointer-events: none;
-    background: linear-gradient(0deg, rgba(244, 197, 66, 0.25) 0%, transparent 60%);
+    background: linear-gradient(0deg, rgba(244, 197, 66, 0.3) 0%, transparent 60%);
     animation: flameFlicker 0.15s infinite alternate;
   }
   @keyframes flameFlicker {
@@ -290,25 +330,16 @@
   }
   .fiveacts-logo-slant {
     background: #00c853; color: #ffffff; font-family: var(--font-head);
-    font-weight: 900; font-size: 1.35rem; padding: 6px 14px; border-radius: 4px;
+    font-weight: 900; font-size: 1.45rem; padding: 6px 16px; border-radius: 4px;
     transform: skewX(-14deg); display: inline-block; letter-spacing: 0.04em;
     box-shadow: 0 3px 12px rgba(0,200,83,0.4);
   }
   .fiveacts-logo-slant span { display: inline-block; transform: skewX(14deg); }
   .fiveacts-logo-text {
-    font-family: var(--font-head); font-weight: 900; font-size: 1.5rem;
-    color: #ffffff; letter-spacing: 0.06em; margin-left: 10px; text-transform: uppercase;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    font-family: var(--font-head); font-weight: 900; font-size: 1.65rem;
+    color: #ffffff; letter-spacing: 0.06em; margin-left: 12px; text-transform: uppercase;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.85);
   }
-
-  /* INDEPENDENT TIME DISPLAY BANNER (POSITIONED BELOW LOGO) */
-  .standalone-clock-banner {
-    display: flex; justify-content: center; align-items: center; gap: 14px;
-    background: rgba(18, 14, 12, 0.88); border: 1px solid var(--border-line); border-radius: 30px;
-    padding: 6px 24px; backdrop-filter: blur(12px); box-shadow: 0 4px 18px rgba(0,0,0,0.6);
-  }
-  .top-clock-time { font-family: var(--font-head); font-size: 1.15rem; color: var(--imperial-gold); letter-spacing: 0.05em; font-weight: 700; }
-  .top-clock-date { font-size: 0.82rem; color: var(--text-dim); font-weight: 600; }
 
   /* ================= FLASH NEWS ANNOUNCEMENT TICKER ================= */
   .news-ticker-bar {
@@ -770,6 +801,7 @@
     .card-actions { flex-direction: row; justify-content: flex-end; }
     .seal-btn { width: 100%; }
     .furnace-frame-container { transform: scale(1); padding: 18px 24px; }
+    .top-banner-row { flex-direction: column; gap: 10px; align-items: flex-start; }
   }
 
   ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -903,7 +935,20 @@
   <!-- ================= MAIN CONTENT ================= -->
   <div class="main-content">
 
-    <!-- REDESIGNED CENTRALLY ALIGNED HERO LAYOUT -->
+    <!-- TOP ROW: TIME ON LEFT (BESIDE SIDEBAR) & DATE IN UPPER RIGHT CORNER -->
+    <div class="top-banner-row">
+      <!-- TIME DISPLAY (RIGHT BESIDE THE NAVIGATION SIDEBAR) -->
+      <div class="left-clock-box">
+        <div class="top-clock-time" id="clockTime">--:--:--</div>
+      </div>
+
+      <!-- DATE DISPLAY (UPPER RIGHT CORNER) -->
+      <div class="right-date-box">
+        <div class="top-clock-date" id="clockDate">Loading PST Manila Time&hellip;</div>
+      </div>
+    </div>
+
+    <!-- CENTRALLY ALIGNED HERO STAGE WITH BIGGER LOGO -->
     <div class="main-hero-stage">
       <!-- ENLARGED AUTHENTIC FIVEACTS BADGE IN A BURNING SAMURAI FURNACE FRAME -->
       <div class="furnace-frame-container" title="FiveActs Official Dojo">
@@ -913,12 +958,6 @@
           <div class="fiveacts-logo-slant"><span>FIVE</span></div>
           <div class="fiveacts-logo-text">ACTS</div>
         </div>
-      </div>
-
-      <!-- DECOUPLED STANDALONE CLOCK BANNER POSITIONED BELOW LOGO -->
-      <div class="standalone-clock-banner">
-        <div class="top-clock-time" id="clockTime">--:--:--</div>
-        <div class="top-clock-date" id="clockDate">Loading PST Manila Time&hellip;</div>
       </div>
     </div>
 
