@@ -385,6 +385,7 @@
   .page-title { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); margin-bottom: 4px; letter-spacing: 0.04em; text-transform: uppercase; }
   .page-sub { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; font-weight: 500; }
 
+  /* ================= ORGANIZATIONAL CHART & NAME TOOLTIPS ================= */
   .org-chart-container {
     background: var(--panel-bg);
     border: 1px solid var(--border-line);
@@ -441,10 +442,39 @@
     justify-content: center;
     gap: 6px;
   }
+  
+  /* Tooltip styling for Hover Full Name Pop-Up */
   .org-name {
     font-size: 0.92rem;
     color: var(--text-main);
     font-weight: 700;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+  }
+  .org-name[data-fullname]::after {
+    content: attr(data-fullname);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(18, 14, 12, 0.98);
+    color: var(--imperial-gold);
+    border: 1px solid var(--border-line);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+    z-index: 100;
+  }
+  .org-name[data-fullname]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
   }
 
   .org-badge {
@@ -533,6 +563,7 @@
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 8px;
   }
+  
   .org-member-item {
     background: var(--card-bg);
     border: 1px solid var(--border-soft);
@@ -544,11 +575,37 @@
     font-weight: 600;
     text-align: left;
     transition: all 0.2s ease;
+    position: relative;
+    cursor: pointer;
   }
   .org-member-item:hover {
     background: rgba(36, 28, 22, 0.95);
     border-left-color: var(--clan-red);
     transform: translateX(3px);
+  }
+  .org-member-item[data-fullname]::after {
+    content: attr(data-fullname);
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(18, 14, 12, 0.98);
+    color: var(--imperial-gold);
+    border: 1px solid var(--border-line);
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+    z-index: 100;
+  }
+  .org-member-item[data-fullname]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-3px);
   }
 
   .section-container { margin-bottom: 30px; scroll-margin-top: 90px; }
@@ -926,90 +983,99 @@
       <h2 class="page-title">Operations Hall</h2>
       <p class="page-sub">The dojo's main hall — organization structure, shortcuts, and your recent work.</p>
 
+      <!-- UPDATED ORGANIZATIONAL CHART (NICKNAMES DISPLAYED, FULL NAMES ON HOVER) -->
       <div class="org-chart-container">
         <h3 class="section-title" style="border:none;margin-bottom:20px;justify-content:center;">⛩️ FiveActs Dojo Command Hierarchy</h3>
         
         <div class="org-tree">
+          <!-- TOP EXECUTIVE LEADERSHIP -->
           <div class="org-node root">
             <div class="org-title">President</div>
-            <div class="org-name">Erick Cruz</div>
+            <div class="org-name" data-fullname="Erick Cruz">Erick</div>
           </div>
 
           <div class="org-line-v"></div>
 
           <div class="org-node sub-root">
             <div class="org-title">Operations Manager</div>
-            <div class="org-name">Jodel Cruz</div>
+            <div class="org-name" data-fullname="Jodel Cruz">Jodel</div>
           </div>
 
           <div class="org-line-v"></div>
 
+          <!-- TEAMS BRANCH -->
           <div class="org-teams-branch">
+            
+            <!-- COLUMN 1: CANDIDATE SUPPORT TEAM -->
             <div class="org-team-column">
               <div class="org-card-group">
                 <div class="org-group-header">
                   Candidate Support Team <span class="org-badge">5</span>
                 </div>
                 <div class="org-member-list">
-                  <div class="org-member-item">Jane Austria</div>
-                  <div class="org-member-item">Gian Garcia</div>
-                  <div class="org-member-item">Dianne Candano</div>
-                  <div class="org-member-item">Ralph Soriano</div>
-                  <div class="org-member-item">Ralph Maullion</div>
+                  <div class="org-member-item" data-fullname="Jane Austria">Jane</div>
+                  <div class="org-member-item" data-fullname="Gian Garcia">Gian</div>
+                  <div class="org-member-item" data-fullname="Dianne Candano">Dianne</div>
+                  <div class="org-member-item" data-fullname="Ralph Soriano">Ralphy</div>
+                  <div class="org-member-item" data-fullname="Ralph Maullion">Raprap</div>
                 </div>
               </div>
             </div>
 
+            <!-- COLUMN 2: ACCOUNTANT -->
             <div class="org-team-column">
               <div class="org-card-group">
                 <div class="org-group-header">
                   Accountant <span class="org-badge">1</span>
                 </div>
                 <div class="org-member-list">
-                  <div class="org-member-item">Bryan Mark Adan</div>
+                  <div class="org-member-item" data-fullname="Bryan Mark Adan">Bry</div>
                 </div>
               </div>
             </div>
 
+            <!-- COLUMN 3: HR & PROCTOR MANAGER -->
             <div class="org-team-column">
               <div class="org-card-group">
                 <div class="org-group-header">Management</div>
                 <div class="org-member-list">
                   <div class="org-node" style="border-left-color:var(--lantern-orange);">
                     <div class="org-title">HR Manager &amp; Proctor Manager</div>
-                    <div class="org-name">Dyanne Cruz</div>
+                    <div class="org-name" data-fullname="Dyanne Cruz">Dang</div>
                   </div>
                 </div>
               </div>
             </div>
 
+            <!-- COLUMN 4: PROCTOR MANAGER & PROCTORS (UPDATED TO 14 WITH ARIANNE GAVIOLA) -->
             <div class="org-team-column" style="flex:1.5;">
               <div class="org-card-group">
                 <div class="org-group-header">Management &amp; Proctors</div>
                 <div class="org-member-list" style="margin-bottom:12px;">
                   <div class="org-node" style="border-left-color:var(--lantern-orange);">
                     <div class="org-title">Proctor Manager</div>
-                    <div class="org-name">Jeffrey Macapagal</div>
+                    <div class="org-name" data-fullname="Jeffrey Macapagal">Jeff</div>
                   </div>
                 </div>
 
                 <div class="org-group-header" style="border-top:1px solid var(--border-line);padding-top:8px;">
-                  Proctors <span class="org-badge">13</span>
+                  Proctors <span class="org-badge">14</span>
                 </div>
                 <div class="org-member-list grid-2">
-                  <div class="org-member-item">Sebastian Tamayo</div>
-                  <div class="org-member-item">Bobzer San Juan</div>
-                  <div class="org-member-item">Keenan Handugan</div>
-                  <div class="org-member-item">Sunshine Faith Broñosa</div>
-                  <div class="org-member-item">Grace Remolacio</div>
-                  <div class="org-member-item">Mark Pesico</div>
-                  <div class="org-member-item">Rachelle Raymundo</div>
-                  <div class="org-member-item">John Paul Racines</div>
-                  <div class="org-member-item">Khate Cyrelle Amil</div>
-                  <div class="org-member-item">Romina Marie Dumlao</div>
-                  <div class="org-member-item">Kathy Lyn Leonar</div>
-                  <div class="org-member-item">Moses Cawil</div>
-                  <div class="org-member-item">Rose Ann Parafina</div>
+                  <div class="org-member-item" data-fullname="Sebastian Tamayo">Seb</div>
+                  <div class="org-member-item" data-fullname="Bobzer San Juan">Bob</div>
+                  <div class="org-member-item" data-fullname="Keenan Handugan">Keenan</div>
+                  <div class="org-member-item" data-fullname="Sunshine Faith Bronosa">Faith</div>
+                  <div class="org-member-item" data-fullname="Grace Remolacio">Grace</div>
+                  <div class="org-member-item" data-fullname="Mark Pesico">Mark</div>
+                  <div class="org-member-item" data-fullname="Rachelle Raymundo">Rachelle</div>
+                  <div class="org-member-item" data-fullname="John Paul Racines">Pol</div>
+                  <div class="org-member-item" data-fullname="Khate Cyrelle Amil">KC</div>
+                  <div class="org-member-item" data-fullname="Romina Marie Dumlao">Mina</div>
+                  <div class="org-member-item" data-fullname="Kathy Lyn Leonar">Kaye</div>
+                  <div class="org-member-item" data-fullname="Moses Cawil">MJ</div>
+                  <div class="org-member-item" data-fullname="Rose Ann Parafina">R.A</div>
+                  <div class="org-member-item" data-fullname="Arianne Gaviola">Arianne</div>
                 </div>
               </div>
             </div>
