@@ -35,6 +35,2710 @@
   html, body { height: 100%; }
 
   /* ============================================================
+     BACKGROUND: EDO TEXTURED WALL WITH SPOOKY HALLOWEEN ELEMENTS
+     ============================================================ */
+  body {
+    font-family: var(--font-body);
+    color: var(--text-main);
+    background: 
+      radial-gradient(circle at 85% 15%, rgba(178, 34, 34, 0.22) 0%, transparent 40%),
+      radial-gradient(circle at 50% 20%, rgba(217, 119, 6, 0.15) 0%, transparent 60%),
+      radial-gradient(circle at 50% 40%, #1f1813 0%, #120e0b 70%, #0a0806 100%);
+    background-attachment: fixed;
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+
+  /* Blood Moon Element */
+  .blood-moon {
+    position: absolute;
+    top: 40px; right: 60px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ff3300 0%, #aa0000 70%, #550000 100%);
+    box-shadow: 0 0 50px rgba(255, 51, 0, 0.6), inset 0 0 20px rgba(0, 0, 0, 0.8);
+    opacity: 0.85;
+  }
+
+  /* Animated Flying Bats */
+  .bat-group {
+    position: absolute;
+    top: 10%; left: -100px;
+    width: 100%; height: 200px;
+    animation: batsFlight 25s linear infinite;
+  }
+  @keyframes batsFlight {
+    0% { transform: translateX(0) translateY(0); }
+    50% { transform: translateX(50vw) translateY(-40px); }
+    100% { transform: translateX(calc(100vw + 200px)) translateY(20px); }
+  }
+
+  /* Spooky Mist Overlay at Bottom */
+  .spooky-mist {
+    position: absolute;
+    left: 0; right: 0; bottom: 0; height: 220px;
+    background: linear-gradient(0deg, rgba(217, 119, 6, 0.12) 0%, rgba(178, 34, 34, 0.05) 50%, transparent 100%);
+    filter: blur(15px);
+    animation: mistSway 8s ease-in-out infinite alternate;
+  }
+  @keyframes mistSway {
+    0% { transform: translateX(-20px); opacity: 0.6; }
+    100% { transform: translateX(20px); opacity: 0.9; }
+  }
+
+  /* Corner Cobwebs */
+  .cobweb-left, .cobweb-right {
+    position: absolute;
+    width: 180px; height: 180px;
+    opacity: 0.35;
+    z-index: 2;
+  }
+  .cobweb-left { top: 0; left: 0; }
+  .cobweb-right { top: 0; right: 0; transform: scaleX(-1); }
+
+  .scene-vignette { 
+    position: fixed; 
+    inset: 0; 
+    pointer-events: none;
+    z-index: 0;
+    box-shadow: inset 0 0 180px 60px rgba(5, 3, 2, 0.85); 
+  }
+
+  /* Kyoto Streetscape with Jack-o'-Lantern Lights */
+  .kyoto-streetscape {
+    position: fixed; left: 0; right: 0; bottom: 0; height: 280px; opacity: 0.9;
+    pointer-events: none;
+    z-index: 0;
+    filter: drop-shadow(0 -10px 25px rgba(217, 119, 6, 0.5));
+  }
+  .kyoto-streetscape svg { width: 100%; height: 100%; display: block; }
+
+  #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+
+  /* Warm Pumpkin-Orange Accent Glow Behind UI Cards */
+  .card, 
+  .trouble-card, 
+  .gen-panel, 
+  .org-chart-container, 
+  .accordion {
+    box-shadow: 
+      0 6px 22px rgba(0, 0, 0, 0.8),
+      0 0 18px rgba(217, 119, 6, 0.22) !important;
+    border-color: rgba(217, 119, 6, 0.4) !important;
+  }
+
+  .card:hover, 
+  .trouble-card:hover, 
+  .accordion:hover {
+    box-shadow: 
+      0 8px 30px rgba(0, 0, 0, 0.9),
+      0 0 28px rgba(217, 119, 6, 0.45) !important;
+    border-color: #d97706 !important;
+  }
+
+  /* ============================================================
+     SIDEBAR & NAVIGATION
+     ============================================================ */
+  .sidebar {
+    position: relative; z-index: 10;
+    width: 310px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
+    background: linear-gradient(180deg, rgba(13, 27, 24, 0.95), rgba(6, 14, 20, 0.98));
+    border-right: 1px solid var(--border-line);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    display: flex; flex-direction: column; padding: 0;
+    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.7);
+  }
+  .sidebar::before {
+    content: ""; display: block; height: 4px; width: 100%; flex-shrink: 0;
+    background: linear-gradient(90deg, transparent, var(--imperial-gold), var(--clan-red), transparent);
+  }
+
+  .sidebar-header { padding: 22px 14px 18px; text-align: center; border-bottom: 1px solid var(--border-line); }
+
+  .brand-mon {
+    width: 58px; height: 58px; margin: 0 auto 10px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--imperial-gold), var(--clan-red) 70%, #4a0c0c 100%);
+    border: 2px solid var(--imperial-gold);
+    box-shadow: 0 0 15px rgba(244, 197, 66, 0.4), inset 0 -2px 6px rgba(0,0,0,0.8);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.7rem; font-weight: 900; color: #121212; font-family: var(--font-head);
+  }
+
+  .sidebar-header h1 {
+    font-family: var(--font-head); font-size: 1.25rem; letter-spacing: 0.08em; color: var(--text-main);
+    text-transform: uppercase;
+  }
+  .sidebar-header .subtitle { font-size: 0.7rem; color: var(--imperial-gold); margin-top: 4px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; }
+
+  .view-selectors { padding: 14px 12px; border-bottom: 1px solid var(--border-line); }
+  .view-btn {
+    width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(252, 247, 232, 0.03); border: 1px solid rgba(244, 197, 66, 0.2);
+    color: var(--rice-paper-dim); text-align: left; padding: 11px 14px; font-size: 0.86rem; font-weight: 600;
+    border-radius: 8px; cursor: pointer; margin-bottom: 6px; transition: all 0.2s ease;
+    font-family: var(--font-body); position: relative; overflow: hidden;
+  }
+  .view-btn .vi { font-size: 1.1rem; width: 1.4em; text-align: center; color: var(--imperial-gold); }
+  .view-btn:hover {
+    background: rgba(244, 197, 66, 0.12); color: var(--text-main); border-color: var(--imperial-gold);
+    transform: translateX(4px);
+  }
+  .view-btn.active {
+    background: linear-gradient(90deg, rgba(244, 197, 66, 0.25), rgba(178, 34, 34, 0.15));
+    color: var(--imperial-gold); border-color: var(--imperial-gold);
+  }
+  .view-btn.active::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--imperial-gold);
+  }
+
+  .nav-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin: 16px 16px 8px; font-weight: 800; }
+  .nav-links { list-style: none; padding: 0 10px; overflow-y: auto; flex-grow: 1; }
+  .nav-links li { margin-bottom: 3px; }
+  .nav-links button {
+    width: 100%; text-align: left; background: none; border: 1px solid transparent; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 6px;
+    padding: 8px 10px; color: var(--text-dim); border-radius: 6px; font-size: 0.8rem; font-weight: 600;
+    transition: all 0.18s ease; font-family: var(--font-body);
+  }
+  .nav-links button:hover {
+    background: rgba(244, 197, 66, 0.12); color: var(--imperial-gold); border-color: rgba(244, 197, 66, 0.3);
+    padding-left: 14px;
+  }
+  .nav-links .cnt { color: var(--imperial-gold); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); font-weight: 700; }
+
+  .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
+
+  /* ============================================================
+     MAIN CONTENT & TOP BAR
+     ============================================================ */
+  .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 22px 38px 60px; min-width: 0; }
+
+  .top-banner-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .left-clock-box {
+    background: rgba(18, 14, 12, 0.88);
+    border: 1px solid var(--border-line);
+    border-radius: 20px;
+    padding: 6px 18px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.6);
+  }
+  .top-clock-time {
+    font-family: var(--font-head);
+    font-size: 1.2rem;
+    color: var(--imperial-gold);
+    letter-spacing: 0.05em;
+    font-weight: 700;
+  }
+
+  .right-date-box {
+    background: rgba(18, 14, 12, 0.88);
+    border: 1px solid var(--border-line);
+    border-radius: 20px;
+    padding: 6px 18px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.6);
+  }
+  .top-clock-date {
+    font-size: 0.84rem;
+    color: var(--text-dim);
+    font-weight: 600;
+  }
+
+  .main-hero-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 20px 24px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .furnace-frame-container {
+    position: relative;
+    padding: 28px 52px;
+    background: linear-gradient(180deg, #241a14 0%, #120d0a 100%);
+    border: 3px solid #6b4423;
+    border-radius: 18px;
+    box-shadow: 
+      0 0 40px rgba(217, 119, 6, 0.5),
+      0 0 20px rgba(178, 34, 34, 0.65),
+      inset 0 0 30px rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transform: scale(1.45);
+  }
+
+  .furnace-frame-container::before, .furnace-frame-container::after {
+    content: ""; position: absolute; width: 16px; height: 16px;
+    border: 2px solid var(--imperial-gold); z-index: 3;
+  }
+  .furnace-frame-container::before { top: 5px; left: 5px; border-right: none; border-bottom: none; }
+  .furnace-frame-container::after { bottom: 5px; right: 5px; border-left: none; border-top: none; }
+
+  .furnace-fire-glow {
+    position: absolute;
+    inset: -10px;
+    background: radial-gradient(circle at 50% 120%, rgba(255, 100, 0, 0.8) 0%, rgba(217, 43, 43, 0.45) 40%, transparent 75%);
+    animation: furnacePulse 2.2s infinite alternate ease-in-out;
+    pointer-events: none;
+    z-index: 1;
+  }
+  @keyframes furnacePulse {
+    0%   { opacity: 0.65; transform: scale(0.98); filter: blur(4px); }
+    100% { opacity: 1; transform: scale(1.04); filter: blur(8px); }
+  }
+
+  .furnace-flame-flicker {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(0deg, rgba(244, 197, 66, 0.3) 0%, transparent 60%);
+    animation: flameFlicker 0.15s infinite alternate;
+  }
+  @keyframes flameFlicker {
+    0% { opacity: 0.7; }
+    100% { opacity: 1; }
+  }
+
+  .fiveacts-logo-badge { 
+    display: flex; align-items: center; flex-shrink: 0; position: relative; z-index: 2; 
+  }
+  .fiveacts-logo-slant {
+    background: #00c853; color: #ffffff; font-family: var(--font-head);
+    font-weight: 900; font-size: 1.45rem; padding: 6px 16px; border-radius: 4px;
+    transform: skewX(-14deg); display: inline-block; letter-spacing: 0.04em;
+    box-shadow: 0 3px 12px rgba(0,200,83,0.4);
+  }
+  .fiveacts-logo-slant span { display: inline-block; transform: skewX(14deg); }
+  .fiveacts-logo-text {
+    font-family: var(--font-head); font-weight: 900; font-size: 1.65rem;
+    color: #ffffff; letter-spacing: 0.06em; margin-left: 12px; text-transform: uppercase;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.85);
+  }
+
+  .news-ticker-bar {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(26, 20, 16, 0.95);
+    border: 1px solid var(--clan-red);
+    border-left: 4px solid var(--clan-red-bright);
+    border-radius: 8px;
+    padding: 6px 12px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 15px rgba(178, 34, 34, 0.35);
+    overflow: hidden;
+  }
+  .news-ticker-badge {
+    background: linear-gradient(135deg, var(--clan-red-bright), var(--clan-red));
+    color: #ffffff;
+    font-family: var(--font-head);
+    font-size: 0.72rem;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px rgba(217, 43, 43, 0.5);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .news-ticker-badge::before {
+    content: "⚡";
+    animation: flashPulse 1s infinite alternate;
+  }
+  @keyframes flashPulse { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+
+  .news-ticker-wrap {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+  }
+  .news-ticker-text {
+    display: inline-block;
+    padding-left: 100%;
+    animation: tickerMove 28s linear infinite;
+    font-size: 0.88rem;
+    color: var(--rice-paper);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+  .news-ticker-text:hover { animation-play-state: paused; }
+  @keyframes tickerMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+
+  .dashboard-view { display: none; }
+  .dashboard-view.active { display: block; }
+
+  .page-title { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); margin-bottom: 4px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .page-sub { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; font-weight: 500; }
+
+  .org-chart-container {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-line);
+    border-radius: 12px;
+    padding: 28px 20px;
+    margin-bottom: 28px;
+    backdrop-filter: blur(12px);
+  }
+  .org-tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    overflow-x: auto;
+    padding: 10px 0;
+  }
+
+  .org-node {
+    background: var(--card-bg);
+    border: 1px solid var(--border-line);
+    border-left: 4px solid var(--imperial-gold);
+    border-radius: 8px;
+    padding: 10px 16px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: all 0.2s ease;
+  }
+  .org-node:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(244, 197, 66, 0.25);
+    border-color: var(--imperial-gold);
+  }
+  .org-node.root {
+    border-left-color: var(--clan-red);
+    background: linear-gradient(135deg, rgba(36, 28, 22, 0.95), rgba(178, 34, 34, 0.3));
+    min-width: 260px;
+  }
+  .org-node.sub-root {
+    border-left-color: var(--lantern-orange);
+    background: linear-gradient(135deg, rgba(36, 28, 22, 0.95), rgba(217, 119, 6, 0.2));
+    min-width: 240px;
+  }
+
+  .org-title {
+    font-family: var(--font-head);
+    font-size: 0.78rem;
+    color: var(--imperial-gold);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .org-name {
+    font-size: 0.92rem;
+    color: var(--text-main);
+    font-weight: 700;
+  }
+
+  .org-badge {
+    background: rgba(244, 197, 66, 0.18);
+    border: 1px solid var(--border-line);
+    color: var(--imperial-gold);
+    font-size: 0.68rem;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 800;
+  }
+
+  .org-line-v {
+    width: 2px;
+    height: 22px;
+    background: var(--border-line);
+  }
+
+  .org-teams-branch {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    position: relative;
+    padding-top: 20px;
+  }
+  .org-teams-branch::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: var(--border-line);
+  }
+
+  .org-team-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+  .org-team-column::before {
+    content: "";
+    position: absolute;
+    top: -20px;
+    width: 2px;
+    height: 20px;
+    background: var(--border-line);
+  }
+
+  .org-card-group {
+    background: rgba(18, 14, 12, 0.75);
+    border: 1px solid var(--border-line);
+    border-radius: 10px;
+    padding: 14px;
+    width: 100%;
+    box-shadow: inset 0 0 12px rgba(0,0,0,0.5);
+  }
+  .org-group-header {
+    font-family: var(--font-head);
+    font-size: 0.8rem;
+    color: var(--imperial-gold);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border-line);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .org-member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .org-member-list.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 8px;
+  }
+  .org-member-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-soft);
+    border-left: 3px solid var(--imperial-gold);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.84rem;
+    color: var(--text-main);
+    font-weight: 600;
+    text-align: left;
+    transition: all 0.2s ease;
+  }
+  .org-member-item:hover {
+    background: rgba(36, 28, 22, 0.95);
+    border-left-color: var(--clan-red);
+    transform: translateX(3px);
+  }
+
+  .section-container { margin-bottom: 30px; scroll-margin-top: 90px; }
+  .section-title {
+    font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; color: var(--text-main);
+    border-bottom: 1px solid var(--border-line); padding-bottom: 10px; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; letter-spacing: 0.03em;
+  }
+  .section-count { font-size: 0.75rem; font-weight: 800; color: var(--imperial-gold); background: rgba(244, 197, 66, 0.15); border: 1px solid var(--border-line); padding: 2px 10px; border-radius: 12px; font-family: var(--font-body); }
+  .empty-state { color: var(--text-dim); font-size: 0.88rem; padding: 28px 20px; text-align: center; border: 1px dashed var(--border-line); border-radius: 10px; background: rgba(26, 20, 16, 0.6); backdrop-filter: blur(8px); }
+
+  .card {
+    position: relative; background: var(--card-bg);
+    border: 1px solid var(--border-line); border-left: 4px solid var(--clan-red); border-radius: 6px 12px 12px 6px;
+    padding: 16px 18px; margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: center; gap: 18px;
+    transition: all 0.22s ease; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .card:hover, .card.highlighted {
+    background: rgba(36, 28, 22, 0.95); border-left-color: var(--imperial-gold); transform: translateY(-2px);
+  }
+  .card.is-pinned { border-left-color: var(--lantern-orange); }
+  .card-body { flex-grow: 1; min-width: 0; }
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .card-tag { display: inline-block; font-size: 0.62rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-main); letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.12); }
+  .card-tag.win { background: rgba(0, 210, 255, 0.25); color: #99ebff; border-color: rgba(0, 210, 255, 0.4); }
+  .card-tag.mac { background: rgba(153, 51, 255, 0.25); color: #e0b3ff; border-color: rgba(153, 51, 255, 0.4); }
+  .card-tag.linux { background: rgba(42, 90, 59, 0.4); color: #b3ffcc; border-color: rgba(42, 90, 59, 0.6); }
+  .card-tag.critical { background: rgba(178, 34, 34, 0.4); color: #ff99aa; border-color: rgba(178, 34, 34, 0.6); }
+  .card-tag.hashi { background: rgba(217, 119, 6, 0.3); color: var(--imperial-gold); border-color: rgba(217, 119, 6, 0.5); }
+
+  .message-text { font-size: 0.94rem; line-height: 1.65; white-space: pre-line; color: #F8EFD5; font-family: var(--font-body); font-weight: 500; }
+
+  .card-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; align-items: stretch; }
+  .icon-btn {
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border-line); color: var(--text-dim);
+    border-radius: 6px; padding: 6px 10px; font-size: 0.88rem; cursor: pointer; line-height: 1; transition: all 0.2s ease;
+  }
+  .icon-btn:hover { background: rgba(244, 197, 66, 0.2); color: var(--imperial-gold); border-color: var(--imperial-gold); }
+  .icon-btn.on { color: var(--imperial-gold); border-color: var(--lantern-orange); background: rgba(217, 119, 6, 0.25); }
+  .icon-row { display: flex; gap: 6px; }
+
+  .seal-btn {
+    background: linear-gradient(135deg, var(--imperial-gold) 0%, var(--clan-red) 100%);
+    color: #121212; border: none; padding: 10px 18px; border-radius: 50px;
+    cursor: pointer; font-size: 0.82rem; font-weight: 900; white-space: nowrap; min-width: 150px;
+    transition: all 0.2s ease; box-shadow: 0 4px 18px rgba(178, 34, 34, 0.35);
+    font-family: var(--font-body); letter-spacing: 0.05em; text-align: center; text-transform: uppercase;
+  }
+  .seal-btn:hover { transform: translateY(-2px) scale(1.03); filter: brightness(1.15); box-shadow: 0 6px 24px rgba(244, 197, 66, 0.5); }
+  .seal-btn.copied { background: linear-gradient(135deg, #00ff88 0%, #00aa44 100%); color: #021208; }
+  .seal-btn:focus-visible { outline: 2px solid var(--imperial-gold); outline-offset: 2px; }
+
+  .progress-check { width: 20px; height: 20px; accent-color: var(--imperial-gold); cursor: pointer; flex-shrink: 0; }
+
+  .os-subfilter-row { display: flex; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px dashed var(--border-line); }
+  .os-subchip {
+    border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
+    padding: 5px 12px; border-radius: 14px; font-size: 0.74rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease;
+  }
+  .os-subchip:hover { border-color: var(--imperial-gold); color: var(--text-main); }
+  .os-subchip.active { background: rgba(244, 197, 66, 0.25); color: var(--imperial-gold); border-color: var(--imperial-gold); }
+
+  .path-selector-box {
+    display: flex; gap: 10px; margin-bottom: 18px; padding: 12px 16px; background: rgba(26, 20, 16, 0.65);
+    border: 1px solid var(--border-line); border-radius: 10px; flex-wrap: wrap; align-items: center;
+  }
+  .path-btn {
+    border: 1px solid var(--border-line); background: rgba(255,255,255,0.05); color: var(--text-main);
+    padding: 8px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease;
+  }
+  .path-btn:hover, .path-btn.active { background: rgba(244, 197, 66, 0.25); border-color: var(--imperial-gold); color: var(--imperial-gold); }
+
+  .library-search-box { position: relative; margin-bottom: 22px; }
+  .search-input {
+    width: 100%; padding: 15px 24px; font-size: 0.98rem; border-radius: 12px;
+    border: 1px solid var(--border-line); background: rgba(26, 20, 16, 0.92); backdrop-filter: blur(14px);
+    color: var(--text-main); outline: none; transition: all 0.25s ease; font-family: var(--font-body); font-weight: 600;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.8), inset 0 0 12px rgba(244, 197, 66, 0.08);
+  }
+  .search-input::placeholder { color: var(--text-muted); letter-spacing: 0.05em; font-weight: 500; }
+  .search-input:focus { border-color: var(--imperial-gold); box-shadow: 0 0 20px rgba(244, 197, 66, 0.35); }
+
+  .suggestions-dropdown {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
+    background: rgba(26, 20, 16, 0.96); border: 1px solid var(--imperial-gold);
+    border-radius: 0 0 12px 12px; backdrop-filter: blur(16px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+    max-height: 280px; overflow-y: auto; display: none; margin-top: 4px;
+  }
+  .suggestion-item {
+    padding: 12px 18px; border-bottom: 1px solid var(--border-soft); cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    transition: all 0.18s ease; font-size: 0.85rem; color: var(--text-main);
+  }
+  .suggestion-item:hover { background: rgba(244, 197, 66, 0.2); color: var(--imperial-gold); padding-left: 22px; }
+  .suggestion-item .sug-cat {
+    font-size: 0.68rem; color: var(--imperial-gold); border: 1px solid var(--border-line);
+    border-radius: 8px; padding: 2px 7px; flex-shrink: 0; font-weight: 700;
+  }
+  .search-count { font-size: 0.78rem; color: var(--imperial-gold); margin-top: 8px; min-height: 1em; font-weight: 700; }
+
+  .accordion { border: 1px solid var(--border-line); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-bg); backdrop-filter: blur(10px); scroll-margin-top: 100px; }
+  .accordion summary {
+    list-style: none; cursor: pointer; padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: linear-gradient(180deg, rgba(244, 197, 66, 0.12), rgba(244, 197, 66, 0.02));
+    font-family: var(--font-head); font-size: 1.1rem; color: var(--text-main); letter-spacing: 0.04em;
+  }
+  .accordion summary::-webkit-details-marker { display: none; }
+  .accordion summary .cat-left { display: flex; align-items: center; gap: 12px; }
+  .accordion summary .cat-num {
+    width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--imperial-gold); color: var(--imperial-gold);
+    display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-family: var(--font-body); font-weight: 900; flex-shrink: 0;
+  }
+  .accordion summary .cat-progress { font-size: 0.76rem; color: var(--text-dim); font-family: var(--font-body); font-weight: 700; }
+  .accordion summary .chevron { transition: transform 0.25s ease; color: var(--imperial-gold); }
+  .accordion[open] summary .chevron { transform: rotate(90deg); }
+  .accordion-body { padding: 18px 20px 20px; }
+
+  .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 28px; }
+  .quick-btn {
+    border: 1px solid var(--border-line); border-radius: 10px; padding: 16px; background: var(--panel-bg);
+    color: var(--text-main); cursor: pointer; text-align: left; font-size: 0.9rem; font-weight: 800;
+    transition: all 0.2s ease; font-family: var(--font-body); backdrop-filter: blur(10px); box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+  .quick-btn:hover { background: rgba(244, 197, 66, 0.15); border-color: var(--imperial-gold); transform: translateY(-2px); }
+  .quick-btn .qi { display: block; font-size: 1.3rem; margin-bottom: 8px; color: var(--imperial-gold); }
+
+  .table-responsive { width: 100%; overflow-x: auto; background: var(--panel-bg); border: 1px solid var(--border-line); border-radius: 12px; backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,0.6); }
+  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.86rem; min-width: 840px; }
+  th { background: rgba(244, 197, 66, 0.15); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-line); white-space: nowrap; position: sticky; top: 0; font-family: var(--font-head); font-weight: 700; letter-spacing: 0.05em; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border-soft); color: #F8EFD5; }
+  tbody tr:hover td { background: rgba(244, 197, 66, 0.08); }
+  tbody tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+  .badge-minor { background: rgba(255,255,255,0.08); color: #F8EFD5; border: 1px solid rgba(255,255,255,0.18); }
+  .badge-major { background: rgba(178, 34, 34, 0.35); color: #ff99aa; border: 1px solid rgba(178, 34, 34, 0.6); }
+
+  .gen-panel { border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; background: var(--panel-bg); margin-bottom: 28px; backdrop-filter: blur(10px); }
+  .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-line); background: rgba(18, 14, 12, 0.95); color: var(--text-main); font-size: 0.92rem; margin-bottom: 16px; font-family: var(--font-body); outline: none; font-weight: 600; }
+  .gen-select:focus { border-color: var(--imperial-gold); box-shadow: 0 0 15px rgba(244, 197, 66, 0.3); }
+  .gen-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+  .gen-card { border: 1px solid var(--border-line); border-radius: 10px; padding: 14px 16px; background: var(--card-bg); display: flex; flex-direction: column; justify-content: space-between; }
+  .gen-card h4 { font-family: var(--font-head); font-size: 0.9rem; color: var(--imperial-gold); margin-bottom: 8px; letter-spacing: 0.03em; }
+  .gen-card p { font-size: 0.86rem; line-height: 1.55; color: #F8EFD5; margin-bottom: 12px; white-space: pre-line; }
+
+  .filter-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  .filter-chip {
+    border: 1px solid var(--border-line); background: rgba(255,255,255,0.04); color: var(--text-dim);
+    padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease; font-family: var(--font-body);
+  }
+  .filter-chip:hover { border-color: var(--imperial-gold); color: var(--text-main); }
+  .filter-chip.active { background: rgba(244, 197, 66, 0.25); color: var(--imperial-gold); border-color: var(--imperial-gold); }
+
+  .infraction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
+  .infr-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 16px 18px; background: var(--card-bg); cursor: pointer; transition: all 0.2s ease; border-left: 4px solid var(--text-dim); backdrop-filter: blur(10px); }
+  .infr-card:hover { background: rgba(36, 28, 22, 0.92); transform: translateY(-2px); }
+  .infr-card.risk-green { border-left-color: #00ff88; }
+  .infr-card.risk-yellow { border-left-color: var(--imperial-gold); }
+  .infr-card.risk-orange { border-left-color: var(--lantern-orange); }
+  .infr-card.risk-red { border-left-color: #ff3b30; }
+  .infr-name { font-weight: 800; color: var(--text-main); margin-bottom: 6px; font-size: 0.95rem; }
+  .infr-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 6px; font-weight: 700; }
+  .infr-threshold { font-size: 0.74rem; color: var(--text-dim); }
+  .infr-detail { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-line); font-size: 0.85rem; line-height: 1.55; display: none; }
+  .infr-card.expanded .infr-detail { display: block; }
+  .risk-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.76rem; color: var(--text-dim); margin-bottom: 18px; align-items: center; font-weight: 700; }
+  .risk-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+
+  .trouble-section { margin-bottom: 30px; }
+  .trouble-mode-header {
+    font-family: var(--font-head); font-size: 1.3rem; color: var(--imperial-gold); border-bottom: 2px solid var(--border-line);
+    padding-bottom: 8px; margin: 24px 0 16px; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .trouble-card {
+    border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; margin-bottom: 18px;
+    background: var(--panel-bg); backdrop-filter: blur(10px);
+  }
+  .trouble-card h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; letter-spacing: 0.03em; }
+  .flow-step {
+    border-left: 2px solid var(--imperial-gold); padding-left: 16px; margin-bottom: 16px; position: relative;
+  }
+  .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--imperial-gold); text-transform: uppercase; letter-spacing: 0.06em; }
+  .flow-step-title { font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin: 3px 0 5px; }
+  .flow-step-action { font-size: 0.86rem; color: var(--text-dim); line-height: 1.45; margin-bottom: 8px; font-weight: 500; }
+  .flow-step-spiel {
+    background: rgba(18, 14, 12, 0.75); border: 1px solid var(--border-line); border-radius: 8px; padding: 10px 12px;
+    font-size: 0.84rem; color: #F8EFD5; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+
+  .dojo-modal-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .dojo-modal {
+    background: var(--panel-bg); border: 2px solid var(--imperial-gold);
+    border-radius: 12px; padding: 24px; max-width: 500px; width: 100%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9); text-align: left;
+  }
+  .dojo-modal h3 { font-family: var(--font-head); color: var(--imperial-gold); margin-bottom: 12px; font-size: 1.2rem; }
+  .dojo-modal textarea {
+    width: 100%; height: 100px; padding: 12px; border-radius: 8px;
+    border: 1px solid var(--border-line); background: rgba(18,14,12,0.9);
+    color: var(--text-main); font-family: var(--font-body); font-size: 0.9rem;
+    margin-bottom: 16px; outline: none; resize: vertical;
+  }
+  .dojo-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+  @media (max-width: 960px) {
+    .sidebar { width: 260px; }
+    .org-teams-branch { flex-direction: column; align-items: center; gap: 16px; }
+    .org-teams-branch::before { display: none; }
+    .org-team-column::before { display: none; }
+  }
+  @media (max-width: 640px) {
+    body { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: relative; }
+    .nav-links { display: none; }
+    .card { flex-direction: column; align-items: stretch; }
+    .card-actions { flex-direction: row; justify-content: flex-end; }
+    .seal-btn { width: 100%; }
+    .furnace-frame-container { transform: scale(1); padding: 18px 24px; }
+    .top-banner-row { flex-direction: column; gap: 10px; align-items: flex-start; }
+  }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(244, 197, 66, 0.35); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(244, 197, 66, 0.6); }
+</style>
+</head>
+<body>
+
+  <!-- ================= ATMOSPHERIC SCENE WITH HALLOWEEN ELEMENTS ================= -->
+  <div class="scene" aria-hidden="true">
+    <!-- Blood Moon -->
+    <div class="blood-moon"></div>
+
+    <!-- Flying Bats Overlay -->
+    <div class="bat-group">
+      <svg viewBox="0 0 1000 200" style="width:100%; height:100%; opacity:0.6;">
+        <path d="M 100 80 Q 110 60 120 70 Q 130 60 140 80 Q 120 85 100 80 Z" fill="#000"/>
+        <path d="M 300 120 Q 315 95 330 110 Q 345 95 360 120 Q 330 128 300 120 Z" fill="#000"/>
+        <path d="M 600 50 Q 610 35 620 45 Q 630 35 640 50 Q 620 55 600 50 Z" fill="#000"/>
+      </svg>
+    </div>
+
+    <!-- Cobweb Corner Framing -->
+    <div class="cobweb-left">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#f4c542" stroke-width="0.8">
+        <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" />
+        <path d="M 20,0 Q 20,20 0,20 M 40,0 Q 40,40 0,40 M 60,0 Q 60,60 0,60 M 80,0 Q 80,80 0,80" />
+      </svg>
+    </div>
+    <div class="cobweb-right">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#f4c542" stroke-width="0.8">
+        <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" />
+        <path d="M 20,0 Q 20,20 0,20 M 40,0 Q 40,40 0,40 M 60,0 Q 60,60 0,60 M 80,0 Q 80,80 0,80" />
+      </svg>
+    </div>
+
+    <!-- EDO KYOTO STREETSCAPE WITH GLOWING JACK-O'-LANTERNS -->
+    <div class="kyoto-streetscape">
+      <svg viewBox="0 0 1200 320" preserveAspectRatio="none">
+        <g fill="#0c0907" stroke="#362218" stroke-width="2">
+          <!-- Left Machiya House -->
+          <rect x="0" y="140" width="220" height="180"/>
+          <polygon points="-10,140 110,80 230,140"/>
+          <rect x="30" y="180" width="60" height="80" fill="#F4C542" opacity="0.85"/>
+          <line x1="60" y1="180" x2="60" y2="260" stroke="#121212" stroke-width="2"/>
+          <line x1="30" y1="220" x2="90" y2="220" stroke="#121212" stroke-width="2"/>
+
+          <!-- Jack-o'-Lantern on Left Porch -->
+          <circle cx="180" cy="285" r="14" fill="#ff6600"/>
+          <polygon points="175,280 178,284 172,284" fill="#121212"/>
+          <polygon points="185,280 188,284 182,284" fill="#121212"/>
+          <path d="M172,289 Q180,295 188,289" stroke="#121212" stroke-width="2" fill="none"/>
+
+          <!-- Traditional Tōrō Lantern Posts -->
+          <rect x="260" y="180" width="12" height="140" fill="#121212"/>
+          <polygon points="250,180 266,150 282,180"/>
+          <rect x="254" y="160" width="24" height="20" fill="#D97706"/>
+
+          <!-- Center Samurai Compound & Gate -->
+          <rect x="420" y="120" width="360" height="200"/>
+          <polygon points="390,120 600,50 810,120"/>
+          <rect x="550" y="200" width="100" height="120" fill="#B22222"/>
+
+          <!-- Jack-o'-Lanterns by Gate -->
+          <circle cx="520" cy="290" r="16" fill="#ff5500"/>
+          <polygon points="514,285 517,289 511,289" fill="#121212"/>
+          <polygon points="526,285 529,289 523,289" fill="#121212"/>
+          <path d="M512,294 Q520,301 528,294" stroke="#121212" stroke-width="2" fill="none"/>
+
+          <circle cx="680" cy="292" r="13" fill="#ff7700"/>
+          <polygon points="675,288 678,291 672,291" fill="#121212"/>
+          <polygon points="685,288 688,291 682,291" fill="#121212"/>
+
+          <!-- Right Machiya Row & Lantern Posts -->
+          <rect x="940" y="150" width="260" height="170"/>
+          <polygon points="920,150 1070,90 1220,150"/>
+          <rect x="980" y="190" width="60" height="80" fill="#F4C542" opacity="0.85"/>
+          <rect x="900" y="200" width="12" height="120" fill="#121212"/>
+          <rect x="894" y="180" width="24" height="20" fill="#D97706"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="spooky-mist"></div>
+    <div class="scene-vignette"></div>
+    <canvas id="fxCanvas"></canvas>
+  </div>
+
+  <!-- ================= SIDEBAR ================= -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-mon">五</div>
+      <h1>Proctor Dojo</h1>
+      <div class="subtitle">Observe &middot; Verify &middot; Protect</div>
+    </div>
+
+    <div class="view-selectors">
+      <button class="view-btn active" data-view="view-home" onclick="switchView('view-home', this)"><span class="vi">🏯</span> Home</button>
+      <button class="view-btn" data-view="view-checkin" onclick="switchView('view-checkin', this)"><span class="vi">📜</span> Check-In Steps</button>
+      <button class="view-btn" data-view="view-troubleshooting" onclick="switchView('view-troubleshooting', this)"><span class="vi">🛠️</span> Troubleshooting</button>
+      <button class="view-btn" data-view="view-library" onclick="switchView('view-library', this)"><span class="vi">🔍</span> Canned Messages</button>
+      <button class="view-btn" data-view="view-threshold" onclick="switchView('view-threshold', this)"><span class="vi">⚠️</span> Threshold Center</button>
+      <button class="view-btn" data-view="view-policies" onclick="switchView('view-policies', this)"><span class="vi">🗝️</span> Client Policies</button>
+      <button class="view-btn" data-view="view-faq" onclick="switchView('view-faq', this)"><span class="vi">🎋</span> FAQ Archive</button>
+      <button class="view-btn" style="border-color:var(--clan-red);" onclick="openTickerAdmin()"><span class="vi">⚡</span> Update Ticker</button>
+    </div>
+
+    <div class="nav-label" id="sidebarSublabel">Navigation Details</div>
+    <ul class="nav-links" id="sidebarDynamicLinks"></ul>
+
+    <div class="sidebar-footer">Certiverse &middot; Proctor Dojo</div>
+  </div>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <div class="main-content">
+
+    <div class="top-banner-row">
+      <div class="left-clock-box">
+        <div class="top-clock-time" id="clockTime">--:--:--</div>
+      </div>
+
+      <div class="right-date-box">
+        <div class="top-clock-date" id="clockDate">Loading PST Manila Time&hellip;</div>
+      </div>
+    </div>
+
+    <div class="main-hero-stage">
+      <div class="furnace-frame-container" title="FiveActs Official Dojo">
+        <div class="furnace-fire-glow"></div>
+        <div class="furnace-flame-flicker"></div>
+        <div class="fiveacts-logo-badge">
+          <div class="fiveacts-logo-slant"><span>FIVE</span></div>
+          <div class="fiveacts-logo-text">ACTS</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="news-ticker-bar">
+      <div class="news-ticker-badge">FLASH UPDATE</div>
+      <div class="news-ticker-wrap">
+        <div class="news-ticker-text" id="tickerDisplay">
+          Welcome to FiveActs Proctor Dojo! Ensure all candidates complete environment & ID verifications before releasing exams. For urgent technical escalations, contact support@certiverse.com.
+        </div>
+      </div>
+    </div>
+
+    <!-- HOME VIEW -->
+    <div id="view-home" class="dashboard-view active">
+      <h2 class="page-title">Operations Hall</h2>
+      <p class="page-sub">The dojo's main hall — organization structure, shortcuts, and your recent work.</p>
+
+      <div class="org-chart-container">
+        <h3 class="section-title" style="border:none;margin-bottom:20px;justify-content:center;">⛩️ FiveActs Dojo Command Hierarchy</h3>
+        
+        <div class="org-tree">
+          <div class="org-node root">
+            <div class="org-title">President</div>
+            <div class="org-name">Erick Cruz</div>
+          </div>
+
+          <div class="org-line-v"></div>
+
+          <div class="org-node sub-root">
+            <div class="org-title">Operations Manager</div>
+            <div class="org-name">Jodel Cruz</div>
+          </div>
+
+          <div class="org-line-v"></div>
+
+          <div class="org-teams-branch">
+            <div class="org-team-column">
+              <div class="org-card-group">
+                <div class="org-group-header">
+                  Candidate Support Team <span class="org-badge">5</span>
+                </div>
+                <div class="org-member-list">
+                  <div class="org-member-item">Jane Austria</div>
+                  <div class="org-member-item">Gian Garcia</div>
+                  <div class="org-member-item">Dianne Candano</div>
+                  <div class="org-member-item">Ralph Soriano</div>
+                  <div class="org-member-item">Ralph Maullion</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="org-team-column">
+              <div class="org-card-group">
+                <div class="org-group-header">
+                  Accountant <span class="org-badge">1</span>
+                </div>
+                <div class="org-member-list">
+                  <div class="org-member-item">Bryan Mark Adan</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="org-team-column">
+              <div class="org-card-group">
+                <div class="org-group-header">Management</div>
+                <div class="org-member-list">
+                  <div class="org-node" style="border-left-color:var(--lantern-orange);">
+                    <div class="org-title">HR Manager &amp; Proctor Manager</div>
+                    <div class="org-name">Dyanne Cruz</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="org-team-column" style="flex:1.5;">
+              <div class="org-card-group">
+                <div class="org-group-header">Management &amp; Proctors</div>
+                <div class="org-member-list" style="margin-bottom:12px;">
+                  <div class="org-node" style="border-left-color:var(--lantern-orange);">
+                    <div class="org-title">Proctor Manager</div>
+                    <div class="org-name">Jeffrey Macapagal</div>
+                  </div>
+                </div>
+
+                <div class="org-group-header" style="border-top:1px solid var(--border-line);padding-top:8px;">
+                  Proctors <span class="org-badge">13</span>
+                </div>
+                <div class="org-member-list grid-2">
+                  <div class="org-member-item">Sebastian Tamayo</div>
+                  <div class="org-member-item">Bobzer San Juan</div>
+                  <div class="org-member-item">Keenan Handugan</div>
+                  <div class="org-member-item">Sunshine Faith Broñosa</div>
+                  <div class="org-member-item">Grace Remolacio</div>
+                  <div class="org-member-item">Mark Pesico</div>
+                  <div class="org-member-item">Rachelle Raymundo</div>
+                  <div class="org-member-item">John Paul Racines</div>
+                  <div class="org-member-item">Khate Cyrelle Amil</div>
+                  <div class="org-member-item">Romina Marie Dumlao</div>
+                  <div class="org-member-item">Kathy Lyn Leonar</div>
+                  <div class="org-member-item">Moses Cawil</div>
+                  <div class="org-member-item">Rose Ann Parafina</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="section-container">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="quick-grid" id="quickGrid"></div>
+      </div>
+    </div>
+
+    <!-- CHECK-IN STEPS VIEW -->
+    <div id="view-checkin" class="dashboard-view">
+      <h2 class="page-title">Check-In Steps</h2>
+      <p class="page-sub">Work sequentially through categories 1&ndash;13. Select an exam mode below to configure steps.</p>
+      
+      <div class="path-selector-box">
+        <span style="font-size:0.8rem;font-weight:800;color:var(--imperial-gold);">Exam Mode Configuration:</span>
+        <button class="path-btn active" id="btn-mode-nonseb" onclick="setExamMode('nonseb')">Non-SEB</button>
+        <button class="path-btn" id="btn-mode-seb" onclick="setExamMode('seb')">SEB</button>
+        <button class="path-btn" style="margin-left:auto;" onclick="resetProgress()">Reset Progress</button>
+      </div>
+
+      <div id="checkinAccordions"></div>
+    </div>
+
+    <!-- TROUBLESHOOTING VIEW -->
+    <div id="view-troubleshooting" class="dashboard-view">
+      <h2 class="page-title">Hardware &amp; System Troubleshooting</h2>
+      <p class="page-sub">Step-by-step diagnostic workflows for candidate Audio, Screen Sharing, and Camera issues across Non-SEB and SEB environments.</p>
+
+      <div class="trouble-section">
+        <details class="accordion" id="trouble-drop-audio" open>
+          <summary>
+            <span class="cat-left">🎤 Audio — Microphone Not Working (Non-SEB)</span>
+            <span class="chevron">&#10148;</span>
+          </summary>
+          <div class="accordion-body">
+            <div class="trouble-card">
+              <div class="flow-step">
+                <div class="flow-step-num">Step 1 &mdash; Browser Version Check</div>
+                <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
+                <div class="flow-step-action">Check if candidate is on the latest version of Chrome or Edge.</div>
+                <div class="flow-step-spiel">
+                  <span>"Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 2 &mdash; Browser Switch Test</div>
+                <div class="flow-step-title">Alternate Browser Isolation</div>
+                <div class="flow-step-action">Instruct candidate to switch between Chrome and Edge.</div>
+                <div class="flow-step-spiel">
+                  <span>"If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 3 &mdash; Company Device Check</div>
+                <div class="flow-step-title">Confirm Corporate vs. Personal Hardware Restrictions</div>
+                <div class="flow-step-action">Inquire whether candidate is using a company-issued device.</div>
+                <div class="flow-step-spiel">
+                  <span>"May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 4 &mdash; Check Mute Settings</div>
+                <div class="flow-step-title">Hardware Switch &amp; Mute Inspection</div>
+                <div class="flow-step-action">Check physical headset switch or device mute setting.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please check your device and headset for any microphone mute buttons or switches and ensure that your microphone is unmuted."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check your device and headset for any microphone mute buttons or switches and ensure that your microphone is unmuted.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 5 &mdash; Device Permission Check</div>
+                <div class="flow-step-title">Verify Device Hardware Permissions</div>
+                <div class="flow-step-action">Confirm device permissions for microphone, camera, and screen sharing are enabled.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 6 &mdash; Operating System Permission Check</div>
+                <div class="flow-step-title">Verify System Privacy Settings</div>
+                <div class="flow-step-action">Confirm OS level microphone access settings.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please verify that your operating system allows applications and websites to access your microphone."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your operating system allows applications and websites to access your microphone.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 7 &mdash; Correct Microphone Selected</div>
+                <div class="flow-step-title">Hardware Device Selection</div>
+                <div class="flow-step-action">Ensure primary microphone input is selected.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please ensure that the correct microphone is selected in both your browser and system audio settings."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please ensure that the correct microphone is selected in both your browser and system audio settings.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 8 &mdash; Rejoin Session</div>
+                <div class="flow-step-title">Re-enter Session from Dashboard</div>
+                <div class="flow-step-action">Re-launch exam session to trigger device re-detection.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please leave the session and rejoin from the exam dashboard so the system can re-detect your microphone settings."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please leave the session and rejoin from the exam dashboard so the system can re-detect your microphone settings.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 9 &mdash; Restart Device</div>
+                <div class="flow-step-title">Full Computer Reboot</div>
+                <div class="flow-step-action">Restart system to reset media drivers.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please perform a full restart of your device and rejoin the exam session."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please perform a full restart of your device and rejoin the exam session.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 10 &mdash; Alternate Device / Escalation</div>
+                <div class="flow-step-title">Secondary Hardware or Support Ticket</div>
+                <div class="flow-step-action">Use fallback machine or contact support@certiverse.com.</div>
+                <div class="flow-step-spiel">
+                  <span>"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.')">⚜ Copy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="accordion" id="trouble-drop-screen">
+          <summary>
+            <span class="cat-left">🖥️ Screen Sharing — Unable to Share Screen (Non-SEB)</span>
+            <span class="chevron">&#10148;</span>
+          </summary>
+          <div class="accordion-body">
+            <div class="trouble-card">
+              <div class="flow-step">
+                <div class="flow-step-num">Step 1 &mdash; Browser Version Check</div>
+                <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
+                <div class="flow-step-action">Confirm browser version compatibility.</div>
+                <div class="flow-step-spiel">
+                  <span>"Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 2 &mdash; Browser Switch Test</div>
+                <div class="flow-step-title">Alternate Browser Test</div>
+                <div class="flow-step-action">Switch from Chrome to Edge or vice versa.</div>
+                <div class="flow-step-spiel">
+                  <span>"If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 3 &mdash; Company Device Check</div>
+                <div class="flow-step-title">Confirm Corporate Security Restrictions</div>
+                <div class="flow-step-action">Check if device is managed by corporate policies.</div>
+                <div class="flow-step-spiel">
+                  <span>"May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 4 &mdash; Screen-Sharing Permissions</div>
+                <div class="flow-step-title">Browser &amp; OS Screen Recording Settings</div>
+                <div class="flow-step-action">Check macOS Privacy Screen Recording or Windows permissions.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please verify that screen-sharing permissions are enabled in both your browser and operating system settings."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that screen-sharing permissions are enabled in both your browser and operating system settings.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 5 &mdash; Multiple Monitor Check</div>
+                <div class="flow-step-title">Disconnect Secondary Monitors</div>
+                <div class="flow-step-action">Physically unplug external displays.</div>
+                <div class="flow-step-spiel">
+                  <span>"If you are using multiple monitors or external displays, please disconnect them and use only one monitor during the exam."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are using multiple monitors or external displays, please disconnect them and use only one monitor during the exam.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 6 &mdash; Device Permission Verification</div>
+                <div class="flow-step-title">All System Permissions Check</div>
+                <div class="flow-step-action">Confirm full device permission access.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 7 &mdash; Network Test</div>
+                <div class="flow-step-title">Switch Network / Mobile Hotspot</div>
+                <div class="flow-step-action">Try connecting to an alternate network or mobile hotspot.</div>
+                <div class="flow-step-spiel">
+                  <span>"If possible, please switch to a different internet connection, such as another Wi-Fi network or a mobile hotspot."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If possible, please switch to a different internet connection, such as another Wi-Fi network or a mobile hotspot.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 8 &mdash; Rejoin Session</div>
+                <div class="flow-step-title">Close &amp; Relaunch Session</div>
+                <div class="flow-step-action">Relaunch exam from candidate dashboard.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please close the session and launch it again from the exam dashboard."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please close the session and launch it again from the exam dashboard.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 9 &mdash; Restart Device</div>
+                <div class="flow-step-title">Restart System &amp; Rejoin</div>
+                <div class="flow-step-action">Restart machine to clear display permissions.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please restart your device and attempt screen sharing again after rejoining the exam."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please restart your device and attempt screen sharing again after rejoining the exam.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 10 &mdash; Alternate Device / Escalation</div>
+                <div class="flow-step-title">Secondary Machine or Support Contact</div>
+                <div class="flow-step-action">Use another personal device or contact support@certiverse.com.</div>
+                <div class="flow-step-spiel">
+                  <span>"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.')">⚜ Copy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="accordion" id="trouble-drop-video">
+          <summary>
+            <span class="cat-left">📷 Video — Camera Not Working (Non-SEB)</span>
+            <span class="chevron">&#10148;</span>
+          </summary>
+          <div class="accordion-body">
+            <div class="trouble-card">
+              <div class="flow-step">
+                <div class="flow-step-num">Step 1 &mdash; Browser Version Check</div>
+                <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
+                <div class="flow-step-action">Confirm browser compatibility.</div>
+                <div class="flow-step-spiel">
+                  <span>"Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 2 &mdash; Browser Switch Test</div>
+                <div class="flow-step-title">Test Alternate Browser</div>
+                <div class="flow-step-action">Switch Chrome &harr; Edge.</div>
+                <div class="flow-step-spiel">
+                  <span>"If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 3 &mdash; Company Device Check</div>
+                <div class="flow-step-title">Confirm Corporate Device Restrictions</div>
+                <div class="flow-step-action">Check for corporate policy restrictions.</div>
+                <div class="flow-step-spiel">
+                  <span>"May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 4 &mdash; Physical Camera Check</div>
+                <div class="flow-step-title">Check Privacy Shutter &amp; Hardware Switch</div>
+                <div class="flow-step-action">Inspect camera shutter, switch, or function key.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please check whether your device has a camera privacy shutter, physical switch, or camera disable button. If it does, make sure the camera is enabled and uncovered."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check whether your device has a camera privacy shutter, physical switch, or camera disable button. If it does, make sure the camera is enabled and uncovered.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 5 &mdash; Device Permission Check</div>
+                <div class="flow-step-title">Verify Device Hardware Permissions</div>
+                <div class="flow-step-action">Allow camera in browser/OS settings.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 6 &mdash; Browser Camera Permission</div>
+                <div class="flow-step-title">Verify Lock Icon Permissions</div>
+                <div class="flow-step-action">Allow camera in browser permissions popup.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please verify that your browser has permission to access your camera."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your browser has permission to access your camera.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 7 &mdash; Operating System Camera Permission</div>
+                <div class="flow-step-title">Verify OS Camera Privacy Access</div>
+                <div class="flow-step-action">Allow camera in Windows/Mac OS privacy settings.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please verify that your operating system allows applications and websites to access your camera."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your operating system allows applications and websites to access your camera.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 8 &mdash; Close Other Applications</div>
+                <div class="flow-step-title">Close Conflicting Applications (Zoom, Teams, Skype)</div>
+                <div class="flow-step-action">Close secondary apps utilizing camera hardware.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please close any applications that may currently be using your camera, such as Zoom, Microsoft Teams, Google Meet, Skype, Discord, or similar programs."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please close any applications that may currently be using your camera, such as Zoom, Microsoft Teams, Google Meet, Skype, Discord, or similar programs.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 9 &mdash; Network Test</div>
+                <div class="flow-step-title">Switch Wi-Fi Connection / Hotspot</div>
+                <div class="flow-step-action">Connect to an alternate network.</div>
+                <div class="flow-step-spiel">
+                  <span>"If possible, please switch to another internet connection and test your camera again."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If possible, please switch to another internet connection and test your camera again.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 10 &mdash; Rejoin / Restart</div>
+                <div class="flow-step-title">Full Computer Reboot &amp; Rejoin</div>
+                <div class="flow-step-action">Restart computer to reset capture drivers.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please leave the session, restart your device, and then rejoin the exam from the dashboard."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please leave the session, restart your device, and then rejoin the exam from the dashboard.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 11 &mdash; Alternate Device / Escalation</div>
+                <div class="flow-step-title">Secondary Machine or Support Ticket</div>
+                <div class="flow-step-action">Use fallback machine or contact support@certiverse.com.</div>
+                <div class="flow-step-spiel">
+                  <span>"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.')">⚜ Copy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="accordion" id="trouble-drop-seb">
+          <summary>
+            <span class="cat-left">🧭 SEB (SECURE EXAM BROWSER) EXAMS</span>
+            <span class="chevron">&#10148;</span>
+          </summary>
+          <div class="accordion-body">
+            <div class="trouble-card">
+              <div class="flow-step">
+                <div class="flow-step-num">Step 1 &mdash; Top-Left SEB Refresh</div>
+                <div class="flow-step-title">Refresh Safe Exam Browser Navigation</div>
+                <div class="flow-step-action">Instruct candidate to click the SEB refresh icon located in the upper-left corner of the window.</div>
+                <div class="flow-step-spiel">
+                  <span>"To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 2 &mdash; SEB Input Device Switching</div>
+                <div class="flow-step-title">Re-select Audio/Video Devices in SEB Bar</div>
+                <div class="flow-step-action">Refresh SEB media selector dialog and choose an alternate active webcam or microphone device.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please try to refresh the SEB and choose a different audio/video input."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please try to refresh the SEB and choose a different audio/video input.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 3 &mdash; Bottom-Right Power Icon Exit</div>
+                <div class="flow-step-title">Exit SEB Application to Reset Environment</div>
+                <div class="flow-step-action">Instruct candidate to exit SEB by clicking the bottom-right power icon, fix device settings, and re-enter.</div>
+                <div class="flow-step-spiel">
+                  <span>"To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 4 &mdash; SEB Re-entry &amp; Support Escalation</div>
+                <div class="flow-step-title">Re-launch SEB or Escalate to Support</div>
+                <div class="flow-step-action">Re-launch SEB session. If version error persists, refer candidate to support@certiverse.com.</div>
+                <div class="flow-step-spiel">
+                  <span>"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.')">⚜ Copy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- CANNED MESSAGE LIBRARY VIEW -->
+    <div id="view-library" class="dashboard-view">
+      <h2 class="page-title">Canned Message Library</h2>
+      <p class="page-sub">Search our database for instant spiels and copyable candidate responses.</p>
+      
+      <div class="library-search-box">
+        <input type="text" id="globalSearch" class="search-input" placeholder="Search database... search spiels, camera, permissions, reboot" oninput="handleLibrarySearch()" onfocus="handleLibrarySearch()" aria-label="Search canned messages">
+        <div class="suggestions-dropdown" id="suggestionsBox"></div>
+      </div>
+      <div class="search-count" id="searchCount"></div>
+
+      <div class="filter-row" id="libraryFilters"></div>
+      <div id="libraryList"></div>
+    </div>
+
+    <!-- THRESHOLD CENTER VIEW -->
+    <div id="view-threshold" class="dashboard-view">
+      <h2 class="page-title">Infraction Threshold Center</h2>
+      <p class="page-sub">Tactical response reference. Risk color is derived from each infraction's severity and remaining threshold.</p>
+      <div class="risk-legend">
+        <span><span class="dot" style="background:#00ff88;"></span>Standard</span>
+        <span><span class="dot" style="background:#ffcc00;"></span>Elevated</span>
+        <span><span class="dot" style="background:#f26522;"></span>Critical</span>
+        <span><span class="dot" style="background:#ff3b30;"></span>Immediate</span>
+      </div>
+      <div class="filter-row" id="thresholdFilters"></div>
+      <div class="infraction-grid" id="infractionGrid"></div>
+      <div class="empty-state" id="infractionEmpty" style="display:none;margin-top:14px;">No matching infractions.</div>
+    </div>
+
+    <!-- CLIENT POLICIES VIEW -->
+    <div id="view-policies" class="dashboard-view">
+      <h2 class="page-title">Client Policy Library</h2>
+      <p class="page-sub">Select a client to generate ready-to-copy responses, or search the full archive below.</p>
+
+      <div class="gen-panel">
+        <label for="policySelect" style="display:block;font-size:.8rem;color:var(--text-dim);margin-bottom:8px;">Policy Generator &mdash; select a client</label>
+        <select id="policySelect" class="gen-select" onchange="renderGenerator()"></select>
+        <div class="gen-cards" id="generatorCards"></div>
+      </div>
+
+      <div class="section-container">
+        <h2 class="section-title">Full Policy Archive <span class="section-count" id="policiesCount"></span></h2>
+        <div class="table-responsive">
+          <table id="policiesTable">
+            <thead>
+              <tr><th>Client</th><th>Name Change</th><th>Breaks Policy</th><th>Name Policy</th><th>SEB / Non-SEB</th><th>Documentation</th></tr>
+            </thead>
+            <tbody id="policiesBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="policiesEmpty" style="display:none;margin-top:10px;">No matching clients.</div>
+      </div>
+    </div>
+
+    <!-- FAQ ARCHIVE VIEW -->
+    <div id="view-faq" class="dashboard-view">
+      <h2 class="page-title">FAQ Archive</h2>
+      <p class="page-sub">Official Certiverse Knowledge Base &amp; Internal Proctor FAQ Encyclopedia.</p>
+
+      <div class="trouble-card">
+        <h3>🛠️ Technical Requirements &amp; Troubleshooting</h3>
+        <div class="flow-step">
+          <div class="flow-step-title">Does my computer meet the necessary requirements?</div>
+          <div class="flow-step-action">Candidates can access the Certiverse System Requirements &amp; Hardware Guide to check the pre-flight requirements. It is highly recommended to run the specific compatibility tool provided for your exam ahead of time.</div>
+          <div class="flow-step-spiel">
+            <span>"Please verify that your computer meets all system requirements by using the pre-exam compatibility tool on your Certiverse dashboard. It is highly recommended to run the compatibility tool provided for your exam ahead of time."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your computer meets all system requirements by using the pre-exam compatibility tool on your Certiverse dashboard. It is highly recommended to run the compatibility tool provided for your exam ahead of time.')">⚜ Copy</button>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-title">Am I able to use a Chromebook?</div>
+          <div class="flow-step-action">No, the test environment does not support Chromebooks. You must use a device that meets the full hardware specifications.</div>
+          <div class="flow-step-spiel">
+            <span>"No, the test environment does not support Chromebooks. You must use a desktop or laptop device that meets full system requirements."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'No, the test environment does not support Chromebooks. You must use a desktop or laptop device that meets full system requirements.')">⚜ Copy</button>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-title">Why do I see a blank page when navigating to Certiverse.com?</div>
+          <div class="flow-step-action">Certain corporate networks or VPNs block the platform. Candidates experiencing this should switch to a personal machine and connection.</div>
+          <div class="flow-step-spiel">
+            <span>"Certain corporate networks or VPNs block the platform. If you see a blank page, please switch to a personal machine and personal network connection."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Certain corporate networks or VPNs block the platform. If you see a blank page, please switch to a personal machine and personal network connection.')">⚜ Copy</button>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-title">What should I do if my camera isn't working?</div>
+          <div class="flow-step-action">Check for a physical camera switch or privacy button on your device. Ensure it is toggled to the "on" position before launching the session so the platform can detect it.</div>
+          <div class="flow-step-spiel">
+            <span>"Please check for a physical camera switch or privacy button on your device and ensure it is toggled to the 'on' position before launching the session."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check for a physical camera switch or privacy button on your device and ensure it is toggled to the \'on\' position before launching the session.')">⚜ Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trouble-card">
+        <h3>📝 Booking, Vouchers, &amp; Exam Management</h3>
+        <div class="flow-step">
+          <div class="flow-step-title">What are voucher codes and how do I use them?</div>
+          <div class="flow-step-action">Vouchers are prepaid codes issued by authorized Test Sponsors. They allow you to pay for and schedule your exam directly through the portal.</div>
+          <div class="flow-step-spiel">
+            <span>"Vouchers are prepaid codes issued by authorized Test Sponsors. You can enter your voucher code at checkout to pay for and schedule your exam."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Vouchers are prepaid codes issued by authorized Test Sponsors. You can enter your voucher code at checkout to pay for and schedule your exam.')">⚜ Copy</button>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-title">Where can I manage my scheduled exams?</div>
+          <div class="flow-step-action">Once logged in, all activities are centralized in the My Exams dashboard (certiverse.com/#/dashboard). This is where you go to review, launch, cancel, or reschedule your tests.</div>
+          <div class="flow-step-spiel">
+            <span>"You can manage all scheduled exams directly from your My Exams dashboard at certiverse.com/#/dashboard to review, launch, cancel, or reschedule your session."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'You can manage all scheduled exams directly from your My Exams dashboard at certiverse.com/#/dashboard to review, launch, cancel, or reschedule your session.')">⚜ Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trouble-card">
+        <h3>🛡️ Online Proctoring &amp; AI Monitoring</h3>
+        <div class="flow-step">
+          <div class="flow-step-title">What happens if I get disconnected during the exam?</div>
+          <div class="flow-step-action">If you lose connectivity, you can immediately rejoin the session from your dashboard. Candidates have up to 60 minutes to relaunch an abandoned exam before it autocompletes. If a disconnection exceeds a 30-minute threshold, you must contact support to reschedule.</div>
+          <div class="flow-step-spiel">
+            <span>"If you get disconnected, you can rejoin directly from your dashboard. You have up to 60 minutes to relaunch before autocompletion, but if disconnected for over 30 minutes, please contact support@certiverse.com."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you get disconnected, you can rejoin directly from your dashboard. You have up to 60 minutes to relaunch before autocompletion, but if disconnected for over 30 minutes, please contact support@certiverse.com.')">⚜ Copy</button>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-title">How do proctors communicate with candidates?</div>
+          <div class="flow-step-action">Communication is conducted entirely over text chat or email via support@certiverse.com. Support staff can also offer remote control assistance if necessary, but phone support is not available.</div>
+          <div class="flow-step-spiel">
+            <span>"All proctor communication is conducted over text chat inside the platform or via email at support@certiverse.com. Phone support is not available."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'All proctor communication is conducted over text chat inside the platform or via email at support@certiverse.com. Phone support is not available.')">⚜ Copy</button>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-title">What triggers an exam pause?</div>
+          <div class="flow-step-action">The AI-assisted proctoring system monitors your webcam. It will automatically pause your test and alert a human proctor if it flags an anomaly, such as your face leaving the camera frame or another person walking into view.</div>
+          <div class="flow-step-spiel">
+            <span>"The proctoring system monitors your webcam and will automatically pause your test if your face leaves the view frame or another person enters the room."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'The proctoring system monitors your webcam and will automatically pause your test if your face leaves the view frame or another person enters the room.')">⚜ Copy</button>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-title">What are the core testing rules?</div>
+          <div class="flow-step-action">You must test in a private, well-lit room completely alone. External monitors must be disconnected, and taking screenshots, photos, or copying and pasting text is strictly prohibited.</div>
+          <div class="flow-step-spiel">
+            <span>"You must test in a private, well-lit room alone. External monitors must be disconnected, and taking screenshots or copying text is strictly prohibited."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'You must test in a private, well-lit room alone. External monitors must be disconnected, and taking screenshots or copying text is strictly prohibited.')">⚜ Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trouble-card">
+        <h3>📞 Candidate Support Contact Information</h3>
+        <div class="flow-step">
+          <div class="flow-step-title">How do I get in touch for help? What are support hours?</div>
+          <div class="flow-step-action">For account issues, general questions, or registration problems, open a ticket at the Certiverse Support Portal or email support@certiverse.com. Support operates 24/7 with typical responses within 24 hours.</div>
+          <div class="flow-step-spiel">
+            <span>"For help, open a ticket at the Certiverse Support Portal or email support@certiverse.com. Support operates 24/7 with a typical response time within 24 hours."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'For help, open a ticket at the Certiverse Support Portal or email support@certiverse.com. Support operates 24/7 with a typical response time within 24 hours.')">⚜ Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trouble-card">
+        <h3>🕒 Scheduling &amp; Timelines</h3>
+        <div class="flow-step">
+          <div class="flow-step-title">Booking advance time, grace period, and proctor wait times</div>
+          <div class="flow-step-action">Sessions must be booked 24h in advance (no same-day booking). 30-minute check-in grace period applies. Proctor wait times average 5 to 10 minutes.</div>
+          <div class="flow-step-spiel">
+            <span>"Exams must be scheduled at least 24 hours in advance. You have a 30-minute grace period from your start time to check in. Proctor connection wait times are typically 5 to 10 minutes."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Exams must be scheduled at least 24 hours in advance. You have a 30-minute grace period from your start time to check in. Proctor connection wait times are typically 5 to 10 minutes.')">⚜ Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trouble-card">
+        <h3>🎟️ Voucher &amp; Expiration Rules</h3>
+        <div class="flow-step">
+          <div class="flow-step-title">What happens if a voucher expires or an exam is abandoned?</div>
+          <div class="flow-step-action">Expired vouchers or launched/abandoned exams mark the voucher as used and it cannot be reinstated or recycled.</div>
+          <div class="flow-step-spiel">
+            <span>"Vouchers must be used before their designated expiration date. If an exam is launched and abandoned, the voucher is marked as used and cannot be reinstated."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Vouchers must be used before their designated expiration date. If an exam is launched and abandoned, the voucher is marked as used and cannot be reinstated.')">⚜ Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trouble-card">
+        <h3>🪟 Workspace Setup &amp; Desk Compliance</h3>
+        <div class="flow-step">
+          <div class="flow-step-title">Drinks, desk items, and dual-monitor rules</div>
+          <div class="flow-step-action">Drinks permitted only in clear, label-free containers. Desk must be clear within arm's reach. Secondary monitors must be physically disconnected.</div>
+          <div class="flow-step-spiel">
+            <span>"Drinks are permitted only in clear, label-free containers. Remove all non-essential items within arm's reach, and physically unplug any secondary monitors."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Drinks are permitted only in clear, label-free containers. Remove all non-essential items within arm\'s reach, and physically unplug any secondary monitors.')">⚜ Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trouble-card">
+        <h3>🌐 System Preferences &amp; Languages</h3>
+        <div class="flow-step">
+          <div class="flow-step-title">Can I change the interface language?</div>
+          <div class="flow-step-action">Yes, Certiverse supports Japanese, Spanish, and Simplified Chinese via the top-right language dropdown.</div>
+          <div class="flow-step-spiel">
+            <span>"You can switch the platform language (including Japanese, Spanish, and Simplified Chinese) using the language dropdown in the upper right-hand corner."</span>
+            <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'You can switch the platform language (including Japanese, Spanish, and Simplified Chinese) using the language dropdown in the upper right-hand corner.')">⚜ Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- UPDATE TICKER MODAL DIALOG -->
+  <div class="dojo-modal-overlay" id="tickerModal">
+    <div class="dojo-modal">
+      <h3>⚡ Update Flash Announcement</h3>
+      <p style="font-size:0.8rem;color:var(--text-dim);margin-bottom:12px;">Type the new update message below. It will immediately stream across the flash ticker on top.</p>
+      <textarea id="tickerInput" placeholder="Type news/update message here..."></textarea>
+      <div class="dojo-modal-actions">
+        <button class="path-btn" onclick="closeTickerModal()">Cancel</button>
+        <button class="seal-btn" style="min-width:auto;padding:8px 16px;" onclick="saveTickerUpdate()">Publish Flash Update</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================
+     CATEGORIES Taxonomy
+     ============================================================ */
+  var CATEGORIES = [
+    {id:"1",  label:"Welcome",                 icon:"🌅"},
+    {id:"2",  label:"Identification Verification", icon:"🪪"},
+    {id:"3",  label:"System Verification",         icon:"🖥️"},
+    {id:"4",  label:"Clear Desk",                  icon:"🧹"},
+    {id:"5",  label:"Room Scan",                   icon:"🔍"},
+    {id:"6",  label:"Exam Release",                icon:"🚪"},
+    {id:"7",  label:"Miscellaneous",               icon:"🗂️"},
+    {id:"8",  label:"Warnings",                    icon:"⚠️"},
+    {id:"9",  label:"Technical Support",           icon:"🛠️"},
+    {id:"11", label:"Non-SEB Exams",               icon:"🔐"},
+    {id:"12", label:"Termination Messages",        icon:"⛔"},
+    {id:"13", label:"SEB",                         icon:"🧭"}
+  ];
+
+  function catLabel(id){
+    for (var i=0;i<CATEGORIES.length;i++){ if (CATEGORIES[i].id===id) return CATEGORIES[i].label; }
+    return id;
+  }
+
+  /* ============================================================
+     MESSAGES Data
+     ============================================================ */
+  var MESSAGES = [
+    // 1. Welcome
+    {id:"m1_1", cat:"1", tags:[], text:"Hello and welcome! I will be your proctor for this exam."},
+    {id:"m1_2", cat:"1", tags:[], text:"We have a few steps to complete before your exam begins. This time does not count against your exam time limit."},
+    {id:"m1_3", cat:"1", tags:[], text:"Please hold while we prepare your exam. Thank you for waiting."},
+
+    // 2. Identification Verification
+    {id:"m2_1", cat:"2", tags:[], text:"We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible."},
+    {id:"m2_2", cat:"2", tags:[], text:"Please bring your ID closer to the camera view."},
+    {id:"m2_3", cat:"2", tags:[], text:"Please hold your ID steady."},
+    {id:"m2_4", cat:"2", tags:[], text:"Please flip your ID."},
+    {id:"m2_5", cat:"2", tags:[], text:"Please show the expiration date."},
+    {id:"m2_6", cat:"2", tags:[], text:"Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment."},
+    {id:"m2_7", cat:"2", tags:["critical"], text:"You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling."},
+    {id:"m2_8", cat:"2", tags:["critical"], text:"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com."},
+    {id:"m2_9", cat:"2", tags:["critical"], text:"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To assist you in reaching out to the exam sponsor who will process the name change, please contact support@certiverse.com."},
+    {id:"m2_10", cat:"2", tags:[], text:"Once completed, you can re-enter the reservation and we will continue."},
+    {id:"m2_11", cat:"2", tags:[], text:"Thank you. You may keep your ID away now."},
+
+    // 3. System Verification
+    {id:"m3_1", cat:"3", tags:[], text:"Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam."},
+    {id:"m3_2", cat:"3", tags:[], text:"Please also close the other Certiverse tab, leaving only this one open."},
+    {id:"m3_3", cat:"3", tags:["win"], text:"Please open your Task Manager then scroll down slowly until you reach the end of the list."},
+    {id:"m3_4", cat:"3", tags:["win"], text:"Thank you. You may close the Task Manager now."},
+    {id:"m3_5", cat:"3", tags:["win"], text:"Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option."},
+    {id:"m3_6", cat:"3", tags:["mac"], text:"Please open your Activity Monitor then scroll down slowly until you reach the end of the list.\n\nYou can find Activity Monitor on a Mac by using Spotlight Search (Command + Spacebar) and typing \"Activity Monitor,\" or by navigating to Applications > Utilities in Finder and double-clicking the app icon."},
+    {id:"m3_7", cat:"3", tags:["mac"], text:"Thank you. You may close the Activity Monitor now."},
+    {id:"m3_8", cat:"3", tags:["mac"], text:"Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed."},
+    {id:"m3_9", cat:"3", tags:["linux"], text:"Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list.\n\nYou can open the System Monitor in Linux through the graphical menu (search for \"System Monitor\" or \"System Tools\"), by running gnome-system-monitor in the terminal or Alt+F2 dialog, or by setting a custom keyboard shortcut (often Ctrl+Shift+Esc or Ctrl+Alt+Del) in your system's Keyboard settings."},
+    {id:"m3_10", cat:"3", tags:["linux"], text:"Thank you. You may close the System Monitor now."},
+    {id:"m3_11", cat:"3", tags:["linux"], text:"Please close or force quit any applications not related to the exam. If needed, select the application and choose “End Process” or “Kill Process."},
+
+    // 4. Clear Desk
+    {id:"m4_1", cat:"4", tags:[], text:"Thank you. If there are any items on your desk surface, please remove them now."},
+    {id:"m4_2", cat:"4", tags:[], text:"Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, smart glasses, and any other electronic device."},
+    {id:"m4_3", cat:"4", tags:[], text:"Headphones are not allowed during the exam. Please remove them and put them away."},
+    {id:"m4_4", cat:"4", tags:[], text:"Hats are not allowed during the exam. Please remove your hat and put it away."},
+    {id:"m4_5", cat:"4", tags:[], text:"Please remove your smartwatch and place it out of reach."},
+    {id:"m4_6", cat:"4", tags:[], text:"As outlined in the exam policies, only one laptop or computer without extra screens is allowed. Please remove or cover any additional monitors so they are not facing you directly."},
+
+    // 5. Room Scan
+    {id:"m5_1", cat:"5", tags:[], text:"Thank you. We will now scan the room to confirm that all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk."},
+    {id:"m5_2", cat:"5", tags:[], text:"When doing the room scan, please hold your laptop or webcam in a way that allows the camera to clearly capture the room. Rotate it slowly and make sure nothing blocks the view, so we can see all areas of your workspace, including the desk, floor, walls, and surrounding environment."},
+    {id:"m5_3", cat:"5", tags:[], text:"Please show us the desk area."},
+    {id:"m5_4", cat:"5", tags:[], text:"Please show the area under the desk."},
+    {id:"m5_5", cat:"5", tags:[], text:"All electronics should be out of reach and turned off."},
+    {id:"m5_6", cat:"5", tags:[], text:"Please ensure your desk is clear of all items."},
+    {id:"m5_7", cat:"5", tags:[], text:"Please direct your camera around the room one more time."},
+    {id:"m5_8", cat:"5", tags:[], text:"Please make sure to capture all corners and edges of your desk during the room scan."},
+    {id:"m5_9", cat:"5", tags:[], text:"Is it possible for you to improve the lighting in your testing area?"},
+    {id:"m5_10", cat:"5", tags:[], text:"The window behind you is creating a backlight effect. Adjusting the lighting or moving slightly would help us proceed."},
+    {id:"m5_11", cat:"5", tags:["critical"], text:"Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination."},
+
+    // 6. Exam Release
+    {id:"m6_1", cat:"6", tags:[], text:"Thank you for your cooperation. You may now click the “Hide Video” button on the left side of this chat box under \"Hide Chat\"."},
+    {id:"m6_2", cat:"6", tags:[], text:"Thank you. Do you have any questions before beginning your exam?"},
+    {id:"m6_3", cat:"6", tags:[], text:"If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection."},
+    {id:"m6_4", cat:"6", tags:[], text:"Please use this chat if you have any questions that are not related to the exam content. I will now release your exam."},
+    {id:"m6_5", cat:"6", tags:[], text:"You can click the “Hide Chat” button on the left side or the X at the top-right to begin your exam."},
+
+    // 7. Miscellaneous
+    {id:"m7_1", cat:"7", tags:[], text:"Breaks are not allowed for this exam."},
+    {id:"m7_2", cat:"7", tags:[], text:"You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules."},
+    {id:"m7_3", cat:"7", tags:[], text:"Please wait briefly while we investigate this issue."},
+    {id:"m7_4", cat:"7", tags:[], text:"Sorry, but we cannot assist with content-related questions."},
+    {id:"m7_5", cat:"7", tags:[], text:"You can email support@certiverse.com for further assistance with rescheduling."},
+    {id:"m7_6", cat:"7", tags:[], text:"Please adjust your camera. Your head and shoulders must remain fully visible during the exam."},
+    {id:"m7_7", cat:"7", tags:[], text:"Welcome back!"},
+    {id:"m7_8", cat:"7", tags:[], text:"Thank you. You may resume now."},
+
+    // 8. Warnings
+    {id:"m8_1", cat:"8", tags:[], text:"Please refrain from talking aloud."},
+    {id:"m8_2", cat:"8", tags:[], text:"Please ensure your face is always within camera view."},
+    {id:"m8_3", cat:"8", tags:[], text:"Please keep your attention forward."},
+    {id:"m8_4", cat:"8", tags:["critical"], text:"Please ask all others to leave the room."},
+    {id:"m8_5", cat:"8", tags:[], text:"Please remain on the exam environment tab only."},
+    {id:"m8_6", cat:"8", tags:["critical"], text:"Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."},
+    {id:"m8_7", cat:"8", tags:["critical"], text:"Unfortunately, we are not allowed to release the exam unless all requirements are met."},
+    {id:"m8_8", cat:"8", tags:[], text:"One moment. Kindly lower the angle of your camera so that we can see your head down to your shoulders."},
+    {id:"m8_9", cat:"8", tags:[], text:"One moment. Please adjust your camera angle or position so that your face and shoulders are centered and fully visible on the screen."},
+
+    // 9. Technical Support
+    {id:"m9_1", cat:"9", tags:[], text:"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."},
+    {id:"m9_2", cat:"9", tags:[], text:"Please click the refresh button on the top left side of the screen."},
+    {id:"m9_3", cat:"9", tags:[], text:"Please try to reboot your machine and launch the exam again."},
+    {id:"m9_4", cat:"9", tags:[], text:"Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?"},
+    {id:"m9_5", cat:"9", tags:[], text:"I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared."},
+    {id:"m9_6", cat:"9", tags:[], text:"Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser."},
+    {id:"m9_7", cat:"9", tags:[], text:"Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs."},
+    {id:"m9_8", cat:"9", tags:[], text:"It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network."},
+    {id:"m9_9", cat:"9", tags:[], text:"I understand. Are you currently on a company network?"},
+    {id:"m9_10", cat:"9", tags:[], text:"Are you currently using a docking station?"},
+    {id:"m9_11", cat:"9", tags:[], text:"Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled."},
+    {id:"m9_12", cat:"9", tags:[], text:"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."},
+    {id:"m9_13", cat:"9", tags:["critical"], text:"You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed."},
+    {id:"m9_14", cat:"9", tags:[], text:"Please check the following before starting the exam:\n\nStep 1: Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.\n\nStep 2: If you are using Google Chrome, and you are experiencing this issue, please switch to Microsoft Edge. If you are experiencing issues in Microsoft Edge, please switch to Google Chrome."},
+
+    // 11. Non-SEB Exams
+    {id:"m11_1", cat:"11", tags:[], text:"Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat."},
+    {id:"m11_2", cat:"11", tags:[], text:"You may hide or move the pop-up screen-sharing message at the bottom center of your screen."},
+
+    // 12. Termination Messages
+    {id:"m12_1", cat:"12", tags:["critical"], term:"prohibited-app", text:"Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_2", cat:"12", tags:["critical"], term:"prohibited-device", text:"The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_3", cat:"12", tags:["critical"], term:"break-overage", text:"We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_4", cat:"12", tags:["critical"], term:"foul-language", text:"Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_5", cat:"12", tags:["critical"], term:"integrity-compromised", text:"The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance."},
+
+    // 13. SEB
+    {id:"m13_1", cat:"13", tags:[], text:"You may exit the Secure Exam Browser to resolve the issue. Once it is fixed, re-entering SEB will reconnect you so the exam can continue."},
+    {id:"m13_2", cat:"13", tags:[], text:"To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen."},
+    {id:"m13_3", cat:"13", tags:[], text:"To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen."},
+    {id:"m13_4", cat:"13", tags:[], text:"Please try to refresh the SEB and choose a different audio/video input."},
+    {id:"m13_5", cat:"13", tags:["critical"], text:"There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."}
+  ];
+
+  function findMessageById(id){
+    for (var i=0;i<MESSAGES.length;i++){ if (MESSAGES[i].id===id) return MESSAGES[i]; }
+    return null;
+  }
+  function findByTerm(term){
+    for (var i=0;i<MESSAGES.length;i++){ if (MESSAGES[i].term===term) return MESSAGES[i]; }
+    return null;
+  }
+
+  /* ============================================================
+     POLICIES Data
+     ============================================================ */
+  var POLICIES = [
+    ["Akylade","Allowed","One (1) five (5) minute break","Name must match govt. ID","SEB","Not allowed"],
+    ["Atlassian","Not allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["Blue Prism","Allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["BMC","Not allowed","One (1) five (5) minute break","Name must match govt. ID","SEB","Allowed"],
+    ["Camunda","Not allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["Casbo","Not allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["Docusign","Not allowed","None","Nicknames allowed","SEB","Not allowed"],
+    ["Hashicorp","Not allowed","None (Vault Prof: one (1) fifteen (15) minute break)","Name must match govt. ID","Non-SEB","Not allowed"],
+    ["Intersystems","Not allowed","One (1) ten (10) minute break","Nicknames allowed","SEB","Depends on the exam"],
+    ["NRPP","Allowed","One (1) fifteen (15) minute break","Nicknames allowed","SEB","Allowed"],
+    ["NVIDIA","Allowed","None (Beta 180: two (2) five (5) minute breaks)","Name must match govt. ID","SEB","Allowed"],
+    ["Open Text","Not allowed","None","Name must match govt. ID","SEB","Allowed"],
+    ["Project Success Incorporated","Allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["SideFX","Allowed","None","Name must match govt. ID","SEB","Textbooks allowed"],
+    ["VastData","Allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["WellSky","Allowed","Unlimited breaks (10-20 minutes per break)","Name must match govt. ID","SEB","Textbooks allowed"]
+  ];
+
+  /* ============================================================
+     INFRACTIONS Data
+     ============================================================ */
+  var INFRACTIONS = [
+    ["Another person in the room","Check in, Testing","Prohibited Behavior","Minor",2,"person",null],
+    ["Books / Supplemental Materials","Check in, Testing","Prohibited Items","Minor",2,"paper materials",null],
+    ["Camera","Check in, Testing","Prohibited Electronic Device","Minor",2,"camera",null],
+    ["Desk is not cleared off (only)","Check in","Check in","Minor",2,"desk",null],
+    ["Does not do complete scan: 360 room scan, desk/table top, under desk/table","Check in","Check in","Minor",1,"scan",null],
+    ["Eating/drinking without approved Special Accom","Testing","Prohibited Behavior","Minor",1,"beverages",null],
+    ["Environment or camera view too dark/candidate not visible","Check in","Check in","Minor",2,"lighting",null],
+    ["Face coverings","Check in","Check in","Minor",2,"",null],
+    ["Face out of view","Testing","Prohibited Behavior","Minor",2,"head and shoulders",null],
+    ["Failure to return from break","Testing","Prohibited Behavior","Major",0,"break","break-overage"],
+    ["Headphones/Earbuds","Check in","Prohibited Electronic Device","Minor",1,"headphones",null],
+    ["Headwear (unless allowed via accommodation/religious exempt)","Check in","Prohibited Items","Minor",1,"hat",null],
+    ["Internal environment too loud","Check in, Testing","Prohibited Behavior","Minor",2,"environment",null],
+    ["Leaves testing area","Testing","Prohibited Behavior","Minor",1,"permission",null],
+    ["Looking elsewhere","Testing","Prohibited Behavior","Minor",4,"attention forward",null],
+    ["Mobile phone in use","Testing","Prohibited Electronic Device","Major",0,"mobile phone","prohibited-device"],
+    ["Mobile phone visible","Check in","Prohibited Electronic Device","Minor",1,"electronic devices",null],
+    ["Not following proctor instructions","Check in, Testing","Prohibited Behavior","Minor",2,"cooperation",null],
+    ["Proctor harassment (disrespectful, name calling)","Check in, Testing","Prohibited Behavior","Major",0,"disrespectful","foul-language"],
+    ["Proper clothing","Check in","Prohibited Behavior","Minor",1,"dressed appropriately",null],
+    ["Remote Desktop Applications","Check in, Testing","Prohibited Behavior","Major",0,"Remote Desktop","prohibited-app"],
+    ["Secondary device (computer, laptop, calculator)","Check in","Prohibited Electronic Device","Minor",1,"electronic",null],
+    ["Smart Watch","Check in","Prohibited Electronic Device","Minor",1,"smartwatch",null],
+    ["Smoking or Vaping","Check in, Testing","Prohibited Behavior","Minor",1,"",null],
+    ["Suspicious behavior","Testing","Prohibited Behavior","Minor",2,"attention forward",null],
+    ["Talking aloud","Testing","Prohibited Behavior","Minor",2,"aloud",null],
+    ["Talking to others","Testing","Prohibited Behavior","Minor",2,"no one else",null],
+    ["Whiteboard/bulletin board with writing","Check in, Testing","Prohibited Items","Minor",2,"desk",null]
+  ];
+
+  /* ============================================================
+     QUICK ACTIONS
+     ============================================================ */
+  var QUICK_ACTIONS = [
+    {icon:"🪪", label:"Blurry / Unclear ID", query:"blurry"},
+    {icon:"❗", label:"Name Mismatch",        query:"not the name registered"},
+    {icon:"📱", label:"Mobile Phone",         query:"mobile phone"},
+    {icon:"👀", label:"Face Out of View",      query:"head and shoulders"},
+    {icon:"⏱️", label:"Break Violation",      query:"break"},
+    {icon:"🖥️", label:"Task Manager / Apps",   query:"Task Manager"}
+  ];
+
+  /* ============================================================
+     UTILITIES
+     ============================================================ */
+  function escapeHtml(str){
+    return String(str)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function loadSet(key){
+    try {
+      var raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : [];
+    } catch(e){ return []; }
+  }
+  function saveSet(key, arr){
+    try { localStorage.setItem(key, JSON.stringify(arr)); } catch(e){}
+  }
+  function toggleInSet(key, id, cap){
+    var arr = loadSet(key);
+    var idx = arr.indexOf(id);
+    if (idx === -1){
+      arr.unshift(id);
+      if (cap){ arr = arr.slice(0, cap); }
+    } else {
+      arr.splice(idx, 1);
+    }
+    saveSet(key, arr);
+    return arr;
+  }
+  function addToRecent(key, id, cap){
+    var arr = loadSet(key);
+    var idx = arr.indexOf(id);
+    if (idx !== -1){ arr.splice(idx,1); }
+    arr.unshift(id);
+    arr = arr.slice(0, cap || 10);
+    saveSet(key, arr);
+    return arr;
+  }
+  function isIn(key, id){ return loadSet(key).indexOf(id) !== -1; }
+
+  window.copyDirectText = function(btn, text) {
+    function showCopied(){
+      var original = btn.textContent;
+      btn.textContent = "✓ Technique Acquired";
+      btn.classList.add("copied");
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
+    }
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(showCopied, function(){ fallbackCopy(text, showCopied); });
+    } else {
+      fallbackCopy(text, showCopied);
+    }
+  };
+
+  var TAG_LABELS = {win:"Windows", mac:"MAC", linux:"Linux", critical:"Termination risk", hashi:"Hashicorp"};
+
+  function renderTags(tags){
+    if (!tags || !tags.length) return "";
+    var out = "";
+    for (var i=0;i<tags.length;i++){
+      var t = tags[i];
+      out += '<span class="card-tag ' + t + '">' + (TAG_LABELS[t] || t.toUpperCase()) + '</span>';
+    }
+    return '<div class="card-tags">' + out + '</div>';
+  }
+
+  function renderMessageCard(msg, opts){
+    opts = opts || {};
+    var pinned = isIn("ph_pins", msg.id);
+    var faved  = isIn("ph_favs", msg.id);
+    var progressBox = "";
+    if (opts.progress){
+      var done = isIn("ph_progress", msg.id);
+      progressBox = '<input type="checkbox" class="progress-check" title="Mark reviewed" ' +
+        (done ? "checked" : "") + ' onchange="toggleProgress(\'' + msg.id + '\')">';
+    }
+    return (
+      '<div class="card' + (pinned ? " is-pinned" : "") + '" data-id="' + msg.id + '" data-cat="' + msg.cat + '">' +
+        (progressBox ? '<div>' + progressBox + '</div>' : '') +
+        '<div class="card-body">' +
+          renderTags(msg.tags) +
+          '<p class="message-text">' + escapeHtml(msg.text) + '</p>' +
+        '</div>' +
+        '<div class="card-actions">' +
+          '<div class="icon-row">' +
+            '<button class="icon-btn' + (faved ? " on" : "") + '" title="Favorite" onclick="toggleFav(\'' + msg.id + '\')">' + (faved ? "★" : "☆") + '</button>' +
+            '<button class="icon-btn' + (pinned ? " on" : "") + '" title="Pin" onclick="togglePin(\'' + msg.id + '\')">📌</button>' +
+          '</div>' +
+          '<button class="seal-btn" onclick="copyMessage(this,\'' + msg.id + '\')">⚜ Copy Scroll</button>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  /* ============================================================
+     CHECK-IN STEPS & EXAM MODE TOGGLE
+     ============================================================ */
+  var activeOsFilter = "all";
+  var activeExamMode = "nonseb";
+
+  window.setExamMode = function(mode) {
+    activeExamMode = mode;
+    document.getElementById("btn-mode-nonseb").classList.toggle("active", mode === "nonseb");
+    document.getElementById("btn-mode-seb").classList.toggle("active", mode === "seb");
+    renderCheckin();
+  };
+
+  function renderCheckin(){
+    var wrap = document.getElementById("checkinAccordions");
+    var html = "";
+
+    var displayCategories = CATEGORIES.filter(function(cat) {
+      if (activeExamMode === "seb" && cat.id === "3") return false;
+      return true;
+    });
+
+    for (var i=0;i<displayCategories.length;i++){
+      var cat = displayCategories[i];
+      var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
+      
+      html += '<details class="accordion" id="accordion-' + cat.id + '"' + (i===0 ? " open" : "") + '>' +
+        '<summary onclick="handleAccordionToggle(event, \'' + cat.id + '\')">' +
+          '<span class="cat-left"><span class="cat-num">' + cat.id + '</span>' + cat.icon + '&nbsp; ' + cat.label + '</span>' +
+          '<span class="cat-progress" id="progress-' + cat.id + '"></span>' +
+          '<span class="chevron">&#10148;</span>' +
+        '</summary>' +
+        '<div class="accordion-body" id="body-' + cat.id + '">';
+      
+      if (cat.id === "3") {
+        html += '<div class="os-subfilter-row">' +
+          '<button class="os-subchip' + (activeOsFilter==="all" ? " active" : "") + '" onclick="setOsSubFilter(\'all\')">All Platforms</button>' +
+          '<button class="os-subchip' + (activeOsFilter==="win" ? " active" : "") + '" onclick="setOsSubFilter(\'win\')">Windows</button>' +
+          '<button class="os-subchip' + (activeOsFilter==="mac" ? " active" : "") + '" onclick="setOsSubFilter(\'mac\')">macOS</button>' +
+          '<button class="os-subchip' + (activeOsFilter==="linux" ? " active" : "") + '" onclick="setOsSubFilter(\'linux\')">Linux</button>' +
+        '</div>';
+      }
+
+      if (msgs.length === 0){
+        html += '<div class="empty-state">No scripted messages on file for this category yet.</div>';
+      } else {
+        for (var j=0;j<msgs.length;j++){ 
+          var m = msgs[j];
+          if (cat.id === "3" && activeOsFilter !== "all") {
+            if (m.tags.length > 0 && m.tags.indexOf(activeOsFilter) === -1) continue;
+          }
+          html += renderMessageCard(m, {progress:true}); 
+        }
+      }
+      html += '</div></details>';
+    }
+    wrap.innerHTML = html;
+    updateProgressLabels();
+
+    if (document.getElementById("view-checkin").classList.contains("active")) {
+      updateSidebarLinks("view-checkin");
+    }
+  }
+
+  window.setOsSubFilter = function(osKey) {
+    activeOsFilter = osKey;
+    renderCheckin();
+    var acc3 = document.getElementById("accordion-3");
+    if (acc3) acc3.open = true;
+  };
+
+  window.handleAccordionToggle = function(e, currentId) {
+    var accordions = document.querySelectorAll("#checkinAccordions .accordion");
+    accordions.forEach(function(acc) {
+      if (acc.id !== "accordion-" + currentId) {
+        acc.removeAttribute("open");
+      }
+    });
+
+    var targetAcc = document.getElementById("accordion-" + currentId);
+    if (targetAcc) {
+      setTimeout(function() {
+        targetAcc.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+    }
+  };
+
+  function updateProgressLabels(){
+    var progressAll = loadSet("ph_progress");
+    for (var i=0;i<CATEGORIES.length;i++){
+      var cat = CATEGORIES[i];
+      var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
+      var done = 0;
+      for (var j=0;j<msgs.length;j++){ if (progressAll.indexOf(msgs[j].id) !== -1) done++; }
+      var el = document.getElementById("progress-" + cat.id);
+      if (el){ el.textContent = msgs.length ? (done + " / " + msgs.length + " reviewed") : ""; }
+    }
+  }
+
+  window.toggleProgress = function(id){
+    toggleInSet("ph_progress", id);
+    updateProgressLabels();
+  };
+
+  window.resetProgress = function(){
+    saveSet("ph_progress", []);
+    renderCheckin();
+    filterAll();
+  };
+
+  window.goToCategory = function(catId){
+    var viewBtn = document.querySelector('.view-btn[data-view="view-checkin"]');
+    switchView("view-checkin", viewBtn);
+    
+    var accordions = document.querySelectorAll("#checkinAccordions .accordion");
+    accordions.forEach(function(acc) {
+      acc.removeAttribute("open");
+    });
+
+    var el = document.getElementById("accordion-" + catId);
+    if (el){
+      el.open = true;
+      setTimeout(function() {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+    }
+  };
+
+  /* ============================================================
+     DYNAMIC SIDEBAR NAVIGATION FOR ALL TAB VIEWS
+     ============================================================ */
+  function updateSidebarLinks(viewId) {
+    var labelEl = document.getElementById("sidebarSublabel");
+    var listEl = document.getElementById("sidebarDynamicLinks");
+    if (!labelEl || !listEl) return;
+
+    var html = "";
+
+    if (viewId === "view-checkin") {
+      labelEl.textContent = "Check-in Categories";
+      var displayCategories = CATEGORIES.filter(function(cat) {
+        if (activeExamMode === "seb" && cat.id === "3") return false;
+        return true;
+      });
+      for (var k=0; k<displayCategories.length; k++){
+        var c = displayCategories[k];
+        var count = MESSAGES.filter(function(m){ return m.cat === c.id; }).length;
+        html += '<li><button onclick="goToCategory(\'' + c.id + '\')">' + c.id + '. ' + c.label + ' <span class="cnt">' + count + '</span></button></li>';
+      }
+    } else if (viewId === "view-troubleshooting") {
+      labelEl.textContent = "Troubleshooting Flows";
+      var flows = [
+        {id: "trouble-drop-audio", label: "Microphone (Non-SEB)", icon: "🎤"},
+        {id: "trouble-drop-screen", label: "Screen Sharing (Non-SEB)", icon: "🖥️"},
+        {id: "trouble-drop-video", label: "Camera (Non-SEB)", icon: "📷"},
+        {id: "trouble-drop-seb", label: "SEB Diagnostics", icon: "🧭"}
+      ];
+      for (var f=0; f<flows.length; f++){
+        html += '<li><button onclick="scrollToTroubleshooting(\'' + flows[f].id + '\')">' + flows[f].icon + ' ' + flows[f].label + '</button></li>';
+      }
+    } else if (viewId === "view-library") {
+      labelEl.textContent = "Category Filters";
+      html += '<li><button onclick="setLibraryFilter(\'all\')">All Messages <span class="cnt">' + MESSAGES.length + '</span></button></li>';
+      for (var l=0; l<CATEGORIES.length; l++){
+        var catL = CATEGORIES[l];
+        var countL = MESSAGES.filter(function(m){ return m.cat === catL.id; }).length;
+        html += '<li><button onclick="setLibraryFilter(\'' + catL.id + '\')">' + catL.icon + ' ' + catL.label + ' <span class="cnt">' + countL + '</span></button></li>';
+      }
+    } else if (viewId === "view-threshold") {
+      labelEl.textContent = "Severity Filter";
+      html += '<li><button onclick="setThresholdFilter(\'all\')">All Infractions <span class="cnt">' + INFRACTIONS.length + '</span></button></li>';
+      html += '<li><button onclick="setThresholdFilter(\'minor\')">Minor Violations</button></li>';
+      html += '<li><button onclick="setThresholdFilter(\'major\')">Major Violations</button></li>';
+    } else if (viewId === "view-policies") {
+      labelEl.textContent = "Client Quick Select";
+      for (var p=0; p<POLICIES.length; p++){
+        html += '<li><button onclick="selectPolicyClient(' + p + ')">' + escapeHtml(POLICIES[p][0]) + '</button></li>';
+      }
+    } else if (viewId === "view-home") {
+      labelEl.textContent = "Dojo Sections";
+      html += '<li><button onclick="window.scrollTo({top:0, behavior:\'smooth\'})">🏯 Command Hierarchy</button></li>';
+      html += '<li><button onclick="document.getElementById(\'quickGrid\').scrollIntoView({behavior:\'smooth\'})">⚡ Quick Actions</button></li>';
+    } else if (viewId === "view-faq") {
+      labelEl.textContent = "FAQ Topics";
+      html += '<li><button onclick="window.scrollTo({top:0, behavior:\'smooth\'})">🛠️ Technical Requirements</button></li>';
+      html += '<li><button onclick="document.querySelectorAll(\'#view-faq .trouble-card\')[1].scrollIntoView({behavior:\'smooth\'})">📝 Booking & Management</button></li>';
+      html += '<li><button onclick="document.querySelectorAll(\'#view-faq .trouble-card\')[2].scrollIntoView({behavior:\'smooth\'})">🛡️ Online Proctoring</button></li>';
+    }
+
+    listEl.innerHTML = html;
+  }
+
+  window.scrollToTroubleshooting = function(targetId) {
+    var accordions = document.querySelectorAll("#view-troubleshooting .accordion");
+    accordions.forEach(function(acc) { acc.removeAttribute("open"); });
+    var target = document.getElementById(targetId);
+    if (target) {
+      target.open = true;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  window.selectPolicyClient = function(index) {
+    var select = document.getElementById("policySelect");
+    if (select) {
+      select.value = index;
+      renderGenerator();
+      select.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  /* ============================================================
+     PROTECTED UPDATE TICKER LOGIC (PASSCODE: 789456)
+     ============================================================ */
+  window.openTickerAdmin = function() {
+    var pwd = prompt("⛩️ Dojo Security Verification\nPlease enter admin passcode:");
+    if (pwd === "789456") {
+      var currentText = document.getElementById("tickerDisplay").textContent.trim();
+      document.getElementById("tickerInput").value = currentText;
+      document.getElementById("tickerModal").style.display = "flex";
+    } else if (pwd !== null) {
+      alert("❌ Access Denied: Incorrect Passcode.");
+    }
+  };
+
+  window.closeTickerModal = function() {
+    document.getElementById("tickerModal").style.display = "none";
+  };
+
+  window.saveTickerUpdate = function() {
+    var text = document.getElementById("tickerInput").value.trim();
+    if (text) {
+      document.getElementById("tickerDisplay").textContent = text;
+      closeTickerModal();
+    }
+  };
+
+  /* ============================================================
+     CANNED MESSAGE LIBRARY & SEARCH
+     ============================================================ */
+  var libraryActiveCat = "all";
+
+  function renderLibraryFilters(){
+    var wrap = document.getElementById("libraryFilters");
+    var html = '<button class="filter-chip' + (libraryActiveCat==="all" ? " active" : "") + '" onclick="setLibraryFilter(\'all\')">All (' + MESSAGES.length + ')</button>';
+    for (var i=0;i<CATEGORIES.length;i++){
+      var cat = CATEGORIES[i];
+      var count = MESSAGES.filter(function(m){ return m.cat === cat.id; }).length;
+      html += '<button class="filter-chip' + (libraryActiveCat===cat.id ? " active" : "") + '" onclick="setLibraryFilter(\'' + cat.id + '\')">' + cat.icon + ' ' + cat.label + ' (' + count + ')</button>';
+    }
+    wrap.innerHTML = html;
+  }
+
+  window.setLibraryFilter = function(catId){
+    libraryActiveCat = catId;
+    renderLibraryFilters();
+    renderLibraryList();
+    filterAll();
+  };
+
+  function renderLibraryList(){
+    var wrap = document.getElementById("libraryList");
+    var msgs = libraryActiveCat === "all" ? MESSAGES : MESSAGES.filter(function(m){ return m.cat === libraryActiveCat; });
+    if (msgs.length === 0){
+      wrap.innerHTML = '<div class="empty-state">No scripted messages on file for this category yet.</div>';
+      return;
+    }
+    var html = "";
+    for (var i=0;i<msgs.length;i++){ html += renderMessageCard(msgs[i], {progress:false}); }
+    wrap.innerHTML = html;
+  }
+
+  window.handleLibrarySearch = function() {
+    var query = document.getElementById("globalSearch").value.trim().toLowerCase();
+    var dropdown = document.getElementById("suggestionsBox");
+
+    if (!query) {
+      dropdown.style.display = "none";
+      filterAll();
+      return;
+    }
+
+    var suggestions = MESSAGES.filter(function(m) {
+      return m.text.toLowerCase().indexOf(query) !== -1;
+    }).slice(0, 6);
+
+    if (suggestions.length === 0) {
+      dropdown.style.display = "none";
+      filterAll();
+      return;
+    }
+
+    var html = "";
+    for (var i = 0; i < suggestions.length; i++) {
+      var s = suggestions[i];
+      var snippet = s.text.length > 70 ? s.text.substring(0, 70) + "..." : s.text;
+      html += '<div class="suggestion-item" onclick="selectSuggestion(\'' + s.id + '\')">' +
+        '<span>' + escapeHtml(snippet) + '</span>' +
+        '<span class="sug-cat">' + catLabel(s.cat) + '</span>' +
+      '</div>';
+    }
+
+    dropdown.innerHTML = html;
+    dropdown.style.display = "block";
+    filterAll();
+  };
+
+  window.selectSuggestion = function(msgId) {
+    document.getElementById("suggestionsBox").style.display = "none";
+    var targetCard = document.querySelector('#libraryList .card[data-id="' + msgId + '"]');
+    if (targetCard) {
+      targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
+      targetCard.classList.add("highlighted");
+      setTimeout(function() {
+        targetCard.classList.remove("highlighted");
+      }, 2500);
+    }
+  };
+
+  document.addEventListener("click", function(e) {
+    var searchBox = document.querySelector(".library-search-box");
+    if (searchBox && !searchBox.contains(e.target)) {
+      var dropdown = document.getElementById("suggestionsBox");
+      if (dropdown) dropdown.style.display = "none";
+    }
+  });
+
+  /* ============================================================
+     FAVORITES, PINS, & COPY ACTIONS
+     ============================================================ */
+  window.toggleFav = function(id){ toggleInSet("ph_favs", id); renderAllInteractive(); };
+  window.togglePin = function(id){ toggleInSet("ph_pins", id); renderAllInteractive(); };
+
+  window.copyMessage = function(btn, id){
+    var msg = findMessageById(id);
+    if (!msg) return;
+    var text = msg.text;
+
+    function showCopied(){
+      var original = btn.textContent;
+      btn.textContent = "✓ Technique Acquired";
+      btn.classList.add("copied");
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
+    }
+    function afterCopy(){
+      addToRecent("ph_recent", id, 10);
+      showCopied();
+    }
+
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(afterCopy, function(){ fallbackCopy(text, afterCopy); });
+    } else {
+      fallbackCopy(text, afterCopy);
+    }
+  };
+
+  function fallbackCopy(text, cb){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px";
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand("copy"); } catch(e){}
+    document.body.removeChild(ta);
+    if (cb) cb();
+  }
+
+  function renderAllInteractive(){
+    renderCheckin();
+    renderLibraryList();
+    filterAll();
+  }
+
+  /* ============================================================
+     HOME DASHBOARD (PHILIPPINE STANDARD TIME - PST / UTC+8)
+     ============================================================ */
+  function tickClock(){
+    var now = new Date();
+    var optsTime = { timeZone: "Asia/Manila", hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" };
+    var optsDate = { timeZone: "Asia/Manila", weekday: "long", year: "numeric", month: "long", day: "numeric" };
+    
+    document.getElementById("clockTime").textContent = now.toLocaleTimeString("en-US", optsTime) + " PST";
+    document.getElementById("clockDate").textContent = now.toLocaleDateString("en-US", optsDate);
+  }
+
+  function renderQuickActions(){
+    var html = "";
+    for (var i=0;i<QUICK_ACTIONS.length;i++){
+      var q = QUICK_ACTIONS[i];
+      html += '<button class="quick-btn" onclick="runQuickAction(\'' + q.query.replace(/'/g,"\\'") + '\')"><span class="qi">' + q.icon + '</span>' + q.label + '</button>';
+    }
+    document.getElementById("quickGrid").innerHTML = html;
+  }
+
+  window.runQuickAction = function(query){
+    var viewBtn = document.querySelector('.view-btn[data-view="view-library"]');
+    switchView("view-library", viewBtn);
+    setLibraryFilter("all");
+    var input = document.getElementById("globalSearch");
+    input.value = query;
+    filterAll();
+    window.scrollTo({top:0, behavior:"smooth"});
+  };
+
+  /* ============================================================
+     THRESHOLD CENTER
+     ============================================================ */
+  var thresholdActiveFilter = "all";
+
+  function riskTier(severity, threshold){
+    var sev = severity.toLowerCase();
+    if (sev === "major" && threshold === 0) return {cls:"risk-red", label:"Immediate"};
+    if (sev === "major") return {cls:"risk-orange", label:"Critical"};
+    if (sev === "minor" && threshold <= 1) return {cls:"risk-yellow", label:"Elevated"};
+    return {cls:"risk-green", label:"Standard"};
+  }
+
+  function renderThresholdFilters(){
+    var wrap = document.getElementById("thresholdFilters");
+    var counts = {all:INFRACTIONS.length, minor:0, major:0};
+    for (var i=0;i<INFRACTIONS.length;i++){ counts[INFRACTIONS[i][3].toLowerCase()]++; }
+    wrap.innerHTML =
+      '<button class="filter-chip' + (thresholdActiveFilter==="all" ? " active" : "") + '" onclick="setThresholdFilter(\'all\')">All (' + counts.all + ')</button>' +
+      '<button class="filter-chip' + (thresholdActiveFilter==="minor" ? " active" : "") + '" onclick="setThresholdFilter(\'minor\')">Minor (' + counts.minor + ')</button>' +
+      '<button class="filter-chip' + (thresholdActiveFilter==="major" ? " active" : "") + '" onclick="setThresholdFilter(\'major\')">Major (' + counts.major + ')</button>';
+  }
+
+  window.setThresholdFilter = function(f){
+    thresholdActiveFilter = f;
+    renderThresholdFilters();
+    renderInfractions();
+    filterAll();
+  };
+
+  function renderInfractions(){
+    var grid = document.getElementById("infractionGrid");
+    var html = "";
+    var shown = 0;
+    for (var i=0;i<INFRACTIONS.length;i++){
+      var r = INFRACTIONS[i];
+      var sevLower = r[3].toLowerCase();
+      if (thresholdActiveFilter !== "all" && thresholdActiveFilter !== sevLower) continue;
+      shown++;
+      var tier = riskTier(r[3], r[4]);
+      var badgeClass = sevLower === "major" ? "badge-major" : "badge-minor";
+      var detail = "";
+      if (r[6]){
+        var termMsg = findByTerm(r[6]);
+        if (termMsg){
+          detail = '<strong>Closest matching termination script:</strong><br>' + escapeHtml(termMsg.text) +
+            '<br><button class="seal-btn" style="margin-top:8px;" onclick="event.stopPropagation();copyMessage(this,\'' + termMsg.id + '\')">⚜ Copy Scroll</button>';
+        }
+      } else if (r[5]){
+        detail = 'No dedicated termination script. <button class="filter-chip" onclick="event.stopPropagation();runQuickAction(\'' + r[5].replace(/'/g,"\\'") + '\')">Search library for &ldquo;' + escapeHtml(r[5]) + '&rdquo;</button>';
+      } else {
+        detail = 'No scripted response on file &mdash; apply proctor judgment and document the incident per policy.';
+      }
+      html += '<div class="infr-card ' + tier.cls + '" data-severity="' + sevLower + '" onclick="this.classList.toggle(\'expanded\')">' +
+        '<div class="infr-name">' + escapeHtml(r[0]) + '</div>' +
+        '<div class="infr-meta"><span>' + escapeHtml(r[2]) + '</span><span>&middot;</span><span>' + escapeHtml(r[1]) + '</span></div>' +
+        '<div class="infr-meta"><span class="badge ' + badgeClass + '">' + escapeHtml(r[3]) + '</span><span class="infr-threshold">Threshold: ' + r[4] + ' &middot; Risk: ' + tier.label + '</span></div>' +
+        '<div class="infr-detail">' + detail + '</div>' +
+      '</div>';
+    }
+    grid.innerHTML = html;
+    document.getElementById("infractionEmpty").style.display = shown === 0 ? "" : "none";
+  }
+
+  /* ============================================================
+     CLIENT POLICIES
+     ============================================================ */
+  function renderPolicies(){
+    var body = document.getElementById("policiesBody");
+    var rows = "";
+    for (var i=0;i<POLICIES.length;i++){
+      var p = POLICIES[i];
+      rows += "<tr>" +
+        "<td>" + escapeHtml(p[0]) + "</td><td>" + escapeHtml(p[1]) + "</td><td>" + escapeHtml(p[2]) + "</td>" +
+        "<td>" + escapeHtml(p[3]) + "</td><td>" + escapeHtml(p[4]) + "</td><td>" + escapeHtml(p[5]) + "</td>" +
+      "</tr>";
+    }
+    body.innerHTML = rows;
+    document.getElementById("policiesCount").textContent = POLICIES.length + " clients";
+
+    var select = document.getElementById("policySelect");
+    var opts = "";
+    for (var j=0;j<POLICIES.length;j++){ opts += '<option value="' + j + '">' + escapeHtml(POLICIES[j][0]) + '</option>'; }
+    select.innerHTML = opts;
+  }
+
+  window.renderGenerator = function(){
+    var idx = parseInt(document.getElementById("policySelect").value, 10) || 0;
+    var p = POLICIES[idx];
+    if (!p) return;
+    var client = p[0], nameChange = p[1], breaks = p[2], namePolicy = p[3], seb = p[4], docs = p[5];
+
+    var breakText = "";
+    if (nameChange.toLowerCase() === "allowed" || breaks.toLowerCase().indexOf("none") === -1) {
+      breakText = "You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules.";
+    } else {
+      breakText = "Breaks are not allowed for this exam.";
+    }
+
+    var nameText = "";
+    var certiverseReq = "Per Certiverse rules, the name on your ID must fully match the exam reservation.\n\n";
+    if (nameChange.toLowerCase() === "not allowed") {
+      nameText = certiverseReq + "Unfortunately we will need to cancel this session. You can email support@certiverse.com for further assistance with rescheduling. Please confirm.";
+    } else {
+      nameText = certiverseReq + "To proceed, please request a name change by contacting support@certiverse.com. Once completed, you can re-enter the reservation and we will continue.";
+    }
+
+    var cards = [
+      {title:"Name Policy & Change Response", text: nameText},
+      {title:"Break Policy Response", text: breakText + " (" + client + " Policy: " + breaks + ")"},
+      {title:"SEB Response", text: client + " exams run under " + seb + " conditions."},
+      {title:"Documentation Response", text: "Documentation policy for " + client + ": " + docs + "."}
+    ];
+
+    var html = "";
+    for (var i=0;i<cards.length;i++){
+      var safeText = cards[i].text.replace(/'/g,"\\'").replace(/\n/g,"\\n");
+      html += '<div class="gen-card"><div><h4>' + cards[i].title + '</h4><p>' + escapeHtml(cards[i].text) + '</p></div>' +
+        '<button class="seal-btn" onclick="copyGenerated(this,\'' + safeText.replace(/"/g,"&quot;") + '\')">⚜ Copy Scroll</button></div>';
+    }
+    document.getElementById("generatorCards").innerHTML = html;
+  };
+
+  window.copyGenerated = function(btn, text){
+    var unescapedText = text.replace(/\\n/g, "\n");
+    function showCopied(){
+      var original = btn.textContent;
+      btn.textContent = "✓ Technique Acquired";
+      btn.classList.add("copied");
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
+    }
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(unescapedText).then(showCopied, function(){ fallbackCopy(unescapedText, showCopied); });
+    } else {
+      fallbackCopy(unescapedText, showCopied);
+    }
+  };
+
+  /* ============================================================
+     SPOOKY YOKAI EMBERS CANVAS ENGINE
+     ============================================================ */
+  function initHollywoodFxEngine(){
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var canvas = document.getElementById("fxCanvas");
+    if (!canvas) return;
+    var ctx = canvas.getContext("2d");
+
+    var width = canvas.width = window.innerWidth;
+    var height = canvas.height = window.innerHeight;
+
+    window.addEventListener("resize", function(){
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    var colors = ["#ff9900", "#d97706", "#ff3300", "#00ff88"];
+    var embers = [];
+    var emberCount = 45;
+
+    for (var i = 0; i < emberCount; i++) {
+      embers.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 2.2 + 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speedY: -(Math.random() * 0.7 + 0.2),
+        speedX: Math.random() * 0.5 - 0.25,
+        opacity: Math.random() * 0.5 + 0.2
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+
+      for (var k = 0; k < embers.length; k++) {
+        var e = embers[k];
+        e.y += e.speedY;
+        e.x += e.speedX + Math.sin(e.y * 0.01) * 0.2;
+
+        if (e.y < -10) {
+          e.y = height + 10;
+          e.x = Math.random() * width;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = e.opacity;
+        ctx.fillStyle = e.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = e.color;
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  }
+
+  /* ============================================================
+     VIEW SWITCHING
+     ============================================================ */
+  window.switchView = function(viewId, btn){
+    var views = document.querySelectorAll(".dashboard-view");
+    for (var i=0;i<views.length;i++){ views[i].classList.remove("active"); }
+    var target = document.getElementById(viewId);
+    if (target){ target.classList.add("active"); }
+
+    var btns = document.querySelectorAll(".view-btn");
+    for (var j=0;j<btns.length;j++){ btns[j].classList.remove("active"); }
+    if (btn){ btn.classList.add("active"); }
+
+    updateSidebarLinks(viewId);
+    filterAll();
+  };
+
+  /* ============================================================
+     GLOBAL SEARCH ENGINE
+     ============================================================ */
+  function filterAll(){
+    var searchEl = document.getElementById("globalSearch");
+    var query = searchEl ? searchEl.value.trim().toLowerCase() : "";
+    var matches = 0, total = 0;
+
+    var accordions = document.querySelectorAll("#checkinAccordions .accordion");
+    for (var a=0;a<accordions.length;a++){
+      var acc = accordions[a];
+      var cards = acc.querySelectorAll(".card");
+      var visible = 0;
+      for (var c=0;c<cards.length;c++){
+        total++;
+        var card = cards[c];
+        var text = card.textContent.toLowerCase();
+        var show = !query || text.indexOf(query) !== -1;
+        card.style.display = show ? "" : "none";
+        if (show){ visible++; matches++; }
+      }
+      acc.style.display = (cards.length === 0 || visible > 0) ? "" : "none";
+      if (query){ acc.open = visible > 0; }
+    }
+
+    var libCards = document.querySelectorAll("#libraryList .card");
+    for (var l=0;l<libCards.length;l++){
+      total++;
+      var lc = libCards[l];
+      var ltext = lc.textContent.toLowerCase();
+      var lshow = !query || ltext.indexOf(query) !== -1;
+      lc.style.display = lshow ? "" : "none";
+      if (lshow){ matches++; }
+    }
+
+    var policyRows = document.querySelectorAll("#policiesBody tr");
+    var visiblePolicies = 0;
+    for (var pr=0;pr<policyRows.length;pr++){
+      total++;
+      var row = policyRows[pr];
+      var rtext = row.textContent.toLowerCase();
+      var showRow = !query || rtext.indexOf(query) !== -1;
+      row.style.display = showRow ? "" : "none";
+      if (showRow){ visiblePolicies++; matches++; }
+    }
+    var polEmpty = document.getElementById("policiesEmpty");
+    if (polEmpty){ polEmpty.style.display = (policyRows.length && visiblePolicies === 0) ? "" : "none"; }
+
+    var infrCards = document.querySelectorAll("#infractionGrid .infr-card");
+    var visibleInfr = 0;
+    for (var ir=0;ir<infrCards.length;ir++){
+      total++;
+      var icard = infrCards[ir];
+      var itext = icard.textContent.toLowerCase();
+      var ishow = !query || itext.indexOf(query) !== -1;
+      icard.style.display = ishow ? "" : "none";
+      if (ishow){ visibleInfr++; matches++; }
+    }
+    var infrEmpty = document.getElementById("infractionEmpty");
+    if (infrEmpty && infrCards.length){ infrEmpty.style.display = visibleInfr === 0 ? "" : "none"; }
+
+    var countLabel = document.getElementById("searchCount");
+    if (countLabel) {
+      countLabel.textContent = query ? ("Showing " + matches + " of " + total + " matching items across the dojo") : "";
+    }
+  }
+  window.filterAll = filterAll;
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  document.addEventListener("DOMContentLoaded", function(){
+    renderQuickActions();
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    renderCheckin();
+    renderLibraryFilters();
+    renderLibraryList();
+
+    renderThresholdFilters();
+    renderInfractions();
+
+    renderPolicies();
+    renderGenerator();
+
+    initHollywoodFxEngine();
+    updateSidebarLinks("view-home");
+    filterAll();
+  });
+})();
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiveActs Proctor Dojo — Kyoto Samurai Estate (PST)</title>
+<style>
+  :root {
+    /* Ghost of Tsushima & Edo Kyoto Samurai Palette */
+    --clan-red: #B22222;
+    --clan-red-bright: #D92b2b;
+    --imperial-gold: #F4C542;
+    --imperial-gold-glow: rgba(244, 197, 66, 0.45);
+    --edo-black: #121212;
+    --edo-dark: #1A1410;
+    --rice-paper: #F8EFD5;
+    --rice-paper-dim: #D9CDA0;
+    --cedar-brown: #6B4423;
+    --lantern-orange: #D97706;
+
+    --panel-bg: rgba(26, 20, 16, 0.92);
+    --card-bg: rgba(36, 28, 22, 0.88);
+    --border-line: rgba(244, 197, 66, 0.35);
+    --border-soft: rgba(248, 239, 213, 0.12);
+
+    --text-main: #F8EFD5;
+    --text-dim: #C7BFA3;
+    --text-muted: #827763;
+
+    --font-head: Georgia, "Iowan Old Style", "Palatino Linotype", "Hiragino Mincho ProN", serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  /* ============================================================
      RESET BACKGROUND: AUTHENTIC EDO TEXTURED WALL WITH PUMPKIN-ORANGE ACCENTS
      ============================================================ */
   body {
