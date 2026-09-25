@@ -443,7 +443,6 @@
     gap: 6px;
   }
   
-  /* Tooltip styling for Hover Full Name Pop-Up */
   .org-name {
     font-size: 0.92rem;
     color: var(--text-main);
@@ -983,12 +982,11 @@
       <h2 class="page-title">Operations Hall</h2>
       <p class="page-sub">The dojo's main hall — organization structure, shortcuts, and your recent work.</p>
 
-      <!-- UPDATED ORGANIZATIONAL CHART (NICKNAMES DISPLAYED, FULL NAMES ON HOVER) -->
+      <!-- ORGANIZATIONAL CHART -->
       <div class="org-chart-container">
         <h3 class="section-title" style="border:none;margin-bottom:20px;justify-content:center;">⛩️ FiveActs Dojo Command Hierarchy</h3>
         
         <div class="org-tree">
-          <!-- TOP EXECUTIVE LEADERSHIP -->
           <div class="org-node root">
             <div class="org-title">President</div>
             <div class="org-name" data-fullname="Erick Cruz">Erick</div>
@@ -1003,10 +1001,8 @@
 
           <div class="org-line-v"></div>
 
-          <!-- TEAMS BRANCH -->
           <div class="org-teams-branch">
             
-            <!-- COLUMN 1: CANDIDATE SUPPORT TEAM -->
             <div class="org-team-column">
               <div class="org-card-group">
                 <div class="org-group-header">
@@ -1022,7 +1018,6 @@
               </div>
             </div>
 
-            <!-- COLUMN 2: ACCOUNTANT -->
             <div class="org-team-column">
               <div class="org-card-group">
                 <div class="org-group-header">
@@ -1034,7 +1029,6 @@
               </div>
             </div>
 
-            <!-- COLUMN 3: HR & PROCTOR MANAGER -->
             <div class="org-team-column">
               <div class="org-card-group">
                 <div class="org-group-header">Management</div>
@@ -1047,7 +1041,6 @@
               </div>
             </div>
 
-            <!-- COLUMN 4: PROCTOR MANAGER & PROCTORS (UPDATED TO 14 WITH ARIANNE GAVIOLA) -->
             <div class="org-team-column" style="flex:1.5;">
               <div class="org-card-group">
                 <div class="org-group-header">Management &amp; Proctors</div>
@@ -2162,7 +2155,6 @@
   window.resetProgress = function(){
     saveSet("ph_progress", []);
     renderCheckin();
-    filterAll();
   };
 
   window.goToCategory = function(catId){
@@ -2293,7 +2285,7 @@
   };
 
   /* ============================================================
-     CANNED MESSAGE LIBRARY & SEARCH
+     ISOLATED CANNED MESSAGE LIBRARY SEARCH ENGINE
      ============================================================ */
   var libraryActiveCat = "all";
 
@@ -2312,7 +2304,7 @@
     libraryActiveCat = catId;
     renderLibraryFilters();
     renderLibraryList();
-    filterAll();
+    filterLibraryOnly();
   };
 
   function renderLibraryList(){
@@ -2327,13 +2319,35 @@
     wrap.innerHTML = html;
   }
 
+  /* ISOLATED SEARCH FILTER (AFFECTS CANNED MESSAGES TAB ONLY) */
+  function filterLibraryOnly(){
+    var searchEl = document.getElementById("globalSearch");
+    var query = searchEl ? searchEl.value.trim().toLowerCase() : "";
+    var libCards = document.querySelectorAll("#libraryList .card");
+    var matches = 0;
+    var total = libCards.length;
+
+    for (var l=0; l<total; l++){
+      var lc = libCards[l];
+      var ltext = lc.textContent.toLowerCase();
+      var lshow = !query || ltext.indexOf(query) !== -1;
+      lc.style.display = lshow ? "" : "none";
+      if (lshow){ matches++; }
+    }
+
+    var countLabel = document.getElementById("searchCount");
+    if (countLabel) {
+      countLabel.textContent = query ? ("Showing " + matches + " of " + total + " matching canned messages") : "";
+    }
+  }
+
   window.handleLibrarySearch = function() {
     var query = document.getElementById("globalSearch").value.trim().toLowerCase();
     var dropdown = document.getElementById("suggestionsBox");
 
     if (!query) {
       dropdown.style.display = "none";
-      filterAll();
+      filterLibraryOnly();
       return;
     }
 
@@ -2343,7 +2357,7 @@
 
     if (suggestions.length === 0) {
       dropdown.style.display = "none";
-      filterAll();
+      filterLibraryOnly();
       return;
     }
 
@@ -2359,18 +2373,32 @@
 
     dropdown.innerHTML = html;
     dropdown.style.display = "block";
-    filterAll();
+    filterLibraryOnly();
   };
 
+  /* SINGLE RESULT FOCUS: ISOLATES ONLY THE CLICKED SUGGESTION CARD */
   window.selectSuggestion = function(msgId) {
     document.getElementById("suggestionsBox").style.display = "none";
-    var targetCard = document.querySelector('#libraryList .card[data-id="' + msgId + '"]');
-    if (targetCard) {
-      targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
-      targetCard.classList.add("highlighted");
-      setTimeout(function() {
-        targetCard.classList.remove("highlighted");
-      }, 2500);
+    var libCards = document.querySelectorAll("#libraryList .card");
+    
+    // Hide all cards except the single chosen match
+    for (var i = 0; i < libCards.length; i++) {
+      var card = libCards[i];
+      if (card.getAttribute("data-id") === msgId) {
+        card.style.display = "";
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+        card.classList.add("highlighted");
+        setTimeout(function() {
+          card.classList.remove("highlighted");
+        }, 2500);
+      } else {
+        card.style.display = "none";
+      }
+    }
+
+    var countLabel = document.getElementById("searchCount");
+    if (countLabel) {
+      countLabel.textContent = "Showing 1 focused result";
     }
   };
 
@@ -2423,7 +2451,7 @@
   function renderAllInteractive(){
     renderCheckin();
     renderLibraryList();
-    filterAll();
+    filterLibraryOnly();
   }
 
   /* ============================================================
@@ -2456,7 +2484,7 @@
     setLibraryFilter("all");
     var input = document.getElementById("globalSearch");
     input.value = query;
-    filterAll();
+    filterLibraryOnly();
     window.scrollTo({top:0, behavior:"smooth"});
   };
 
@@ -2487,7 +2515,6 @@
     thresholdActiveFilter = f;
     renderThresholdFilters();
     renderInfractions();
-    filterAll();
   };
 
   function renderInfractions(){
@@ -2675,76 +2702,7 @@
     if (btn){ btn.classList.add("active"); }
 
     updateSidebarLinks(viewId);
-    filterAll();
   };
-
-  /* ============================================================
-     GLOBAL SEARCH ENGINE
-     ============================================================ */
-  function filterAll(){
-    var searchEl = document.getElementById("globalSearch");
-    var query = searchEl ? searchEl.value.trim().toLowerCase() : "";
-    var matches = 0, total = 0;
-
-    var accordions = document.querySelectorAll("#checkinAccordions .accordion");
-    for (var a=0;a<accordions.length;a++){
-      var acc = accordions[a];
-      var cards = acc.querySelectorAll(".card");
-      var visible = 0;
-      for (var c=0;c<cards.length;c++){
-        total++;
-        var card = cards[c];
-        var text = card.textContent.toLowerCase();
-        var show = !query || text.indexOf(query) !== -1;
-        card.style.display = show ? "" : "none";
-        if (show){ visible++; matches++; }
-      }
-      acc.style.display = (cards.length === 0 || visible > 0) ? "" : "none";
-      if (query){ acc.open = visible > 0; }
-    }
-
-    var libCards = document.querySelectorAll("#libraryList .card");
-    for (var l=0;l<libCards.length;l++){
-      total++;
-      var lc = libCards[l];
-      var ltext = lc.textContent.toLowerCase();
-      var lshow = !query || ltext.indexOf(query) !== -1;
-      lc.style.display = lshow ? "" : "none";
-      if (lshow){ matches++; }
-    }
-
-    var policyRows = document.querySelectorAll("#policiesBody tr");
-    var visiblePolicies = 0;
-    for (var pr=0;pr<policyRows.length;pr++){
-      total++;
-      var row = policyRows[pr];
-      var rtext = row.textContent.toLowerCase();
-      var showRow = !query || rtext.indexOf(query) !== -1;
-      row.style.display = showRow ? "" : "none";
-      if (showRow){ visiblePolicies++; matches++; }
-    }
-    var polEmpty = document.getElementById("policiesEmpty");
-    if (polEmpty){ polEmpty.style.display = (policyRows.length && visiblePolicies === 0) ? "" : "none"; }
-
-    var infrCards = document.querySelectorAll("#infractionGrid .infr-card");
-    var visibleInfr = 0;
-    for (var ir=0;ir<infrCards.length;ir++){
-      total++;
-      var icard = infrCards[ir];
-      var itext = icard.textContent.toLowerCase();
-      var ishow = !query || itext.indexOf(query) !== -1;
-      icard.style.display = ishow ? "" : "none";
-      if (ishow){ visibleInfr++; matches++; }
-    }
-    var infrEmpty = document.getElementById("infractionEmpty");
-    if (infrEmpty && infrCards.length){ infrEmpty.style.display = visibleInfr === 0 ? "" : "none"; }
-
-    var countLabel = document.getElementById("searchCount");
-    if (countLabel) {
-      countLabel.textContent = query ? ("Showing " + matches + " of " + total + " matching items across the dojo") : "";
-    }
-  }
-  window.filterAll = filterAll;
 
   /* ============================================================
      INIT
@@ -2766,7 +2724,7 @@
 
     initHollywoodFxEngine();
     updateSidebarLinks("view-home");
-    filterAll();
+    filterLibraryOnly();
   });
 })();
 </script>
