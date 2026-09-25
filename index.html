@@ -1098,7 +1098,7 @@
       <div id="checkinAccordions"></div>
     </div>
 
-    <!-- TROUBLESHOOTING VIEW (WITH UPDATED SPIELS FOR COMPANY DEVICES) -->
+    <!-- TROUBLESHOOTING VIEW (STANDARDIZED COMPANY DEVICE SPIEL ACROSS ALL WORKFLOWS) -->
     <div id="view-troubleshooting" class="dashboard-view">
       <h2 class="page-title">Hardware &amp; System Troubleshooting</h2>
       <p class="page-sub">Step-by-step diagnostic workflows for candidate Audio, Camera, Screen Sharing, and SEB issues.</p>
@@ -1909,6 +1909,41 @@
 (function(){
   "use strict";
 
+  /* PERSISTENT TICKER LOGIC: Load saved update or default text */
+  var STORAGE_KEY_TICKER = "dojo_ticker_announcement";
+
+  function initTickerText() {
+    var savedText = localStorage.getItem(STORAGE_KEY_TICKER);
+    var tickerEl = document.getElementById("tickerDisplay");
+    if (savedText && tickerEl) {
+      tickerEl.textContent = savedText;
+    }
+  }
+
+  window.openTickerAdmin = function() {
+    var pwd = prompt("⛩️ Dojo Security Verification\nPlease enter admin passcode:");
+    if (pwd === "789456") {
+      var currentText = document.getElementById("tickerDisplay").textContent.trim();
+      document.getElementById("tickerInput").value = currentText;
+      document.getElementById("tickerModal").style.display = "flex";
+    } else if (pwd !== null) {
+      alert("❌ Access Denied: Incorrect Passcode.");
+    }
+  };
+
+  window.closeTickerModal = function() {
+    document.getElementById("tickerModal").style.display = "none";
+  };
+
+  window.saveTickerUpdate = function() {
+    var text = document.getElementById("tickerInput").value.trim();
+    if (text) {
+      document.getElementById("tickerDisplay").textContent = text;
+      localStorage.setItem(STORAGE_KEY_TICKER, text);
+      closeTickerModal();
+    }
+  };
+
   /* ============================================================
      CATEGORIES Taxonomy
      ============================================================ */
@@ -2454,6 +2489,7 @@
     var text = document.getElementById("tickerInput").value.trim();
     if (text) {
       document.getElementById("tickerDisplay").textContent = text;
+      localStorage.setItem("dojo_ticker_announcement", text);
       closeTickerModal();
     }
   };
