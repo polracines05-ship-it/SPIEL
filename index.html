@@ -1098,7 +1098,7 @@
       <div id="checkinAccordions"></div>
     </div>
 
-    <!-- TROUBLESHOOTING VIEW (STANDARDIZED COMPANY DEVICE SPIEL ACROSS ALL WORKFLOWS) -->
+    <!-- TROUBLESHOOTING VIEW (WITH UPDATED STANDARDIZED SPIEL) -->
     <div id="view-troubleshooting" class="dashboard-view">
       <h2 class="page-title">Hardware &amp; System Troubleshooting</h2>
       <p class="page-sub">Step-by-step diagnostic workflows for candidate Audio, Camera, Screen Sharing, and SEB issues.</p>
@@ -2468,33 +2468,6 @@
   };
 
   /* ============================================================
-     PROTECTED UPDATE TICKER LOGIC (PASSCODE: 789456)
-     ============================================================ */
-  window.openTickerAdmin = function() {
-    var pwd = prompt("⛩️ Dojo Security Verification\nPlease enter admin passcode:");
-    if (pwd === "789456") {
-      var currentText = document.getElementById("tickerDisplay").textContent.trim();
-      document.getElementById("tickerInput").value = currentText;
-      document.getElementById("tickerModal").style.display = "flex";
-    } else if (pwd !== null) {
-      alert("❌ Access Denied: Incorrect Passcode.");
-    }
-  };
-
-  window.closeTickerModal = function() {
-    document.getElementById("tickerModal").style.display = "none";
-  };
-
-  window.saveTickerUpdate = function() {
-    var text = document.getElementById("tickerInput").value.trim();
-    if (text) {
-      document.getElementById("tickerDisplay").textContent = text;
-      localStorage.setItem("dojo_ticker_announcement", text);
-      closeTickerModal();
-    }
-  };
-
-  /* ============================================================
      ISOLATED CANNED MESSAGE LIBRARY SEARCH ENGINE
      ============================================================ */
   var libraryActiveCat = "all";
@@ -2917,6 +2890,7 @@
      INIT
      ============================================================ */
   document.addEventListener("DOMContentLoaded", function(){
+    initTickerText();
     renderQuickActions();
     tickClock();
     setInterval(tickClock, 1000);
