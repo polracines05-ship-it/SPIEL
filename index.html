@@ -1098,73 +1098,84 @@
       <div id="checkinAccordions"></div>
     </div>
 
-    <!-- TROUBLESHOOTING VIEW (DROPDOWNS CLOSED BY DEFAULT) -->
+    <!-- TROUBLESHOOTING VIEW (REPLACED WITH UPDATED SPIELS) -->
     <div id="view-troubleshooting" class="dashboard-view">
       <h2 class="page-title">Hardware &amp; System Troubleshooting</h2>
-      <p class="page-sub">Step-by-step diagnostic workflows for candidate Audio, Screen Sharing, and Camera issues across Non-SEB and SEB environments.</p>
+      <p class="page-sub">Step-by-step diagnostic workflows for candidate Audio, Camera, Screen Sharing, and SEB issues.</p>
 
       <div class="trouble-section">
+        <!-- 🎤 AUDIO WORKFLOW -->
         <details class="accordion" id="trouble-drop-audio">
           <summary>
-            <span class="cat-left">🎤 Audio — Microphone Not Working (Non-SEB)</span>
+            <span class="cat-left">🎤 Audio Issue — Microphone Not Working (Non-SEB)</span>
             <span class="chevron">&#10148;</span>
           </summary>
           <div class="accordion-body">
             <div class="trouble-card">
               <div class="flow-step">
-                <div class="flow-step-num">Step 1 &mdash; Browser Version Check</div>
-                <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
-                <div class="flow-step-action">Check if candidate is on the latest version of Chrome or Edge.</div>
+                <div class="flow-step-num">Step 1 &mdash; Browser Verification</div>
+                <div class="flow-step-title">Confirm Supported Browser</div>
+                <div class="flow-step-action">Check if candidate is on Chrome or Edge.</div>
                 <div class="flow-step-spiel">
-                  <span>"Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
+                  <span>"Before we begin troubleshooting, please confirm that you are using the latest version of Google Chrome or Microsoft Edge."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Before we begin troubleshooting, please confirm that you are using the latest version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
                 <div class="flow-step-num">Step 2 &mdash; Browser Switch Test</div>
-                <div class="flow-step-title">Alternate Browser Isolation</div>
-                <div class="flow-step-action">Instruct candidate to switch between Chrome and Edge.</div>
+                <div class="flow-step-title">Chrome ↔ Edge Isolation Test</div>
+                <div class="flow-step-action">Instruct candidate to switch alternate browsers.</div>
                 <div class="flow-step-spiel">
-                  <span>"If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again.')">⚜ Copy</button>
+                  <span>"If you are currently using Google Chrome, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are currently using Google Chrome, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 3 &mdash; Company Device Check</div>
-                <div class="flow-step-title">Confirm Corporate vs. Personal Hardware Restrictions</div>
-                <div class="flow-step-action">Inquire whether candidate is using a company-issued device.</div>
+                <div class="flow-step-num">Step 3 &mdash; Microphone Detection Check</div>
+                <div class="flow-step-title">Verify Device Detection</div>
+                <div class="flow-step-action">Confirm OS sees connected input hardware.</div>
                 <div class="flow-step-spiel">
-                  <span>"May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam.')">⚜ Copy</button>
+                  <span>"Please open your system sound settings and confirm that a microphone is listed and detected as an available input device."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please open your system sound settings and confirm that a microphone is listed and detected as an available input device.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 4 &mdash; Check Mute Settings</div>
-                <div class="flow-step-title">Hardware Switch &amp; Mute Inspection</div>
-                <div class="flow-step-action">Check physical headset switch or device mute setting.</div>
+                <div class="flow-step-num">Step 4 &mdash; Microphone Selection Check</div>
+                <div class="flow-step-title">Verify Correct Input Device</div>
+                <div class="flow-step-action">Ensure primary input target is chosen.</div>
                 <div class="flow-step-spiel">
-                  <span>"Please check your device and headset for any microphone mute buttons or switches and ensure that your microphone is unmuted."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check your device and headset for any microphone mute buttons or switches and ensure that your microphone is unmuted.')">⚜ Copy</button>
+                  <span>"Please check your browser and system audio settings and ensure that the correct microphone is selected as your active input device."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check your browser and system audio settings and ensure that the correct microphone is selected as your active input device.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 5 &mdash; Device Permission Check</div>
-                <div class="flow-step-title">Verify Device Hardware Permissions</div>
-                <div class="flow-step-action">Confirm device permissions for microphone, camera, and screen sharing are enabled.</div>
+                <div class="flow-step-num">Step 5 &mdash; Mute Settings Check</div>
+                <div class="flow-step-title">Physical and Software Mute Verification</div>
+                <div class="flow-step-action">Inspect physical inline buttons and soft mutes.</div>
                 <div class="flow-step-spiel">
-                  <span>"Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled.')">⚜ Copy</button>
+                  <span>"Please check your device settings and ensure that your microphone is not muted."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check your device settings and ensure that your microphone is not muted.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 6 &mdash; Operating System Permission Check</div>
-                <div class="flow-step-title">Verify System Privacy Settings</div>
-                <div class="flow-step-action">Confirm OS level microphone access settings.</div>
+                <div class="flow-step-num">Step 6 &mdash; Browser Permission Check</div>
+                <div class="flow-step-title">Microphone Access Permission</div>
+                <div class="flow-step-action">Check browser lock popup permissions.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please verify that your browser has permission to access your microphone. If prompted, select 'Allow' when granting microphone access."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your browser has permission to access your microphone. If prompted, select \'Allow\' when granting microphone access.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 7 &mdash; Operating System Permission Check</div>
+                <div class="flow-step-title">System Privacy Settings</div>
+                <div class="flow-step-action">Confirm OS privacy mic toggles are ON.</div>
                 <div class="flow-step-spiel">
                   <span>"Please verify that your operating system allows applications and websites to access your microphone."</span>
                   <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your operating system allows applications and websites to access your microphone.')">⚜ Copy</button>
@@ -1172,19 +1183,49 @@
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 7 &mdash; Correct Microphone Selected</div>
-                <div class="flow-step-title">Hardware Device Selection</div>
-                <div class="flow-step-action">Ensure primary microphone input is selected.</div>
+                <div class="flow-step-num">Step 8 &mdash; Close Other Applications</div>
+                <div class="flow-step-title">Application Conflict Check</div>
+                <div class="flow-step-action">Shut down background communication software.</div>
                 <div class="flow-step-spiel">
-                  <span>"Please ensure that the correct microphone is selected in both your browser and system audio settings."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please ensure that the correct microphone is selected in both your browser and system audio settings.')">⚜ Copy</button>
+                  <span>"Please close any applications that may be using your microphone, such as Microsoft Teams, Zoom, Discord, Webex, OBS Studio, or similar software."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please close any applications that may be using your microphone, such as Microsoft Teams, Zoom, Discord, Webex, OBS Studio, or similar software.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 8 &mdash; Rejoin Session</div>
-                <div class="flow-step-title">Re-enter Session from Dashboard</div>
-                <div class="flow-step-action">Re-launch exam session to trigger device re-detection.</div>
+                <div class="flow-step-num">Step 9 &mdash; VPN / Security Restriction Check</div>
+                <div class="flow-step-title">Security Software Review</div>
+                <div class="flow-step-action">Check corporate network blockers or VPNs.</div>
+                <div class="flow-step-spiel">
+                  <span>"Are you currently connected to a VPN or using security software that may restrict browser permissions? If so, please temporarily disconnect the VPN or verify whether the software may be blocking microphone access."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Are you currently connected to a VPN or using security software that may restrict browser permissions? If so, please temporarily disconnect the VPN or verify whether the software may be blocking microphone access.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 10 &mdash; External Microphone Test</div>
+                <div class="flow-step-title">Platform vs. Hardware Isolation</div>
+                <div class="flow-step-action">Test mic inside Windows/Mac system recorder.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please test your microphone outside of the exam platform using your device's sound settings. Is the microphone working normally there?"</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please test your microphone outside of the exam platform using your device\'s sound settings. Is the microphone working normally there?')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 11 &mdash; Company Device Check</div>
+                <div class="flow-step-title">Identify Corporate Restrictions</div>
+                <div class="flow-step-action">Inquire if candidate uses a company machine.</div>
+                <div class="flow-step-spiel">
+                  <span>"May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone functionality during the exam."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone functionality during the exam.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 12 &mdash; Rejoin Session</div>
+                <div class="flow-step-title">Refresh Device Detection</div>
+                <div class="flow-step-action">Re-enter session to force device polling.</div>
                 <div class="flow-step-spiel">
                   <span>"Please leave the session and rejoin from the exam dashboard so the system can re-detect your microphone settings."</span>
                   <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please leave the session and rejoin from the exam dashboard so the system can re-detect your microphone settings.')">⚜ Copy</button>
@@ -1192,9 +1233,9 @@
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 9 &mdash; Restart Device</div>
+                <div class="flow-step-num">Step 13 &mdash; Restart Device</div>
                 <div class="flow-step-title">Full Computer Reboot</div>
-                <div class="flow-step-action">Restart system to reset media drivers.</div>
+                <div class="flow-step-action">Reboot system to clear media hooks.</div>
                 <div class="flow-step-spiel">
                   <span>"Please perform a full restart of your device and rejoin the exam session."</span>
                   <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please perform a full restart of your device and rejoin the exam session.')">⚜ Copy</button>
@@ -1202,97 +1243,269 @@
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 10 &mdash; Alternate Device / Escalation</div>
-                <div class="flow-step-title">Secondary Hardware or Support Ticket</div>
-                <div class="flow-step-action">Use fallback machine or contact support@certiverse.com.</div>
+                <div class="flow-step-num">Step 14 &mdash; Alternate Device / Escalation</div>
+                <div class="flow-step-title">Secondary Machine or Support Escalation</div>
+                <div class="flow-step-action">Contact support@certiverse.com or use secondary machine.</div>
                 <div class="flow-step-spiel">
-                  <span>"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.')">⚜ Copy</button>
+                  <span>"If available, please try using another personal device. If the issue continues, please contact support@certiverse.com for further assistance."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If available, please try using another personal device. If the issue continues, please contact support@certiverse.com for further assistance.')">⚜ Copy</button>
                 </div>
               </div>
             </div>
           </div>
         </details>
 
-        <details class="accordion" id="trouble-drop-screen">
+        <!-- 🎥 CAMERA WORKFLOW -->
+        <details class="accordion" id="trouble-drop-video">
           <summary>
-            <span class="cat-left">🖥️ Screen Sharing — Unable to Share Screen (Non-SEB)</span>
+            <span class="cat-left">🎥 Camera Issue — Camera Not Working (Non-SEB)</span>
             <span class="chevron">&#10148;</span>
           </summary>
           <div class="accordion-body">
             <div class="trouble-card">
               <div class="flow-step">
-                <div class="flow-step-num">Step 1 &mdash; Browser Version Check</div>
-                <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
-                <div class="flow-step-action">Confirm browser version compatibility.</div>
+                <div class="flow-step-num">Step 1 &mdash; Browser Verification</div>
+                <div class="flow-step-title">Confirm Supported Browser</div>
+                <div class="flow-step-action">Confirm Chrome or Edge usage.</div>
                 <div class="flow-step-spiel">
-                  <span>"Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
+                  <span>"Before we begin troubleshooting, please confirm that you are using the latest version of Google Chrome or Microsoft Edge."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Before we begin troubleshooting, please confirm that you are using the latest version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
                 <div class="flow-step-num">Step 2 &mdash; Browser Switch Test</div>
-                <div class="flow-step-title">Alternate Browser Test</div>
-                <div class="flow-step-action">Switch from Chrome to Edge or vice versa.</div>
+                <div class="flow-step-title">Chrome ↔ Edge Isolation Test</div>
+                <div class="flow-step-action">Switch Chrome &harr; Edge.</div>
                 <div class="flow-step-spiel">
-                  <span>"If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again.')">⚜ Copy</button>
+                  <span>"If you are currently using Google Chrome, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are currently using Google Chrome, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 3 &mdash; Company Device Check</div>
-                <div class="flow-step-title">Confirm Corporate Security Restrictions</div>
-                <div class="flow-step-action">Check if device is managed by corporate policies.</div>
+                <div class="flow-step-num">Step 3 &mdash; Camera Cover Check</div>
+                <div class="flow-step-title">Physical Camera Inspection</div>
+                <div class="flow-step-action">Inspect physical privacy slider or camera toggle.</div>
                 <div class="flow-step-spiel">
-                  <span>"May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam.')">⚜ Copy</button>
+                  <span>"Some devices have a built-in camera cover. Please check your camera and make sure the cover is open."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Some devices have a built-in camera cover. Please check your camera and make sure the cover is open.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 4 &mdash; Screen-Sharing Permissions</div>
-                <div class="flow-step-title">Browser &amp; OS Screen Recording Settings</div>
-                <div class="flow-step-action">Check macOS Privacy Screen Recording or Windows permissions.</div>
+                <div class="flow-step-num">Step 4 &mdash; Camera Detection Check</div>
+                <div class="flow-step-title">Verify Device Hardware Detection</div>
+                <div class="flow-step-action">Confirm OS detects connected camera.</div>
                 <div class="flow-step-spiel">
-                  <span>"Please verify that screen-sharing permissions are enabled in both your browser and operating system settings."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that screen-sharing permissions are enabled in both your browser and operating system settings.')">⚜ Copy</button>
+                  <span>"Please verify that your camera is detected by your system and appears in your device settings."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your camera is detected by your system and appears in your device settings.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 5 &mdash; Multiple Monitor Check</div>
-                <div class="flow-step-title">Disconnect Secondary Monitors</div>
-                <div class="flow-step-action">Physically unplug external displays.</div>
+                <div class="flow-step-num">Step 5 &mdash; Camera Selection Check</div>
+                <div class="flow-step-title">Target Active Camera Device</div>
+                <div class="flow-step-action">Select default primary webcam.</div>
                 <div class="flow-step-spiel">
-                  <span>"If you are using multiple monitors or external displays, please disconnect them and use only one monitor during the exam."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are using multiple monitors or external displays, please disconnect them and use only one monitor during the exam.')">⚜ Copy</button>
+                  <span>"Please ensure that the correct camera is selected in both your browser and device settings."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please ensure that the correct camera is selected in both your browser and device settings.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 6 &mdash; Device Permission Verification</div>
-                <div class="flow-step-title">All System Permissions Check</div>
-                <div class="flow-step-action">Confirm full device permission access.</div>
+                <div class="flow-step-num">Step 6 &mdash; Browser Permission Check</div>
+                <div class="flow-step-title">Browser Permissions Popup</div>
+                <div class="flow-step-action">Grant camera access in browser popup.</div>
                 <div class="flow-step-spiel">
-                  <span>"Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled.')">⚜ Copy</button>
+                  <span>"Please verify that your browser has permission to access your camera. If prompted, select 'Allow'."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your browser has permission to access your camera. If prompted, select \'Allow\'.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 7 &mdash; Network Test</div>
-                <div class="flow-step-title">Switch Network / Mobile Hotspot</div>
-                <div class="flow-step-action">Try connecting to an alternate network or mobile hotspot.</div>
+                <div class="flow-step-num">Step 7 &mdash; Operating System Permission Check</div>
+                <div class="flow-step-title">OS Privacy Camera Toggles</div>
+                <div class="flow-step-action">Allow camera in Windows/Mac OS settings.</div>
                 <div class="flow-step-spiel">
-                  <span>"If possible, please switch to a different internet connection, such as another Wi-Fi network or a mobile hotspot."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If possible, please switch to a different internet connection, such as another Wi-Fi network or a mobile hotspot.')">⚜ Copy</button>
+                  <span>"Please verify that your operating system allows applications and websites to access your camera."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your operating system allows applications and websites to access your camera.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 8 &mdash; Rejoin Session</div>
+                <div class="flow-step-num">Step 8 &mdash; Close Other Applications</div>
+                <div class="flow-step-title">Application Video Conflict Check</div>
+                <div class="flow-step-action">Close secondary apps using camera (Zoom, Teams, OBS).</div>
+                <div class="flow-step-spiel">
+                  <span>"Please close any applications that may be using your camera, such as Microsoft Teams, Zoom, Discord, Webex, OBS Studio, or similar software."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please close any applications that may be using your camera, such as Microsoft Teams, Zoom, Discord, Webex, OBS Studio, or similar software.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 9 &mdash; VPN / Security Restriction Check</div>
+                <div class="flow-step-title">Check Security Restrictions</div>
+                <div class="flow-step-action">Inspect active VPN or corporate firewalls.</div>
+                <div class="flow-step-spiel">
+                  <span>"Are you currently connected to a VPN or using security software that may restrict browser permissions? If so, please temporarily disconnect the VPN or verify whether the software may be blocking camera access."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Are you currently connected to a VPN or using security software that may restrict browser permissions? If so, please temporarily disconnect the VPN or verify whether the software may be blocking camera access.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 10 &mdash; External Camera App Test</div>
+                <div class="flow-step-title">Platform vs. Hardware Test</div>
+                <div class="flow-step-action">Open built-in Windows Camera / Mac Photo Booth app.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please open your device's Camera application and confirm whether your camera functions normally outside of the exam platform."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please open your device\'s Camera application and confirm whether your camera functions normally outside of the exam platform.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 11 &mdash; Company Device Check</div>
+                <div class="flow-step-title">Corporate Policy Review</div>
+                <div class="flow-step-action">Inquire whether candidate uses corporate laptop.</div>
+                <div class="flow-step-spiel">
+                  <span>"May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect camera functionality during the exam."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect camera functionality during the exam.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 12 &mdash; Rejoin Session</div>
+                <div class="flow-step-title">Relaunch Exam Session</div>
+                <div class="flow-step-action">Re-enter session from dashboard.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please leave the session and rejoin from the exam dashboard so the system can re-detect your camera settings."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please leave the session and rejoin from the exam dashboard so the system can re-detect your camera settings.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 13 &mdash; Restart Device</div>
+                <div class="flow-step-title">Full Computer Reboot</div>
+                <div class="flow-step-action">Reboot system to reset media capture drivers.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please restart your device and rejoin the exam session."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please restart your device and rejoin the exam session.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 14 &mdash; Alternate Device / Escalation</div>
+                <div class="flow-step-title">Secondary Machine or Support Escalation</div>
+                <div class="flow-step-action">Contact support@certiverse.com or switch devices.</div>
+                <div class="flow-step-spiel">
+                  <span>"If available, please try using another personal device. If the issue continues, please contact support@certiverse.com for further assistance."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If available, please try using another personal device. If the issue continues, please contact support@certiverse.com for further assistance.')">⚜ Copy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- 🖥️ SCREEN SHARING WORKFLOW -->
+        <details class="accordion" id="trouble-drop-screen">
+          <summary>
+            <span class="cat-left">🖥️ Screen Sharing Issue — Unable to Share Screen (Non-SEB)</span>
+            <span class="chevron">&#10148;</span>
+          </summary>
+          <div class="accordion-body">
+            <div class="trouble-card">
+              <div class="flow-step">
+                <div class="flow-step-num">Step 1 &mdash; Browser Verification</div>
+                <div class="flow-step-title">Confirm Supported Browser</div>
+                <div class="flow-step-action">Confirm Chrome or Edge version.</div>
+                <div class="flow-step-spiel">
+                  <span>"Before we begin troubleshooting, please confirm that you are using the latest version of Google Chrome or Microsoft Edge."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Before we begin troubleshooting, please confirm that you are using the latest version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 2 &mdash; Browser Switch Test</div>
+                <div class="flow-step-title">Chrome ↔ Edge Isolation Test</div>
+                <div class="flow-step-action">Switch Chrome &harr; Edge.</div>
+                <div class="flow-step-spiel">
+                  <span>"If you are currently using Google Chrome, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are currently using Google Chrome, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 3 &mdash; Multiple Monitor Check</div>
+                <div class="flow-step-title">Disconnect External Displays</div>
+                <div class="flow-step-action">Unplug secondary monitors.</div>
+                <div class="flow-step-spiel">
+                  <span>"Are you currently using more than one monitor or display? If so, please disconnect all additional monitors and use only one monitor during the exam."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Are you currently using more than one monitor or display? If so, please disconnect all additional monitors and use only one monitor during the exam.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 4 &mdash; Close Remote Access Applications</div>
+                <div class="flow-step-title">Close Remote Desktop Software</div>
+                <div class="flow-step-action">Close AnyDesk, TeamViewer, Citrix, VMware, Parsec.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please close any remote access software such as AnyDesk, TeamViewer, Citrix Workspace, VMware, Remote Desktop, Parsec, or similar applications."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please close any remote access software such as AnyDesk, TeamViewer, Citrix Workspace, VMware, Remote Desktop, Parsec, or similar applications.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 5 &mdash; Entire Screen Selection</div>
+                <div class="flow-step-title">Select Full Desktop View</div>
+                <div class="flow-step-action">Ensure candidate selects 'Entire Screen' tab.</div>
+                <div class="flow-step-spiel">
+                  <span>"When prompted to share your screen, please select 'Entire Screen' rather than a specific browser tab or application window."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'When prompted to share your screen, please select \'Entire Screen\' rather than a specific browser tab or application window.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 6 &mdash; Screen Sharing Permission Check</div>
+                <div class="flow-step-title">Browser &amp; OS Screen Capture Permissions</div>
+                <div class="flow-step-action">Check macOS Privacy Screen Recording settings.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please verify that screen-sharing permissions are enabled within both your browser and operating system settings."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that screen-sharing permissions are enabled within both your browser and operating system settings.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 7 &mdash; Device Permission Verification</div>
+                <div class="flow-step-title">Full Hardware Permissions Check</div>
+                <div class="flow-step-action">Confirm mic, camera, and display access.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please verify that your microphone, camera, and screen-sharing permissions are fully enabled on your device."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your microphone, camera, and screen-sharing permissions are fully enabled on your device.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 8 &mdash; VPN / Security Restriction Check</div>
+                <div class="flow-step-title">Inspect Security Blockers</div>
+                <div class="flow-step-action">Disconnect active VPN connections.</div>
+                <div class="flow-step-spiel">
+                  <span>"Are you currently connected to a VPN or using security software that may restrict screen sharing? If so, please temporarily disconnect the VPN or verify whether the software may be blocking screen-sharing access."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Are you currently connected to a VPN or using security software that may restrict screen sharing? If so, please temporarily disconnect the VPN or verify whether the software may be blocking screen-sharing access.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 9 &mdash; Company Device Check</div>
+                <div class="flow-step-title">Corporate Restrictions Review</div>
+                <div class="flow-step-action">Confirm if device is managed by company policies.</div>
+                <div class="flow-step-spiel">
+                  <span>"May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can prevent screen sharing."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can prevent screen sharing.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 10 &mdash; Rejoin Session</div>
                 <div class="flow-step-title">Close &amp; Relaunch Session</div>
                 <div class="flow-step-action">Relaunch exam from candidate dashboard.</div>
                 <div class="flow-step-spiel">
@@ -1302,9 +1515,9 @@
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 9 &mdash; Restart Device</div>
-                <div class="flow-step-title">Restart System &amp; Rejoin</div>
-                <div class="flow-step-action">Restart machine to clear display permissions.</div>
+                <div class="flow-step-num">Step 11 &mdash; Restart Device</div>
+                <div class="flow-step-title">Full System Restart</div>
+                <div class="flow-step-action">Reboot machine to clear display stack.</div>
                 <div class="flow-step-spiel">
                   <span>"Please restart your device and attempt screen sharing again after rejoining the exam."</span>
                   <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please restart your device and attempt screen sharing again after rejoining the exam.')">⚜ Copy</button>
@@ -1312,182 +1525,133 @@
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 10 &mdash; Alternate Device / Escalation</div>
-                <div class="flow-step-title">Secondary Machine or Support Contact</div>
-                <div class="flow-step-action">Use another personal device or contact support@certiverse.com.</div>
+                <div class="flow-step-num">Step 12 &mdash; Network Isolation Test</div>
+                <div class="flow-step-title">Switch Connection / Hotspot</div>
+                <div class="flow-step-action">Connect to mobile hotspot or secondary Wi-Fi.</div>
                 <div class="flow-step-spiel">
-                  <span>"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.')">⚜ Copy</button>
+                  <span>"If possible, please switch to an alternate internet connection, such as a mobile hotspot or a different Wi‑Fi network."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If possible, please switch to an alternate internet connection, such as a mobile hotspot or a different Wi‑Fi network.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 13 &mdash; Alternate Device / Escalation</div>
+                <div class="flow-step-title">Secondary Hardware or Support Ticket</div>
+                <div class="flow-step-action">Contact support@certiverse.com or switch devices.</div>
+                <div class="flow-step-spiel">
+                  <span>"If available, please try using another personal device. If the issue continues, please contact support@certiverse.com for additional assistance."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If available, please try using another personal device. If the issue continues, please contact support@certiverse.com for additional assistance.')">⚜ Copy</button>
                 </div>
               </div>
             </div>
           </div>
         </details>
 
-        <details class="accordion" id="trouble-drop-video">
-          <summary>
-            <span class="cat-left">📷 Video — Camera Not Working (Non-SEB)</span>
-            <span class="chevron">&#10148;</span>
-          </summary>
-          <div class="accordion-body">
-            <div class="trouble-card">
-              <div class="flow-step">
-                <div class="flow-step-num">Step 1 &mdash; Browser Version Check</div>
-                <div class="flow-step-title">Verify Google Chrome or Microsoft Edge</div>
-                <div class="flow-step-action">Confirm browser compatibility.</div>
-                <div class="flow-step-spiel">
-                  <span>"Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.')">⚜ Copy</button>
-                </div>
-              </div>
-
-              <div class="flow-step">
-                <div class="flow-step-num">Step 2 &mdash; Browser Switch Test</div>
-                <div class="flow-step-title">Test Alternate Browser</div>
-                <div class="flow-step-action">Switch Chrome &harr; Edge.</div>
-                <div class="flow-step-spiel">
-                  <span>"If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If you are currently using Google Chrome and experiencing this issue, please try Microsoft Edge instead. If you are using Microsoft Edge, please switch to Google Chrome and test again.')">⚜ Copy</button>
-                </div>
-              </div>
-
-              <div class="flow-step">
-                <div class="flow-step-num">Step 3 &mdash; Company Device Check</div>
-                <div class="flow-step-title">Confirm Corporate Device Restrictions</div>
-                <div class="flow-step-action">Check for corporate policy restrictions.</div>
-                <div class="flow-step-spiel">
-                  <span>"May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I confirm whether you are using a company-issued device or a personal device? Some company-managed devices may have security restrictions that can affect microphone, camera, or screen-sharing functionality during the exam.')">⚜ Copy</button>
-                </div>
-              </div>
-
-              <div class="flow-step">
-                <div class="flow-step-num">Step 4 &mdash; Physical Camera Check</div>
-                <div class="flow-step-title">Check Privacy Shutter &amp; Hardware Switch</div>
-                <div class="flow-step-action">Inspect camera shutter, switch, or function key.</div>
-                <div class="flow-step-spiel">
-                  <span>"Please check whether your device has a camera privacy shutter, physical switch, or camera disable button. If it does, make sure the camera is enabled and uncovered."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please check whether your device has a camera privacy shutter, physical switch, or camera disable button. If it does, make sure the camera is enabled and uncovered.')">⚜ Copy</button>
-                </div>
-              </div>
-
-              <div class="flow-step">
-                <div class="flow-step-num">Step 5 &mdash; Device Permission Check</div>
-                <div class="flow-step-title">Verify Device Hardware Permissions</div>
-                <div class="flow-step-action">Allow camera in browser/OS settings.</div>
-                <div class="flow-step-spiel">
-                  <span>"Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your device settings for your microphone, camera, and screen sharing are fully enabled.')">⚜ Copy</button>
-                </div>
-              </div>
-
-              <div class="flow-step">
-                <div class="flow-step-num">Step 6 &mdash; Browser Camera Permission</div>
-                <div class="flow-step-title">Verify Lock Icon Permissions</div>
-                <div class="flow-step-action">Allow camera in browser permissions popup.</div>
-                <div class="flow-step-spiel">
-                  <span>"Please verify that your browser has permission to access your camera."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your browser has permission to access your camera.')">⚜ Copy</button>
-                </div>
-              </div>
-
-              <div class="flow-step">
-                <div class="flow-step-num">Step 7 &mdash; Operating System Camera Permission</div>
-                <div class="flow-step-title">Verify OS Camera Privacy Access</div>
-                <div class="flow-step-action">Allow camera in Windows/Mac OS privacy settings.</div>
-                <div class="flow-step-spiel">
-                  <span>"Please verify that your operating system allows applications and websites to access your camera."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your operating system allows applications and websites to access your camera.')">⚜ Copy</button>
-                </div>
-              </div>
-
-              <div class="flow-step">
-                <div class="flow-step-num">Step 8 &mdash; Close Other Applications</div>
-                <div class="flow-step-title">Close Conflicting Applications (Zoom, Teams, Skype)</div>
-                <div class="flow-step-action">Close secondary apps utilizing camera hardware.</div>
-                <div class="flow-step-spiel">
-                  <span>"Please close any applications that may currently be using your camera, such as Zoom, Microsoft Teams, Google Meet, Skype, Discord, or similar programs."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please close any applications that may currently be using your camera, such as Zoom, Microsoft Teams, Google Meet, Skype, Discord, or similar programs.')">⚜ Copy</button>
-                </div>
-              </div>
-
-              <div class="flow-step">
-                <div class="flow-step-num">Step 9 &mdash; Network Test</div>
-                <div class="flow-step-title">Switch Wi-Fi Connection / Hotspot</div>
-                <div class="flow-step-action">Connect to an alternate network.</div>
-                <div class="flow-step-spiel">
-                  <span>"If possible, please switch to another internet connection and test your camera again."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'If possible, please switch to another internet connection and test your camera again.')">⚜ Copy</button>
-                </div>
-              </div>
-
-              <div class="flow-step">
-                <div class="flow-step-num">Step 10 &mdash; Rejoin / Restart</div>
-                <div class="flow-step-title">Full Computer Reboot &amp; Rejoin</div>
-                <div class="flow-step-action">Restart computer to reset capture drivers.</div>
-                <div class="flow-step-spiel">
-                  <span>"Please leave the session, restart your device, and then rejoin the exam from the dashboard."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please leave the session, restart your device, and then rejoin the exam from the dashboard.')">⚜ Copy</button>
-                </div>
-              </div>
-
-              <div class="flow-step">
-                <div class="flow-step-num">Step 11 &mdash; Alternate Device / Escalation</div>
-                <div class="flow-step-title">Secondary Machine or Support Ticket</div>
-                <div class="flow-step-action">Use fallback machine or contact support@certiverse.com.</div>
-                <div class="flow-step-spiel">
-                  <span>"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.')">⚜ Copy</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </details>
-
+        <!-- 🧭 SEB WORKFLOW -->
         <details class="accordion" id="trouble-drop-seb">
           <summary>
-            <span class="cat-left">🧭 SEB (SECURE EXAM BROWSER) EXAMS</span>
+            <span class="cat-left">🧭 SEB (Secure Exam Browser) Issues</span>
             <span class="chevron">&#10148;</span>
           </summary>
           <div class="accordion-body">
             <div class="trouble-card">
               <div class="flow-step">
-                <div class="flow-step-num">Step 1 &mdash; Top-Left SEB Refresh</div>
-                <div class="flow-step-title">Refresh Safe Exam Browser Navigation</div>
-                <div class="flow-step-action">Instruct candidate to click the SEB refresh icon located in the upper-left corner of the window.</div>
+                <div class="flow-step-num">Step 1 &mdash; Obtain Exact Error Message</div>
+                <div class="flow-step-title">Identify Error Screen Details</div>
+                <div class="flow-step-action">Ask candidate for exact error text on screen.</div>
                 <div class="flow-step-spiel">
-                  <span>"To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen.')">⚜ Copy</button>
+                  <span>"May I please know the exact error message displayed on your screen?"</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'May I please know the exact error message displayed on your screen?')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 2 &mdash; SEB Input Device Switching</div>
-                <div class="flow-step-title">Re-select Audio/Video Devices in SEB Bar</div>
-                <div class="flow-step-action">Refresh SEB media selector dialog and choose an alternate active webcam or microphone device.</div>
+                <div class="flow-step-num">Step 2 &mdash; Refresh SEB</div>
+                <div class="flow-step-title">Top-Left SEB Refresh</div>
+                <div class="flow-step-action">Click refresh icon in upper-left corner of SEB window.</div>
                 <div class="flow-step-spiel">
-                  <span>"Please try to refresh the SEB and choose a different audio/video input."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please try to refresh the SEB and choose a different audio/video input.')">⚜ Copy</button>
+                  <span>"Please click the refresh icon located in the upper-left corner of the Safe Exam Browser window."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please click the refresh icon located in the upper-left corner of the Safe Exam Browser window.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 3 &mdash; Bottom-Right Power Icon Exit</div>
-                <div class="flow-step-title">Exit SEB Application to Reset Environment</div>
-                <div class="flow-step-action">Instruct candidate to exit SEB by clicking the bottom-right power icon, fix device settings, and re-enter.</div>
+                <div class="flow-step-num">Step 3 &mdash; Re-select Audio/Video Devices</div>
+                <div class="flow-step-title">Re-select Active Inputs</div>
+                <div class="flow-step-action">Re-choose active camera and mic in SEB selector.</div>
                 <div class="flow-step-spiel">
-                  <span>"To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen.')">⚜ Copy</button>
+                  <span>"Please refresh Safe Exam Browser and select the appropriate microphone and camera devices from the available options."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please refresh Safe Exam Browser and select the appropriate microphone and camera devices from the available options.')">⚜ Copy</button>
                 </div>
               </div>
 
               <div class="flow-step">
-                <div class="flow-step-num">Step 4 &mdash; SEB Re-entry &amp; Support Escalation</div>
-                <div class="flow-step-title">Re-launch SEB or Escalate to Support</div>
-                <div class="flow-step-action">Re-launch SEB session. If version error persists, refer candidate to support@certiverse.com.</div>
+                <div class="flow-step-num">Step 4 &mdash; Camera Cover Check</div>
+                <div class="flow-step-title">Physical Camera Cover Review</div>
+                <div class="flow-step-action">Inspect physical privacy sliders.</div>
                 <div class="flow-step-spiel">
-                  <span>"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."</span>
-                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam.')">⚜ Copy</button>
+                  <span>"Some devices have a built-in camera cover. Please check your camera and make sure the cover is open."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Some devices have a built-in camera cover. Please check your camera and make sure the cover is open.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 5 &mdash; Verify Device Permissions</div>
+                <div class="flow-step-title">Hardware Privacy Access Check</div>
+                <div class="flow-step-action">Confirm camera & mic access toggles are ON.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please verify that your microphone and camera permissions are fully enabled within your device settings."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please verify that your microphone and camera permissions are fully enabled within your device settings.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 6 &mdash; Close Other Applications</div>
+                <div class="flow-step-title">Shut Down Conflicting Software</div>
+                <div class="flow-step-action">Close Zoom, Teams, Webex, Discord, OBS.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please close any applications that may be using your microphone or camera, such as Microsoft Teams, Zoom, Discord, Webex, OBS Studio, or similar software."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please close any applications that may be using your microphone or camera, such as Microsoft Teams, Zoom, Discord, Webex, OBS Studio, or similar software.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 7 &mdash; VPN / Security Restriction Check</div>
+                <div class="flow-step-title">SEB Network &amp; Security Blocker Check</div>
+                <div class="flow-step-action">Disconnect VPN or disable interfering firewall software.</div>
+                <div class="flow-step-spiel">
+                  <span>"Are you currently connected to a VPN or using security software that may affect Safe Exam Browser functionality? If so, please temporarily disconnect the VPN or verify whether the software is interfering with the exam environment."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Are you currently connected to a VPN or using security software that may affect Safe Exam Browser functionality? If so, please temporarily disconnect the VPN or verify whether the software is interfering with the exam environment.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 8 &mdash; Restart SEB Session</div>
+                <div class="flow-step-title">Close &amp; Relaunch SEB</div>
+                <div class="flow-step-action">Exit SEB (power icon) and launch again.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please close and relaunch the Safe Exam Browser session."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please close and relaunch the Safe Exam Browser session.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 9 &mdash; Restart Device</div>
+                <div class="flow-step-title">Full System Reboot</div>
+                <div class="flow-step-action">Restart computer completely.</div>
+                <div class="flow-step-spiel">
+                  <span>"Please restart your device completely and launch the exam again."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'Please restart your device completely and launch the exam again.')">⚜ Copy</button>
+                </div>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-step-num">Step 10 &mdash; Alternate Device / Escalation</div>
+                <div class="flow-step-title">Support Ticket Escalation</div>
+                <div class="flow-step-action">Refer candidate to support@certiverse.com.</div>
+                <div class="flow-step-spiel">
+                  <span>"It appears the issue is persisting. Please contact support@certiverse.com so they can assist you further before the exam begins."</span>
+                  <button class="seal-btn" style="min-width:auto;padding:4px 10px;" onclick="copyDirectText(this, 'It appears the issue is persisting. Please contact support@certiverse.com so they can assist you further before the exam begins.')">⚜ Copy</button>
                 </div>
               </div>
             </div>
@@ -2074,7 +2238,6 @@
       var cat = displayCategories[i];
       var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
       
-      /* All check-in accordions initialized closed (no default 'open') */
       html += '<details class="accordion" id="accordion-' + cat.id + '">' +
         '<summary onclick="handleAccordionToggle(event, \'' + cat.id + '\')">' +
           '<span class="cat-left"><span class="cat-num">' + cat.id + '</span>' + cat.icon + '&nbsp; ' + cat.label + '</span>' +
@@ -2201,8 +2364,8 @@
       labelEl.textContent = "Troubleshooting Flows";
       var flows = [
         {id: "trouble-drop-audio", label: "Microphone (Non-SEB)", icon: "🎤"},
+        {id: "trouble-drop-video", label: "Camera (Non-SEB)", icon: "🎥"},
         {id: "trouble-drop-screen", label: "Screen Sharing (Non-SEB)", icon: "🖥️"},
-        {id: "trouble-drop-video", label: "Camera (Non-SEB)", icon: "📷"},
         {id: "trouble-drop-seb", label: "SEB Diagnostics", icon: "🧭"}
       ];
       for (var f=0; f<flows.length; f++){
