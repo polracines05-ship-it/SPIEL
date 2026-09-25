@@ -1098,13 +1098,13 @@
       <div id="checkinAccordions"></div>
     </div>
 
-    <!-- TROUBLESHOOTING VIEW -->
+    <!-- TROUBLESHOOTING VIEW (DROPDOWNS CLOSED BY DEFAULT) -->
     <div id="view-troubleshooting" class="dashboard-view">
       <h2 class="page-title">Hardware &amp; System Troubleshooting</h2>
       <p class="page-sub">Step-by-step diagnostic workflows for candidate Audio, Screen Sharing, and Camera issues across Non-SEB and SEB environments.</p>
 
       <div class="trouble-section">
-        <details class="accordion" id="trouble-drop-audio" open>
+        <details class="accordion" id="trouble-drop-audio">
           <summary>
             <span class="cat-left">🎤 Audio — Microphone Not Working (Non-SEB)</span>
             <span class="chevron">&#10148;</span>
@@ -2049,7 +2049,7 @@
   }
 
   /* ============================================================
-     CHECK-IN STEPS & EXAM MODE TOGGLE
+     CHECK-IN STEPS & EXAM MODE TOGGLE (CLOSED BY DEFAULT)
      ============================================================ */
   var activeOsFilter = "all";
   var activeExamMode = "nonseb";
@@ -2074,7 +2074,8 @@
       var cat = displayCategories[i];
       var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
       
-      html += '<details class="accordion" id="accordion-' + cat.id + '"' + (i===0 ? " open" : "") + '>' +
+      /* All check-in accordions initialized closed (no default 'open') */
+      html += '<details class="accordion" id="accordion-' + cat.id + '">' +
         '<summary onclick="handleAccordionToggle(event, \'' + cat.id + '\')">' +
           '<span class="cat-left"><span class="cat-num">' + cat.id + '</span>' + cat.icon + '&nbsp; ' + cat.label + '</span>' +
           '<span class="cat-progress" id="progress-' + cat.id + '"></span>' +
@@ -2381,7 +2382,6 @@
     document.getElementById("suggestionsBox").style.display = "none";
     var libCards = document.querySelectorAll("#libraryList .card");
     
-    // Hide all cards except the single chosen match
     for (var i = 0; i < libCards.length; i++) {
       var card = libCards[i];
       if (card.getAttribute("data-id") === msgId) {
