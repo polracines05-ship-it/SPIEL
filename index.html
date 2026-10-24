@@ -235,13 +235,14 @@
     box-shadow: inset 0 0 200px 70px rgba(5, 3, 2, 0.9); 
   }
 
-  .kyoto-streetscape {
-    position: fixed; left: 0; right: 0; bottom: 0; height: 280px; opacity: 0.92;
+  /* KYOTO SAMURAI DOJO COMPOUND */
+  .kyoto-dojo-estate {
+    position: fixed; left: 0; right: 0; bottom: 0; height: 290px; opacity: 0.94;
     pointer-events: none;
     z-index: 0;
-    filter: drop-shadow(0 -10px 30px rgba(217, 119, 6, 0.55));
+    filter: drop-shadow(0 -10px 30px rgba(217, 119, 6, 0.5));
   }
-  .kyoto-streetscape svg { width: 100%; height: 100%; display: block; }
+  .kyoto-dojo-estate svg { width: 100%; height: 100%; display: block; }
 
   #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
@@ -1032,23 +1033,15 @@
             <stop offset="100%" stop-color="#f8efd5" stop-opacity="0"/>
           </linearGradient>
         </defs>
-        <!-- Floating Gown -->
-        <path d="M 70 70 C 55 95, 40 140, 25 195 C 18 215, 38 225, 52 220 C 66 215, 75 225, 88 218 C 102 212, 115 222, 125 208 C 112 155, 90 95, 70 70 Z" 
-              fill="url(#whiteLadyGown)"/>
-        <!-- Ghostly Sleeves -->
+        <path d="M 70 70 C 55 95, 40 140, 25 195 C 18 215, 38 225, 52 220 C 66 215, 75 225, 88 218 C 102 212, 115 222, 125 208 C 112 155, 90 95, 70 70 Z" fill="url(#whiteLadyGown)"/>
         <path d="M 55 80 Q 32 120 36 155 Q 48 140 58 105 Z" fill="rgba(250, 245, 235, 0.75)"/>
         <path d="M 85 80 Q 108 120 104 155 Q 92 140 82 105 Z" fill="rgba(250, 245, 235, 0.75)"/>
-        <!-- Pale Face -->
         <ellipse cx="70" cy="46" rx="14" ry="18" fill="#f5ede0"/>
-        <!-- Long Flowing Dark Hair -->
-        <path d="M 70 26 C 52 26, 46 45, 46 70 C 44 100, 50 145, 40 185 C 48 168, 54 120, 54 75 C 54 54, 60 36, 70 35 C 80 36, 86 54, 86 75 C 86 120, 92 168, 100 185 C 90 145, 96 100, 94 70 C 94 45, 88 26, 70 26 Z" 
-              fill="#0a080c"/>
-        <!-- Dark Eyes with Red Center Glow -->
+        <path d="M 70 26 C 52 26, 46 45, 46 70 C 44 100, 50 145, 40 185 C 48 168, 54 120, 54 75 C 54 54, 60 36, 70 35 C 80 36, 86 54, 86 75 C 86 120, 92 168, 100 185 C 90 145, 96 100, 94 70 C 94 45, 88 26, 70 26 Z" fill="#0a080c"/>
         <ellipse cx="64" cy="44" rx="3.2" ry="4" fill="#140202"/>
         <ellipse cx="76" cy="44" rx="3.2" ry="4" fill="#140202"/>
         <circle cx="64" cy="44" r="1.1" fill="#ff2222"/>
         <circle cx="76" cy="44" r="1.1" fill="#ff2222"/>
-        <!-- Distinct Smiling Mouth -->
         <path d="M 60 54 Q 70 63 80 54" stroke="#ff2222" stroke-width="1.6" stroke-linecap="round" fill="none"/>
       </svg>
     </div>
@@ -1092,38 +1085,153 @@
       </svg>
     </div>
 
-    <!-- Kyoto Streetscape -->
-    <div class="kyoto-streetscape">
-      <svg viewBox="0 0 1200 320" preserveAspectRatio="none">
-        <g fill="#0c0907" stroke="#362218" stroke-width="2">
-          <rect x="0" y="140" width="220" height="180"/>
-          <polygon points="-10,140 110,80 230,140"/>
-          <rect x="30" y="180" width="60" height="80" fill="#F4C542" opacity="0.85"/>
-          <circle cx="180" cy="285" r="14" fill="#ff6600"/>
-          <polygon points="175,280 178,284 172,284" fill="#121212"/>
-          <polygon points="185,280 188,284 182,284" fill="#121212"/>
-          <path d="M172,289 Q180,295 188,289" stroke="#121212" stroke-width="2" fill="none"/>
+    <!-- AUTHENTIC KYOTO-ERA SAMURAI DOJO ESTATE -->
+    <div class="kyoto-dojo-estate">
+      <svg viewBox="0 0 1400 320" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="shojiGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#fff1c2" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="#e8a838" stop-opacity="0.8"/>
+          </linearGradient>
+          <linearGradient id="lanternGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffcc00"/>
+            <stop offset="100%" stop-color="#ff5500"/>
+          </linearGradient>
+        </defs>
 
-          <rect x="260" y="180" width="12" height="140" fill="#121212"/>
-          <polygon points="250,180 266,150 282,180"/>
-          <rect x="254" y="160" width="24" height="20" fill="#D97706"/>
+        <!-- Courtyard Stone Foundation Base -->
+        <rect x="0" y="282" width="1400" height="38" fill="#0d0907"/>
+        <line x1="0" y1="282" x2="1400" y2="282" stroke="#4a3425" stroke-width="3"/>
 
-          <rect x="420" y="120" width="360" height="200"/>
-          <polygon points="390,120 600,50 810,120"/>
-          <rect x="550" y="200" width="100" height="120" fill="#B22222"/>
+        <!-- ================= LEFT DOJO WING ================= -->
+        <g fill="#140e0a" stroke="#362218" stroke-width="2">
+          <!-- Main Body -->
+          <rect x="40" y="165" width="310" height="117"/>
+          <!-- Shoji Lattice Windows -->
+          <rect x="65" y="195" width="110" height="65" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="2.5"/>
+          <line x1="102" y1="195" x2="102" y2="260" stroke="#2b1a11" stroke-width="2"/>
+          <line x1="138" y1="195" x2="138" y2="260" stroke="#2b1a11" stroke-width="2"/>
+          <line x1="65" y1="216" x2="175" y2="216" stroke="#2b1a11" stroke-width="1.8"/>
+          <line x1="65" y1="238" x2="175" y2="238" stroke="#2b1a11" stroke-width="1.8"/>
 
-          <circle cx="520" cy="290" r="16" fill="#ff5500"/>
-          <polygon points="514,285 517,289 511,289" fill="#121212"/>
-          <polygon points="526,285 529,289 523,289" fill="#121212"/>
-          <path d="M512,294 Q520,301 528,294" stroke="#121212" stroke-width="2" fill="none"/>
+          <rect x="205" y="195" width="110" height="65" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="2.5"/>
+          <line x1="242" y1="195" x2="242" y2="260" stroke="#2b1a11" stroke-width="2"/>
+          <line x1="278" y1="195" x2="278" y2="260" stroke="#2b1a11" stroke-width="2"/>
+          <line x1="205" y1="216" x2="315" y2="216" stroke="#2b1a11" stroke-width="1.8"/>
+          <line x1="205" y1="238" x2="315" y2="238" stroke="#2b1a11" stroke-width="1.8"/>
 
-          <circle cx="680" cy="292" r="13" fill="#ff7700"/>
-          <polygon points="675,288 678,291 672,291" fill="#121212"/>
-          <polygon points="685,288 688,291 682,291" fill="#121212"/>
+          <!-- Veranda (Engawa) -->
+          <rect x="25" y="270" width="340" height="12" fill="#241710" stroke="#3d271b" stroke-width="2"/>
+          <!-- Swept Tiled Eave (Sori) -->
+          <path d="M 10 170 Q 180 135 370 162 L 350 178 Q 180 148 30 180 Z" fill="#0d0907" stroke="#4a3020" stroke-width="2"/>
+        </g>
 
-          <rect x="940" y="150" width="260" height="170"/>
-          <polygon points="920,150 1070,90 1220,150"/>
-          <rect x="980" y="190" width="60" height="80" fill="#F4C542" opacity="0.85"/>
+        <!-- ================= RIGHT DOJO WING ================= -->
+        <g fill="#140e0a" stroke="#362218" stroke-width="2">
+          <!-- Main Body -->
+          <rect x="1050" y="165" width="310" height="117"/>
+          <!-- Shoji Lattice Windows -->
+          <rect x="1075" y="195" width="110" height="65" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="2.5"/>
+          <line x1="1112" y1="195" x2="1112" y2="260" stroke="#2b1a11" stroke-width="2"/>
+          <line x1="1148" y1="195" x2="1148" y2="260" stroke="#2b1a11" stroke-width="2"/>
+          <line x1="1075" y1="216" x2="1185" y2="216" stroke="#2b1a11" stroke-width="1.8"/>
+          <line x1="1075" y1="238" x2="1185" y2="238" stroke="#2b1a11" stroke-width="1.8"/>
+
+          <rect x="1215" y="195" width="110" height="65" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="2.5"/>
+          <line x1="1252" y1="195" x2="1252" y2="260" stroke="#2b1a11" stroke-width="2"/>
+          <line x1="1288" y1="195" x2="1288" y2="260" stroke="#2b1a11" stroke-width="2"/>
+          <line x1="1215" y1="216" x2="1325" y2="216" stroke="#2b1a11" stroke-width="1.8"/>
+          <line x1="1215" y1="238" x2="1325" y2="238" stroke="#2b1a11" stroke-width="1.8"/>
+
+          <!-- Veranda (Engawa) -->
+          <rect x="1035" y="270" width="340" height="12" fill="#241710" stroke="#3d271b" stroke-width="2"/>
+          <!-- Swept Tiled Eave (Sori) -->
+          <path d="M 1030 162 Q 1220 135 1390 170 L 1370 180 Q 1220 148 1050 178 Z" fill="#0d0907" stroke="#4a3020" stroke-width="2"/>
+        </g>
+
+        <!-- ================= CENTRAL GRAND MARTIAL ARTS DOJO HALL ================= -->
+        <!-- Grand Lower Hall & Entrance -->
+        <rect x="440" y="145" width="520" height="137" fill="#140e0a" stroke="#362218" stroke-width="3"/>
+
+        <!-- Massive Backlit Shoji Training Hall Entrance -->
+        <rect x="530" y="180" width="340" height="95" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="3"/>
+        <!-- Central Red Torii-Style Dojo Gateway Frame -->
+        <rect x="670" y="180" width="60" height="95" fill="#8f1d1d" stroke="#1f0808" stroke-width="2"/>
+        <!-- Lattice Bars across Shoji -->
+        <line x1="572" y1="180" x2="572" y2="275" stroke="#2b1a11" stroke-width="2.5"/>
+        <line x1="615" y1="180" x2="615" y2="275" stroke="#2b1a11" stroke-width="2.5"/>
+        <line x1="785" y1="180" x2="785" y2="275" stroke="#2b1a11" stroke-width="2.5"/>
+        <line x1="828" y1="180" x2="828" y2="275" stroke="#2b1a11" stroke-width="2.5"/>
+        <line x1="530" y1="205" x2="870" y2="205" stroke="#2b1a11" stroke-width="2"/>
+        <line x1="530" y1="228" x2="870" y2="228" stroke="#2b1a11" stroke-width="2"/>
+        <line x1="530" y1="252" x2="870" y2="252" stroke="#2b1a11" stroke-width="2"/>
+
+        <!-- Cedar Pillars Supporting Pent Roof -->
+        <rect x="450" y="150" width="16" height="130" fill="#241710" stroke="#110a07" stroke-width="2"/>
+        <rect x="520" y="150" width="14" height="130" fill="#241710" stroke="#110a07" stroke-width="2"/>
+        <rect x="866" y="150" width="14" height="130" fill="#241710" stroke="#110a07" stroke-width="2"/>
+        <rect x="934" y="150" width="16" height="130" fill="#241710" stroke="#110a07" stroke-width="2"/>
+
+        <!-- Lower Sweeping Pent Roof (Hisashi) -->
+        <path d="M 390 155 Q 700 112 1010 155 L 980 172 Q 700 128 420 172 Z" fill="#0c0806" stroke="#5c3c26" stroke-width="3"/>
+
+        <!-- Upper Hip-and-Gable Floor (Irimoya-zukuri Level) -->
+        <rect x="510" y="70" width="380" height="75" fill="#140e0a" stroke="#362218" stroke-width="2.5"/>
+        <!-- Upper Gable Wooden Slatting (Kegyo Vent) -->
+        <polygon points="700,74 610,128 790,128" fill="#21150f" stroke="#3d271b" stroke-width="2"/>
+        <line x1="700" y1="74" x2="700" y2="128" stroke="#3d271b" stroke-width="2"/>
+        <line x1="670" y1="92" x2="670" y2="128" stroke="#3d271b" stroke-width="1.8"/>
+        <line x1="730" y1="92" x2="730" y2="128" stroke="#3d271b" stroke-width="1.8"/>
+
+        <!-- Grand Sweeping Pagoda Temple Roof -->
+        <path d="M 430 75 Q 700 24 970 75 Q 940 88 910 82 Q 700 42 490 82 Q 460 88 430 75 Z" fill="#080504" stroke="#66432b" stroke-width="3.5"/>
+        <!-- Ornate Roof Ridge Cap & Onigawara Finials -->
+        <path d="M 445 74 Q 425 64 435 52 Q 445 64 455 72" fill="#523522" stroke="#2b1a11" stroke-width="2"/>
+        <path d="M 955 74 Q 975 64 965 52 Q 955 64 945 72" fill="#523522" stroke="#2b1a11" stroke-width="2"/>
+        <rect x="685" y="24" width="30" height="10" fill="#523522" rx="2"/>
+
+        <!-- ================= TRADITIONAL CARVED STONE LANTERNS (ISHI-DŌRŌ) ================= -->
+        <!-- Left Stone Lantern -->
+        <g transform="translate(385, 175)">
+          <!-- Lantern Jewel Finial (Hōju) -->
+          <circle cx="20" cy="18" r="4.5" fill="#54483e"/>
+          <!-- Pagoda Umbrella Cap (Kasa) with upturned edges -->
+          <path d="M 0 34 Q 20 22 40 34 L 35 40 Q 20 30 5 40 Z" fill="#362f29" stroke="#1f1a16" stroke-width="1.5"/>
+          <!-- Carved Fire Chamber with Glowing Flame (Hibukuro) -->
+          <rect x="10" y="40" width="20" height="19" fill="url(#lanternGlow)" stroke="#2b231c" stroke-width="2" rx="2"/>
+          <line x1="20" y1="40" x2="20" y2="59" stroke="#1f1a16" stroke-width="2"/>
+          <!-- Stone Middle Platform (Chūdai) -->
+          <polygon points="6,59 34,59 28,68 12,68" fill="#362f29" stroke="#1f1a16" stroke-width="1.5"/>
+          <!-- Solid Stone Pillar (Sao) -->
+          <rect x="15" y="68" width="10" height="30" fill="#2b231c" stroke="#17120e" stroke-width="1.5"/>
+          <!-- Hexagonal Stone Base (Kiso) -->
+          <polygon points="5,98 35,98 38,107 2,107" fill="#362f29" stroke="#1f1a16" stroke-width="2"/>
+        </g>
+
+        <!-- Right Stone Lantern -->
+        <g transform="translate(975, 175)">
+          <circle cx="20" cy="18" r="4.5" fill="#54483e"/>
+          <path d="M 0 34 Q 20 22 40 34 L 35 40 Q 20 30 5 40 Z" fill="#362f29" stroke="#1f1a16" stroke-width="1.5"/>
+          <rect x="10" y="40" width="20" height="19" fill="url(#lanternGlow)" stroke="#2b231c" stroke-width="2" rx="2"/>
+          <line x1="20" y1="40" x2="20" y2="59" stroke="#1f1a16" stroke-width="2"/>
+          <polygon points="6,59 34,59 28,68 12,68" fill="#362f29" stroke="#1f1a16" stroke-width="1.5"/>
+          <rect x="15" y="68" width="10" height="30" fill="#2b231c" stroke="#17120e" stroke-width="1.5"/>
+          <polygon points="5,98 35,98 38,107 2,107" fill="#362f29" stroke="#1f1a16" stroke-width="2"/>
+        </g>
+
+        <!-- Subtle Courtyard Jack-o'-Lanterns by the Grand Steps -->
+        <g transform="translate(500, 266)">
+          <ellipse cx="14" cy="14" rx="13" ry="11" fill="#ff6600"/>
+          <polygon points="9,10 12,10 10.5,6" fill="#120e0b"/>
+          <polygon points="16,10 19,10 17.5,6" fill="#120e0b"/>
+          <path d="M 8 16 Q 14 21 20 16" stroke="#120e0b" stroke-width="1.6" fill="none"/>
+        </g>
+
+        <g transform="translate(865, 266)">
+          <ellipse cx="14" cy="14" rx="13" ry="11" fill="#ff6600"/>
+          <polygon points="9,10 12,10 10.5,6" fill="#120e0b"/>
+          <polygon points="16,10 19,10 17.5,6" fill="#120e0b"/>
+          <path d="M 8 16 Q 14 21 20 16" stroke="#120e0b" stroke-width="1.6" fill="none"/>
         </g>
       </svg>
     </div>
@@ -2138,7 +2246,6 @@
 (function(){
   "use strict";
 
-  /* PERSISTENT TICKER LOGIC: Load saved update or default text */
   var STORAGE_KEY_TICKER = "dojo_ticker_announcement";
 
   function initTickerText() {
@@ -2888,256 +2995,4 @@
   }
 
   window.runQuickAction = function(query){
-    var viewBtn = document.querySelector('.view-btn[data-view="view-library"]');
-    switchView("view-library", viewBtn);
-    setLibraryFilter("all");
-    var input = document.getElementById("globalSearch");
-    input.value = query;
-    filterLibraryOnly();
-    window.scrollTo({top:0, behavior:"smooth"});
-  };
-
-  /* ============================================================
-     THRESHOLD CENTER
-     ============================================================ */
-  var thresholdActiveFilter = "all";
-
-  function riskTier(severity, threshold){
-    var sev = severity.toLowerCase();
-    if (sev === "major" && threshold === 0) return {cls:"risk-red", label:"Immediate"};
-    if (sev === "major") return {cls:"risk-orange", label:"Critical"};
-    if (sev === "minor" && threshold <= 1) return {cls:"risk-yellow", label:"Elevated"};
-    return {cls:"risk-green", label:"Standard"};
-  }
-
-  function renderThresholdFilters(){
-    var wrap = document.getElementById("thresholdFilters");
-    var counts = {all:INFRACTIONS.length, minor:0, major:0};
-    for (var i=0;i<INFRACTIONS.length;i++){ counts[INFRACTIONS[i][3].toLowerCase()]++; }
-    wrap.innerHTML =
-      '<button class="filter-chip' + (thresholdActiveFilter==="all" ? " active" : "") + '" onclick="setThresholdFilter(\'all\')">All (' + counts.all + ')</button>' +
-      '<button class="filter-chip' + (thresholdActiveFilter==="minor" ? " active" : "") + '" onclick="setThresholdFilter(\'minor\')">Minor (' + counts.minor + ')</button>' +
-      '<button class="filter-chip' + (thresholdActiveFilter==="major" ? " active" : "") + '" onclick="setThresholdFilter(\'major\')">Major (' + counts.major + ')</button>';
-  }
-
-  window.setThresholdFilter = function(f){
-    thresholdActiveFilter = f;
-    renderThresholdFilters();
-    renderInfractions();
-  };
-
-  function renderInfractions(){
-    var grid = document.getElementById("infractionGrid");
-    var html = "";
-    var shown = 0;
-    for (var i=0;i<INFRACTIONS.length;i++){
-      var r = INFRACTIONS[i];
-      var sevLower = r[3].toLowerCase();
-      if (thresholdActiveFilter !== "all" && thresholdActiveFilter !== sevLower) continue;
-      shown++;
-      var tier = riskTier(r[3], r[4]);
-      var badgeClass = sevLower === "major" ? "badge-major" : "badge-minor";
-      var detail = "";
-      if (r[6]){
-        var termMsg = findByTerm(r[6]);
-        if (termMsg){
-          detail = '<strong>Closest matching termination script:</strong><br>' + escapeHtml(termMsg.text) +
-            '<br><button class="seal-btn" style="margin-top:8px;" onclick="event.stopPropagation();copyMessage(this,\'' + termMsg.id + '\')">🎃 Copy Scroll</button>';
-        }
-      } else if (r[5]){
-        detail = 'No dedicated termination script. <button class="filter-chip" onclick="event.stopPropagation();runQuickAction(\'' + r[5].replace(/'/g,"\\'") + '\')">Search library for &ldquo;' + escapeHtml(r[5]) + '&rdquo;</button>';
-      } else {
-        detail = 'No scripted response on file &mdash; apply proctor judgment and document the incident per policy.';
-      }
-      html += '<div class="infr-card ' + tier.cls + '" data-severity="' + sevLower + '" onclick="this.classList.toggle(\'expanded\')">' +
-        '<div class="infr-name">' + escapeHtml(r[0]) + '</div>' +
-        '<div class="infr-meta"><span>' + escapeHtml(r[2]) + '</span><span>&middot;</span><span>' + escapeHtml(r[1]) + '</span></div>' +
-        '<div class="infr-meta"><span class="badge ' + badgeClass + '">' + escapeHtml(r[3]) + '</span><span class="infr-threshold">Threshold: ' + r[4] + ' &middot; Risk: ' + tier.label + '</span></div>' +
-        '<div class="infr-detail">' + detail + '</div>' +
-      '</div>';
-    }
-    grid.innerHTML = html;
-    document.getElementById("infractionEmpty").style.display = shown === 0 ? "" : "none";
-  }
-
-  /* ============================================================
-     CLIENT POLICIES
-     ============================================================ */
-  function renderPolicies(){
-    var body = document.getElementById("policiesBody");
-    var rows = "";
-    for (var i=0;i<POLICIES.length;i++){
-      var p = POLICIES[i];
-      rows += "<tr>" +
-        "<td>" + escapeHtml(p[0]) + "</td><td>" + escapeHtml(p[1]) + "</td><td>" + escapeHtml(p[2]) + "</td>" +
-        "<td>" + escapeHtml(p[3]) + "</td><td>" + escapeHtml(p[4]) + "</td><td>" + escapeHtml(p[5]) + "</td>" +
-      "</tr>";
-    }
-    body.innerHTML = rows;
-    document.getElementById("policiesCount").textContent = POLICIES.length + " clients";
-
-    var select = document.getElementById("policySelect");
-    var opts = "";
-    for (var j=0;j<POLICIES.length;j++){ opts += '<option value="' + j + '">' + escapeHtml(POLICIES[j][0]) + '</option>'; }
-    select.innerHTML = opts;
-  }
-
-  window.renderGenerator = function(){
-    var idx = parseInt(document.getElementById("policySelect").value, 10) || 0;
-    var p = POLICIES[idx];
-    if (!p) return;
-    var client = p[0], nameChange = p[1], breaks = p[2], namePolicy = p[3], seb = p[4], docs = p[5];
-
-    var breakText = "";
-    if (nameChange.toLowerCase() === "allowed" || breaks.toLowerCase().indexOf("none") === -1) {
-      breakText = "You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules.";
-    } else {
-      breakText = "Breaks are not allowed for this exam.";
-    }
-
-    var nameText = "";
-    var certiverseReq = "Per Certiverse rules, the name on your ID must fully match the exam reservation.\n\n";
-    if (nameChange.toLowerCase() === "not allowed") {
-      nameText = certiverseReq + "Unfortunately we will need to cancel this session. You can email support@certiverse.com for further assistance with rescheduling. Please confirm.";
-    } else {
-      nameText = certiverseReq + "To proceed, please request a name change by contacting support@certiverse.com. Once completed, you can re-enter the reservation and we will continue.";
-    }
-
-    var cards = [
-      {title:"Name Policy & Change Response", text: nameText},
-      {title:"Break Policy Response", text: breakText + " (" + client + " Policy: " + breaks + ")"},
-      {title:"SEB Response", text: client + " exams run under " + seb + " conditions."},
-      {title:"Documentation Response", text: "Documentation policy for " + client + ": " + docs + "."}
-    ];
-
-    var html = "";
-    for (var i=0;i<cards.length;i++){
-      var safeText = cards[i].text.replace(/'/g,"\\'").replace(/\n/g,"\\n");
-      html += '<div class="gen-card"><div><h4>' + cards[i].title + '</h4><p>' + escapeHtml(cards[i].text) + '</p></div>' +
-        '<button class="seal-btn" onclick="copyGenerated(this,\'' + safeText.replace(/"/g,"&quot;") + '\')">🎃 Copy Scroll</button></div>';
-    }
-    document.getElementById("generatorCards").innerHTML = html;
-  };
-
-  window.copyGenerated = function(btn, text){
-    var unescapedText = text.replace(/\\n/g, "\n");
-    function showCopied(){
-      var original = btn.textContent;
-      btn.textContent = "🎃 Spell Cast!";
-      btn.classList.add("copied");
-      setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
-    }
-    if (navigator.clipboard && window.isSecureContext){
-      navigator.clipboard.writeText(unescapedText).then(showCopied, function(){ fallbackCopy(unescapedText, showCopied); });
-    } else {
-      fallbackCopy(unescapedText, showCopied);
-    }
-  };
-
-  /* ============================================================
-     SPOOKY YOKAI EMBERS & SPIRIT FIRE CANVAS ENGINE
-     ============================================================ */
-  function initHollywoodFxEngine(){
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    var canvas = document.getElementById("fxCanvas");
-    if (!canvas) return;
-    var ctx = canvas.getContext("2d");
-
-    var width = canvas.width = window.innerWidth;
-    var height = canvas.height = window.innerHeight;
-
-    window.addEventListener("resize", function(){
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
-
-    var colors = ["#ff9900", "#ff6600", "#ff2200", "#00ff88", "#b347d9"];
-    var embers = [];
-    var emberCount = 55;
-
-    for (var i = 0; i < emberCount; i++) {
-      embers.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        radius: Math.random() * 2.8 + 1,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        speedY: -(Math.random() * 0.75 + 0.25),
-        speedX: Math.random() * 0.6 - 0.3,
-        opacity: Math.random() * 0.6 + 0.25,
-        isWisp: Math.random() > 0.8
-      });
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, width, height);
-
-      for (var k = 0; k < embers.length; k++) {
-        var e = embers[k];
-        e.y += e.speedY;
-        e.x += e.speedX + Math.sin(e.y * 0.015) * 0.4;
-
-        if (e.y < -15) {
-          e.y = height + 15;
-          e.x = Math.random() * width;
-        }
-
-        ctx.save();
-        ctx.globalAlpha = e.opacity;
-        ctx.fillStyle = e.color;
-        ctx.shadowBlur = e.isWisp ? 16 : 9;
-        ctx.shadowColor = e.color;
-        ctx.beginPath();
-        ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-  }
-
-  /* ============================================================
-     VIEW SWITCHING
-     ============================================================ */
-  window.switchView = function(viewId, btn){
-    var views = document.querySelectorAll(".dashboard-view");
-    for (var i=0;i<views.length;i++){ views[i].classList.remove("active"); }
-    var target = document.getElementById(viewId);
-    if (target){ target.classList.add("active"); }
-
-    var btns = document.querySelectorAll(".view-btn");
-    for (var j=0;j<btns.length;j++){ btns[j].classList.remove("active"); }
-    if (btn){ btn.classList.add("active"); }
-
-    updateSidebarLinks(viewId);
-  };
-
-  /* ============================================================
-     INIT
-     ============================================================ */
-  document.addEventListener("DOMContentLoaded", function(){
-    initTickerText();
-    renderQuickActions();
-    tickClock();
-    setInterval(tickClock, 1000);
-
-    renderCheckin();
-    renderLibraryFilters();
-    renderLibraryList();
-
-    renderThresholdFilters();
-    renderInfractions();
-
-    renderPolicies();
-    renderGenerator();
-
-    initHollywoodFxEngine();
-    updateSidebarLinks("view-home");
-    filterLibraryOnly();
-  });
-})();
-</script>
-</body>
-</html>
+    var view
