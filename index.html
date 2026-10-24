@@ -1,21 +1,3 @@
-Here is the updated file with all three requested figures woven into the
-background atmosphere:
-
-🧙‍♀️ Spooky Additions Included:
-
-1.  Flying Witch on a Broomstick: A classic silhouette of a witch with a pointed
-    hat and broomstick flying smoothly across the night sky and passing near the
-    Blood Moon.
-2.  Classic White Sheet Ghosts: Classic floating, billowy white ghosts with
-    hollow black eyes and wavy hems drifting and bobbing through the atmosphere.
-3.  The Smiling White Lady (Balete Drive folklore style): An ethereal White Lady
-    in a flowing pale gown with long cascading black hair, pale ghostly skin,
-    and an eerie, uncanny red smile hovering softly from within the mist.
-
-All elements are set to pointer-events: none with smooth GPU-accelerated CSS
-animations so your proctor tools, clicks, and workflows remain completely
-unobstructed.
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +38,7 @@ unobstructed.
   html, body { height: 100%; }
 
   /* ============================================================
-     BACKGROUND: EDO TEXTURED WALL WITH SPOOKY HALLOWEEN ELEMENTS
+     BACKGROUND & SPOOKY HALLOWEEN SCENE
      ============================================================ */
   body {
     font-family: var(--font-body);
@@ -75,7 +57,7 @@ unobstructed.
 
   .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
 
-  /* Blood Moon Element */
+  /* Blood Moon */
   .blood-moon {
     position: absolute;
     top: 35px; right: 55px;
@@ -91,96 +73,79 @@ unobstructed.
     100% { filter: drop-shadow(0 0 45px rgba(255,80,0,0.9)); }
   }
 
-  /* FLYING WITCH ON A BROOMSTICK */
+  /* FLYING WITCH */
   .flying-witch {
     position: absolute;
-    top: 60px;
+    top: 50px;
     left: -180px;
-    width: 140px;
-    height: 110px;
-    z-index: 3;
-    animation: witchFlight 26s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    filter: drop-shadow(0 0 10px rgba(255, 102, 0, 0.5));
+    width: 135px;
+    height: 100px;
+    z-index: 2;
+    animation: witchFlight 28s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    filter: drop-shadow(0 0 12px rgba(255, 102, 0, 0.45));
   }
   @keyframes witchFlight {
-    0% {
-      transform: translateX(0) translateY(0) rotate(-6deg);
-      opacity: 0;
-    }
-    10% { opacity: 0.95; }
-    50% {
-      transform: translateX(calc(55vw)) translateY(-25px) rotate(4deg);
-    }
-    90% { opacity: 0.95; }
-    100% {
-      transform: translateX(calc(100vw + 260px)) translateY(10px) rotate(-4deg);
-      opacity: 0;
-    }
+    0%   { transform: translateX(0) translateY(0) rotate(-4deg); opacity: 0; }
+    8%   { opacity: 0.95; }
+    50%  { transform: translateX(55vw) translateY(-28px) rotate(4deg); }
+    92%  { opacity: 0.95; }
+    100% { transform: translateX(calc(100vw + 260px)) translateY(10px) rotate(-4deg); opacity: 0; }
   }
 
   /* CLASSIC WHITE GHOSTS */
   .classic-ghost {
     position: absolute;
     z-index: 2;
-    filter: drop-shadow(0 0 16px rgba(248, 239, 213, 0.5));
+    pointer-events: none;
+    filter: drop-shadow(0 0 16px rgba(248, 239, 213, 0.45));
   }
-  .ghost-1 {
-    top: 22%;
-    left: 4%;
-    width: 95px;
-    height: 120px;
-    opacity: 0.45;
-    animation: ghostBobLeft 9s ease-in-out infinite alternate;
-  }
-  .ghost-2 {
-    top: 48%;
-    right: 5%;
+  .ghost-left {
+    top: 25%;
+    left: 330px;
     width: 80px;
     height: 105px;
-    opacity: 0.40;
-    animation: ghostBobRight 11s ease-in-out infinite alternate;
+    opacity: 0.35;
+    animation: ghostBobLeft 8s ease-in-out infinite alternate;
+  }
+  .ghost-right {
+    top: 52%;
+    right: 5%;
+    width: 75px;
+    height: 98px;
+    opacity: 0.32;
+    animation: ghostBobRight 10s ease-in-out infinite alternate;
   }
   @keyframes ghostBobLeft {
-    0% { transform: translateY(0) rotate(-5deg) scale(0.95); opacity: 0.35; }
-    50% { transform: translateY(-35px) rotate(6deg) scale(1.05); opacity: 0.65; }
-    100% { transform: translateY(15px) rotate(-3deg) scale(0.98); opacity: 0.35; }
+    0%   { transform: translateY(0) rotate(-4deg); opacity: 0.25; }
+    50%  { transform: translateY(-28px) rotate(5deg); opacity: 0.55; }
+    100% { transform: translateY(12px) rotate(-2deg); opacity: 0.25; }
   }
   @keyframes ghostBobRight {
-    0% { transform: translateY(0) rotate(5deg) scale(1); opacity: 0.30; }
-    50% { transform: translateY(-40px) rotate(-6deg) scale(1.1); opacity: 0.60; }
-    100% { transform: translateY(20px) rotate(3deg) scale(0.95); opacity: 0.30; }
+    0%   { transform: translateY(0) rotate(4deg); opacity: 0.22; }
+    50%  { transform: translateY(-32px) rotate(-5deg); opacity: 0.50; }
+    100% { transform: translateY(16px) rotate(2deg); opacity: 0.22; }
   }
 
-  /* SMILING WHITE LADY */
+  /* SMILING WHITE LADY APPARITION */
   .white-lady-spirit {
     position: absolute;
-    bottom: 25px;
-    right: 40px;
-    width: 155px;
-    height: 250px;
+    bottom: 40px;
+    right: 50px;
+    width: 130px;
+    height: 220px;
     z-index: 2;
     pointer-events: none;
-    opacity: 0.55;
-    filter: drop-shadow(0 0 25px rgba(248, 239, 213, 0.4)) drop-shadow(0 0 10px rgba(139, 47, 201, 0.4));
-    animation: whiteLadyHover 8s ease-in-out infinite alternate;
+    opacity: 0.5;
+    filter: drop-shadow(0 0 20px rgba(248, 239, 213, 0.35)) drop-shadow(0 0 12px rgba(139, 47, 201, 0.35));
+    animation: whiteLadyHover 7s ease-in-out infinite alternate;
   }
   @keyframes whiteLadyHover {
-    0% {
-      transform: translateY(0) scale(0.97) rotate(0deg);
-      opacity: 0.45;
-    }
-    50% {
-      transform: translateY(-22px) scale(1.03) rotate(-2deg);
-      opacity: 0.75;
-      filter: drop-shadow(0 0 32px rgba(255, 68, 0, 0.5)) drop-shadow(0 0 15px rgba(248, 239, 213, 0.7));
-    }
-    100% {
-      transform: translateY(6px) scale(0.99) rotate(2deg);
-      opacity: 0.45;
-    }
+    0%   { transform: translateY(0) scale(0.98); opacity: 0.4; }
+    50%  { transform: translateY(-18px) scale(1.02); opacity: 0.7; }
+    100% { transform: translateY(6px) scale(0.99); opacity: 0.4; }
   }
 
-  /* Animated Flying Bats */
+  /* Bats Overlay */
   .bat-group {
     position: absolute;
     top: 8%; left: -100px;
@@ -188,12 +153,12 @@ unobstructed.
     animation: batsFlight 22s linear infinite;
   }
   @keyframes batsFlight {
-    0% { transform: translateX(0) translateY(0) scale(0.9); }
-    50% { transform: translateX(50vw) translateY(-40px) scale(1.1); }
+    0%   { transform: translateX(0) translateY(0) scale(0.9); }
+    50%  { transform: translateX(50vw) translateY(-40px) scale(1.1); }
     100% { transform: translateX(calc(100vw + 200px)) translateY(15px) scale(0.85); }
   }
 
-  /* Dangling Spider from Ceiling */
+  /* Dangling Spider */
   .dangling-spider-box {
     position: absolute;
     top: 0;
@@ -205,10 +170,10 @@ unobstructed.
   }
   @keyframes spiderDescend {
     0%, 100% { transform: translateY(0); }
-    40% { transform: translateY(90px); }
-    50% { transform: translateY(85px) rotate(8deg); }
-    60% { transform: translateY(90px) rotate(-6deg); }
-    75% { transform: translateY(15px); }
+    40%      { transform: translateY(90px); }
+    50%      { transform: translateY(85px) rotate(8deg); }
+    60%      { transform: translateY(90px) rotate(-6deg); }
+    75%      { transform: translateY(15px); }
   }
   .spider-silk {
     width: 1px;
@@ -217,7 +182,7 @@ unobstructed.
     margin: 0 auto;
   }
 
-  /* Creepy Glowing Eyes in Dark Corners */
+  /* Blinking Eyes */
   .creepy-eyes {
     position: absolute;
     display: flex;
@@ -235,10 +200,10 @@ unobstructed.
   }
   @keyframes blinkEyes {
     0%, 94%, 98%, 100% { transform: scaleY(1); opacity: 0.85; }
-    96% { transform: scaleY(0.05); opacity: 0.1; }
+    96%                { transform: scaleY(0.05); opacity: 0.1; }
   }
 
-  /* Spooky Mist Overlay at Bottom */
+  /* Spooky Mist */
   .spooky-mist {
     position: absolute;
     left: 0; right: 0; bottom: 0; height: 240px;
@@ -247,11 +212,11 @@ unobstructed.
     animation: mistSway 9s ease-in-out infinite alternate;
   }
   @keyframes mistSway {
-    0% { transform: translateX(-30px); opacity: 0.65; }
+    0%   { transform: translateX(-30px); opacity: 0.65; }
     100% { transform: translateX(30px); opacity: 0.95; }
   }
 
-  /* Corner Cobwebs */
+  /* Cobwebs */
   .cobweb-left, .cobweb-right {
     position: absolute;
     width: 200px; height: 200px;
@@ -270,7 +235,6 @@ unobstructed.
     box-shadow: inset 0 0 200px 70px rgba(5, 3, 2, 0.9); 
   }
 
-  /* Kyoto Streetscape with Jack-o'-Lantern Lights */
   .kyoto-streetscape {
     position: fixed; left: 0; right: 0; bottom: 0; height: 280px; opacity: 0.92;
     pointer-events: none;
@@ -281,7 +245,7 @@ unobstructed.
 
   #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
-  /* Warm Pumpkin-Orange Accent Glow Behind UI Cards */
+  /* Card Glows */
   .card, 
   .trouble-card, 
   .gen-panel, 
@@ -304,7 +268,7 @@ unobstructed.
   }
 
   /* ============================================================
-     SIDEBAR & NAVIGATION
+     SIDEBAR
      ============================================================ */
   .sidebar {
     position: relative; z-index: 10;
@@ -381,11 +345,10 @@ unobstructed.
     padding-left: 14px;
   }
   .nav-links .cnt { color: var(--imperial-gold); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); font-weight: 700; }
-
   .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; letter-spacing: 0.08em; font-weight: 700; }
 
   /* ============================================================
-     MAIN CONTENT & TOP BAR
+     MAIN CONTENT & CLEAN STAGED HERO
      ============================================================ */
   .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 22px 38px 60px; min-width: 0; }
 
@@ -394,7 +357,7 @@ unobstructed.
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
 
   .left-clock-box, .right-date-box {
@@ -418,45 +381,42 @@ unobstructed.
     font-weight: 600;
   }
 
-  /* HERO FURNACE STAGE WITH FLANKING PUMPKINS */
+  /* Safe Hero Stage with Breathing Room */
   .main-hero-stage {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px 20px 28px;
-    margin-bottom: 24px;
+    gap: 36px;
+    margin: 18px 0 34px;
     position: relative;
-    gap: 30px;
   }
 
   .hero-pumpkin {
-    width: 58px;
-    height: 58px;
-    filter: drop-shadow(0 0 16px rgba(255, 102, 0, 0.75));
+    width: 52px;
+    height: 52px;
+    filter: drop-shadow(0 0 14px rgba(255, 102, 0, 0.7));
     animation: pumpkinBob 3.5s ease-in-out infinite alternate;
   }
-  .hero-pumpkin.p-left { animation-delay: 0s; }
-  .hero-pumpkin.p-right { animation-delay: -1.75s; transform: scaleX(-1); }
   @keyframes pumpkinBob {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-8px); }
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(-7px); }
   }
 
   .furnace-frame-container {
     position: relative;
-    padding: 26px 52px;
+    padding: 24px 48px;
     background: linear-gradient(180deg, #261912 0%, #120d0a 100%);
     border: 3px solid #7c4820;
     border-radius: 18px;
     box-shadow: 
-      0 0 45px rgba(255, 102, 0, 0.6),
-      0 0 25px rgba(178, 34, 34, 0.75),
+      0 0 45px rgba(255, 102, 0, 0.55),
+      0 0 25px rgba(178, 34, 34, 0.7),
       inset 0 0 32px rgba(0, 0, 0, 0.95);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    transform: scale(1.38);
+    transform: scale(1.3);
   }
 
   .furnace-frame-container::before, .furnace-frame-container::after {
@@ -502,7 +462,7 @@ unobstructed.
     text-shadow: 0 2px 8px rgba(0,0,0,0.85);
   }
 
-  /* FLASH UPDATE TICKER */
+  /* Flash Update Ticker */
   .news-ticker-bar {
     display: flex; align-items: center; gap: 12px;
     background: rgba(26, 20, 16, 0.95);
@@ -558,7 +518,7 @@ unobstructed.
   }
   .news-ticker-text:hover { animation-play-state: paused; }
   @keyframes tickerMove {
-    0% { transform: translateX(0); }
+    0%   { transform: translateX(0); }
     100% { transform: translateX(-100%); }
   }
 
@@ -568,7 +528,7 @@ unobstructed.
   .page-title { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); margin-bottom: 4px; letter-spacing: 0.04em; text-transform: uppercase; }
   .page-sub { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; font-weight: 500; }
 
-  /* ================= ORGANIZATIONAL CHART & NAME TOOLTIPS ================= */
+  /* ================= ORGANIZATIONAL CHART & TOOLTIPS ================= */
   .org-chart-container {
     background: var(--panel-bg);
     border: 1px solid var(--border-line);
@@ -669,11 +629,7 @@ unobstructed.
     font-weight: 800;
   }
 
-  .org-line-v {
-    width: 2px;
-    height: 22px;
-    background: var(--border-line);
-  }
+  .org-line-v { width: 2px; height: 22px; background: var(--border-line); }
 
   .org-teams-branch {
     display: flex;
@@ -1023,151 +979,81 @@ unobstructed.
 </head>
 <body>
 
-  <!-- ================= ATMOSPHERIC SCENE WITH HALLOWEEN ELEMENTS ================= -->
+  <!-- ================= ATMOSPHERIC SCENE ================= -->
   <div class="scene" aria-hidden="true">
     <!-- Blood Moon -->
     <div class="blood-moon"></div>
 
-    <!-- FLYING WITCH ON BROOMSTICK -->
+    <!-- FLYING WITCH -->
     <div class="flying-witch">
       <svg viewBox="0 0 160 120" fill="none">
-        <!-- Witch Hat -->
         <polygon points="62,12 82,38 48,36" fill="#120e0b"/>
         <ellipse cx="62" cy="38" rx="28" ry="6" fill="#120e0b"/>
         <rect x="52" y="32" width="18" height="4" fill="#ff6600"/>
-        
-        <!-- Witch Head & Face Silhouette -->
         <circle cx="64" cy="46" r="9" fill="#120e0b"/>
-        <path d="M 72 46 Q 81 48 76 53 Q 73 51 71 52 Z" fill="#120e0b"/> <!-- Pointy Nose -->
-        <path d="M 69 55 Q 73 59 66 59 Z" fill="#120e0b"/> <!-- Chin -->
-
-        <!-- Flowing Cloak / Robe -->
+        <path d="M 72 46 Q 81 48 76 53 Q 73 51 71 52 Z" fill="#120e0b"/>
+        <path d="M 69 55 Q 73 59 66 59 Z" fill="#120e0b"/>
         <path d="M 58 50 Q 30 75 16 95 Q 40 88 56 74 Q 68 85 78 70 Q 72 58 64 54 Z" fill="#120e0b"/>
-
-        <!-- Broomstick -->
         <line x1="5" y1="94" x2="150" y2="38" stroke="#8b4513" stroke-width="4.5" stroke-linecap="round"/>
-        <!-- Broom Bristles -->
         <polygon points="5,94 -5,108 8,118 24,104 16,92" fill="#d97706"/>
-        <path d="M 0 102 Q 10 108 20 98" stroke="#ff3300" stroke-width="1.5" fill="none"/>
-
-        <!-- Witch Hands Gripping Broom -->
         <circle cx="82" cy="62" r="4" fill="#120e0b"/>
         <circle cx="95" cy="57" r="3.5" fill="#120e0b"/>
-
-        <!-- Black Cat on the Tail of the Broom -->
-        <ellipse cx="28" cy="85" rx="6" ry="5" fill="#120e0b"/>
-        <circle cx="24" cy="81" r="3.5" fill="#120e0b"/>
-        <polygon points="21,79 23,75 25,79" fill="#120e0b"/>
-        <polygon points="25,79 27,75 29,79" fill="#120e0b"/>
-        <path d="M 33 86 Q 40 82 38 74" stroke="#120e0b" stroke-width="2" fill="none" stroke-linecap="round"/>
       </svg>
     </div>
 
-    <!-- CLASSIC WHITE GHOST 1 (Floating Left) -->
-    <div class="classic-ghost ghost-1">
-      <svg viewBox="0 0 120 150" fill="none">
-        <!-- Floating Sheet Ghost Body -->
-        <path d="M 60 15 
-                 C 25 15, 15 50, 18 95 
-                 C 20 120, 10 135, 22 138 
-                 C 32 140, 36 122, 46 136 
-                 C 56 150, 64 125, 74 138 
-                 C 84 150, 92 124, 102 138 
-                 C 112 132, 104 110, 104 95 
-                 C 106 50, 95 15, 60 15 Z" 
-              fill="rgba(248, 239, 213, 0.85)" stroke="rgba(255, 255, 255, 0.95)" stroke-width="2"/>
-        
-        <!-- Waving Sheet Arms -->
-        <path d="M 22 80 Q 5 70 12 60 Q 22 66 26 74 Z" fill="rgba(248, 239, 213, 0.85)"/>
-        <path d="M 98 80 Q 115 70 108 60 Q 98 66 94 74 Z" fill="rgba(248, 239, 213, 0.85)"/>
-
-        <!-- Classic Hollow Oval Eyes & Ghostly 'O' Mouth -->
-        <ellipse cx="45" cy="54" rx="6.5" ry="11" fill="#120e0b"/>
-        <ellipse cx="75" cy="54" rx="6.5" ry="11" fill="#120e0b"/>
-        <!-- Soft Eye Highlights -->
-        <circle cx="43" cy="50" r="2" fill="#ffffff" opacity="0.8"/>
-        <circle cx="73" cy="50" r="2" fill="#ffffff" opacity="0.8"/>
-        <!-- Mouth -->
-        <ellipse cx="60" cy="78" rx="8" ry="13" fill="#120e0b"/>
+    <!-- CLASSIC WHITE GHOSTS -->
+    <div class="classic-ghost ghost-left">
+      <svg viewBox="0 0 100 120" fill="none">
+        <path d="M 50 15 C 25 15, 18 45, 20 85 C 22 105, 12 115, 24 116 C 34 118, 38 104, 48 116 C 58 126, 64 105, 74 116 C 84 126, 92 104, 98 114 C 104 110, 96 90, 96 80 C 96 45, 85 15, 50 15 Z" 
+              fill="rgba(248, 239, 213, 0.75)" stroke="rgba(255, 255, 255, 0.9)" stroke-width="2"/>
+        <ellipse cx="40" cy="48" rx="5" ry="9" fill="#120e0b"/>
+        <ellipse cx="64" cy="48" rx="5" ry="9" fill="#120e0b"/>
+        <ellipse cx="52" cy="70" rx="6" ry="10" fill="#120e0b"/>
       </svg>
     </div>
 
-    <!-- CLASSIC WHITE GHOST 2 (Floating Right) -->
-    <div class="classic-ghost ghost-2">
-      <svg viewBox="0 0 120 150" fill="none">
-        <path d="M 60 18 
-                 C 30 18, 20 48, 24 90 
-                 C 28 115, 12 130, 26 134 
-                 C 38 138, 42 120, 52 134 
-                 C 62 148, 70 122, 80 135 
-                 C 90 148, 98 120, 106 134 
-                 C 114 128, 102 105, 102 90 
-                 C 102 48, 90 18, 60 18 Z" 
-              fill="rgba(248, 239, 213, 0.82)" stroke="rgba(255, 255, 255, 0.9)" stroke-width="2"/>
-        <ellipse cx="48" cy="56" rx="5.5" ry="9" fill="#120e0b"/>
-        <ellipse cx="74" cy="56" rx="5.5" ry="9" fill="#120e0b"/>
-        <ellipse cx="61" cy="77" rx="7" ry="10" fill="#120e0b"/>
+    <div class="classic-ghost ghost-right">
+      <svg viewBox="0 0 100 120" fill="none">
+        <path d="M 50 15 C 25 15, 18 45, 20 85 C 22 105, 12 115, 24 116 C 34 118, 38 104, 48 116 C 58 126, 64 105, 74 116 C 84 126, 92 104, 98 114 C 104 110, 96 90, 96 80 C 96 45, 85 15, 50 15 Z" 
+              fill="rgba(248, 239, 213, 0.75)" stroke="rgba(255, 255, 255, 0.9)" stroke-width="2"/>
+        <ellipse cx="40" cy="48" rx="5" ry="9" fill="#120e0b"/>
+        <ellipse cx="64" cy="48" rx="5" ry="9" fill="#120e0b"/>
+        <ellipse cx="52" cy="70" rx="6" ry="10" fill="#120e0b"/>
       </svg>
     </div>
 
-    <!-- THE SMILING WHITE LADY (Balete Drive Folklore Style) -->
-    <div class="white-lady-spirit" title="White Lady of the Dojo">
-      <svg viewBox="0 0 160 260" fill="none">
-        <!-- Floating Ethereal White Dress dissolving into mist -->
-        <path d="M 80 85 
-                 C 65 110, 48 160, 30 220 
-                 C 22 245, 45 258, 60 252 
-                 C 75 246, 85 258, 100 250 
-                 C 115 242, 130 256, 140 238 
-                 C 125 180, 100 115, 80 85 Z" 
-              fill="url(#whiteLadyGown)" opacity="0.88"/>
-        
-        <!-- Long Hanging Ghostly Sleeves -->
-        <path d="M 62 95 Q 38 135 42 180 Q 56 160 68 120 Z" fill="rgba(250, 245, 235, 0.85)"/>
-        <path d="M 98 95 Q 122 135 118 180 Q 104 160 92 120 Z" fill="rgba(250, 245, 235, 0.85)"/>
-
-        <!-- Neck & Pale Face -->
-        <rect x="74" y="66" width="12" height="15" fill="#f5ede0"/>
-        <ellipse cx="80" cy="55" rx="16" ry="21" fill="#f3eae1"/>
-
-        <!-- Cascading Long Black Hair (Framing the Pale Face) -->
-        <path d="M 80 32 
-                 C 58 32, 52 55, 52 85 
-                 C 50 120, 56 170, 46 215 
-                 C 55 195, 62 140, 62 90 
-                 C 62 65, 68 45, 80 44 
-                 C 92 45, 98 65, 98 90 
-                 C 98 140, 105 195, 114 215 
-                 C 104 170, 110 120, 108 85 
-                 C 108 55, 102 32, 80 32 Z" 
-              fill="#080709"/>
-        <!-- Hair strands across shoulders -->
-        <path d="M 62 60 Q 60 110 56 150 Q 64 125 66 85 Z" fill="#0d0b0f"/>
-        <path d="M 98 60 Q 100 110 104 150 Q 96 125 94 85 Z" fill="#0d0b0f"/>
-
-        <!-- Dark Hollow Eerie Eyes -->
-        <ellipse cx="73" cy="52" rx="3.8" ry="4.5" fill="#160202"/>
-        <ellipse cx="87" cy="52" rx="3.8" ry="4.5" fill="#160202"/>
-        <!-- Red pinpoint pupils -->
-        <circle cx="73" cy="52" r="1.3" fill="#ff1a1a"/>
-        <circle cx="87" cy="52" r="1.3" fill="#ff1a1a"/>
-
-        <!-- THE UNCANNY CREEPY SMILE -->
-        <path d="M 68 64 Q 80 75 92 64 Q 80 71 68 64 Z" fill="#880000" stroke="#4a0000" stroke-width="1"/>
-        <path d="M 68 64 Q 80 76 92 64" stroke="#ff2222" stroke-width="1.2" fill="none"/>
-
-        <!-- Subtle Gradient for Ethereal Fade -->
+    <!-- THE SMILING WHITE LADY APPARITION -->
+    <div class="white-lady-spirit" title="White Lady">
+      <svg viewBox="0 0 140 240" fill="none">
         <defs>
           <linearGradient id="whiteLadyGown" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
-            <stop offset="50%" stop-color="#f8efd5" stop-opacity="0.8"/>
-            <stop offset="100%" stop-color="#e0d5b5" stop-opacity="0"/>
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
+            <stop offset="60%" stop-color="#f8efd5" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#f8efd5" stop-opacity="0"/>
           </linearGradient>
         </defs>
+        <!-- Floating Gown -->
+        <path d="M 70 70 C 55 95, 40 140, 25 195 C 18 215, 38 225, 52 220 C 66 215, 75 225, 88 218 C 102 212, 115 222, 125 208 C 112 155, 90 95, 70 70 Z" 
+              fill="url(#whiteLadyGown)"/>
+        <!-- Ghostly Sleeves -->
+        <path d="M 55 80 Q 32 120 36 155 Q 48 140 58 105 Z" fill="rgba(250, 245, 235, 0.75)"/>
+        <path d="M 85 80 Q 108 120 104 155 Q 92 140 82 105 Z" fill="rgba(250, 245, 235, 0.75)"/>
+        <!-- Pale Face -->
+        <ellipse cx="70" cy="46" rx="14" ry="18" fill="#f5ede0"/>
+        <!-- Long Flowing Dark Hair -->
+        <path d="M 70 26 C 52 26, 46 45, 46 70 C 44 100, 50 145, 40 185 C 48 168, 54 120, 54 75 C 54 54, 60 36, 70 35 C 80 36, 86 54, 86 75 C 86 120, 92 168, 100 185 C 90 145, 96 100, 94 70 C 94 45, 88 26, 70 26 Z" 
+              fill="#0a080c"/>
+        <!-- Dark Eyes with Red Center Glow -->
+        <ellipse cx="64" cy="44" rx="3.2" ry="4" fill="#140202"/>
+        <ellipse cx="76" cy="44" rx="3.2" ry="4" fill="#140202"/>
+        <circle cx="64" cy="44" r="1.1" fill="#ff2222"/>
+        <circle cx="76" cy="44" r="1.1" fill="#ff2222"/>
+        <!-- Distinct Smiling Mouth -->
+        <path d="M 60 54 Q 70 63 80 54" stroke="#ff2222" stroke-width="1.6" stroke-linecap="round" fill="none"/>
       </svg>
     </div>
 
-    <!-- Dangling Spider on Silk -->
+    <!-- Dangling Spider -->
     <div class="dangling-spider-box">
       <div class="spider-silk"></div>
       <svg viewBox="0 0 30 30" width="30" height="30" fill="#120e0b">
@@ -1175,31 +1061,24 @@ unobstructed.
         <circle cx="15" cy="10" r="4.5" fill="#120e0b"/>
         <circle cx="13.5" cy="9" r="1" fill="#ffffff"/>
         <circle cx="16.5" cy="9" r="1" fill="#ffffff"/>
-        <path d="M12 12 Q4 8 2 14 M18 12 Q26 8 28 14 M12 15 Q3 17 2 24 M18 15 Q27 17 28 24 M12 17 Q5 23 6 29 M18 17 Q25 23 24 29 M12 11 Q6 4 10 2 M18 11 Q24 4 20 2" stroke="#ff6600" stroke-width="1.5" fill="none"/>
+        <path d="M12 12 Q4 8 2 14 M18 12 Q26 8 28 14 M12 15 Q3 17 2 24 M18 15 Q27 17 28 24 M12 17 Q5 23 6 29 M18 17 Q25 23 24 29" stroke="#ff6600" stroke-width="1.5" fill="none"/>
       </svg>
     </div>
 
-    <!-- Flying Bats Overlay -->
+    <!-- Flying Bats -->
     <div class="bat-group">
       <svg viewBox="0 0 1000 200" style="width:100%; height:100%; opacity:0.7;">
         <path d="M 100 80 Q 110 60 120 70 Q 130 60 140 80 Q 120 85 100 80 Z" fill="#000"/>
         <path d="M 300 120 Q 315 95 330 110 Q 345 95 360 120 Q 330 128 300 120 Z" fill="#000"/>
         <path d="M 600 50 Q 610 35 620 45 Q 630 35 640 50 Q 620 55 600 50 Z" fill="#000"/>
-        <path d="M 750 130 Q 762 110 775 122 Q 788 110 800 130 Q 775 136 750 130 Z" fill="#000"/>
       </svg>
     </div>
 
-    <!-- Creepy Eyes Blinking in the Dark -->
-    <div class="creepy-eyes eyes-1">
-      <div class="eye-pupil"></div>
-      <div class="eye-pupil"></div>
-    </div>
-    <div class="creepy-eyes eyes-2">
-      <div class="eye-pupil"></div>
-      <div class="eye-pupil"></div>
-    </div>
+    <!-- Blinking Eyes -->
+    <div class="creepy-eyes eyes-1"><div class="eye-pupil"></div><div class="eye-pupil"></div></div>
+    <div class="creepy-eyes eyes-2"><div class="eye-pupil"></div><div class="eye-pupil"></div></div>
 
-    <!-- Cobweb Corner Framing -->
+    <!-- Cobwebs -->
     <div class="cobweb-left">
       <svg viewBox="0 0 100 100" fill="none" stroke="#ff8800" stroke-width="0.8">
         <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" />
@@ -1213,33 +1092,26 @@ unobstructed.
       </svg>
     </div>
 
-    <!-- EDO KYOTO STREETSCAPE WITH GLOWING JACK-O'-LANTERNS -->
+    <!-- Kyoto Streetscape -->
     <div class="kyoto-streetscape">
       <svg viewBox="0 0 1200 320" preserveAspectRatio="none">
         <g fill="#0c0907" stroke="#362218" stroke-width="2">
           <rect x="0" y="140" width="220" height="180"/>
           <polygon points="-10,140 110,80 230,140"/>
           <rect x="30" y="180" width="60" height="80" fill="#F4C542" opacity="0.85"/>
-          <line x1="60" y1="180" x2="60" y2="260" stroke="#121212" stroke-width="2"/>
-          <line x1="30" y1="220" x2="90" y2="220" stroke="#121212" stroke-width="2"/>
-
-          <!-- Jack-o'-Lantern on Left Porch -->
           <circle cx="180" cy="285" r="14" fill="#ff6600"/>
           <polygon points="175,280 178,284 172,284" fill="#121212"/>
           <polygon points="185,280 188,284 182,284" fill="#121212"/>
           <path d="M172,289 Q180,295 188,289" stroke="#121212" stroke-width="2" fill="none"/>
 
-          <!-- Traditional Tōrō Lantern Posts -->
           <rect x="260" y="180" width="12" height="140" fill="#121212"/>
           <polygon points="250,180 266,150 282,180"/>
           <rect x="254" y="160" width="24" height="20" fill="#D97706"/>
 
-          <!-- Center Samurai Compound & Gate -->
           <rect x="420" y="120" width="360" height="200"/>
           <polygon points="390,120 600,50 810,120"/>
           <rect x="550" y="200" width="100" height="120" fill="#B22222"/>
 
-          <!-- Jack-o'-Lanterns by Gate -->
           <circle cx="520" cy="290" r="16" fill="#ff5500"/>
           <polygon points="514,285 517,289 511,289" fill="#121212"/>
           <polygon points="526,285 529,289 523,289" fill="#121212"/>
@@ -1249,12 +1121,9 @@ unobstructed.
           <polygon points="675,288 678,291 672,291" fill="#121212"/>
           <polygon points="685,288 688,291 682,291" fill="#121212"/>
 
-          <!-- Right Machiya Row & Lantern Posts -->
           <rect x="940" y="150" width="260" height="170"/>
           <polygon points="920,150 1070,90 1220,150"/>
           <rect x="980" y="190" width="60" height="80" fill="#F4C542" opacity="0.85"/>
-          <rect x="900" y="200" width="12" height="120" fill="#121212"/>
-          <rect x="894" y="180" width="24" height="20" fill="#D97706"/>
         </g>
       </svg>
     </div>
@@ -1302,16 +1171,15 @@ unobstructed.
       </div>
     </div>
 
-    <!-- MAIN HERO STAGE WITH JACK-O'-LANTERNS -->
+    <!-- MAIN HERO STAGE -->
     <div class="main-hero-stage">
-      <!-- Left Jack-o'-Lantern -->
-      <svg class="hero-pumpkin p-left" viewBox="0 0 100 100">
+      <svg class="hero-pumpkin" viewBox="0 0 100 100">
         <ellipse cx="50" cy="55" rx="42" ry="36" fill="#ff6600"/>
         <path d="M 50 20 Q 52 8 62 12" stroke="#3d6b24" stroke-width="6" fill="none" stroke-linecap="round"/>
-        <polygon points="32,46 42,46 37,36" fill="#ffe066" filter="drop-shadow(0 0 4px #ff3300)"/>
-        <polygon points="58,46 68,46 63,36" fill="#ffe066" filter="drop-shadow(0 0 4px #ff3300)"/>
+        <polygon points="32,46 42,46 37,36" fill="#ffe066"/>
+        <polygon points="58,46 68,46 63,36" fill="#ffe066"/>
         <polygon points="50,50 46,57 54,57" fill="#ffe066"/>
-        <path d="M 28 66 Q 50 82 72 66 Q 64 74 58 68 Q 50 75 42 68 Q 36 74 28 66 Z" fill="#ffe066" filter="drop-shadow(0 0 5px #ff5500)"/>
+        <path d="M 28 66 Q 50 82 72 66 Q 64 74 58 68 Q 50 75 42 68 Q 36 74 28 66 Z" fill="#ffe066"/>
       </svg>
 
       <div class="furnace-frame-container" title="FiveActs Official Dojo">
@@ -1323,15 +1191,16 @@ unobstructed.
         </div>
       </div>
 
-      <!-- Right Jack-o'-Lantern -->
-      <svg class="hero-pumpkin p-right" viewBox="0 0 100 100">
-        <ellipse cx="50" cy="55" rx="42" ry="36" fill="#ff6600"/>
-        <path d="M 50 20 Q 52 8 62 12" stroke="#3d6b24" stroke-width="6" fill="none" stroke-linecap="round"/>
-        <polygon points="32,46 42,46 37,36" fill="#ffe066" filter="drop-shadow(0 0 4px #ff3300)"/>
-        <polygon points="58,46 68,46 63,36" fill="#ffe066" filter="drop-shadow(0 0 4px #ff3300)"/>
-        <polygon points="50,50 46,57 54,57" fill="#ffe066"/>
-        <path d="M 28 66 Q 50 82 72 66 Q 64 74 58 68 Q 50 75 42 68 Q 36 74 28 66 Z" fill="#ffe066" filter="drop-shadow(0 0 5px #ff5500)"/>
-      </svg>
+      <div style="transform: scaleX(-1);">
+        <svg class="hero-pumpkin" style="animation-delay: -1.75s;" viewBox="0 0 100 100">
+          <ellipse cx="50" cy="55" rx="42" ry="36" fill="#ff6600"/>
+          <path d="M 50 20 Q 52 8 62 12" stroke="#3d6b24" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <polygon points="32,46 42,46 37,36" fill="#ffe066"/>
+          <polygon points="58,46 68,46 63,36" fill="#ffe066"/>
+          <polygon points="50,50 46,57 54,57" fill="#ffe066"/>
+          <path d="M 28 66 Q 50 82 72 66 Q 64 74 58 68 Q 50 75 42 68 Q 36 74 28 66 Z" fill="#ffe066"/>
+        </svg>
+      </div>
     </div>
 
     <div class="news-ticker-bar">
@@ -1368,12 +1237,9 @@ unobstructed.
           <div class="org-line-v"></div>
 
           <div class="org-teams-branch">
-            
             <div class="org-team-column">
               <div class="org-card-group">
-                <div class="org-group-header">
-                  Candidate Support Team <span class="org-badge">5</span>
-                </div>
+                <div class="org-group-header">Candidate Support Team <span class="org-badge">5</span></div>
                 <div class="org-member-list">
                   <div class="org-member-item" data-fullname="Jane Austria">Jane</div>
                   <div class="org-member-item" data-fullname="Gian Garcia">Gian</div>
@@ -1386,9 +1252,7 @@ unobstructed.
 
             <div class="org-team-column">
               <div class="org-card-group">
-                <div class="org-group-header">
-                  Accountant <span class="org-badge">1</span>
-                </div>
+                <div class="org-group-header">Accountant <span class="org-badge">1</span></div>
                 <div class="org-member-list">
                   <div class="org-member-item" data-fullname="Bryan Mark Adan">Bry</div>
                 </div>
@@ -1438,7 +1302,6 @@ unobstructed.
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -2751,7 +2614,7 @@ unobstructed.
   };
 
   /* ============================================================
-     DYNAMIC SIDEBAR NAVIGATION FOR ALL TAB VIEWS
+     DYNAMIC SIDEBAR NAVIGATION
      ============================================================ */
   function updateSidebarLinks(viewId) {
     var labelEl = document.getElementById("sidebarSublabel");
@@ -2834,7 +2697,7 @@ unobstructed.
   };
 
   /* ============================================================
-     ISOLATED CANNED MESSAGE LIBRARY SEARCH ENGINE
+     ISOLATED CANNED MESSAGE SEARCH ENGINE
      ============================================================ */
   var libraryActiveCat = "all";
 
@@ -3001,7 +2864,7 @@ unobstructed.
   }
 
   /* ============================================================
-     HOME DASHBOARD (PHILIPPINE STANDARD TIME - PST / UTC+8)
+     HOME CLOCK (PST / UTC+8)
      ============================================================ */
   function tickClock(){
     var now = new Date();
