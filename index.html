@@ -49,7 +49,7 @@
     position: relative;
     overflow-x: hidden;
   }
-  .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none !important; }
   /* Blood Moon */
   .blood-moon {
     position: absolute;
@@ -226,7 +226,7 @@
     filter: drop-shadow(0 -10px 30px rgba(217, 119, 6, 0.5));
   }
   .kyoto-dojo-estate svg { width: 100%; height: 100%; display: block; }
-  #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+  #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none !important; }
   /* Card Glows */
   .card, 
   .trouble-card, 
@@ -258,6 +258,7 @@
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     display: flex; flex-direction: column; padding: 0;
     box-shadow: 12px 0 35px rgba(0, 0, 0, 0.75);
+    pointer-events: auto !important;
   }
   .sidebar::before {
     content: ""; display: block; height: 4px; width: 100%; flex-shrink: 0;
@@ -324,7 +325,7 @@
   /* ============================================================
      MAIN CONTENT & CLEAN STAGED HERO
      ============================================================ */
-  .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 22px 38px 60px; min-width: 0; }
+  .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 22px 38px 60px; min-width: 0; pointer-events: auto !important; }
   .top-banner-row {
     display: flex;
     justify-content: space-between;
@@ -881,14 +882,14 @@
   .dojo-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
 
   /* ============================================================
-     SPACE IMPACT — INTEGRATED MODULE STYLES
+     SPACE IMPACT — STYLES
      ============================================================ */
   .si-shell {
     border: 1px solid var(--border-line);
     border-radius: 14px;
     background: var(--panel-bg);
     padding: 16px;
-    box-shadow: 0 10px 34px rgba(0,0,0,0.72), 0 0 26px rgba(217,119,6,0.18);
+    box-shadow: 0 10px 34px rgba(0,0,0,.72), 0 0 26px rgba(217,119,6,.18);
   }
   .si-topbar {
     display: flex;
@@ -904,13 +905,13 @@
     align-items: baseline;
     gap: 8px;
     font-family: var(--font-head);
-    letter-spacing: 0.1em;
+    letter-spacing: .1em;
   }
   .si-brand-chip {
     background: var(--pumpkin-bright);
     color: #160b04;
     font-weight: 900;
-    font-size: 0.78rem;
+    font-size: .78rem;
     padding: 3px 9px;
     border-radius: 3px;
   }
@@ -921,8 +922,8 @@
     text-transform: uppercase;
   }
   .si-brand-tag {
-    font-size: 0.6rem;
-    letter-spacing: 0.22em;
+    font-size: .6rem;
+    letter-spacing: .22em;
     color: var(--imperial-gold);
     text-transform: uppercase;
     font-weight: 800;
@@ -937,43 +938,43 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    background: rgba(18,14,12,0.85);
+    background: rgba(18,14,12,.85);
     border: 1px solid var(--border-line);
     border-radius: 8px;
     padding: 5px 11px;
     min-width: 82px;
   }
   .si-stat-k {
-    font-size: 0.55rem;
-    letter-spacing: 0.16em;
+    font-size: .55rem;
+    letter-spacing: .16em;
     text-transform: uppercase;
     color: var(--text-muted);
     font-weight: 800;
   }
   .si-stat-v {
     font-family: 'Courier New', monospace;
-    font-size: 0.86rem;
+    font-size: .86rem;
     font-weight: 800;
     color: var(--imperial-gold);
-    letter-spacing: 0.06em;
+    letter-spacing: .06em;
   }
   .si-sound {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255,255,255,.05);
     border: 1px solid var(--border-line);
     color: var(--text-dim);
     border-radius: 8px;
     padding: 8px 13px;
-    font-size: 0.66rem;
+    font-size: .66rem;
     font-weight: 800;
-    letter-spacing: 0.12em;
+    letter-spacing: .12em;
     cursor: pointer;
     text-transform: uppercase;
-    transition: all 0.2s ease;
+    transition: all .2s ease;
   }
   .si-sound:hover {
     border-color: var(--pumpkin-bright);
     color: var(--imperial-gold);
-    background: rgba(255,102,0,0.16);
+    background: rgba(255,102,0,.16);
   }
   .si-screen {
     position: relative;
@@ -981,7 +982,7 @@
     overflow: hidden;
     border: 2px solid #2a352b;
     background: #050807;
-    box-shadow: inset 0 0 46px rgba(0,0,0,0.95), 0 0 22px rgba(120,180,120,0.12);
+    box-shadow: inset 0 0 46px rgba(0,0,0,.95), 0 0 22px rgba(120,180,120,.12);
   }
   #siCanvas {
     display: block;
@@ -990,12 +991,13 @@
     image-rendering: pixelated;
     image-rendering: crisp-edges;
     touch-action: none;
+    cursor: default;
   }
   .si-scan {
     position: absolute;
     inset: 0;
-    pointer-events: none;
-    background: linear-gradient(180deg, rgba(232,246,227,0.05), rgba(0,0,0,0.14) 60%, rgba(0,0,0,0.3));
+    pointer-events: none !important;
+    background: linear-gradient(180deg, rgba(232,246,227,.05), rgba(0,0,0,.14) 60%, rgba(0,0,0,.3));
     mix-blend-mode: screen;
   }
   .si-legend {
@@ -1004,8 +1006,8 @@
     flex-wrap: wrap;
     margin-top: 12px;
     font-family: 'Courier New', monospace;
-    font-size: 0.66rem;
-    letter-spacing: 0.08em;
+    font-size: .66rem;
+    letter-spacing: .08em;
     color: var(--text-dim);
   }
   .si-key {
@@ -1017,8 +1019,8 @@
     color: var(--imperial-gold);
     font-style: normal;
     text-transform: uppercase;
-    font-size: 0.58rem;
-    letter-spacing: 0.14em;
+    font-size: .58rem;
+    letter-spacing: .14em;
   }
   .si-cards {
     display: grid;
@@ -1035,20 +1037,18 @@
   }
   .si-card h3 {
     font-family: var(--font-head);
-    font-size: 0.82rem;
-    letter-spacing: 0.1em;
+    font-size: .82rem;
+    letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--imperial-gold);
     margin-bottom: 8px;
   }
   .si-card p {
-    font-size: 0.8rem;
+    font-size: .8rem;
     line-height: 1.6;
     color: var(--text-dim);
   }
-  .si-card p strong {
-    color: var(--text-main);
-  }
+  .si-card p strong { color: var(--text-main); }
 
   @media (max-width: 960px) {
     .sidebar { width: 260px; }
@@ -1084,9 +1084,7 @@
 <body>
   <!-- ================= ATMOSPHERIC SCENE ================= -->
   <div class="scene" aria-hidden="true">
-    <!-- Blood Moon -->
     <div class="blood-moon"></div>
-    <!-- FLYING WITCH -->
     <div class="flying-witch">
       <svg viewBox="0 0 160 120" fill="none">
         <polygon points="62,12 82,38 48,36" fill="#120e0b"/>
@@ -1102,7 +1100,6 @@
         <circle cx="95" cy="57" r="3.5" fill="#120e0b"/>
       </svg>
     </div>
-    <!-- CLASSIC WHITE GHOSTS -->
     <div class="classic-ghost ghost-left">
       <svg viewBox="0 0 100 120" fill="none">
         <path d="M 50 15 C 25 15, 18 45, 20 85 C 22 105, 12 115, 24 116 C 34 118, 38 104, 48 116 C 58 126, 64 105, 74 116 C 84 126, 92 104, 98 114 C 104 110, 96 90, 96 80 C 96 45, 85 15, 50 15 Z" 
@@ -1121,7 +1118,6 @@
         <ellipse cx="52" cy="70" rx="6" ry="10" fill="#120e0b"/>
       </svg>
     </div>
-    <!-- THE SMILING WHITE LADY APPARITION -->
     <div class="white-lady-spirit" title="White Lady">
       <svg viewBox="0 0 140 240" fill="none">
         <defs>
@@ -1143,7 +1139,6 @@
         <path d="M 60 54 Q 70 63 80 54" stroke="#ff2222" stroke-width="1.6" stroke-linecap="round" fill="none"/>
       </svg>
     </div>
-    <!-- Dangling Spider -->
     <div class="dangling-spider-box">
       <div class="spider-silk"></div>
       <svg viewBox="0 0 30 30" width="30" height="30" fill="#120e0b">
@@ -1154,7 +1149,6 @@
         <path d="M12 12 Q4 8 2 14 M18 12 Q26 8 28 14 M12 15 Q3 17 2 24 M18 15 Q27 17 28 24 M12 17 Q5 23 6 29 M18 17 Q25 23 24 29" stroke="#ff6600" stroke-width="1.5" fill="none"/>
       </svg>
     </div>
-    <!-- Flying Bats -->
     <div class="bat-group">
       <svg viewBox="0 0 1000 200" style="width:100%; height:100%; opacity:0.7;">
         <path d="M 100 80 Q 110 60 120 70 Q 130 60 140 80 Q 120 85 100 80 Z" fill="#000"/>
@@ -1162,10 +1156,8 @@
         <path d="M 600 50 Q 610 35 620 45 Q 630 35 640 50 Q 620 55 600 50 Z" fill="#000"/>
       </svg>
     </div>
-    <!-- Blinking Eyes -->
     <div class="creepy-eyes eyes-1"><div class="eye-pupil"></div><div class="eye-pupil"></div></div>
     <div class="creepy-eyes eyes-2"><div class="eye-pupil"></div><div class="eye-pupil"></div></div>
-    <!-- Cobwebs -->
     <div class="cobweb-left">
       <svg viewBox="0 0 100 100" fill="none" stroke="#ff8800" stroke-width="0.8">
         <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" />
@@ -1178,7 +1170,6 @@
         <path d="M 20,0 Q 20,20 0,20 M 40,0 Q 40,40 0,40 M 60,0 Q 60,60 0,60 M 80,0 Q 80,80 0,80" />
       </svg>
     </div>
-    <!-- AUTHENTIC KYOTO-ERA SAMURAI DOJO ESTATE -->
     <div class="kyoto-dojo-estate">
       <svg viewBox="0 0 1400 320" preserveAspectRatio="none">
         <defs>
@@ -1191,14 +1182,10 @@
             <stop offset="100%" stop-color="#ff5500"/>
           </linearGradient>
         </defs>
-        <!-- Courtyard Stone Foundation Base -->
         <rect x="0" y="282" width="1400" height="38" fill="#0d0907"/>
         <line x1="0" y1="282" x2="1400" y2="282" stroke="#4a3425" stroke-width="3"/>
-        <!-- ================= LEFT DOJO WING ================= -->
         <g fill="#140e0a" stroke="#362218" stroke-width="2">
-          <!-- Main Body -->
           <rect x="40" y="165" width="310" height="117"/>
-          <!-- Shoji Lattice Windows -->
           <rect x="65" y="195" width="110" height="65" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="2.5"/>
           <line x1="102" y1="195" x2="102" y2="260" stroke="#2b1a11" stroke-width="2"/>
           <line x1="138" y1="195" x2="138" y2="260" stroke="#2b1a11" stroke-width="2"/>
@@ -1209,16 +1196,11 @@
           <line x1="278" y1="195" x2="278" y2="260" stroke="#2b1a11" stroke-width="2"/>
           <line x1="205" y1="216" x2="315" y2="216" stroke="#2b1a11" stroke-width="1.8"/>
           <line x1="205" y1="238" x2="315" y2="238" stroke="#2b1a11" stroke-width="1.8"/>
-          <!-- Veranda (Engawa) -->
           <rect x="25" y="270" width="340" height="12" fill="#241710" stroke="#3d271b" stroke-width="2"/>
-          <!-- Swept Tiled Eave (Sori) -->
           <path d="M 10 170 Q 180 135 370 162 L 350 178 Q 180 148 30 180 Z" fill="#0d0907" stroke="#4a3020" stroke-width="2"/>
         </g>
-        <!-- ================= RIGHT DOJO WING ================= -->
         <g fill="#140e0a" stroke="#362218" stroke-width="2">
-          <!-- Main Body -->
           <rect x="1050" y="165" width="310" height="117"/>
-          <!-- Shoji Lattice Windows -->
           <rect x="1075" y="195" width="110" height="65" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="2.5"/>
           <line x1="1112" y1="195" x2="1112" y2="260" stroke="#2b1a11" stroke-width="2"/>
           <line x1="1148" y1="195" x2="1148" y2="260" stroke="#2b1a11" stroke-width="2"/>
@@ -1229,19 +1211,12 @@
           <line x1="1288" y1="195" x2="1288" y2="260" stroke="#2b1a11" stroke-width="2"/>
           <line x1="1215" y1="216" x2="1325" y2="216" stroke="#2b1a11" stroke-width="1.8"/>
           <line x1="1215" y1="238" x2="1325" y2="238" stroke="#2b1a11" stroke-width="1.8"/>
-          <!-- Veranda (Engawa) -->
           <rect x="1035" y="270" width="340" height="12" fill="#241710" stroke="#3d271b" stroke-width="2"/>
-          <!-- Swept Tiled Eave (Sori) -->
           <path d="M 1030 162 Q 1220 135 1390 170 L 1370 180 Q 1220 148 1050 178 Z" fill="#0d0907" stroke="#4a3020" stroke-width="2"/>
         </g>
-        <!-- ================= CENTRAL GRAND MARTIAL ARTS DOJO HALL ================= -->
-        <!-- Grand Lower Hall & Entrance -->
         <rect x="440" y="145" width="520" height="137" fill="#140e0a" stroke="#362218" stroke-width="3"/>
-        <!-- Massive Backlit Shoji Training Hall Entrance -->
         <rect x="530" y="180" width="340" height="95" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="3"/>
-        <!-- Central Red Torii-Style Dojo Gateway Frame -->
         <rect x="670" y="180" width="60" height="95" fill="#8f1d1d" stroke="#1f0808" stroke-width="2"/>
-        <!-- Lattice Bars across Shoji -->
         <line x1="572" y1="180" x2="572" y2="275" stroke="#2b1a11" stroke-width="2.5"/>
         <line x1="615" y1="180" x2="615" y2="275" stroke="#2b1a11" stroke-width="2.5"/>
         <line x1="785" y1="180" x2="785" y2="275" stroke="#2b1a11" stroke-width="2.5"/>
@@ -1249,28 +1224,20 @@
         <line x1="530" y1="205" x2="870" y2="205" stroke="#2b1a11" stroke-width="2"/>
         <line x1="530" y1="228" x2="870" y2="228" stroke="#2b1a11" stroke-width="2"/>
         <line x1="530" y1="252" x2="870" y2="252" stroke="#2b1a11" stroke-width="2"/>
-        <!-- Cedar Pillars Supporting Pent Roof -->
         <rect x="450" y="150" width="16" height="130" fill="#241710" stroke="#110a07" stroke-width="2"/>
         <rect x="520" y="150" width="14" height="130" fill="#241710" stroke="#110a07" stroke-width="2"/>
         <rect x="866" y="150" width="14" height="130" fill="#241710" stroke="#110a07" stroke-width="2"/>
         <rect x="934" y="150" width="16" height="130" fill="#241710" stroke="#110a07" stroke-width="2"/>
-        <!-- Lower Sweeping Pent Roof (Hisashi) -->
         <path d="M 390 155 Q 700 112 1010 155 L 980 172 Q 700 128 420 172 Z" fill="#0c0806" stroke="#5c3c26" stroke-width="3"/>
-        <!-- Upper Hip-and-Gable Floor (Irimoya-zukuri Level) -->
         <rect x="510" y="70" width="380" height="75" fill="#140e0a" stroke="#362218" stroke-width="2.5"/>
-        <!-- Upper Gable Wooden Slatting (Kegyo Vent) -->
         <polygon points="700,74 610,128 790,128" fill="#21150f" stroke="#3d271b" stroke-width="2"/>
         <line x1="700" y1="74" x2="700" y2="128" stroke="#3d271b" stroke-width="2"/>
         <line x1="670" y1="92" x2="670" y2="128" stroke="#3d271b" stroke-width="1.8"/>
         <line x1="730" y1="92" x2="730" y2="128" stroke="#3d271b" stroke-width="1.8"/>
-        <!-- Grand Sweeping Pagoda Temple Roof -->
         <path d="M 430 75 Q 700 24 970 75 Q 940 88 910 82 Q 700 42 490 82 Q 460 88 430 75 Z" fill="#080504" stroke="#66432b" stroke-width="3.5"/>
-        <!-- Ornate Roof Ridge Cap & Onigawara Finials -->
         <path d="M 445 74 Q 425 64 435 52 Q 445 64 455 72" fill="#523522" stroke="#2b1a11" stroke-width="2"/>
         <path d="M 955 74 Q 975 64 965 52 Q 955 64 945 72" fill="#523522" stroke="#2b1a11" stroke-width="2"/>
         <rect x="685" y="24" width="30" height="10" fill="#523522" rx="2"/>
-        <!-- ================= TRADITIONAL CARVED STONE LANTERNS (ISHI-DŌRŌ) ================= -->
-        <!-- Left Stone Lantern -->
         <g transform="translate(385, 175)">
           <circle cx="20" cy="18" r="4.5" fill="#54483e"/>
           <path d="M 0 34 Q 20 22 40 34 L 35 40 Q 20 30 5 40 Z" fill="#362f29" stroke="#1f1a16" stroke-width="1.5"/>
@@ -1280,7 +1247,6 @@
           <rect x="15" y="68" width="10" height="30" fill="#2b231c" stroke="#17120e" stroke-width="1.5"/>
           <polygon points="5,98 35,98 38,107 2,107" fill="#362f29" stroke="#1f1a16" stroke-width="2"/>
         </g>
-        <!-- Right Stone Lantern -->
         <g transform="translate(975, 175)">
           <circle cx="20" cy="18" r="4.5" fill="#54483e"/>
           <path d="M 0 34 Q 20 22 40 34 L 35 40 Q 20 30 5 40 Z" fill="#362f29" stroke="#1f1a16" stroke-width="1.5"/>
@@ -1290,7 +1256,6 @@
           <rect x="15" y="68" width="10" height="30" fill="#2b231c" stroke="#17120e" stroke-width="1.5"/>
           <polygon points="5,98 35,98 38,107 2,107" fill="#362f29" stroke="#1f1a16" stroke-width="2"/>
         </g>
-        <!-- Subtle Courtyard Jack-o'-Lanterns by the Grand Steps -->
         <g transform="translate(500, 266)">
           <ellipse cx="14" cy="14" rx="13" ry="11" fill="#ff6600"/>
           <polygon points="9,10 12,10 10.5,6" fill="#120e0b"/>
@@ -1309,7 +1274,6 @@
     <div class="scene-vignette"></div>
     <canvas id="fxCanvas"></canvas>
   </div>
-
   <!-- ================= SIDEBAR ================= -->
   <div class="sidebar">
     <div class="sidebar-header">
@@ -1332,7 +1296,6 @@
     <ul class="nav-links" id="sidebarDynamicLinks"></ul>
     <div class="sidebar-footer">Certiverse &middot; Proctor Dojo &middot; 🎃 Spooky Edition</div>
   </div>
-
   <!-- ================= MAIN CONTENT ================= -->
   <div class="main-content">
     <div class="top-banner-row">
@@ -1380,7 +1343,6 @@
         </div>
       </div>
     </div>
-
     <!-- HOME VIEW -->
     <div id="view-home" class="dashboard-view active">
       <h2 class="page-title">Operations Hall</h2>
@@ -1469,7 +1431,6 @@
         <div class="quick-grid" id="quickGrid"></div>
       </div>
     </div>
-
     <!-- CHECK-IN STEPS VIEW -->
     <div id="view-checkin" class="dashboard-view">
       <h2 class="page-title">Check-In Steps</h2>
@@ -1482,7 +1443,6 @@
       </div>
       <div id="checkinAccordions"></div>
     </div>
-
     <!-- TROUBLESHOOTING VIEW -->
     <div id="view-troubleshooting" class="dashboard-view">
       <h2 class="page-title">Hardware &amp; System Troubleshooting</h2>
@@ -1625,7 +1585,6 @@
             </div>
           </div>
         </details>
-
         <!-- 🎥 CAMERA WORKFLOW -->
         <details class="accordion" id="trouble-drop-video">
           <summary>
@@ -1763,7 +1722,6 @@
             </div>
           </div>
         </details>
-
         <!-- 🖥️ SCREEN SHARING WORKFLOW -->
         <details class="accordion" id="trouble-drop-screen">
           <summary>
@@ -1892,7 +1850,6 @@
             </div>
           </div>
         </details>
-
         <!-- 🧭 SEB WORKFLOW -->
         <details class="accordion" id="trouble-drop-seb">
           <summary>
@@ -2005,7 +1962,6 @@
         </details>
       </div>
     </div>
-
     <!-- CANNED MESSAGE LIBRARY VIEW -->
     <div id="view-library" class="dashboard-view">
       <h2 class="page-title">Canned Message Library</h2>
@@ -2018,7 +1974,6 @@
       <div class="filter-row" id="libraryFilters"></div>
       <div id="libraryList"></div>
     </div>
-
     <!-- THRESHOLD CENTER VIEW -->
     <div id="view-threshold" class="dashboard-view">
       <h2 class="page-title">Infraction Threshold Center</h2>
@@ -2033,7 +1988,6 @@
       <div class="infraction-grid" id="infractionGrid"></div>
       <div class="empty-state" id="infractionEmpty" style="display:none;margin-top:14px;">No matching infractions.</div>
     </div>
-
     <!-- CLIENT POLICIES VIEW -->
     <div id="view-policies" class="dashboard-view">
       <h2 class="page-title">Client Policy Library</h2>
@@ -2056,7 +2010,6 @@
         <div class="empty-state" id="policiesEmpty" style="display:none;margin-top:10px;">No matching clients.</div>
       </div>
     </div>
-
     <!-- FAQ ARCHIVE VIEW -->
     <div id="view-faq" class="dashboard-view">
       <h2 class="page-title">FAQ Archive</h2>
@@ -2206,7 +2159,6 @@
         </div>
       </div>
     </div>
-
     <!-- SPACE IMPACT VIEW -->
     <div id="view-space-impact" class="dashboard-view">
       <h2 class="page-title">Space Impact</h2>
@@ -2240,7 +2192,7 @@
       <div class="si-cards">
         <div class="si-card">
           <h3>Power-Ups</h3>
-          <p><strong>W</strong> weapon up &middot; <strong>R</strong> rapid fire &middot; <strong>S</strong> spread shot &middot; <strong>M</strong> homing missiles &middot; <strong>B</strong> barrier &middot; <strong>H</strong> hull repair &middot; <strong>P</strong> bonus points</p>
+          <p><strong>W</strong> weapon up · <strong>R</strong> rapid fire · <strong>S</strong> spread shot · <strong>M</strong> homing missiles · <strong>B</strong> barrier · <strong>H</strong> hull repair · <strong>P</strong> bonus points</p>
         </div>
         <div class="si-card">
           <h3>Flight Manual</h3>
@@ -2253,7 +2205,6 @@
       </div>
     </div>
   </div>
-
   <!-- UPDATE TICKER MODAL DIALOG -->
   <div class="dojo-modal-overlay" id="tickerModal">
     <div class="dojo-modal">
@@ -2303,18 +2254,18 @@
      CATEGORIES Taxonomy
      ============================================================ */
   var CATEGORIES = [
-    {id:"1",  label:"Welcome",                  icon:"🌅"},
+    {id:"1",  label:"Welcome",                 icon:"🌅"},
     {id:"2",  label:"Identification Verification", icon:"🪪"},
-    {id:"3",  label:"System Verification",          icon:"🖥️"},
-    {id:"4",  label:"Clear Desk",                   icon:"🧹"},
-    {id:"5",  label:"Room Scan",                    icon:"🔍"},
-    {id:"6",  label:"Exam Release",                 icon:"🚪"},
-    {id:"7",  label:"Miscellaneous",                icon:"🗂️"},
-    {id:"8",  label:"Warnings",                     icon:"⚠️"},
-    {id:"9",  label:"Technical Support",            icon:"🛠️"},
-    {id:"11", label:"Non-SEB Exams",                icon:"🔐"},
-    {id:"12", label:"Termination Messages",         icon:"⛔"},
-    {id:"13", label:"SEB",                          icon:"🧭"}
+    {id:"3",  label:"System Verification",         icon:"🖥️"},
+    {id:"4",  label:"Clear Desk",                  icon:"🧹"},
+    {id:"5",  label:"Room Scan",                   icon:"🔍"},
+    {id:"6",  label:"Exam Release",                icon:"🚪"},
+    {id:"7",  label:"Miscellaneous",               icon:"🗂️"},
+    {id:"8",  label:"Warnings",                    icon:"⚠️"},
+    {id:"9",  label:"Technical Support",           icon:"🛠️"},
+    {id:"11", label:"Non-SEB Exams",               icon:"🔐"},
+    {id:"12", label:"Termination Messages",        icon:"⛔"},
+    {id:"13", label:"SEB",                         icon:"🧭"}
   ];
   function catLabel(id){
     for (var i=0;i<CATEGORIES.length;i++){ if (CATEGORIES[i].id===id) return CATEGORIES[i].label; }
@@ -2366,4 +2317,52 @@
     {id:"m5_4", cat:"5", tags:[], text:"Please show the area under the desk."},
     {id:"m5_5", cat:"5", tags:[], text:"All electronics should be out of reach and turned off."},
     {id:"m5_6", cat:"5", tags:[], text:"Please ensure your desk is clear of all items."},
-    {id:"m5_7
+    {id:"m5_7", cat:"5", tags:[], text:"Please direct your camera around the room one more time."},
+    {id:"m5_8", cat:"5", tags:[], text:"Please make sure to capture all corners and edges of your desk during the room scan."},
+    {id:"m5_9", cat:"5", tags:[], text:"Is it possible for you to improve the lighting in your testing area?"},
+    {id:"m5_10", cat:"5", tags:[], text:"The window behind you is creating a backlight effect. Adjusting the lighting or moving slightly would help us proceed."},
+    {id:"m5_11", cat:"5", tags:["critical"], text:"Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination."},
+    // 6. Exam Release
+    {id:"m6_1", cat:"6", tags:[], text:"Thank you for your cooperation. You may now click the “Hide Video” button on the left side of this chat box under \"Hide Chat\"."},
+    {id:"m6_2", cat:"6", tags:[], text:"Thank you. Do you have any questions before beginning your exam?"},
+    {id:"m6_3", cat:"6", tags:[], text:"If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection."},
+    {id:"m6_4", cat:"6", tags:[], text:"Please use this chat if you have any questions that are not related to the exam content. I will now release your exam."},
+    {id:"m6_5", cat:"6", tags:[], text:"You can click the “Hide Chat” button on the left side or the X at the top-right to begin your exam."},
+    // 7. Miscellaneous
+    {id:"m7_1", cat:"7", tags:[], text:"Breaks are not allowed for this exam."},
+    {id:"m7_2", cat:"7", tags:[], text:"You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules."},
+    {id:"m7_3", cat:"7", tags:[], text:"Please wait briefly while we investigate this issue."},
+    {id:"m7_4", cat:"7", tags:[], text:"Sorry, but we cannot assist with content-related questions."},
+    {id:"m7_5", cat:"7", tags:[], text:"You can email support@certiverse.com for further assistance with rescheduling."},
+    {id:"m7_6", cat:"7", tags:[], text:"Please adjust your camera. Your head and shoulders must remain fully visible during the exam."},
+    {id:"m7_7", cat:"7", tags:[], text:"Welcome back!"},
+    {id:"m7_8", cat:"7", tags:[], text:"Thank you. You may resume now."},
+    // 8. Warnings
+    {id:"m8_1", cat:"8", tags:[], text:"Please refrain from talking aloud."},
+    {id:"m8_2", cat:"8", tags:[], text:"Please ensure your face is always within camera view."},
+    {id:"m8_3", cat:"8", tags:[], text:"Please keep your attention forward."},
+    {id:"m8_4", cat:"8", tags:["critical"], text:"Please ask all others to leave the room."},
+    {id:"m8_5", cat:"8", tags:[], text:"Please remain on the exam environment tab only."},
+    {id:"m8_6", cat:"8", tags:["critical"], text:"Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."},
+    {id:"m8_7", cat:"8", tags:["critical"], text:"Unfortunately, we are not allowed to release the exam unless all requirements are met."},
+    {id:"m8_8", cat:"8", tags:[], text:"One moment. Kindly lower the angle of your camera so that we can see your head down to your shoulders."},
+    {id:"m8_9", cat:"8", tags:[], text:"One moment. Please adjust your camera angle or position so that your face and shoulders are centered and fully visible on the screen."},
+    // 9. Technical Support
+    {id:"m9_1", cat:"9", tags:[], text:"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."},
+    {id:"m9_2", cat:"9", tags:[], text:"Please click the refresh button on the top left side of the screen."},
+    {id:"m9_3", cat:"9", tags:[], text:"Please try to reboot your machine and launch the exam again."},
+    {id:"m9_4", cat:"9", tags:[], text:"Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?"},
+    {id:"m9_5", cat:"9", tags:[], text:"I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared."},
+    {id:"m9_6", cat:"9", tags:[], text:"Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser."},
+    {id:"m9_7", cat:"9", tags:[], text:"Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs."},
+    {id:"m9_8", cat:"9", tags:[], text:"It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network."},
+    {id:"m9_9", cat:"9", tags:[], text:"I understand. Are you currently on a company network?"},
+    {id:"m9_10", cat:"9", tags:[], text:"Are you currently using a docking station?"},
+    {id:"m9_11", cat:"9", tags:[], text:"Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled."},
+    {id:"m9_12", cat:"9", tags:[], text:"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."},
+    {id:"m9_13", cat:"9", tags:["critical"], text:"You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed."},
+    {id:"m9_14", cat:"9", tags:[], text:"Please check the following before starting the exam:\n\nStep 1: Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.\n\nStep 2: If you are using Google Chrome, and you are experiencing this issue, please switch to Microsoft Edge. If you are experiencing issues in Microsoft Edge, please switch to Google Chrome."},
+    // 11. Non-SEB Exams
+    {id:"m11_1", cat:"11", tags:[], text:"Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat."},
+    {id:"m11_2", cat:"11", tags:[], text:"You may hide or move the pop-up screen-sharing message at the bottom center of your screen."},
+    // 12
