@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FiveActs Proctor Dojo — Kyoto Samurai Estate (Halloween & Chess Edition)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Serif+JP:wght@600;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --clan-red: #B22222;
@@ -21,7 +24,7 @@
     --spectral-green: #00ff88;
 
     --panel-bg: rgba(26, 20, 16, 0.94);
-    --card-bg: rgba(36, 28, 22, 0.88);
+    --card-bg: rgba(36, 28, 22, 0.90);
     --border-line: rgba(244, 197, 66, 0.35);
     --border-soft: rgba(248, 239, 213, 0.12);
 
@@ -170,7 +173,7 @@
   .kyoto-dojo-estate svg { width: 100%; height: 100%; display: block; }
   #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
-  /* Card Glows */
+  /* CARD GLOWS */
   .card, .trouble-card, .gen-panel, .org-chart-container, .accordion, .chess-board-card {
     box-shadow: 0 6px 22px rgba(0, 0, 0, 0.8), 0 0 20px rgba(217, 119, 6, 0.24) !important;
     border-color: rgba(217, 119, 6, 0.45) !important;
@@ -228,7 +231,7 @@
   .nav-links .cnt { color: var(--imperial-gold); font-size: 0.72rem; background: rgba(0,0,0,0.5); padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-line); }
   .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--border-line); font-size: 0.68rem; color: var(--text-muted); text-align: center; font-weight: 700; }
 
-  /* MAIN CONTENT */
+  /* MAIN STAGE */
   .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 22px 38px 60px; min-width: 0; }
   .top-banner-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 24px; }
   .left-clock-box, .right-date-box {
@@ -271,6 +274,40 @@
   .page-title { font-family: var(--font-head); font-size: 1.8rem; color: var(--text-main); margin-bottom: 4px; letter-spacing: 0.04em; text-transform: uppercase; }
   .page-sub { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; }
 
+  /* ================= MAANGAS NA FONT PARA SA SPIELS ================= */
+  .message-text {
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Cinzel", "Noto Serif JP", serif;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    white-space: pre-line;
+    color: #F8EFD5;
+    letter-spacing: 0.025em;
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.85);
+  }
+
+  /* CARDS & TAGS */
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .card-tag { display: inline-block; font-size: 0.62rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-main); text-transform: uppercase; border: 1px solid rgba(255,255,255,0.12); }
+  .card-tag.win { background: rgba(0, 210, 255, 0.25); color: #99ebff; border-color: rgba(0, 210, 255, 0.4); }
+  .card-tag.mac { background: rgba(153, 51, 255, 0.25); color: #e0b3ff; border-color: rgba(153, 51, 255, 0.4); }
+  .card-tag.linux { background: rgba(42, 90, 59, 0.4); color: #b3ffcc; border-color: rgba(42, 90, 59, 0.6); }
+  .card-tag.critical { background: rgba(178, 34, 34, 0.4); color: #ff99aa; border-color: rgba(178, 34, 34, 0.6); }
+
+  .card {
+    background: var(--card-bg); border: 1px solid var(--border-line); border-left: 4px solid var(--clan-red);
+    border-radius: 6px 12px 12px 6px; padding: 16px 18px; margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: center; gap: 18px; transition: all 0.22s ease;
+  }
+  .card:hover { background: rgba(36, 28, 22, 0.95); border-left-color: var(--pumpkin-bright); transform: translateY(-2px); }
+  .seal-btn {
+    background: linear-gradient(135deg, #ff8800 0%, var(--clan-red) 100%); color: #ffffff; border: none;
+    padding: 10px 18px; border-radius: 50px; cursor: pointer; font-size: 0.82rem; font-weight: 900;
+    text-transform: uppercase; white-space: nowrap; transition: all 0.2s;
+  }
+  .seal-btn:hover { transform: translateY(-2px) scale(1.03); filter: brightness(1.2); }
+  .seal-btn.copied { background: linear-gradient(135deg, #00ff88 0%, #00aa44 100%); color: #021208; }
+
   /* ORG CHART */
   .org-chart-container { background: var(--panel-bg); border: 1px solid var(--border-line); border-radius: 12px; padding: 28px 20px; margin-bottom: 28px; }
   .org-tree { display: flex; flex-direction: column; align-items: center; width: 100%; overflow-x: auto; padding: 10px 0; }
@@ -304,28 +341,7 @@
   }
   .org-member-item:hover { background: rgba(36, 28, 22, 0.95); border-left-color: var(--pumpkin-bright); }
 
-  /* COMMON CARDS & ACCORDIONS */
-  .section-container { margin-bottom: 30px; }
-  .section-title {
-    font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; color: var(--text-main);
-    border-bottom: 1px solid var(--border-line); padding-bottom: 10px; margin-bottom: 18px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .card {
-    background: var(--card-bg); border: 1px solid var(--border-line); border-left: 4px solid var(--clan-red);
-    border-radius: 6px 12px 12px 6px; padding: 16px 18px; margin-bottom: 14px;
-    display: flex; justify-content: space-between; align-items: center; gap: 18px; transition: all 0.22s ease;
-  }
-  .card:hover { background: rgba(36, 28, 22, 0.95); border-left-color: var(--pumpkin-bright); transform: translateY(-2px); }
-  .message-text { font-size: 0.94rem; line-height: 1.6; color: #F8EFD5; }
-  .seal-btn {
-    background: linear-gradient(135deg, #ff8800 0%, var(--clan-red) 100%); color: #ffffff; border: none;
-    padding: 10px 18px; border-radius: 50px; cursor: pointer; font-size: 0.82rem; font-weight: 900;
-    text-transform: uppercase; white-space: nowrap; transition: all 0.2s;
-  }
-  .seal-btn:hover { transform: translateY(-2px) scale(1.03); filter: brightness(1.2); }
-  .seal-btn.copied { background: linear-gradient(135deg, #00ff88 0%, #00aa44 100%); color: #021208; }
-
+  /* COMMON ACCORDIONS & CONTROLS */
   .path-selector-box {
     display: flex; gap: 10px; margin-bottom: 18px; padding: 12px 16px; background: rgba(26, 20, 16, 0.65);
     border: 1px solid var(--border-line); border-radius: 10px; flex-wrap: wrap; align-items: center;
@@ -335,7 +351,6 @@
     padding: 8px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 800; cursor: pointer;
   }
   .path-btn.active, .path-btn:hover { background: rgba(255, 102, 0, 0.25); border-color: var(--pumpkin-bright); color: var(--imperial-gold); }
-
   .accordion { border: 1px solid var(--border-line); border-radius: 12px; overflow: hidden; margin-bottom: 16px; background: var(--panel-bg); }
   .accordion summary {
     list-style: none; cursor: pointer; padding: 16px 22px; display: flex; align-items: center; justify-content: space-between;
@@ -355,20 +370,18 @@
     padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer;
   }
   .filter-chip.active { background: rgba(255, 102, 0, 0.25); color: var(--imperial-gold); border-color: var(--pumpkin-bright); }
-
   .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 28px; }
   .quick-btn {
     border: 1px solid var(--border-line); border-radius: 10px; padding: 16px; background: var(--panel-bg);
     color: var(--text-main); cursor: pointer; text-align: left; font-size: 0.9rem; font-weight: 800;
   }
   .quick-btn:hover { background: rgba(255, 102, 0, 0.2); border-color: var(--pumpkin-bright); }
-
   .table-responsive { width: 100%; overflow-x: auto; background: var(--panel-bg); border: 1px solid var(--border-line); border-radius: 12px; }
   table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.86rem; min-width: 800px; }
   th { background: rgba(255, 102, 0, 0.15); color: var(--text-main); padding: 14px; border-bottom: 1px solid var(--border-line); }
   td { padding: 12px 14px; border-bottom: 1px solid var(--border-soft); color: #F8EFD5; }
 
-  /* TROUBLESHOOTING STEP STYLES */
+  /* TROUBLESHOOTING */
   .trouble-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 20px; margin-bottom: 18px; background: var(--panel-bg); }
   .flow-step { border-left: 2px solid var(--pumpkin-bright); padding-left: 16px; margin-bottom: 16px; }
   .flow-step-num { font-size: 0.74rem; font-weight: 900; color: var(--pumpkin-bright); text-transform: uppercase; }
@@ -379,7 +392,7 @@
     font-size: 0.84rem; color: #F8EFD5; display: flex; justify-content: space-between; align-items: center; gap: 12px;
   }
 
-  /* ================= SAMURAI CHESS (UNIVERSAL RECOGNIZABLE PIECES) ================= */
+  /* ================= SAMURAI CHESS (JAPANESE ATMOSPHERE + USUAL CHESS PIECES) ================= */
   .chess-container { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
   .chess-board-card {
     background: linear-gradient(145deg, #1d140e 0%, #0d0906 100%);
@@ -400,7 +413,7 @@
   .move-dot { width: 18px; height: 18px; background: rgba(0, 255, 136, 0.75); border-radius: 50%; box-shadow: 0 0 10px #00ff88; pointer-events: none; }
   .capture-ring { position: absolute; inset: 4px; border: 3px dashed #ff4400; border-radius: 50%; pointer-events: none; }
 
-  /* CLASSIC UNIVERSAL CHESS PIECE TOKENS */
+  /* UNIVERSAL PIECES WITH JAPANESE FLAVOR */
   .samurai-piece {
     width: 52px; height: 52px; border-radius: 50%; display: flex; flex-direction: column;
     align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.85); border: 2px solid;
@@ -408,21 +421,19 @@
   }
   .samurai-piece:hover { transform: scale(1.1); z-index: 2; }
 
-  /* White/Gold Clan Pieces */
   .piece-white {
     background: radial-gradient(circle at 35% 30%, #ffffff 0%, #ecd083 65%, #a67c2e 100%);
     border-color: #fff4ca; color: #1e1104;
   }
   .piece-white .p-symbol { font-size: 1.85rem; line-height: 1; filter: drop-shadow(0 1px 2px rgba(255,255,255,0.8)); }
-  .piece-white .p-label { font-size: 0.55rem; font-weight: 900; letter-spacing: 0.05em; opacity: 0.9; margin-top: -2px; }
+  .piece-white .p-label { font-size: 0.58rem; font-weight: 900; font-family: "Noto Serif JP", serif; letter-spacing: 0.04em; margin-top: -2px; }
 
-  /* Black/Crimson Shadow Clan Pieces */
   .piece-black {
     background: radial-gradient(circle at 35% 30%, #4a0d0d 0%, #1a0606 65%, #050202 100%);
     border-color: #ff4d4d; color: #ffcccc;
   }
   .piece-black .p-symbol { font-size: 1.85rem; line-height: 1; color: #ff4444; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.9)); }
-  .piece-black .p-label { font-size: 0.55rem; font-weight: 900; color: #ff8888; letter-spacing: 0.05em; margin-top: -2px; }
+  .piece-black .p-label { font-size: 0.58rem; font-weight: 900; color: #ff9999; font-family: "Noto Serif JP", serif; letter-spacing: 0.04em; margin-top: -2px; }
 
   .chess-info-panel {
     flex: 1; min-width: 300px; background: var(--panel-bg); border: 1px solid var(--border-line);
@@ -434,7 +445,7 @@
     width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
     font-size: 1.3rem; border: 2px solid var(--imperial-gold); box-shadow: 0 0 10px rgba(244, 197, 66, 0.4);
   }
-  .clan-title { font-size: 0.95rem; font-weight: 800; font-family: var(--font-head); }
+  .clan-title { font-size: 0.95rem; font-weight: 800; font-family: "Noto Serif JP", var(--font-head); }
   .clan-role  { font-size: 0.72rem; color: var(--text-dim); }
 
   .chess-status-box {
@@ -456,6 +467,28 @@
   .thinking-spinner { width: 16px; height: 16px; border: 3px solid rgba(255, 102, 0, 0.3); border-top-color: var(--pumpkin-bright); border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+  /* ================= CHESS VICTORY MODAL ================= */
+  .chess-victory-overlay {
+    position: fixed; inset: 0; z-index: 1000; background: rgba(5, 3, 2, 0.92); backdrop-filter: blur(12px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .chess-victory-card {
+    background: linear-gradient(180deg, #261912 0%, #120d0a 100%);
+    border: 3px solid var(--imperial-gold); border-radius: 18px; padding: 36px 32px;
+    max-width: 480px; width: 100%; text-align: center; box-shadow: 0 0 50px rgba(244, 197, 66, 0.6);
+    animation: victoryPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes victoryPop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .chess-victory-card.defeat {
+    border-color: var(--clan-red); box-shadow: 0 0 50px rgba(217, 43, 43, 0.7);
+  }
+  .victory-icon { font-size: 3.5rem; margin-bottom: 12px; }
+  .victory-title { font-family: "Noto Serif JP", var(--font-head); font-size: 1.85rem; font-weight: 900; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .victory-title.gold { color: var(--imperial-gold); text-shadow: 0 0 15px rgba(244,197,66,0.6); }
+  .victory-title.red { color: #ff4d4d; text-shadow: 0 0 15px rgba(255,68,68,0.7); }
+  .victory-desc { font-size: 0.95rem; color: var(--rice-paper); line-height: 1.6; margin-bottom: 24px; font-family: "Noto Serif JP", serif; }
+  .victory-actions { display: flex; gap: 14px; justify-content: center; }
+
   .dojo-modal-overlay {
     position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
     display: none; align-items: center; justify-content: center; padding: 20px;
@@ -476,7 +509,6 @@
   <!-- ================= ATMOSPHERIC SCENE ================= -->
   <div class="scene" aria-hidden="true">
     <div class="blood-moon"></div>
-
     <div class="flying-witch">
       <svg viewBox="0 0 160 120" fill="none">
         <polygon points="62,12 82,38 48,36" fill="#120e0b"/><ellipse cx="62" cy="38" rx="28" ry="6" fill="#120e0b"/>
@@ -486,23 +518,18 @@
         <polygon points="5,94 -5,108 8,118 24,104 16,92" fill="#d97706"/>
       </svg>
     </div>
-
     <div class="classic-ghost ghost-left">
       <svg viewBox="0 0 100 120" fill="none">
-        <path d="M 50 15 C 25 15, 18 45, 20 85 C 22 105, 12 115, 24 116 C 34 118, 38 104, 48 116 C 58 126, 64 105, 74 116 C 84 126, 92 104, 98 114 C 104 110, 96 90, 96 80 C 96 45, 85 15, 50 15 Z" 
-              fill="rgba(248, 239, 213, 0.75)" stroke="rgba(255, 255, 255, 0.9)" stroke-width="2"/>
+        <path d="M 50 15 C 25 15, 18 45, 20 85 C 22 105, 12 115, 24 116 C 34 118, 38 104, 48 116 C 58 126, 64 105, 74 116 C 84 126, 92 104, 98 114 Z" fill="rgba(248, 239, 213, 0.75)" stroke="rgba(255, 255, 255, 0.9)" stroke-width="2"/>
         <ellipse cx="40" cy="48" rx="5" ry="9" fill="#120e0b"/><ellipse cx="64" cy="48" rx="5" ry="9" fill="#120e0b"/><ellipse cx="52" cy="70" rx="6" ry="10" fill="#120e0b"/>
       </svg>
     </div>
-
     <div class="classic-ghost ghost-right">
       <svg viewBox="0 0 100 120" fill="none">
-        <path d="M 50 15 C 25 15, 18 45, 20 85 C 22 105, 12 115, 24 116 C 34 118, 38 104, 48 116 C 58 126, 64 105, 74 116 C 84 126, 92 104, 98 114 C 104 110, 96 90, 96 80 C 96 45, 85 15, 50 15 Z" 
-              fill="rgba(248, 239, 213, 0.75)" stroke="rgba(255, 255, 255, 0.9)" stroke-width="2"/>
+        <path d="M 50 15 C 25 15, 18 45, 20 85 C 22 105, 12 115, 24 116 C 34 118, 38 104, 48 116 C 58 126, 64 105, 74 116 C 84 126, 92 104, 98 114 Z" fill="rgba(248, 239, 213, 0.75)" stroke="rgba(255, 255, 255, 0.9)" stroke-width="2"/>
         <ellipse cx="40" cy="48" rx="5" ry="9" fill="#120e0b"/><ellipse cx="64" cy="48" rx="5" ry="9" fill="#120e0b"/><ellipse cx="52" cy="70" rx="6" ry="10" fill="#120e0b"/>
       </svg>
     </div>
-
     <div class="white-lady-spirit" title="White Lady">
       <svg viewBox="0 0 140 240" fill="none">
         <defs>
@@ -517,7 +544,6 @@
         <path d="M 60 54 Q 70 63 80 54" stroke="#ff2222" stroke-width="1.6" stroke-linecap="round" fill="none"/>
       </svg>
     </div>
-
     <div class="dangling-spider-box">
       <div class="spider-silk"></div>
       <svg viewBox="0 0 30 30" width="30" height="30" fill="#120e0b">
@@ -526,7 +552,6 @@
         <path d="M12 12 Q4 8 2 14 M18 12 Q26 8 28 14 M12 15 Q3 17 2 24 M18 15 Q27 17 28 24 M12 17 Q5 23 6 29 M18 17 Q25 23 24 29" stroke="#ff6600" stroke-width="1.5" fill="none"/>
       </svg>
     </div>
-
     <div class="bat-group">
       <svg viewBox="0 0 1000 200" style="width:100%; height:100%; opacity:0.7;">
         <path d="M 100 80 Q 110 60 120 70 Q 130 60 140 80 Q 120 85 100 80 Z" fill="#000"/>
@@ -534,10 +559,8 @@
         <path d="M 600 50 Q 610 35 620 45 Q 630 35 640 50 Q 620 55 600 50 Z" fill="#000"/>
       </svg>
     </div>
-
     <div class="creepy-eyes eyes-1"><div class="eye-pupil"></div><div class="eye-pupil"></div></div>
     <div class="creepy-eyes eyes-2"><div class="eye-pupil"></div><div class="eye-pupil"></div></div>
-
     <div class="cobweb-left">
       <svg viewBox="0 0 100 100" fill="none" stroke="#ff8800" stroke-width="0.8">
         <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" /><path d="M 20,0 Q 20,20 0,20 M 40,0 Q 40,40 0,40 M 60,0 Q 60,60 0,60 M 80,0 Q 80,80 0,80" />
@@ -548,8 +571,6 @@
         <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" /><path d="M 20,0 Q 20,20 0,20 M 40,0 Q 40,40 0,40 M 60,0 Q 60,60 0,60 M 80,0 Q 80,80 0,80" />
       </svg>
     </div>
-
-    <!-- AUTHENTIC KYOTO-ERA SAMURAI DOJO ESTATE -->
     <div class="kyoto-dojo-estate">
       <svg viewBox="0 0 1400 320" preserveAspectRatio="none">
         <defs>
@@ -560,43 +581,25 @@
             <stop offset="0%" stop-color="#ffcc00"/><stop offset="100%" stop-color="#ff5500"/>
           </linearGradient>
         </defs>
-        <rect x="0" y="282" width="1400" height="38" fill="#0d0907"/>
-        <line x1="0" y1="282" x2="1400" y2="282" stroke="#4a3425" stroke-width="3"/>
-
-        <!-- Left Wing -->
+        <rect x="0" y="282" width="1400" height="38" fill="#0d0907"/><line x1="0" y1="282" x2="1400" y2="282" stroke="#4a3425" stroke-width="3"/>
         <rect x="40" y="165" width="310" height="117" fill="#140e0a" stroke="#362218" stroke-width="2"/>
         <rect x="65" y="195" width="110" height="65" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="2"/>
         <rect x="205" y="195" width="110" height="65" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="2"/>
         <path d="M 10 170 Q 180 135 370 162 L 350 178 Q 180 148 30 180 Z" fill="#0d0907" stroke="#4a3020" stroke-width="2"/>
-
-        <!-- Right Wing -->
         <rect x="1050" y="165" width="310" height="117" fill="#140e0a" stroke="#362218" stroke-width="2"/>
         <rect x="1075" y="195" width="110" height="65" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="2"/>
         <rect x="1215" y="195" width="110" height="65" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="2"/>
         <path d="M 1030 162 Q 1220 135 1390 170 L 1370 180 Q 1220 148 1050 178 Z" fill="#0d0907" stroke="#4a3020" stroke-width="2"/>
-
-        <!-- Central Hall -->
         <rect x="440" y="145" width="520" height="137" fill="#140e0a" stroke="#362218" stroke-width="3"/>
         <rect x="530" y="180" width="340" height="95" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="3"/>
         <rect x="670" y="180" width="60" height="95" fill="#8f1d1d" stroke="#1f0808" stroke-width="2"/>
         <path d="M 390 155 Q 700 112 1010 155 L 980 172 Q 700 128 420 172 Z" fill="#0c0806" stroke="#5c3c26" stroke-width="3"/>
         <rect x="510" y="70" width="380" height="75" fill="#140e0a" stroke="#362218" stroke-width="2.5"/>
         <path d="M 430 75 Q 700 24 970 75 Q 940 88 910 82 Q 700 42 490 82 Q 460 88 430 75 Z" fill="#080504" stroke="#66432b" stroke-width="3.5"/>
-
-        <!-- Stone Lanterns -->
-        <g transform="translate(385, 175)">
-          <path d="M 0 34 Q 20 22 40 34 L 35 40 Q 20 30 5 40 Z" fill="#362f29"/>
-          <rect x="10" y="40" width="20" height="19" fill="url(#lanternGlow)" stroke="#2b231c" stroke-width="2" rx="2"/>
-          <rect x="15" y="68" width="10" height="30" fill="#2b231c"/>
-        </g>
-        <g transform="translate(975, 175)">
-          <path d="M 0 34 Q 20 22 40 34 L 35 40 Q 20 30 5 40 Z" fill="#362f29"/>
-          <rect x="10" y="40" width="20" height="19" fill="url(#lanternGlow)" stroke="#2b231c" stroke-width="2" rx="2"/>
-          <rect x="15" y="68" width="10" height="30" fill="#2b231c"/>
-        </g>
+        <g transform="translate(385, 175)"><rect x="10" y="40" width="20" height="19" fill="url(#lanternGlow)" stroke="#2b231c" stroke-width="2" rx="2"/><rect x="15" y="68" width="10" height="30" fill="#2b231c"/></g>
+        <g transform="translate(975, 175)"><rect x="10" y="40" width="20" height="19" fill="url(#lanternGlow)" stroke="#2b231c" stroke-width="2" rx="2"/><rect x="15" y="68" width="10" height="30" fill="#2b231c"/></g>
       </svg>
     </div>
-
     <div class="spooky-mist"></div>
     <div class="scene-vignette"></div>
     <canvas id="fxCanvas"></canvas>
@@ -610,53 +613,40 @@
       <div class="subtitle">🎃 Observe &middot; Verify &middot; Protect 👻</div>
     </div>
 
+    <!-- VIEW SELECTORS: SAMURAI CHESS AT THE VERY BOTTOM -->
     <div class="view-selectors">
       <button class="view-btn active" data-view="view-home" onclick="switchView('view-home', this)"><span class="vi">🏯</span> Home</button>
-      <button class="view-btn" data-view="view-chess" onclick="switchView('view-chess', this)"><span class="vi">♟️</span> Samurai Chess</button>
       <button class="view-btn" data-view="view-checkin" onclick="switchView('view-checkin', this)"><span class="vi">📜</span> Check-In Steps</button>
       <button class="view-btn" data-view="view-troubleshooting" onclick="switchView('view-troubleshooting', this)"><span class="vi">🛠️</span> Troubleshooting</button>
       <button class="view-btn" data-view="view-library" onclick="switchView('view-library', this)"><span class="vi">🔮</span> Canned Messages</button>
       <button class="view-btn" data-view="view-threshold" onclick="switchView('view-threshold', this)"><span class="vi">⚠️</span> Threshold Center</button>
       <button class="view-btn" data-view="view-policies" onclick="switchView('view-policies', this)"><span class="vi">🦇</span> Client Policies</button>
       <button class="view-btn" data-view="view-faq" onclick="switchView('view-faq', this)"><span class="vi">🎋</span> FAQ Archive</button>
+      <button class="view-btn" data-view="view-chess" onclick="switchView('view-chess', this)"><span class="vi">♟️</span> 将棋道場 &middot; Samurai Chess</button>
       <button class="view-btn" style="border-color:var(--pumpkin-bright);" onclick="openTickerAdmin()"><span class="vi">🎃</span> Update Ticker</button>
     </div>
 
     <div class="nav-label" id="sidebarSublabel">Navigation Details</div>
     <ul class="nav-links" id="sidebarDynamicLinks"></ul>
-
     <div class="sidebar-footer">Certiverse &middot; Proctor Dojo &middot; 🎃 Spooky Edition</div>
   </div>
 
   <!-- ================= MAIN CONTENT ================= -->
   <div class="main-content">
-
     <div class="top-banner-row">
-      <div class="left-clock-box">
-        <div class="top-clock-time" id="clockTime">--:--:--</div>
-      </div>
-      <div class="right-date-box">
-        <div class="top-clock-date" id="clockDate">Loading PST Manila Time&hellip;</div>
-      </div>
+      <div class="left-clock-box"><div class="top-clock-time" id="clockTime">--:--:--</div></div>
+      <div class="right-date-box"><div class="top-clock-date" id="clockDate">Loading PST Manila Time&hellip;</div></div>
     </div>
 
     <!-- MAIN HERO STAGE -->
     <div class="main-hero-stage">
-      <svg class="hero-pumpkin" viewBox="0 0 100 100">
-        <ellipse cx="50" cy="55" rx="42" ry="36" fill="#ff6600"/>
-        <polygon points="32,46 42,46 37,36" fill="#ffe066"/><polygon points="58,46 68,46 63,36" fill="#ffe066"/>
-        <path d="M 28 66 Q 50 82 72 66 Z" fill="#ffe066"/>
-      </svg>
+      <svg class="hero-pumpkin" viewBox="0 0 100 100"><ellipse cx="50" cy="55" rx="42" ry="36" fill="#ff6600"/><polygon points="32,46 42,46 37,36" fill="#ffe066"/><polygon points="58,46 68,46 63,36" fill="#ffe066"/><path d="M 28 66 Q 50 82 72 66 Z" fill="#ffe066"/></svg>
       <div class="furnace-frame-container">
         <div class="fiveacts-logo-slant"><span>FIVE</span></div>
         <div class="fiveacts-logo-text">ACTS</div>
       </div>
       <div style="transform: scaleX(-1);">
-        <svg class="hero-pumpkin" viewBox="0 0 100 100">
-          <ellipse cx="50" cy="55" rx="42" ry="36" fill="#ff6600"/>
-          <polygon points="32,46 42,46 37,36" fill="#ffe066"/><polygon points="58,46 68,46 63,36" fill="#ffe066"/>
-          <path d="M 28 66 Q 50 82 72 66 Z" fill="#ffe066"/>
-        </svg>
+        <svg class="hero-pumpkin" viewBox="0 0 100 100"><ellipse cx="50" cy="55" rx="42" ry="36" fill="#ff6600"/><polygon points="32,46 42,46 37,36" fill="#ffe066"/><polygon points="58,46 68,46 63,36" fill="#ffe066"/><path d="M 28 66 Q 50 82 72 66 Z" fill="#ffe066"/></svg>
       </div>
     </div>
 
@@ -676,7 +666,6 @@
 
       <div class="org-chart-container">
         <h3 class="section-title" style="border:none;margin-bottom:20px;justify-content:center;">⛩️ FiveActs Dojo Command Hierarchy</h3>
-        
         <div class="org-tree">
           <div class="org-node root">
             <div class="org-title">President</div>
@@ -765,71 +754,7 @@
       </div>
     </div>
 
-    <!-- 2. SAMURAI CHESS TAB (STANDARD RECOGNIZABLE CHESS PIECES) -->
-    <div id="view-chess" class="dashboard-view">
-      <h2 class="page-title">将棋道場 &middot; Samurai Chess Dojo</h2>
-      <p class="page-sub">Command the Imperial Gold Clan (White) against the Crimson Shadow Shogun AI (Black).</p>
-
-      <div class="path-selector-box">
-        <span style="font-size:0.8rem;font-weight:800;color:var(--imperial-gold);">⚔️ Shogun Difficulty:</span>
-        <button class="path-btn active" id="diff-1" onclick="setChessDifficulty(1)">Ashigaru (Beginner)</button>
-        <button class="path-btn" id="diff-2" onclick="setChessDifficulty(2)">Ronin (Casual)</button>
-        <button class="path-btn" id="diff-3" onclick="setChessDifficulty(3)">Samurai (Adept)</button>
-        <button class="path-btn" id="diff-4" onclick="setChessDifficulty(4)">Daimyo (Master)</button>
-        <button class="path-btn" id="diff-5" onclick="setChessDifficulty(5)">Shogun (Grandmaster)</button>
-      </div>
-
-      <div class="chess-container">
-        <div class="chess-board-card">
-          <div class="chess-board-wrapper">
-            <div class="chess-board-grid" id="chessBoardGrid"></div>
-          </div>
-        </div>
-
-        <div class="chess-info-panel">
-          <div class="chess-clan-header">
-            <div class="clan-banner">
-              <div class="clan-mon-icon" style="background:#260505;border-color:#ff4444;color:#ff4444;">♚</div>
-              <div>
-                <div class="clan-title" style="color:#ff6666;">Crimson Shadow Clan</div>
-                <div class="clan-role">AI Shogun &middot; Black</div>
-              </div>
-            </div>
-            <div class="clan-banner" style="flex-direction:row-reverse;text-align:right;">
-              <div class="clan-mon-icon" style="background:#fff2d1;border-color:#e2be68;color:#2b1803;">♔</div>
-              <div>
-                <div class="clan-title" style="color:var(--imperial-gold);">Imperial Gold Clan</div>
-                <div class="clan-role">Your Command &middot; White</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="chess-status-box" id="chessStatusBox">
-            <span id="chessStatusText">Your turn &mdash; Select your warrior piece.</span>
-            <div class="thinking-spinner" id="chessThinking" style="display:none;"></div>
-          </div>
-
-          <div style="font-size:0.75rem;color:var(--text-dim);font-weight:800;margin-bottom:6px;text-transform:uppercase;">Captured Imperial Pieces</div>
-          <div class="captured-tray" id="trayWhiteCaptured"></div>
-
-          <div style="font-size:0.75rem;color:var(--text-dim);font-weight:800;margin-bottom:6px;text-transform:uppercase;">Captured Crimson Pieces</div>
-          <div class="captured-tray" id="trayBlackCaptured"></div>
-
-          <div style="font-size:0.75rem;color:var(--text-dim);font-weight:800;margin-bottom:6px;text-transform:uppercase;">Battle Log</div>
-          <div class="chess-moves-log" id="chessMovesLog">
-            <p>⛩️ Dojo match registered. Awaiting White's opening move...</p>
-          </div>
-
-          <div class="chess-btn-row">
-            <button class="seal-btn" style="min-width:auto;" onclick="startNewChessGame()">⚔️ New Game</button>
-            <button class="path-btn" onclick="undoChessMove()">↩️ Undo</button>
-            <button class="path-btn" onclick="restartChessGame()">🔄 Restart</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. CHECK-IN STEPS VIEW -->
+    <!-- 2. CHECK-IN STEPS VIEW (ALL ORIGINAL SPIELS) -->
     <div id="view-checkin" class="dashboard-view">
       <h2 class="page-title">Check-In Steps</h2>
       <p class="page-sub">Work sequentially through categories 1&ndash;13. Select an exam mode below to configure steps.</p>
@@ -844,26 +769,25 @@
       <div id="checkinAccordions"></div>
     </div>
 
-    <!-- 4. TROUBLESHOOTING VIEW -->
+    <!-- 3. TROUBLESHOOTING VIEW -->
     <div id="view-troubleshooting" class="dashboard-view">
       <h2 class="page-title">Hardware &amp; System Troubleshooting</h2>
       <p class="page-sub">Step-by-step diagnostic workflows for candidate Audio, Camera, Screen Sharing, and SEB issues.</p>
       <div id="troubleshootingContainer"></div>
     </div>
 
-    <!-- 5. CANNED MESSAGE LIBRARY VIEW -->
+    <!-- 4. CANNED MESSAGE LIBRARY VIEW -->
     <div id="view-library" class="dashboard-view">
       <h2 class="page-title">Canned Message Library</h2>
-      <p class="page-sub">Search our database for instant spiels and copyable candidate responses.</p>
-
+      <p class="page-sub">Search our complete database for instant spiels and copyable candidate responses.</p>
       <div class="library-search-box">
-        <input type="text" id="globalSearch" class="search-input" placeholder="Search database... search spiels, camera, permissions, reboot" oninput="filterLibraryOnly()" aria-label="Search canned messages">
+        <input type="text" id="globalSearch" class="search-input" placeholder="Search spiels... (ID, camera, permissions, reboot, network)" oninput="filterLibraryOnly()" aria-label="Search canned messages">
       </div>
       <div class="filter-row" id="libraryFilters"></div>
       <div id="libraryList"></div>
     </div>
 
-    <!-- 6. THRESHOLD CENTER VIEW -->
+    <!-- 5. THRESHOLD CENTER VIEW -->
     <div id="view-threshold" class="dashboard-view">
       <h2 class="page-title">Infraction Threshold Center</h2>
       <p class="page-sub">Tactical response reference and escalation limits.</p>
@@ -871,11 +795,10 @@
       <div class="quick-grid" id="infractionGrid"></div>
     </div>
 
-    <!-- 7. CLIENT POLICIES VIEW -->
+    <!-- 6. CLIENT POLICIES VIEW -->
     <div id="view-policies" class="dashboard-view">
       <h2 class="page-title">Client Policy Library</h2>
       <p class="page-sub">Rules on breaks, identification, and system requirements.</p>
-
       <div class="table-responsive">
         <table>
           <thead>
@@ -886,13 +809,89 @@
       </div>
     </div>
 
-    <!-- 8. FAQ ARCHIVE VIEW -->
+    <!-- 7. FAQ ARCHIVE VIEW -->
     <div id="view-faq" class="dashboard-view">
       <h2 class="page-title">FAQ Archive</h2>
       <p class="page-sub">Official Certiverse Knowledge Base &amp; Internal Proctor FAQ Encyclopedia.</p>
       <div id="faqContainer"></div>
     </div>
 
+    <!-- 8. SAMURAI CHESS TAB (LOCATED AT THE VERY BOTTOM OF VIEWS) -->
+    <div id="view-chess" class="dashboard-view">
+      <h2 class="page-title">将棋道場 &middot; Samurai Chess Dojo</h2>
+      <p class="page-sub">Command the Imperial Gold Clan (白軍 · 黄金) against the Crimson Shadow Shogun AI (黒軍 · 紅影).</p>
+
+      <div class="path-selector-box">
+        <span style="font-size:0.8rem;font-weight:800;color:var(--imperial-gold);">⚔️ 難易度選択 (Difficulty):</span>
+        <button class="path-btn active" id="diff-1" onclick="setChessDifficulty(1)">足軽 · Beginner</button>
+        <button class="path-btn" id="diff-2" onclick="setChessDifficulty(2)">浪人 · Casual</button>
+        <button class="path-btn" id="diff-3" onclick="setChessDifficulty(3)">侍 · Adept</button>
+        <button class="path-btn" id="diff-4" onclick="setChessDifficulty(4)">大名 · Master</button>
+        <button class="path-btn" id="diff-5" onclick="setChessDifficulty(5)">将軍 · Grandmaster</button>
+      </div>
+
+      <div class="chess-container">
+        <div class="chess-board-card">
+          <div class="chess-board-wrapper">
+            <div class="chess-board-grid" id="chessBoardGrid"></div>
+          </div>
+        </div>
+
+        <div class="chess-info-panel">
+          <div class="chess-clan-header">
+            <div class="clan-banner">
+              <div class="clan-mon-icon" style="background:#260505;border-color:#ff4444;color:#ff4444;">♚</div>
+              <div>
+                <div class="clan-title" style="color:#ff6666;">紅影軍 (Crimson Shadow)</div>
+                <div class="clan-role">AI 将軍 &middot; Black</div>
+              </div>
+            </div>
+            <div class="clan-banner" style="flex-direction:row-reverse;text-align:right;">
+              <div class="clan-mon-icon" style="background:#fff2d1;border-color:#e2be68;color:#2b1803;">♔</div>
+              <div>
+                <div class="clan-title" style="color:var(--imperial-gold);">黄金軍 (Imperial Gold)</div>
+                <div class="clan-role">司令官 &middot; White</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chess-status-box" id="chessStatusBox">
+            <span id="chessStatusText">手番: あなたの番です (Your turn — Select warrior piece)</span>
+            <div class="thinking-spinner" id="chessThinking" style="display:none;"></div>
+          </div>
+
+          <div style="font-size:0.75rem;color:var(--text-dim);font-weight:800;margin-bottom:6px;font-family:'Noto Serif JP',serif;">討ち取られた駒 (Captured Imperial Pieces)</div>
+          <div class="captured-tray" id="trayWhiteCaptured"></div>
+
+          <div style="font-size:0.75rem;color:var(--text-dim);font-weight:800;margin-bottom:6px;font-family:'Noto Serif JP',serif;">討ち取った敵駒 (Captured Crimson Pieces)</div>
+          <div class="captured-tray" id="trayBlackCaptured"></div>
+
+          <div style="font-size:0.75rem;color:var(--text-dim);font-weight:800;margin-bottom:6px;font-family:'Noto Serif JP',serif;">合戦記録 (Combat Chronicle)</div>
+          <div class="chess-moves-log" id="chessMovesLog">
+            <p>⛩️ 対局登録完了。白軍の先手をお待ちしています...</p>
+          </div>
+
+          <div class="chess-btn-row">
+            <button class="seal-btn" style="min-width:auto;" onclick="startNewChessGame()">⚔️ 対局開始</button>
+            <button class="path-btn" onclick="undoChessMove()">↩️ 待った (Undo)</button>
+            <button class="path-btn" onclick="restartChessGame()">🔄 再開 (Restart)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHESS VICTORY MODAL OVERLAY (JAPANESE ATMOSPHERE) -->
+  <div class="chess-victory-overlay" id="chessVictoryModal">
+    <div class="chess-victory-card" id="victoryCard">
+      <div class="victory-icon" id="victoryIcon">🏆</div>
+      <div class="victory-title gold" id="victoryTitle">大勝利！(VICTORY!)</div>
+      <div class="victory-desc" id="victoryDesc">「敵将、討ち取ったり！」<br>The Crimson Shogun has fallen in battle! Honor is restored to the Imperial Gold Clan.</div>
+      <div class="victory-actions">
+        <button class="seal-btn" onclick="startNewChessGame()">⚔️ 再戦を挑む (Rematch)</button>
+        <button class="path-btn" onclick="closeVictoryModal()">📜 盤面確認 (Review Board)</button>
+      </div>
+    </div>
   </div>
 
   <!-- UPDATE TICKER MODAL DIALOG -->
@@ -942,45 +941,137 @@
   }
 
   /* ============================================================
-     DATA TAXONOMY (FULL ORIGINAL SETS)
+     ALL ORIGINAL COMPLETE DATA TAXONOMY & SPIELS (100% COMPLETE)
      ============================================================ */
   var CATEGORIES = [
-    {id:"1", label:"Welcome", icon:"🌅"}, {id:"2", label:"Identification Verification", icon:"🪪"},
-    {id:"3", label:"System Verification", icon:"🖥️"}, {id:"4", label:"Clear Desk", icon:"🧹"},
-    {id:"5", label:"Room Scan", icon:"🔍"}, {id:"6", label:"Exam Release", icon:"🚪"},
-    {id:"7", label:"Miscellaneous", icon:"🗂️"}, {id:"8", label:"Warnings", icon:"⚠️"},
-    {id:"9", label:"Technical Support", icon:"🛠️"}, {id:"11", label:"Non-SEB Exams", icon:"🔐"},
-    {id:"12", label:"Termination Messages", icon:"⛔"}, {id:"13", label:"SEB", icon:"🧭"}
+    {id:"1",  label:"Welcome",                 icon:"🌅"},
+    {id:"2",  label:"Identification Verification", icon:"🪪"},
+    {id:"3",  label:"System Verification",         icon:"🖥️"},
+    {id:"4",  label:"Clear Desk",                  icon:"🧹"},
+    {id:"5",  label:"Room Scan",                   icon:"🔍"},
+    {id:"6",  label:"Exam Release",                icon:"🚪"},
+    {id:"7",  label:"Miscellaneous",               icon:"🗂️"},
+    {id:"8",  label:"Warnings",                    icon:"⚠️"},
+    {id:"9",  label:"Technical Support",           icon:"🛠️"},
+    {id:"11", label:"Non-SEB Exams",               icon:"🔐"},
+    {id:"12", label:"Termination Messages",        icon:"⛔"},
+    {id:"13", label:"SEB",                         icon:"🧭"}
   ];
 
   var MESSAGES = [
-    {id:"m1_1", cat:"1", text:"Hello and welcome! I will be your proctor for this exam."},
-    {id:"m1_2", cat:"1", text:"We have a few steps to complete before your exam begins. This time does not count against your exam time limit."},
-    {id:"m2_1", cat:"2", text:"We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera."},
-    {id:"m2_2", cat:"2", text:"Please bring your ID closer to the camera view."},
-    {id:"m2_3", cat:"2", text:"Please hold your ID steady."},
-    {id:"m2_4", cat:"2", text:"Please flip your ID."},
-    {id:"m2_5", cat:"2", text:"Please show the expiration date."},
-    {id:"m2_6", cat:"2", text:"Your ID appears blurry on the screen. Could you please adjust it so it is clearly visible?"},
-    {id:"m2_7", cat:"2", text:"You must present a valid government-issued ID to test today. If you do not have one available, please contact support@certiverse.com."},
-    {id:"m2_8", cat:"2", text:"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match."},
-    {id:"m3_1", cat:"3", text:"Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam."},
-    {id:"m3_2", cat:"3", text:"Please also close the other Certiverse tab, leaving only this one open."},
-    {id:"m3_3", cat:"3", text:"Please open your Task Manager then scroll down slowly until you reach the end of the list."},
-    {id:"m3_6", cat:"3", text:"Please open your Activity Monitor then scroll down slowly until you reach the end of the list."},
-    {id:"m4_1", cat:"4", text:"Thank you. If there are any items on your desk surface, please remove them now."},
-    {id:"m4_2", cat:"4", text:"Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, and headphones."},
-    {id:"m4_3", cat:"4", text:"Headphones are not allowed during the exam. Please remove them and put them away."},
-    {id:"m5_1", cat:"5", text:"We will now scan the room to confirm security policies are followed. Please slowly rotate your webcam 360 degrees around the room."},
-    {id:"m5_4", cat:"5", text:"Please show the area under the desk."},
-    {id:"m6_1", cat:"6", text:"Thank you for your cooperation. You may now click the 'Hide Video' button and 'Hide Chat' to begin your exam. Good luck!"},
-    {id:"m8_1", cat:"8", text:"Please refrain from talking aloud."},
-    {id:"m8_2", cat:"8", text:"Please ensure your face is always within camera view."},
-    {id:"m8_3", cat:"8", text:"Please keep your attention forward on the screen."},
-    {id:"m8_6", cat:"8", text:"Please be reminded that leaving the testing area without proctor permission is against Certiverse rules."},
-    {id:"m9_1", cat:"9", text:"Please check for a physical camera switch or slider on your device and make sure it is in the open position."},
-    {id:"m9_3", cat:"9", text:"Please try to reboot your machine and launch the exam session again."},
-    {id:"m12_1", cat:"12", text:"Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules, we are required to terminate this exam."}
+    // 1. Welcome
+    {id:"m1_1", cat:"1", tags:[], text:"Hello and welcome! I will be your proctor for this exam."},
+    {id:"m1_2", cat:"1", tags:[], text:"We have a few steps to complete before your exam begins. This time does not count against your exam time limit."},
+    {id:"m1_3", cat:"1", tags:[], text:"Please hold while we prepare your exam. Thank you for waiting."},
+
+    // 2. Identification Verification
+    {id:"m2_1", cat:"2", tags:[], text:"We will need to verify your identity before we release the exam. Please show the front of your valid identification (ID) to the camera. You may use the camera preview on your screen as a guide to confirm your ID is fully visible."},
+    {id:"m2_2", cat:"2", tags:[], text:"Please bring your ID closer to the camera view."},
+    {id:"m2_3", cat:"2", tags:[], text:"Please hold your ID steady."},
+    {id:"m2_4", cat:"2", tags:[], text:"Please flip your ID."},
+    {id:"m2_5", cat:"2", tags:[], text:"Please show the expiration date."},
+    {id:"m2_6", cat:"2", tags:[], text:"Your ID appears blurry on the screen. Could you please adjust it, so it is clearly visible? You may try improving the lighting, placing it flat on the desk, or holding it still for a moment."},
+    {id:"m2_7", cat:"2", tags:["critical"], text:"You must present a valid government-issued ID to test today. If you do not have one available, you can contact support@certiverse.com for further assistance in rescheduling."},
+    {id:"m2_8", cat:"2", tags:["critical"], text:"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To proceed, please request a name change by contacting support@certiverse.com."},
+    {id:"m2_9", cat:"2", tags:["critical"], text:"Unfortunately, that is not the name registered for this reservation. Per Certiverse rules, the name on your ID must fully match the exam reservation. To assist you in reaching out to the exam sponsor who will process the name change, please contact support@certiverse.com."},
+    {id:"m2_10", cat:"2", tags:[], text:"Once completed, you can re-enter the reservation and we will continue."},
+    {id:"m2_11", cat:"2", tags:[], text:"Thank you. You may keep your ID away now."},
+
+    // 3. System Verification
+    {id:"m3_1", cat:"3", tags:[], text:"Please make sure that all running applications are closed and shut down. This includes all browser tabs that are not the exam."},
+    {id:"m3_2", cat:"3", tags:[], text:"Please also close the other Certiverse tab, leaving only this one open."},
+    {id:"m3_3", cat:"3", tags:["win"], text:"Please open your Task Manager then scroll down slowly until you reach the end of the list."},
+    {id:"m3_4", cat:"3", tags:["win"], text:"Thank you. You may close the Task Manager now."},
+    {id:"m3_5", cat:"3", tags:["win"], text:"Please open your System Tray by clicking the arrow icon (^) at the bottom-right corner of your taskbar. Right-click each application and close any that offers a 'Quit' or 'Exit' option."},
+    {id:"m3_6", cat:"3", tags:["mac"], text:"Please open your Activity Monitor then scroll down slowly until you reach the end of the list.\n\nYou can find Activity Monitor on a Mac by using Spotlight Search (Command + Spacebar) and typing \"Activity Monitor,\" or by navigating to Applications > Utilities in Finder and double-clicking the app icon."},
+    {id:"m3_7", cat:"3", tags:["mac"], text:"Thank you. You may close the Activity Monitor now."},
+    {id:"m3_8", cat:"3", tags:["mac"], text:"Press Option + Command + Esc simultaneously to open the Force Quit Applications window and ensure all applications not related to the exam are closed."},
+    {id:"m3_9", cat:"3", tags:["linux"], text:"Please open your System Monitor. Please go to the Processes tab and scroll down slowly until you reach the end of the list.\n\nYou can open the System Monitor in Linux through the graphical menu (search for \"System Monitor\" or \"System Tools\"), by running gnome-system-monitor in the terminal or Alt+F2 dialog, or by setting a custom keyboard shortcut (often Ctrl+Shift+Esc or Ctrl+Alt+Del) in your system's Keyboard settings."},
+    {id:"m3_10", cat:"3", tags:["linux"], text:"Thank you. You may close the System Monitor now."},
+    {id:"m3_11", cat:"3", tags:["linux"], text:"Please close or force quit any applications not related to the exam. If needed, select the application and choose “End Process” or “Kill Process."},
+
+    // 4. Clear Desk
+    {id:"m4_1", cat:"4", tags:[], text:"Thank you. If there are any items on your desk surface, please remove them now."},
+    {id:"m4_2", cat:"4", tags:[], text:"Ensure all electronic devices are put away and out of reach. This includes phones, smartwatches, headphones, smart glasses, and any other electronic device."},
+    {id:"m4_3", cat:"4", tags:[], text:"Headphones are not allowed during the exam. Please remove them and put them away."},
+    {id:"m4_4", cat:"4", tags:[], text:"Hats are not allowed during the exam. Please remove your hat and put it away."},
+    {id:"m4_5", cat:"4", tags:[], text:"Please remove your smartwatch and place it out of reach."},
+    {id:"m4_6", cat:"4", tags:[], text:"As outlined in the exam policies, only one laptop or computer without extra screens is allowed. Please remove or cover any additional monitors so they are not facing you directly."},
+
+    // 5. Room Scan
+    {id:"m5_1", cat:"5", tags:[], text:"Thank you. We will now scan the room to confirm that all security policies are followed. Please slowly direct your webcam or laptop camera around the room. You will need to capture the entire room and the area on your desk."},
+    {id:"m5_2", cat:"5", tags:[], text:"When doing the room scan, please hold your laptop or webcam in a way that allows the camera to clearly capture the room. Rotate it slowly and make sure nothing blocks the view, so we can see all areas of your workspace, including the desk, floor, walls, and surrounding environment."},
+    {id:"m5_3", cat:"5", tags:[], text:"Please show us the desk area."},
+    {id:"m5_4", cat:"5", tags:[], text:"Please show the area under the desk."},
+    {id:"m5_5", cat:"5", tags:[], text:"All electronics should be out of reach and turned off."},
+    {id:"m5_6", cat:"5", tags:[], text:"Please ensure your desk is clear of all items."},
+    {id:"m5_7", cat:"5", tags:[], text:"Please direct your camera around the room one more time."},
+    {id:"m5_8", cat:"5", tags:[], text:"Please make sure to capture all corners and edges of your desk during the room scan."},
+    {id:"m5_9", cat:"5", tags:[], text:"Is it possible for you to improve the lighting in your testing area?"},
+    {id:"m5_10", cat:"5", tags:[], text:"The window behind you is creating a backlight effect. Adjusting the lighting or moving slightly would help us proceed."},
+    {id:"m5_11", cat:"5", tags:["critical"], text:"Please ensure that no one else is present and that no one enters or interrupts during the exam, as this is against Certiverse rules and may lead to termination."},
+
+    // 6. Exam Release
+    {id:"m6_1", cat:"6", tags:[], text:"Thank you for your cooperation. You may now click the “Hide Video” button on the left side of this chat box under \"Hide Chat\"."},
+    {id:"m6_2", cat:"6", tags:[], text:"Thank you. Do you have any questions before beginning your exam?"},
+    {id:"m6_3", cat:"6", tags:[], text:"If your session gets disconnected at any point during the exam, please be reminded that we will need to verify the security of your device and environment upon reconnection."},
+    {id:"m6_4", cat:"6", tags:[], text:"Please use this chat if you have any questions that are not related to the exam content. I will now release your exam."},
+    {id:"m6_5", cat:"6", tags:[], text:"You can click the “Hide Chat” button on the left side or the X at the top-right to begin your exam."},
+
+    // 7. Miscellaneous
+    {id:"m7_1", cat:"7", tags:[], text:"Breaks are not allowed for this exam."},
+    {id:"m7_2", cat:"7", tags:[], text:"You may take a 5-minute break during your exam. The session will be paused while you're away and resumed once you return. Please make sure to come back within 5 minutes, as exceeding this time is against Certiverse rules."},
+    {id:"m7_3", cat:"7", tags:[], text:"Please wait briefly while we investigate this issue."},
+    {id:"m7_4", cat:"7", tags:[], text:"Sorry, but we cannot assist with content-related questions."},
+    {id:"m7_5", cat:"7", tags:[], text:"You can email support@certiverse.com for further assistance with rescheduling."},
+    {id:"m7_6", cat:"7", tags:[], text:"Please adjust your camera. Your head and shoulders must remain fully visible during the exam."},
+    {id:"m7_7", cat:"7", tags:[], text:"Welcome back!"},
+    {id:"m7_8", cat:"7", tags:[], text:"Thank you. You may resume now."},
+
+    // 8. Warnings
+    {id:"m8_1", cat:"8", tags:[], text:"Please refrain from talking aloud."},
+    {id:"m8_2", cat:"8", tags:[], text:"Please ensure your face is always within camera view."},
+    {id:"m8_3", cat:"8", tags:[], text:"Please keep your attention forward."},
+    {id:"m8_4", cat:"8", tags:["critical"], text:"Please ask all others to leave the room."},
+    {id:"m8_5", cat:"8", tags:[], text:"Please remain on the exam environment tab only."},
+    {id:"m8_6", cat:"8", tags:["critical"], text:"Please be reminded that leaving the exam testing area without proctor permission is against Certiverse rules and may result in termination."},
+    {id:"m8_7", cat:"8", tags:["critical"], text:"Unfortunately, we are not allowed to release the exam unless all requirements are met."},
+    {id:"m8_8", cat:"8", tags:[], text:"One moment. Kindly lower the angle of your camera so that we can see your head down to your shoulders."},
+    {id:"m8_9", cat:"8", tags:[], text:"One moment. Please adjust your camera angle or position so that your face and shoulders are centered and fully visible on the screen."},
+
+    // 9. Technical Support
+    {id:"m9_1", cat:"9", tags:[], text:"Please check for a camera switch or button on your device. Some laptops have a physical switch that turns the camera on or off. If your laptop has one, make sure it is in the on position before using your camera. Otherwise, please check if your camera has a sliding cover and slide it open."},
+    {id:"m9_2", cat:"9", tags:[], text:"Please click the refresh button on the top left side of the screen."},
+    {id:"m9_3", cat:"9", tags:[], text:"Please try to reboot your machine and launch the exam again."},
+    {id:"m9_4", cat:"9", tags:[], text:"Seems like you are experiencing issues with your session. Can you please close this browser and relaunch your session from the exam dashboard?"},
+    {id:"m9_5", cat:"9", tags:[], text:"I'm no longer able to hear/see you. Please refresh your tab. This will take you back to the initial screen where you can adjust the settings to ensure your mic/screen/camera are properly shared."},
+    {id:"m9_6", cat:"9", tags:[], text:"Please verify that your browser has permission to access your camera, microphone, and screen. You may see a small lock icon or popup at the top of your browser."},
+    {id:"m9_7", cat:"9", tags:[], text:"Please make sure no other applications are using your camera, microphone, or screen sharing, and close any unnecessary programs."},
+    {id:"m9_8", cat:"9", tags:[], text:"It seems that you are having internet issues. We can cancel this reservation so you can reschedule the exam when you can use a more reliable network."},
+    {id:"m9_9", cat:"9", tags:[], text:"I understand. Are you currently on a company network?"},
+    {id:"m9_10", cat:"9", tags:[], text:"Are you currently using a docking station?"},
+    {id:"m9_11", cat:"9", tags:[], text:"Please try to disable any VPN or ZScaler that might be causing the issue. Also, check your browser and computer settings to confirm camera and screen sharing permissions are enabled."},
+    {id:"m9_12", cat:"9", tags:[], text:"It seems like the problem persists. Please contact support@certiverse.com so they can help you complete your setup before we begin the exam."},
+    {id:"m9_13", cat:"9", tags:["critical"], text:"You will have up to 30 minutes to reconnect. Your previous answers will be saved. If it takes more than 30 minutes, the exam will be automatically submitted. Please contact support@certiverse.com for further assistance if needed."},
+    {id:"m9_14", cat:"9", tags:[], text:"Please check the following before starting the exam:\n\nStep 1: Prior to beginning the exam, please verify that you are using the most recent version of Google Chrome or Microsoft Edge.\n\nStep 2: If you are using Google Chrome, and you are experiencing this issue, please switch to Microsoft Edge. If you are experiencing issues in Microsoft Edge, please switch to Google Chrome."},
+
+    // 11. Non-SEB Exams
+    {id:"m11_1", cat:"11", tags:[], text:"Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat."},
+    {id:"m11_2", cat:"11", tags:[], text:"You may hide or move the pop-up screen-sharing message at the bottom center of your screen."},
+
+    // 12. Termination Messages
+    {id:"m12_1", cat:"12", tags:["critical"], text:"Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_2", cat:"12", tags:["critical"], text:"The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_3", cat:"12", tags:["critical"], text:"We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_4", cat:"12", tags:["critical"], text:"Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_5", cat:"12", tags:["critical"], text:"The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance."},
+
+    // 13. SEB
+    {id:"m13_1", cat:"13", tags:[], text:"You may exit the Secure Exam Browser to resolve the issue. Once it is fixed, re-entering SEB will reconnect you so the exam can continue."},
+    {id:"m13_2", cat:"13", tags:[], text:"To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen."},
+    {id:"m13_3", cat:"13", tags:[], text:"To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen."},
+    {id:"m13_4", cat:"13", tags:[], text:"Please try to refresh the SEB and choose a different audio/video input."},
+    {id:"m13_5", cat:"13", tags:["critical"], text:"There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."}
   ];
 
   var POLICIES = [
@@ -1079,7 +1170,17 @@
     if (cb) cb();
   }
 
-  /* RENDER FUNCTIONS */
+  function renderTags(tags) {
+    if (!tags || !tags.length) return "";
+    var out = "";
+    for (var i = 0; i < tags.length; i++) {
+      var t = tags[i];
+      out += '<span class="card-tag ' + t + '">' + t.toUpperCase() + '</span>';
+    }
+    return '<div class="card-tags">' + out + '</div>';
+  }
+
+  /* RENDER SECTIONS */
   var activeExamMode = "nonseb";
   window.setExamMode = function(m) {
     activeExamMode = m;
@@ -1098,7 +1199,10 @@
         html += '<div style="color:var(--text-dim);font-size:0.85rem;">No scripted spiels for this section.</div>';
       } else {
         msgs.forEach(function(m) {
-          html += '<div class="card"><p class="message-text">' + m.text + '</p><button class="seal-btn" onclick="copyDirectText(this,\'' + m.text.replace(/'/g,"\\'") + '\')">🎃 Copy</button></div>';
+          html += '<div class="card">' +
+            '<div>' + renderTags(m.tags) + '<p class="message-text">' + m.text + '</p></div>' +
+            '<button class="seal-btn" onclick="copyDirectText(this,\'' + m.text.replace(/'/g,"\\'") + '\')">🎃 Copy</button>' +
+          '</div>';
         });
       }
       html += '</div></details>';
@@ -1151,7 +1255,10 @@
       return matchC && matchQ;
     });
     list.innerHTML = msgs.map(function(m) {
-      return '<div class="card"><p class="message-text">' + m.text + '</p><button class="seal-btn" onclick="copyDirectText(this,\'' + m.text.replace(/'/g,"\\'") + '\')">🎃 Copy</button></div>';
+      return '<div class="card">' +
+        '<div>' + renderTags(m.tags) + '<p class="message-text">' + m.text + '</p></div>' +
+        '<button class="seal-btn" onclick="copyDirectText(this,\'' + m.text.replace(/'/g,"\\'") + '\')">🎃 Copy</button>' +
+      '</div>';
     }).join("");
   };
 
@@ -1161,7 +1268,7 @@
       return '<div class="card" style="flex-direction:column;align-items:flex-start;">' +
         '<div style="font-weight:800;color:var(--imperial-gold);">' + inf.name + '</div>' +
         '<div style="font-size:0.75rem;margin:4px 0 8px;color:var(--text-dim);">Limit: ' + inf.limit + ' warning(s)</div>' +
-        '<p class="message-text" style="font-size:0.84rem;margin-bottom:10px;">"' + inf.action + '"</p>' +
+        '<p class="message-text" style="font-size:0.88rem;margin-bottom:10px;">"' + inf.action + '"</p>' +
         '<button class="seal-btn" style="min-width:auto;padding:5px 12px;font-size:0.75rem;" onclick="copyDirectText(this,\'' + inf.action.replace(/'/g,"\\'") + '\')">🎃 Copy</button>' +
       '</div>';
     }).join("");
@@ -1178,7 +1285,7 @@
     var items = [
       {label:"Blurry ID Spiel", q:"blurry"}, {label:"Name Mismatch", q:"registered"},
       {label:"Task Manager", q:"Task Manager"}, {label:"Clear Desk", q:"desk surface"},
-      {label:"Privacy Slider", q:"privacy switch"}, {label:"Reboot Machine", q:"reboot"}
+      {label:"Privacy Slider", q:"switch or button"}, {label:"Reboot Machine", q:"reboot"}
     ];
     document.getElementById("quickGrid").innerHTML = items.map(function(it) {
       return '<button class="quick-btn" onclick="runQuickAction(\'' + it.q + '\')">⚡ ' + it.label + '</button>';
@@ -1191,23 +1298,22 @@
   };
 
   /* ============================================================
-     SAMURAI CHESS LOGIC (UNIVERSAL COMMON CHESS PIECES)
+     SAMURAI CHESS (JAPANESE CHARACTER LABELS + USUAL CHESS PIECES)
      ============================================================ */
-  // Classic standard chess symbols + universal labels
   var CHESS_PIECES = {
-    wK: { symbol: "♔", label: "KING", val: 10000 },
-    wQ: { symbol: "♕", label: "QUEEN", val: 900 },
-    wR: { symbol: "♖", label: "ROOK", val: 500 },
-    wB: { symbol: "♗", label: "BISHOP", val: 320 },
-    wN: { symbol: "♘", label: "KNIGHT", val: 300 },
-    wP: { symbol: "♙", label: "PAWN", val: 100 },
+    wK: { symbol: "♔", label: "王将", sub: "KING", val: 10000 },
+    wQ: { symbol: "♕", label: "女王", sub: "QUEEN", val: 900 },
+    wR: { symbol: "♖", label: "飛車", sub: "ROOK", val: 500 },
+    wB: { symbol: "♗", label: "角行", sub: "BISHOP", val: 320 },
+    wN: { symbol: "♘", label: "桂馬", sub: "KNIGHT", val: 300 },
+    wP: { symbol: "♙", label: "歩兵", sub: "PAWN", val: 100 },
 
-    bK: { symbol: "♚", label: "KING", val: 10000 },
-    bQ: { symbol: "♛", label: "QUEEN", val: 900 },
-    bR: { symbol: "♜", label: "ROOK", val: 500 },
-    bB: { symbol: "♝", label: "BISHOP", val: 320 },
-    bN: { symbol: "♞", label: "KNIGHT", val: 300 },
-    bP: { symbol: "♟", label: "PAWN", val: 100 }
+    bK: { symbol: "♚", label: "覇王", sub: "KING", val: 10000 },
+    bQ: { symbol: "♛", label: "黒后", sub: "QUEEN", val: 900 },
+    bR: { symbol: "♜", label: "砦車", sub: "ROOK", val: 500 },
+    bB: { symbol: "♝", label: "忍角", sub: "BISHOP", val: 320 },
+    bN: { symbol: "♞", label: "黒騎", sub: "KNIGHT", val: 300 },
+    bP: { symbol: "♟", label: "足軽", sub: "PAWN", val: 100 }
   };
 
   var chessBoard = [];
@@ -1238,6 +1344,7 @@
     chessGameOver = false;
     chessWhiteCaps = [];
     chessBlackCaps = [];
+    closeVictoryModal();
   }
 
   window.setChessDifficulty = function(lvl) {
@@ -1257,8 +1364,7 @@
       for (var c = 0; c < 8; c++) {
         var sq = document.createElement("div");
         sq.className = "chess-sq " + ((r + c) % 2 === 0 ? "sq-light" : "sq-dark");
-        sq.dataset.r = r;
-        sq.dataset.c = c;
+        sq.dataset.r = r; sq.dataset.c = c;
 
         if (lastMove && ((lastMove.from.r === r && lastMove.from.c === c) || (lastMove.to.r === r && lastMove.to.c === c))) {
           sq.classList.add("sq-last-from");
@@ -1378,6 +1484,33 @@
     return all;
   }
 
+  function showVictoryModal(isWhiteWinner) {
+    var overlay = document.getElementById("chessVictoryModal");
+    var card = document.getElementById("victoryCard");
+    var icon = document.getElementById("victoryIcon");
+    var title = document.getElementById("victoryTitle");
+    var desc = document.getElementById("victoryDesc");
+
+    if (isWhiteWinner) {
+      card.className = "chess-victory-card";
+      icon.textContent = "🏆";
+      title.className = "victory-title gold";
+      title.textContent = "大勝利！(VICTORY!)";
+      desc.innerHTML = "「敵将、討ち取ったり！」<br>The Crimson Shogun has fallen in battle! Honor is restored to the Imperial Gold Clan.";
+    } else {
+      card.className = "chess-victory-card defeat";
+      icon.textContent = "💀";
+      title.className = "victory-title red";
+      title.textContent = "無念の敗北... (DEFEAT...)";
+      desc.innerHTML = "「我が軍の王将が討ち取られた...」<br>Your King has fallen! The Crimson Shadow Clan now controls the Kyoto Estate.";
+    }
+    overlay.style.display = "flex";
+  }
+
+  window.closeVictoryModal = function() {
+    document.getElementById("chessVictoryModal").style.display = "none";
+  };
+
   function executeMove(m) {
     var p = chessBoard[m.from.r][m.from.c];
     var cap = chessBoard[m.to.r][m.to.c];
@@ -1394,7 +1527,8 @@
       else chessBlackCaps.push(cap);
       if (cap[1] === "K") {
         chessGameOver = true;
-        document.getElementById("chessStatusText").textContent = p[0] === "w" ? "🏆 Victory! The Shogun King has fallen!" : "💀 Defeat! Your King was captured!";
+        document.getElementById("chessStatusText").textContent = p[0] === "w" ? "🏆 勝利！王手を討ち取りました (Victory!)" : "💀 敗北... 王将が討ち取られました (Defeat!)";
+        showVictoryModal(p[0] === "w");
       }
     }
 
@@ -1406,8 +1540,8 @@
     }
 
     var files = ["a","b","c","d","e","f","g","h"];
-    var not = (p[0] === "w" ? "Gold " : "Crimson ") + CHESS_PIECES[p].label + " (" + files[m.from.c] + (8 - m.from.r) + " → " + files[m.to.c] + (8 - m.to.r) + ")";
-    if (cap) not += " ⚔️ captured " + CHESS_PIECES[cap].label;
+    var not = (p[0] === "w" ? "白軍 " : "黒軍 ") + CHESS_PIECES[p].label + " (" + files[m.from.c] + (8 - m.from.r) + " → " + files[m.to.c] + (8 - m.to.r) + ")";
+    if (cap) not += " ⚔️ 撃破: " + CHESS_PIECES[cap].label;
     var log = document.getElementById("chessMovesLog");
     log.innerHTML += "<p>" + not + "</p>";
     log.scrollTop = log.scrollHeight;
@@ -1416,14 +1550,15 @@
   }
 
   function triggerAiMove() {
-    document.getElementById("chessStatusText").textContent = "Shogun AI is calculating move...";
+    document.getElementById("chessStatusText").textContent = "将軍思案中... (Shogun AI is calculating move...)";
     document.getElementById("chessThinking").style.display = "inline-block";
     setTimeout(function() {
       if (chessGameOver) return;
       var moves = getAllMoves(chessBoard, "b");
       if (!moves.length) {
-        document.getElementById("chessStatusText").textContent = "Checkmate! Victory to Imperial Clan!";
+        document.getElementById("chessStatusText").textContent = "詰み！白軍の勝利！ (Checkmate! Victory to Imperial Clan!)";
         chessGameOver = true;
+        showVictoryModal(true);
         return;
       }
 
@@ -1440,7 +1575,7 @@
         executeMove(chosen);
         renderChessBoard(chosen);
         document.getElementById("chessThinking").style.display = "none";
-        if (!chessGameOver) document.getElementById("chessStatusText").textContent = "Your turn &mdash; Select your warrior piece.";
+        if (!chessGameOver) document.getElementById("chessStatusText").textContent = "手番: あなたの番です (Your turn — Select warrior piece)";
       }
     }, 450);
   }
@@ -1487,18 +1622,18 @@
   window.startNewChessGame = function() {
     initChessBoard();
     renderChessBoard();
-    document.getElementById("chessStatusText").textContent = "New battle started. Your turn (White).";
-    document.getElementById("chessMovesLog").innerHTML = "<p>⚔️ Dojo match initiated.</p>";
+    document.getElementById("chessStatusText").textContent = "新局開始。白軍の先手です。(New game started. Your turn)";
+    document.getElementById("chessMovesLog").innerHTML = "<p>⚔️ 対局開始。陣形を整えよ。</p>";
   };
 
   window.restartChessGame = function() {
-    if (confirm("Reset current match to beginning?")) window.startNewChessGame();
+    if (confirm("対局を初期状態にリセットしますか？ (Restart match from initial state?)")) window.startNewChessGame();
   };
 
   window.undoChessMove = function() {
-    if (chessHistory.length < 2) { alert("No moves to undo!"); return; }
-    chessHistory.pop(); // Pop AI move
-    var prev = chessHistory.pop(); // Pop White move
+    if (chessHistory.length < 2) { alert("待ったはこれ以上できません (No moves to undo!)"); return; }
+    chessHistory.pop();
+    var prev = chessHistory.pop();
     chessBoard = prev.board;
     chessTurn = prev.turn;
     chessWhiteCaps = prev.wCaps;
@@ -1506,12 +1641,13 @@
     chessGameOver = false;
     chessSelectedSq = null;
     chessLegalMoves = [];
+    closeVictoryModal();
     renderChessBoard();
-    document.getElementById("chessStatusText").textContent = "Move undone. Your turn.";
+    document.getElementById("chessStatusText").textContent = "一手戻しました。あなたの番です。(Move undone. Your turn)";
   };
 
   /* ============================================================
-     VIEW CONTROLLER & SIDEBAR LINKS
+     VIEW CONTROLLER
      ============================================================ */
   window.switchView = function(viewId, btn) {
     document.querySelectorAll(".dashboard-view").forEach(function(v){ v.classList.remove("active"); });
@@ -1537,10 +1673,10 @@
         return '<li><button onclick="renderCheckin()">' + c.icon + ' ' + c.label + '</button></li>';
       }).join("");
     } else if (viewId === "view-chess") {
-      label.textContent = "Chess Controls";
-      list.innerHTML = '<li><button onclick="startNewChessGame()">⚔️ New Match</button></li>' +
-                       '<li><button onclick="undoChessMove()">↩️ Undo Turn</button></li>' +
-                       '<li><button onclick="restartChessGame()">🔄 Restart Board</button></li>';
+      label.textContent = "将棋道場操作 (Controls)";
+      list.innerHTML = '<li><button onclick="startNewChessGame()">⚔️ 対局開始 (New Match)</button></li>' +
+                       '<li><button onclick="undoChessMove()">↩️ 待った (Undo Move)</button></li>' +
+                       '<li><button onclick="restartChessGame()">🔄 再開 (Restart)</button></li>';
     } else {
       label.textContent = "Dojo Sections";
       list.innerHTML = '<li><button onclick="window.scrollTo({top:0,behavior:\'smooth\'})">Top of Page</button></li>';
