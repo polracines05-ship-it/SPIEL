@@ -49,7 +49,7 @@
     position: relative;
     overflow-x: hidden;
   }
-  .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none !important; }
+  .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
   /* Blood Moon */
   .blood-moon {
     position: absolute;
@@ -214,8 +214,8 @@
   .scene-vignette { 
     position: fixed; 
     inset: 0; 
-    pointer-events: none; 
-    z-index: 0; 
+    pointer-events: none;
+    z-index: 0;
     box-shadow: inset 0 0 200px 70px rgba(5, 3, 2, 0.9); 
   }
   /* KYOTO SAMURAI DOJO COMPOUND */
@@ -226,7 +226,7 @@
     filter: drop-shadow(0 -10px 30px rgba(217, 119, 6, 0.5));
   }
   .kyoto-dojo-estate svg { width: 100%; height: 100%; display: block; }
-  #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none !important; }
+  #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
   /* Card Glows */
   .card, 
   .trouble-card, 
@@ -258,7 +258,6 @@
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     display: flex; flex-direction: column; padding: 0;
     box-shadow: 12px 0 35px rgba(0, 0, 0, 0.75);
-    pointer-events: auto !important;
   }
   .sidebar::before {
     content: ""; display: block; height: 4px; width: 100%; flex-shrink: 0;
@@ -325,7 +324,7 @@
   /* ============================================================
      MAIN CONTENT & CLEAN STAGED HERO
      ============================================================ */
-  .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 22px 38px 60px; min-width: 0; pointer-events: auto !important; }
+  .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 22px 38px 60px; min-width: 0; }
   .top-banner-row {
     display: flex;
     justify-content: space-between;
@@ -543,6 +542,7 @@
     justify-content: center;
     gap: 6px;
   }
+  
   .org-name {
     font-size: 0.92rem;
     color: var(--text-main);
@@ -652,6 +652,7 @@
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 8px;
   }
+  
   .org-member-item {
     background: var(--card-bg);
     border: 1px solid var(--border-soft);
@@ -880,176 +881,6 @@
     margin-bottom: 16px; outline: none; resize: vertical;
   }
   .dojo-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
-
-  /* ============================================================
-     SPACE IMPACT — STYLES
-     ============================================================ */
-  .si-shell {
-    border: 1px solid var(--border-line);
-    border-radius: 14px;
-    background: var(--panel-bg);
-    padding: 16px;
-    box-shadow: 0 10px 34px rgba(0,0,0,.72), 0 0 26px rgba(217,119,6,.18);
-  }
-  .si-topbar {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-    padding-bottom: 12px;
-    margin-bottom: 12px;
-    border-bottom: 1px solid var(--border-line);
-  }
-  .si-brand {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    font-family: var(--font-head);
-    letter-spacing: .1em;
-  }
-  .si-brand-chip {
-    background: var(--pumpkin-bright);
-    color: #160b04;
-    font-weight: 900;
-    font-size: .78rem;
-    padding: 3px 9px;
-    border-radius: 3px;
-  }
-  .si-brand-word {
-    font-size: 1.16rem;
-    font-weight: 900;
-    color: var(--text-main);
-    text-transform: uppercase;
-  }
-  .si-brand-tag {
-    font-size: .6rem;
-    letter-spacing: .22em;
-    color: var(--imperial-gold);
-    text-transform: uppercase;
-    font-weight: 800;
-  }
-  .si-stats {
-    display: flex;
-    gap: 10px;
-    margin-left: auto;
-    flex-wrap: wrap;
-  }
-  .si-stat {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    background: rgba(18,14,12,.85);
-    border: 1px solid var(--border-line);
-    border-radius: 8px;
-    padding: 5px 11px;
-    min-width: 82px;
-  }
-  .si-stat-k {
-    font-size: .55rem;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-weight: 800;
-  }
-  .si-stat-v {
-    font-family: 'Courier New', monospace;
-    font-size: .86rem;
-    font-weight: 800;
-    color: var(--imperial-gold);
-    letter-spacing: .06em;
-  }
-  .si-sound {
-    background: rgba(255,255,255,.05);
-    border: 1px solid var(--border-line);
-    color: var(--text-dim);
-    border-radius: 8px;
-    padding: 8px 13px;
-    font-size: .66rem;
-    font-weight: 800;
-    letter-spacing: .12em;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all .2s ease;
-  }
-  .si-sound:hover {
-    border-color: var(--pumpkin-bright);
-    color: var(--imperial-gold);
-    background: rgba(255,102,0,.16);
-  }
-  .si-screen {
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 2px solid #2a352b;
-    background: #050807;
-    box-shadow: inset 0 0 46px rgba(0,0,0,.95), 0 0 22px rgba(120,180,120,.12);
-  }
-  #siCanvas {
-    display: block;
-    width: 100%;
-    height: auto;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-    touch-action: none;
-    cursor: default;
-  }
-  .si-scan {
-    position: absolute;
-    inset: 0;
-    pointer-events: none !important;
-    background: linear-gradient(180deg, rgba(232,246,227,.05), rgba(0,0,0,.14) 60%, rgba(0,0,0,.3));
-    mix-blend-mode: screen;
-  }
-  .si-legend {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-top: 12px;
-    font-family: 'Courier New', monospace;
-    font-size: .66rem;
-    letter-spacing: .08em;
-    color: var(--text-dim);
-  }
-  .si-key {
-    display: inline-flex;
-    gap: 6px;
-    align-items: baseline;
-  }
-  .si-key em {
-    color: var(--imperial-gold);
-    font-style: normal;
-    text-transform: uppercase;
-    font-size: .58rem;
-    letter-spacing: .14em;
-  }
-  .si-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 12px;
-    margin-top: 16px;
-  }
-  .si-card {
-    border: 1px solid var(--border-line);
-    border-left: 4px solid var(--lantern-orange);
-    border-radius: 10px;
-    padding: 14px 16px;
-    background: var(--card-bg);
-  }
-  .si-card h3 {
-    font-family: var(--font-head);
-    font-size: .82rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--imperial-gold);
-    margin-bottom: 8px;
-  }
-  .si-card p {
-    font-size: .8rem;
-    line-height: 1.6;
-    color: var(--text-dim);
-  }
-  .si-card p strong { color: var(--text-main); }
-
   @media (max-width: 960px) {
     .sidebar { width: 260px; }
     .org-teams-branch { flex-direction: column; align-items: center; gap: 16px; }
@@ -1057,10 +888,6 @@
     .org-team-column::before { display: none; }
     .hero-pumpkin { display: none; }
     .white-lady-spirit { display: none; }
-  }
-  @media (max-width: 760px) {
-    .si-stats { margin-left: 0; }
-    .si-brand-tag { display: none; }
   }
   @media (max-width: 640px) {
     body { flex-direction: column; }
@@ -1084,7 +911,9 @@
 <body>
   <!-- ================= ATMOSPHERIC SCENE ================= -->
   <div class="scene" aria-hidden="true">
+    <!-- Blood Moon -->
     <div class="blood-moon"></div>
+    <!-- FLYING WITCH -->
     <div class="flying-witch">
       <svg viewBox="0 0 160 120" fill="none">
         <polygon points="62,12 82,38 48,36" fill="#120e0b"/>
@@ -1100,6 +929,7 @@
         <circle cx="95" cy="57" r="3.5" fill="#120e0b"/>
       </svg>
     </div>
+    <!-- CLASSIC WHITE GHOSTS -->
     <div class="classic-ghost ghost-left">
       <svg viewBox="0 0 100 120" fill="none">
         <path d="M 50 15 C 25 15, 18 45, 20 85 C 22 105, 12 115, 24 116 C 34 118, 38 104, 48 116 C 58 126, 64 105, 74 116 C 84 126, 92 104, 98 114 C 104 110, 96 90, 96 80 C 96 45, 85 15, 50 15 Z" 
@@ -1118,6 +948,7 @@
         <ellipse cx="52" cy="70" rx="6" ry="10" fill="#120e0b"/>
       </svg>
     </div>
+    <!-- THE SMILING WHITE LADY APPARITION -->
     <div class="white-lady-spirit" title="White Lady">
       <svg viewBox="0 0 140 240" fill="none">
         <defs>
@@ -1139,6 +970,7 @@
         <path d="M 60 54 Q 70 63 80 54" stroke="#ff2222" stroke-width="1.6" stroke-linecap="round" fill="none"/>
       </svg>
     </div>
+    <!-- Dangling Spider -->
     <div class="dangling-spider-box">
       <div class="spider-silk"></div>
       <svg viewBox="0 0 30 30" width="30" height="30" fill="#120e0b">
@@ -1149,6 +981,7 @@
         <path d="M12 12 Q4 8 2 14 M18 12 Q26 8 28 14 M12 15 Q3 17 2 24 M18 15 Q27 17 28 24 M12 17 Q5 23 6 29 M18 17 Q25 23 24 29" stroke="#ff6600" stroke-width="1.5" fill="none"/>
       </svg>
     </div>
+    <!-- Flying Bats -->
     <div class="bat-group">
       <svg viewBox="0 0 1000 200" style="width:100%; height:100%; opacity:0.7;">
         <path d="M 100 80 Q 110 60 120 70 Q 130 60 140 80 Q 120 85 100 80 Z" fill="#000"/>
@@ -1156,8 +989,10 @@
         <path d="M 600 50 Q 610 35 620 45 Q 630 35 640 50 Q 620 55 600 50 Z" fill="#000"/>
       </svg>
     </div>
+    <!-- Blinking Eyes -->
     <div class="creepy-eyes eyes-1"><div class="eye-pupil"></div><div class="eye-pupil"></div></div>
     <div class="creepy-eyes eyes-2"><div class="eye-pupil"></div><div class="eye-pupil"></div></div>
+    <!-- Cobwebs -->
     <div class="cobweb-left">
       <svg viewBox="0 0 100 100" fill="none" stroke="#ff8800" stroke-width="0.8">
         <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" />
@@ -1170,6 +1005,7 @@
         <path d="M 20,0 Q 20,20 0,20 M 40,0 Q 40,40 0,40 M 60,0 Q 60,60 0,60 M 80,0 Q 80,80 0,80" />
       </svg>
     </div>
+    <!-- AUTHENTIC KYOTO-ERA SAMURAI DOJO ESTATE -->
     <div class="kyoto-dojo-estate">
       <svg viewBox="0 0 1400 320" preserveAspectRatio="none">
         <defs>
@@ -1182,10 +1018,14 @@
             <stop offset="100%" stop-color="#ff5500"/>
           </linearGradient>
         </defs>
+        <!-- Courtyard Stone Foundation Base -->
         <rect x="0" y="282" width="1400" height="38" fill="#0d0907"/>
         <line x1="0" y1="282" x2="1400" y2="282" stroke="#4a3425" stroke-width="3"/>
+        <!-- ================= LEFT DOJO WING ================= -->
         <g fill="#140e0a" stroke="#362218" stroke-width="2">
+          <!-- Main Body -->
           <rect x="40" y="165" width="310" height="117"/>
+          <!-- Shoji Lattice Windows -->
           <rect x="65" y="195" width="110" height="65" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="2.5"/>
           <line x1="102" y1="195" x2="102" y2="260" stroke="#2b1a11" stroke-width="2"/>
           <line x1="138" y1="195" x2="138" y2="260" stroke="#2b1a11" stroke-width="2"/>
@@ -1196,11 +1036,16 @@
           <line x1="278" y1="195" x2="278" y2="260" stroke="#2b1a11" stroke-width="2"/>
           <line x1="205" y1="216" x2="315" y2="216" stroke="#2b1a11" stroke-width="1.8"/>
           <line x1="205" y1="238" x2="315" y2="238" stroke="#2b1a11" stroke-width="1.8"/>
+          <!-- Veranda (Engawa) -->
           <rect x="25" y="270" width="340" height="12" fill="#241710" stroke="#3d271b" stroke-width="2"/>
+          <!-- Swept Tiled Eave (Sori) -->
           <path d="M 10 170 Q 180 135 370 162 L 350 178 Q 180 148 30 180 Z" fill="#0d0907" stroke="#4a3020" stroke-width="2"/>
         </g>
+        <!-- ================= RIGHT DOJO WING ================= -->
         <g fill="#140e0a" stroke="#362218" stroke-width="2">
+          <!-- Main Body -->
           <rect x="1050" y="165" width="310" height="117"/>
+          <!-- Shoji Lattice Windows -->
           <rect x="1075" y="195" width="110" height="65" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="2.5"/>
           <line x1="1112" y1="195" x2="1112" y2="260" stroke="#2b1a11" stroke-width="2"/>
           <line x1="1148" y1="195" x2="1148" y2="260" stroke="#2b1a11" stroke-width="2"/>
@@ -1211,12 +1056,19 @@
           <line x1="1288" y1="195" x2="1288" y2="260" stroke="#2b1a11" stroke-width="2"/>
           <line x1="1215" y1="216" x2="1325" y2="216" stroke="#2b1a11" stroke-width="1.8"/>
           <line x1="1215" y1="238" x2="1325" y2="238" stroke="#2b1a11" stroke-width="1.8"/>
+          <!-- Veranda (Engawa) -->
           <rect x="1035" y="270" width="340" height="12" fill="#241710" stroke="#3d271b" stroke-width="2"/>
+          <!-- Swept Tiled Eave (Sori) -->
           <path d="M 1030 162 Q 1220 135 1390 170 L 1370 180 Q 1220 148 1050 178 Z" fill="#0d0907" stroke="#4a3020" stroke-width="2"/>
         </g>
+        <!-- ================= CENTRAL GRAND MARTIAL ARTS DOJO HALL ================= -->
+        <!-- Grand Lower Hall & Entrance -->
         <rect x="440" y="145" width="520" height="137" fill="#140e0a" stroke="#362218" stroke-width="3"/>
+        <!-- Massive Backlit Shoji Training Hall Entrance -->
         <rect x="530" y="180" width="340" height="95" fill="url(#shojiGlow)" stroke="#2b1a11" stroke-width="3"/>
+        <!-- Central Red Torii-Style Dojo Gateway Frame -->
         <rect x="670" y="180" width="60" height="95" fill="#8f1d1d" stroke="#1f0808" stroke-width="2"/>
+        <!-- Lattice Bars across Shoji -->
         <line x1="572" y1="180" x2="572" y2="275" stroke="#2b1a11" stroke-width="2.5"/>
         <line x1="615" y1="180" x2="615" y2="275" stroke="#2b1a11" stroke-width="2.5"/>
         <line x1="785" y1="180" x2="785" y2="275" stroke="#2b1a11" stroke-width="2.5"/>
@@ -1224,20 +1076,28 @@
         <line x1="530" y1="205" x2="870" y2="205" stroke="#2b1a11" stroke-width="2"/>
         <line x1="530" y1="228" x2="870" y2="228" stroke="#2b1a11" stroke-width="2"/>
         <line x1="530" y1="252" x2="870" y2="252" stroke="#2b1a11" stroke-width="2"/>
+        <!-- Cedar Pillars Supporting Pent Roof -->
         <rect x="450" y="150" width="16" height="130" fill="#241710" stroke="#110a07" stroke-width="2"/>
         <rect x="520" y="150" width="14" height="130" fill="#241710" stroke="#110a07" stroke-width="2"/>
         <rect x="866" y="150" width="14" height="130" fill="#241710" stroke="#110a07" stroke-width="2"/>
         <rect x="934" y="150" width="16" height="130" fill="#241710" stroke="#110a07" stroke-width="2"/>
+        <!-- Lower Sweeping Pent Roof (Hisashi) -->
         <path d="M 390 155 Q 700 112 1010 155 L 980 172 Q 700 128 420 172 Z" fill="#0c0806" stroke="#5c3c26" stroke-width="3"/>
+        <!-- Upper Hip-and-Gable Floor (Irimoya-zukuri Level) -->
         <rect x="510" y="70" width="380" height="75" fill="#140e0a" stroke="#362218" stroke-width="2.5"/>
+        <!-- Upper Gable Wooden Slatting (Kegyo Vent) -->
         <polygon points="700,74 610,128 790,128" fill="#21150f" stroke="#3d271b" stroke-width="2"/>
         <line x1="700" y1="74" x2="700" y2="128" stroke="#3d271b" stroke-width="2"/>
         <line x1="670" y1="92" x2="670" y2="128" stroke="#3d271b" stroke-width="1.8"/>
         <line x1="730" y1="92" x2="730" y2="128" stroke="#3d271b" stroke-width="1.8"/>
+        <!-- Grand Sweeping Pagoda Temple Roof -->
         <path d="M 430 75 Q 700 24 970 75 Q 940 88 910 82 Q 700 42 490 82 Q 460 88 430 75 Z" fill="#080504" stroke="#66432b" stroke-width="3.5"/>
+        <!-- Ornate Roof Ridge Cap & Onigawara Finials -->
         <path d="M 445 74 Q 425 64 435 52 Q 445 64 455 72" fill="#523522" stroke="#2b1a11" stroke-width="2"/>
         <path d="M 955 74 Q 975 64 965 52 Q 955 64 945 72" fill="#523522" stroke="#2b1a11" stroke-width="2"/>
         <rect x="685" y="24" width="30" height="10" fill="#523522" rx="2"/>
+        <!-- ================= TRADITIONAL CARVED STONE LANTERNS (ISHI-DŌRŌ) ================= -->
+        <!-- Left Stone Lantern -->
         <g transform="translate(385, 175)">
           <circle cx="20" cy="18" r="4.5" fill="#54483e"/>
           <path d="M 0 34 Q 20 22 40 34 L 35 40 Q 20 30 5 40 Z" fill="#362f29" stroke="#1f1a16" stroke-width="1.5"/>
@@ -1247,6 +1107,7 @@
           <rect x="15" y="68" width="10" height="30" fill="#2b231c" stroke="#17120e" stroke-width="1.5"/>
           <polygon points="5,98 35,98 38,107 2,107" fill="#362f29" stroke="#1f1a16" stroke-width="2"/>
         </g>
+        <!-- Right Stone Lantern -->
         <g transform="translate(975, 175)">
           <circle cx="20" cy="18" r="4.5" fill="#54483e"/>
           <path d="M 0 34 Q 20 22 40 34 L 35 40 Q 20 30 5 40 Z" fill="#362f29" stroke="#1f1a16" stroke-width="1.5"/>
@@ -1256,6 +1117,7 @@
           <rect x="15" y="68" width="10" height="30" fill="#2b231c" stroke="#17120e" stroke-width="1.5"/>
           <polygon points="5,98 35,98 38,107 2,107" fill="#362f29" stroke="#1f1a16" stroke-width="2"/>
         </g>
+        <!-- Subtle Courtyard Jack-o'-Lanterns by the Grand Steps -->
         <g transform="translate(500, 266)">
           <ellipse cx="14" cy="14" rx="13" ry="11" fill="#ff6600"/>
           <polygon points="9,10 12,10 10.5,6" fill="#120e0b"/>
@@ -1289,7 +1151,6 @@
       <button class="view-btn" data-view="view-threshold" onclick="switchView('view-threshold', this)"><span class="vi">⚠️</span> Threshold Center</button>
       <button class="view-btn" data-view="view-policies" onclick="switchView('view-policies', this)"><span class="vi">🦇</span> Client Policies</button>
       <button class="view-btn" data-view="view-faq" onclick="switchView('view-faq', this)"><span class="vi">🎋</span> FAQ Archive</button>
-      <button class="view-btn" data-view="view-space-impact" onclick="switchView('view-space-impact', this)"><span class="vi">🚀</span> Space Impact</button>
       <button class="view-btn" style="border-color:var(--pumpkin-bright);" onclick="openTickerAdmin()"><span class="vi">🎃</span> Update Ticker</button>
     </div>
     <div class="nav-label" id="sidebarSublabel">Navigation Details</div>
@@ -1350,6 +1211,7 @@
       <!-- ORGANIZATIONAL CHART -->
       <div class="org-chart-container">
         <h3 class="section-title" style="border:none;margin-bottom:20px;justify-content:center;">⛩️ FiveActs Dojo Command Hierarchy</h3>
+        
         <div class="org-tree">
           <div class="org-node root">
             <div class="org-title">President</div>
@@ -1435,6 +1297,7 @@
     <div id="view-checkin" class="dashboard-view">
       <h2 class="page-title">Check-In Steps</h2>
       <p class="page-sub">Work sequentially through categories 1&ndash;13. Select an exam mode below to configure steps.</p>
+      
       <div class="path-selector-box">
         <span style="font-size:0.8rem;font-weight:800;color:var(--imperial-gold);">Exam Mode Configuration:</span>
         <button class="path-btn active" id="btn-mode-nonseb" onclick="setExamMode('nonseb')">Non-SEB</button>
@@ -2159,51 +2022,6 @@
         </div>
       </div>
     </div>
-    <!-- SPACE IMPACT VIEW -->
-    <div id="view-space-impact" class="dashboard-view">
-      <h2 class="page-title">Space Impact</h2>
-      <p class="page-sub">Campaign flight deck. Six sectors, three lives, one automatic cannon. Dodge, collect, survive.</p>
-      <div class="si-shell">
-        <div class="si-topbar">
-          <div class="si-brand">
-            <span class="si-brand-chip">SPACE</span>
-            <span class="si-brand-word">IMPACT</span>
-            <span class="si-brand-tag">PROTOCOL EDITION</span>
-          </div>
-          <div class="si-stats">
-            <div class="si-stat"><span class="si-stat-k">High Score</span><span class="si-stat-v" id="siHighScore">000000</span></div>
-            <div class="si-stat"><span class="si-stat-k">Sectors</span><span class="si-stat-v" id="siBestSector">1 / 6</span></div>
-            <div class="si-stat"><span class="si-stat-k">Status</span><span class="si-stat-v" id="siStatus">STANDBY</span></div>
-          </div>
-          <button type="button" class="si-sound" id="siSoundBtn" onclick="SpaceImpact.toggleSound()">SOUND ON</button>
-        </div>
-        <div class="si-screen">
-          <canvas id="siCanvas" width="800" height="480" aria-label="Space Impact game screen"></canvas>
-          <div class="si-scan" aria-hidden="true"></div>
-        </div>
-        <div class="si-legend">
-          <span class="si-key">W A S D / ARROWS <em>move</em></span>
-          <span class="si-key">SPACE <em>special</em></span>
-          <span class="si-key">ESC <em>pause</em></span>
-          <span class="si-key">CANNON <em>auto-fire</em></span>
-          <span class="si-key">M <em>mute</em></span>
-        </div>
-      </div>
-      <div class="si-cards">
-        <div class="si-card">
-          <h3>Power-Ups</h3>
-          <p><strong>W</strong> weapon up · <strong>R</strong> rapid fire · <strong>S</strong> spread shot · <strong>M</strong> homing missiles · <strong>B</strong> barrier · <strong>H</strong> hull repair · <strong>P</strong> bonus points</p>
-        </div>
-        <div class="si-card">
-          <h3>Flight Manual</h3>
-          <p>The cannon fires on its own. Bank between enemy formations, let your special charge to full, then press SPACE to clear the screen and shred everything in front of you.</p>
-        </div>
-        <div class="si-card">
-          <h3>Campaign</h3>
-          <p>Six handcrafted sectors, three mid-boss encounters, six capital-ship battles and a three-phase finale. Sectors unlock as you clear them and are remembered locally.</p>
-        </div>
-      </div>
-    </div>
   </div>
   <!-- UPDATE TICKER MODAL DIALOG -->
   <div class="dojo-modal-overlay" id="tickerModal">
@@ -2217,7 +2035,6 @@
       </div>
     </div>
   </div>
-
 <script>
 (function(){
   "use strict";
@@ -2365,4 +2182,775 @@
     // 11. Non-SEB Exams
     {id:"m11_1", cat:"11", tags:[], text:"Click on the 'Enter Full Screen' button that you will find in the bottom center of the screen after you hide this chat."},
     {id:"m11_2", cat:"11", tags:[], text:"You may hide or move the pop-up screen-sharing message at the bottom center of your screen."},
-    // 12
+    // 12. Termination Messages
+    {id:"m12_1", cat:"12", tags:["critical"], term:"prohibited-app", text:"Remote Desktop Applications are prohibited. We have confirmed the use of one during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_2", cat:"12", tags:["critical"], term:"prohibited-device", text:"The use of mobile phones is prohibited. We have confirmed its use during this session. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_3", cat:"12", tags:["critical"], term:"break-overage", text:"We have noticed a failure to return from break. Under Certiverse rules and to maintain exam integrity, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_4", cat:"12", tags:["critical"], term:"foul-language", text:"Disrespectful or abusive language towards your proctor is prohibited. Under Certiverse rules, we are required to terminate this exam. If you have any questions, please reach out to support@certiverse.com."},
+    {id:"m12_5", cat:"12", tags:["critical"], term:"integrity-compromised", text:"The integrity of this exam has been compromised. We are obliged to terminate your session. Please reach out to support@certiverse.com for further assistance."},
+    // 13. SEB
+    {id:"m13_1", cat:"13", tags:[], text:"You may exit the Secure Exam Browser to resolve the issue. Once it is fixed, re-entering SEB will reconnect you so the exam can continue."},
+    {id:"m13_2", cat:"13", tags:[], text:"To exit Safe Exam Browser, please click the power icon located in the bottom-right corner of the screen."},
+    {id:"m13_3", cat:"13", tags:[], text:"To refresh Safe Exam Browser, please click the refresh icon located in the upper-left corner of the screen."},
+    {id:"m13_4", cat:"13", tags:[], text:"Please try to refresh the SEB and choose a different audio/video input."},
+    {id:"m13_5", cat:"13", tags:["critical"], text:"There appears to be a problem with your SEB version. Please contact support@certiverse.com to resolve this and continue with the exam."}
+  ];
+  function findMessageById(id){
+    for (var i=0;i<MESSAGES.length;i++){ if (MESSAGES[i].id===id) return MESSAGES[i]; }
+    return null;
+  }
+  function findByTerm(term){
+    for (var i=0;i<MESSAGES.length;i++){ if (MESSAGES[i].term===term) return MESSAGES[i]; }
+    return null;
+  }
+  /* ============================================================
+     POLICIES Data
+     ============================================================ */
+  var POLICIES = [
+    ["Akylade","Allowed","One (1) five (5) minute break","Name must match govt. ID","SEB","Not allowed"],
+    ["Atlassian","Not allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["Blue Prism","Allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["BMC","Not allowed","One (1) five (5) minute break","Name must match govt. ID","SEB","Allowed"],
+    ["Camunda","Not allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["Casbo","Not allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["Docusign","Not allowed","None","Nicknames allowed","SEB","Not allowed"],
+    ["Hashicorp","Not allowed","None (Vault Prof: one (1) fifteen (15) minute break)","Name must match govt. ID","Non-SEB","Not allowed"],
+    ["Intersystems","Not allowed","One (1) ten (10) minute break","Nicknames allowed","SEB","Depends on the exam"],
+    ["NRPP","Allowed","One (1) fifteen (15) minute break","Nicknames allowed","SEB","Allowed"],
+    ["NVIDIA","Allowed","None (Beta 180: two (2) five (5) minute breaks)","Name must match govt. ID","SEB","Allowed"],
+    ["Open Text","Not allowed","None","Name must match govt. ID","SEB","Allowed"],
+    ["Project Success Incorporated","Allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["SideFX","Allowed","None","Name must match govt. ID","SEB","Textbooks allowed"],
+    ["VastData","Allowed","None","Name must match govt. ID","SEB","Not allowed"],
+    ["WellSky","Allowed","Unlimited breaks (10-20 minutes per break)","Name must match govt. ID","SEB","Textbooks allowed"]
+  ];
+  /* ============================================================
+     INFRACTIONS Data
+     ============================================================ */
+  var INFRACTIONS = [
+    ["Another person in the room","Check in, Testing","Prohibited Behavior","Minor",2,"person",null],
+    ["Books / Supplemental Materials","Check in, Testing","Prohibited Items","Minor",2,"paper materials",null],
+    ["Camera","Check in, Testing","Prohibited Electronic Device","Minor",2,"camera",null],
+    ["Desk is not cleared off (only)","Check in","Check in","Minor",2,"desk",null],
+    ["Does not do complete scan: 360 room scan, desk/table top, under desk/table","Check in","Check in","Minor",1,"scan",null],
+    ["Eating/drinking without approved Special Accom","Testing","Prohibited Behavior","Minor",1,"beverages",null],
+    ["Environment or camera view too dark/candidate not visible","Check in","Check in","Minor",2,"lighting",null],
+    ["Face coverings","Check in","Check in","Minor",2,"",null],
+    ["Face out of view","Testing","Prohibited Behavior","Minor",2,"head and shoulders",null],
+    ["Failure to return from break","Testing","Prohibited Behavior","Major",0,"break","break-overage"],
+    ["Headphones/Earbuds","Check in","Prohibited Electronic Device","Minor",1,"headphones",null],
+    ["Headwear (unless allowed via accommodation/religious exempt)","Check in","Prohibited Items","Minor",1,"hat",null],
+    ["Internal environment too loud","Check in, Testing","Prohibited Behavior","Minor",2,"environment",null],
+    ["Leaves testing area","Testing","Prohibited Behavior","Minor",1,"permission",null],
+    ["Looking elsewhere","Testing","Prohibited Behavior","Minor",4,"attention forward",null],
+    ["Mobile phone in use","Testing","Prohibited Electronic Device","Major",0,"mobile phone","prohibited-device"],
+    ["Mobile phone visible","Check in","Prohibited Electronic Device","Minor",1,"electronic devices",null],
+    ["Not following proctor instructions","Check in, Testing","Prohibited Behavior","Minor",2,"cooperation",null],
+    ["Proctor harassment (disrespectful, name calling)","Check in, Testing","Prohibited Behavior","Major",0,"disrespectful","foul-language"],
+    ["Proper clothing","Check in","Prohibited Behavior","Minor",1,"dressed appropriately",null],
+    ["Remote Desktop Applications","Check in, Testing","Prohibited Behavior","Major",0,"Remote Desktop","prohibited-app"],
+    ["Secondary device (computer, laptop, calculator)","Check in","Prohibited Electronic Device","Minor",1,"electronic",null],
+    ["Smart Watch","Check in","Prohibited Electronic Device","Minor",1,"smartwatch",null],
+    ["Smoking or Vaping","Check in, Testing","Prohibited Behavior","Minor",1,"",null],
+    ["Suspicious behavior","Testing","Prohibited Behavior","Minor",2,"attention forward",null],
+    ["Talking aloud","Testing","Prohibited Behavior","Minor",2,"aloud",null],
+    ["Talking to others","Testing","Prohibited Behavior","Minor",2,"no one else",null],
+    ["Whiteboard/bulletin board with writing","Check in, Testing","Prohibited Items","Minor",2,"desk",null]
+  ];
+  /* ============================================================
+     QUICK ACTIONS (HALLOWEEN THEMED)
+     ============================================================ */
+  var QUICK_ACTIONS = [
+    {icon:"🪪", label:"Blurry / Unclear ID", query:"blurry"},
+    {icon:"❗", label:"Name Mismatch",        query:"not the name registered"},
+    {icon:"📱", label:"Mobile Phone",         query:"mobile phone"},
+    {icon:"👀", label:"Face Out of View",      query:"head and shoulders"},
+    {icon:"⏱️", label:"Break Violation",      query:"break"},
+    {icon:"🖥️", label:"Task Manager / Apps",   query:"Task Manager"}
+  ];
+  /* ============================================================
+     UTILITIES
+     ============================================================ */
+  function escapeHtml(str){
+    return String(str)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function loadSet(key){
+    try {
+      var raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : [];
+    } catch(e){ return []; }
+  }
+  function saveSet(key, arr){
+    try { localStorage.setItem(key, JSON.stringify(arr)); } catch(e){}
+  }
+  function toggleInSet(key, id, cap){
+    var arr = loadSet(key);
+    var idx = arr.indexOf(id);
+    if (idx === -1){
+      arr.unshift(id);
+      if (cap){ arr = arr.slice(0, cap); }
+    } else {
+      arr.splice(idx, 1);
+    }
+    saveSet(key, arr);
+    return arr;
+  }
+  function addToRecent(key, id, cap){
+    var arr = loadSet(key);
+    var idx = arr.indexOf(id);
+    if (idx !== -1){ arr.splice(idx,1); }
+    arr.unshift(id);
+    arr = arr.slice(0, cap || 10);
+    saveSet(key, arr);
+    return arr;
+  }
+  function isIn(key, id){ return loadSet(key).indexOf(id) !== -1; }
+  window.copyDirectText = function(btn, text) {
+    function showCopied(){
+      var original = btn.textContent;
+      btn.textContent = "🎃 Spell Cast!";
+      btn.classList.add("copied");
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
+    }
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(showCopied, function(){ fallbackCopy(text, showCopied); });
+    } else {
+      fallbackCopy(text, showCopied);
+    }
+  };
+  var TAG_LABELS = {win:"Windows", mac:"MAC", linux:"Linux", critical:"Termination risk", hashi:"Hashicorp"};
+  function renderTags(tags){
+    if (!tags || !tags.length) return "";
+    var out = "";
+    for (var i=0;i<tags.length;i++){
+      var t = tags[i];
+      out += '<span class="card-tag ' + t + '">' + (TAG_LABELS[t] || t.toUpperCase()) + '</span>';
+    }
+    return '<div class="card-tags">' + out + '</div>';
+  }
+  function renderMessageCard(msg, opts){
+    opts = opts || {};
+    var pinned = isIn("ph_pins", msg.id);
+    var faved  = isIn("ph_favs", msg.id);
+    var progressBox = "";
+    if (opts.progress){
+      var done = isIn("ph_progress", msg.id);
+      progressBox = '<input type="checkbox" class="progress-check" title="Mark reviewed" ' +
+        (done ? "checked" : "") + ' onchange="toggleProgress(\'' + msg.id + '\')">';
+    }
+    return (
+      '<div class="card' + (pinned ? " is-pinned" : "") + '" data-id="' + msg.id + '" data-cat="' + msg.cat + '">' +
+        (progressBox ? '<div>' + progressBox + '</div>' : '') +
+        '<div class="card-body">' +
+          renderTags(msg.tags) +
+          '<p class="message-text">' + escapeHtml(msg.text) + '</p>' +
+        '</div>' +
+        '<div class="card-actions">' +
+          '<div class="icon-row">' +
+            '<button class="icon-btn' + (faved ? " on" : "") + '" title="Favorite" onclick="toggleFav(\'' + msg.id + '\')">' + (faved ? "★" : "☆") + '</button>' +
+            '<button class="icon-btn' + (pinned ? " on" : "") + '" title="Pin" onclick="togglePin(\'' + msg.id + '\')">📌</button>' +
+          '</div>' +
+          '<button class="seal-btn" onclick="copyMessage(this,\'' + msg.id + '\')">🎃 Copy Scroll</button>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+  /* ============================================================
+     CHECK-IN STEPS & EXAM MODE TOGGLE
+     ============================================================ */
+  var activeOsFilter = "all";
+  var activeExamMode = "nonseb";
+  window.setExamMode = function(mode) {
+    activeExamMode = mode;
+    document.getElementById("btn-mode-nonseb").classList.toggle("active", mode === "nonseb");
+    document.getElementById("btn-mode-seb").classList.toggle("active", mode === "seb");
+    renderCheckin();
+  };
+  function renderCheckin(){
+    var wrap = document.getElementById("checkinAccordions");
+    var html = "";
+    var displayCategories = CATEGORIES.filter(function(cat) {
+      if (activeExamMode === "seb" && cat.id === "3") return false;
+      return true;
+    });
+    for (var i=0;i<displayCategories.length;i++){
+      var cat = displayCategories[i];
+      var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
+      
+      html += '<details class="accordion" id="accordion-' + cat.id + '">' +
+        '<summary onclick="handleAccordionToggle(event, \'' + cat.id + '\')">' +
+          '<span class="cat-left"><span class="cat-num">' + cat.id + '</span>' + cat.icon + '&nbsp; ' + cat.label + '</span>' +
+          '<span class="cat-progress" id="progress-' + cat.id + '"></span>' +
+          '<span class="chevron">&#10148;</span>' +
+        '</summary>' +
+        '<div class="accordion-body" id="body-' + cat.id + '">';
+      
+      if (cat.id === "3") {
+        html += '<div class="os-subfilter-row">' +
+          '<button class="os-subchip' + (activeOsFilter==="all" ? " active" : "") + '" onclick="setOsSubFilter(\'all\')">All Platforms</button>' +
+          '<button class="os-subchip' + (activeOsFilter==="win" ? " active" : "") + '" onclick="setOsSubFilter(\'win\')">Windows</button>' +
+          '<button class="os-subchip' + (activeOsFilter==="mac" ? " active" : "") + '" onclick="setOsSubFilter(\'mac\')">macOS</button>' +
+          '<button class="os-subchip' + (activeOsFilter==="linux" ? " active" : "") + '" onclick="setOsSubFilter(\'linux\')">Linux</button>' +
+        '</div>';
+      }
+      if (msgs.length === 0){
+        html += '<div class="empty-state">No scripted messages on file for this category yet.</div>';
+      } else {
+        for (var j=0;j<msgs.length;j++){ 
+          var m = msgs[j];
+          if (cat.id === "3" && activeOsFilter !== "all") {
+            if (m.tags.length > 0 && m.tags.indexOf(activeOsFilter) === -1) continue;
+          }
+          html += renderMessageCard(m, {progress:true}); 
+        }
+      }
+      html += '</div></details>';
+    }
+    wrap.innerHTML = html;
+    updateProgressLabels();
+    if (document.getElementById("view-checkin").classList.contains("active")) {
+      updateSidebarLinks("view-checkin");
+    }
+  }
+  window.setOsSubFilter = function(osKey) {
+    activeOsFilter = osKey;
+    renderCheckin();
+    var acc3 = document.getElementById("accordion-3");
+    if (acc3) acc3.open = true;
+  };
+  window.handleAccordionToggle = function(e, currentId) {
+    var accordions = document.querySelectorAll("#checkinAccordions .accordion");
+    accordions.forEach(function(acc) {
+      if (acc.id !== "accordion-" + currentId) {
+        acc.removeAttribute("open");
+      }
+    });
+    var targetAcc = document.getElementById("accordion-" + currentId);
+    if (targetAcc) {
+      setTimeout(function() {
+        targetAcc.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+    }
+  };
+  function updateProgressLabels(){
+    var progressAll = loadSet("ph_progress");
+    for (var i=0;i<CATEGORIES.length;i++){
+      var cat = CATEGORIES[i];
+      var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
+      var done = 0;
+      for (var j=0;j<msgs.length;j++){ if (progressAll.indexOf(msgs[j].id) !== -1) done++; }
+      var el = document.getElementById("progress-" + cat.id);
+      if (el){ el.textContent = msgs.length ? (done + " / " + msgs.length + " reviewed") : ""; }
+    }
+  }
+  window.toggleProgress = function(id){
+    toggleInSet("ph_progress", id);
+    updateProgressLabels();
+  };
+  window.resetProgress = function(){
+    saveSet("ph_progress", []);
+    renderCheckin();
+  };
+  window.goToCategory = function(catId){
+    var viewBtn = document.querySelector('.view-btn[data-view="view-checkin"]');
+    switchView("view-checkin", viewBtn);
+    
+    var accordions = document.querySelectorAll("#checkinAccordions .accordion");
+    accordions.forEach(function(acc) {
+      acc.removeAttribute("open");
+    });
+    var el = document.getElementById("accordion-" + catId);
+    if (el){
+      el.open = true;
+      setTimeout(function() {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+    }
+  };
+  /* ============================================================
+     DYNAMIC SIDEBAR NAVIGATION
+     ============================================================ */
+  function updateSidebarLinks(viewId) {
+    var labelEl = document.getElementById("sidebarSublabel");
+    var listEl = document.getElementById("sidebarDynamicLinks");
+    if (!labelEl || !listEl) return;
+    var html = "";
+    if (viewId === "view-checkin") {
+      labelEl.textContent = "Check-in Categories";
+      var displayCategories = CATEGORIES.filter(function(cat) {
+        if (activeExamMode === "seb" && cat.id === "3") return false;
+        return true;
+      });
+      for (var k=0; k<displayCategories.length; k++){
+        var c = displayCategories[k];
+        var count = MESSAGES.filter(function(m){ return m.cat === c.id; }).length;
+        html += '<li><button onclick="goToCategory(\'' + c.id + '\')">' + c.id + '. ' + c.label + ' <span class="cnt">' + count + '</span></button></li>';
+      }
+    } else if (viewId === "view-troubleshooting") {
+      labelEl.textContent = "Troubleshooting Flows";
+      var flows = [
+        {id: "trouble-drop-audio", label: "Microphone (Non-SEB)", icon: "🎤"},
+        {id: "trouble-drop-video", label: "Camera (Non-SEB)", icon: "🎥"},
+        {id: "trouble-drop-screen", label: "Screen Sharing (Non-SEB)", icon: "🖥️"},
+        {id: "trouble-drop-seb", label: "SEB Diagnostics", icon: "🧭"}
+      ];
+      for (var f=0; f<flows.length; f++){
+        html += '<li><button onclick="scrollToTroubleshooting(\'' + flows[f].id + '\')">' + flows[f].icon + ' ' + flows[f].label + '</button></li>';
+      }
+    } else if (viewId === "view-library") {
+      labelEl.textContent = "Category Filters";
+      html += '<li><button onclick="setLibraryFilter(\'all\')">All Messages <span class="cnt">' + MESSAGES.length + '</span></button></li>';
+      for (var l=0; l<CATEGORIES.length; l++){
+        var catL = CATEGORIES[l];
+        var countL = MESSAGES.filter(function(m){ return m.cat === catL.id; }).length;
+        html += '<li><button onclick="setLibraryFilter(\'' + catL.id + '\')">' + catL.icon + ' ' + catL.label + ' <span class="cnt">' + countL + '</span></button></li>';
+      }
+    } else if (viewId === "view-threshold") {
+      labelEl.textContent = "Severity Filter";
+      html += '<li><button onclick="setThresholdFilter(\'all\')">All Infractions <span class="cnt">' + INFRACTIONS.length + '</span></button></li>';
+      html += '<li><button onclick="setThresholdFilter(\'minor\')">Minor Violations</button></li>';
+      html += '<li><button onclick="setThresholdFilter(\'major\')">Major Violations</button></li>';
+    } else if (viewId === "view-policies") {
+      labelEl.textContent = "Client Quick Select";
+      for (var p=0; p<POLICIES.length; p++){
+        html += '<li><button onclick="selectPolicyClient(' + p + ')">' + escapeHtml(POLICIES[p][0]) + '</button></li>';
+      }
+    } else if (viewId === "view-home") {
+      labelEl.textContent = "Dojo Sections";
+      html += '<li><button onclick="window.scrollTo({top:0, behavior:\'smooth\'})">🏯 Command Hierarchy</button></li>';
+      html += '<li><button onclick="document.getElementById(\'quickGrid\').scrollIntoView({behavior:\'smooth\'})">⚡ Quick Actions</button></li>';
+    } else if (viewId === "view-faq") {
+      labelEl.textContent = "FAQ Topics";
+      html += '<li><button onclick="window.scrollTo({top:0, behavior:\'smooth\'})">🛠️ Technical Requirements</button></li>';
+      html += '<li><button onclick="document.querySelectorAll(\'#view-faq .trouble-card\')[1].scrollIntoView({behavior:\'smooth\'})">📝 Booking & Management</button></li>';
+      html += '<li><button onclick="document.querySelectorAll(\'#view-faq .trouble-card\')[2].scrollIntoView({behavior:\'smooth\'})">🛡️ Online Proctoring</button></li>';
+    }
+    listEl.innerHTML = html;
+  }
+  window.scrollToTroubleshooting = function(targetId) {
+    var accordions = document.querySelectorAll("#view-troubleshooting .accordion");
+    accordions.forEach(function(acc) { acc.removeAttribute("open"); });
+    var target = document.getElementById(targetId);
+    if (target) {
+      target.open = true;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+  window.selectPolicyClient = function(index) {
+    var select = document.getElementById("policySelect");
+    if (select) {
+      select.value = index;
+      renderGenerator();
+      select.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+  /* ============================================================
+     ISOLATED CANNED MESSAGE SEARCH ENGINE
+     ============================================================ */
+  var libraryActiveCat = "all";
+  function renderLibraryFilters(){
+    var wrap = document.getElementById("libraryFilters");
+    var html = '<button class="filter-chip' + (libraryActiveCat==="all" ? " active" : "") + '" onclick="setLibraryFilter(\'all\')">All (' + MESSAGES.length + ')</button>';
+    for (var i=0;i<CATEGORIES.length;i++){
+      var cat = CATEGORIES[i];
+      var count = MESSAGES.filter(function(m){ return m.cat === cat.id; }).length;
+      html += '<button class="filter-chip' + (libraryActiveCat===cat.id ? " active" : "") + '" onclick="setLibraryFilter(\'' + cat.id + '\')">' + cat.icon + ' ' + cat.label + ' (' + count + ')</button>';
+    }
+    wrap.innerHTML = html;
+  }
+  window.setLibraryFilter = function(catId){
+    libraryActiveCat = catId;
+    renderLibraryFilters();
+    renderLibraryList();
+    filterLibraryOnly();
+  };
+  function renderLibraryList(){
+    var wrap = document.getElementById("libraryList");
+    var msgs = libraryActiveCat === "all" ? MESSAGES : MESSAGES.filter(function(m){ return m.cat === libraryActiveCat; });
+    if (msgs.length === 0){
+      wrap.innerHTML = '<div class="empty-state">No scripted messages on file for this category yet.</div>';
+      return;
+    }
+    var html = "";
+    for (var i=0;i<msgs.length;i++){ html += renderMessageCard(msgs[i], {progress:false}); }
+    wrap.innerHTML = html;
+  }
+  function filterLibraryOnly(){
+    var searchEl = document.getElementById("globalSearch");
+    var query = searchEl ? searchEl.value.trim().toLowerCase() : "";
+    var libCards = document.querySelectorAll("#libraryList .card");
+    var matches = 0;
+    var total = libCards.length;
+    for (var l=0; l<total; l++){
+      var lc = libCards[l];
+      var ltext = lc.textContent.toLowerCase();
+      var lshow = !query || ltext.indexOf(query) !== -1;
+      lc.style.display = lshow ? "" : "none";
+      if (lshow){ matches++; }
+    }
+    var countLabel = document.getElementById("searchCount");
+    if (countLabel) {
+      countLabel.textContent = query ? ("Showing " + matches + " of " + total + " matching canned messages") : "";
+    }
+  }
+  window.handleLibrarySearch = function() {
+    var query = document.getElementById("globalSearch").value.trim().toLowerCase();
+    var dropdown = document.getElementById("suggestionsBox");
+    if (!query) {
+      dropdown.style.display = "none";
+      filterLibraryOnly();
+      return;
+    }
+    var suggestions = MESSAGES.filter(function(m) {
+      return m.text.toLowerCase().indexOf(query) !== -1;
+    }).slice(0, 6);
+    if (suggestions.length === 0) {
+      dropdown.style.display = "none";
+      filterLibraryOnly();
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < suggestions.length; i++) {
+      var s = suggestions[i];
+      var snippet = s.text.length > 70 ? s.text.substring(0, 70) + "..." : s.text;
+      html += '<div class="suggestion-item" onclick="selectSuggestion(\'' + s.id + '\')">' +
+        '<span>' + escapeHtml(snippet) + '</span>' +
+        '<span class="sug-cat">' + catLabel(s.cat) + '</span>' +
+      '</div>';
+    }
+    dropdown.innerHTML = html;
+    dropdown.style.display = "block";
+    filterLibraryOnly();
+  };
+  window.selectSuggestion = function(msgId) {
+    document.getElementById("suggestionsBox").style.display = "none";
+    var libCards = document.querySelectorAll("#libraryList .card");
+    
+    for (var i = 0; i < libCards.length; i++) {
+      var card = libCards[i];
+      if (card.getAttribute("data-id") === msgId) {
+        card.style.display = "";
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+        card.classList.add("highlighted");
+        setTimeout(function() {
+          card.classList.remove("highlighted");
+        }, 2500);
+      } else {
+        card.style.display = "none";
+      }
+    }
+    var countLabel = document.getElementById("searchCount");
+    if (countLabel) {
+      countLabel.textContent = "Showing 1 focused result";
+    }
+  };
+  document.addEventListener("click", function(e) {
+    var searchBox = document.querySelector(".library-search-box");
+    if (searchBox && !searchBox.contains(e.target)) {
+      var dropdown = document.getElementById("suggestionsBox");
+      if (dropdown) dropdown.style.display = "none";
+    }
+  });
+  /* ============================================================
+     FAVORITES, PINS, & COPY ACTIONS
+     ============================================================ */
+  window.toggleFav = function(id){ toggleInSet("ph_favs", id); renderAllInteractive(); };
+  window.togglePin = function(id){ toggleInSet("ph_pins", id); renderAllInteractive(); };
+  window.copyMessage = function(btn, id){
+    var msg = findMessageById(id);
+    if (!msg) return;
+    var text = msg.text;
+    function showCopied(){
+      var original = btn.textContent;
+      btn.textContent = "🎃 Spell Cast!";
+      btn.classList.add("copied");
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
+    }
+    function afterCopy(){
+      addToRecent("ph_recent", id, 10);
+      showCopied();
+    }
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(afterCopy, function(){ fallbackCopy(text, afterCopy); });
+    } else {
+      fallbackCopy(text, afterCopy);
+    }
+  };
+  function fallbackCopy(text, cb){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px";
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand("copy"); } catch(e){}
+    document.body.removeChild(ta);
+    if (cb) cb();
+  }
+  function renderAllInteractive(){
+    renderCheckin();
+    renderLibraryList();
+    filterLibraryOnly();
+  }
+  /* ============================================================
+     HOME CLOCK (PST / UTC+8)
+     ============================================================ */
+  function tickClock(){
+    var now = new Date();
+    var optsTime = { timeZone: "Asia/Manila", hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" };
+    var optsDate = { timeZone: "Asia/Manila", weekday: "long", year: "numeric", month: "long", day: "numeric" };
+    
+    var timeEl = document.getElementById("clockTime");
+    var dateEl = document.getElementById("clockDate");
+    if(timeEl) timeEl.textContent = now.toLocaleTimeString("en-US", optsTime) + " PST";
+    if(dateEl) dateEl.textContent = now.toLocaleDateString("en-US", optsDate);
+  }
+  function renderQuickActions(){
+    var html = "";
+    for (var i=0;i<QUICK_ACTIONS.length;i++){
+      var q = QUICK_ACTIONS[i];
+      html += '<button class="quick-btn" onclick="runQuickAction(\'' + q.query.replace(/'/g,"\\'") + '\')"><span class="qi">' + q.icon + '</span>' + q.label + '</button>';
+    }
+    document.getElementById("quickGrid").innerHTML = html;
+  }
+  /* ============================================================
+     QUICK ACTIONS & SEARCH BRIDGING
+     ============================================================ */
+  window.runQuickAction = function(query){
+    var viewBtn = document.querySelector('.view-btn[data-view="view-library"]');
+    switchView("view-library", viewBtn);
+    var searchInput = document.getElementById("globalSearch");
+    if (searchInput) {
+      searchInput.value = query;
+      handleLibrarySearch();
+      searchInput.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+  /* ============================================================
+     TAB SWITCHING (VIEW CONTROLLER)
+     ============================================================ */
+  window.switchView = function(viewId, btnElement) {
+    // 1. Hide all dashboard views and activate target
+    var views = document.querySelectorAll(".dashboard-view");
+    views.forEach(function(view) {
+      view.classList.remove("active");
+    });
+    var targetView = document.getElementById(viewId);
+    if (targetView) {
+      targetView.classList.add("active");
+    }
+    // 2. Update active states on sidebar buttons
+    var buttons = document.querySelectorAll(".view-btn");
+    buttons.forEach(function(btn) {
+      btn.classList.remove("active");
+    });
+    if (btnElement) {
+      btnElement.classList.add("active");
+    } else {
+      var autoBtn = document.querySelector('.view-btn[data-view="' + viewId + '"]');
+      if (autoBtn) autoBtn.classList.add("active");
+    }
+    // 3. Update dynamic links in the sidebar
+    updateSidebarLinks(viewId);
+    // 4. Trigger contextual tab rendering
+    if (viewId === "view-checkin") {
+      renderCheckin();
+    } else if (viewId === "view-library") {
+      renderLibraryFilters();
+      renderLibraryList();
+      filterLibraryOnly();
+    } else if (viewId === "view-threshold") {
+      renderThresholdFilters();
+      renderThresholdGrid();
+    } else if (viewId === "view-policies") {
+      renderPolicyDropdown();
+      renderGenerator();
+      renderPoliciesTable();
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  /* ============================================================
+     THRESHOLD CENTER LOGIC
+     ============================================================ */
+  var thresholdActiveFilter = "all";
+  function renderThresholdFilters() {
+    var wrap = document.getElementById("thresholdFilters");
+    if (!wrap) return;
+    wrap.innerHTML = 
+      '<button class="filter-chip' + (thresholdActiveFilter === "all" ? " active" : "") + '" onclick="setThresholdFilter(\'all\')">All (' + INFRACTIONS.length + ')</button>' +
+      '<button class="filter-chip' + (thresholdActiveFilter === "Minor" ? " active" : "") + '" onclick="setThresholdFilter(\'Minor\')">Minor Violations</button>' +
+      '<button class="filter-chip' + (thresholdActiveFilter === "Major" ? " active" : "") + '" onclick="setThresholdFilter(\'Major\')">Major Violations</button>';
+  }
+  window.setThresholdFilter = function(filter) {
+    thresholdActiveFilter = filter;
+    renderThresholdFilters();
+    renderThresholdGrid();
+  };
+  function getRiskClass(severity, limit) {
+    if (severity === "Major") return "risk-red";
+    if (limit <= 1) return "risk-orange";
+    if (limit === 2) return "risk-yellow";
+    return "risk-green";
+  }
+  function renderThresholdGrid() {
+    var grid = document.getElementById("infractionGrid");
+    var empty = document.getElementById("infractionEmpty");
+    if (!grid) return;
+    var filtered = INFRACTIONS.filter(function(item) {
+      if (thresholdActiveFilter === "all") return true;
+      return item[3].toLowerCase() === thresholdActiveFilter.toLowerCase();
+    });
+    if (filtered.length === 0) {
+      grid.innerHTML = "";
+      if (empty) empty.style.display = "block";
+      return;
+    }
+    if (empty) empty.style.display = "none";
+    var html = "";
+    filtered.forEach(function(item) {
+      var name = item[0];
+      var phase = item[1];
+      var category = item[2];
+      var severity = item[3];
+      var threshold = item[4];
+      var termTag = item[6];
+      var riskClass = getRiskClass(severity, threshold);
+      var canned = termTag ? findByTerm(termTag) : null;
+      var cannedSpiel = canned ? escapeHtml(canned.text) : "Issue standard verbal/chat warning to candidate.";
+      html += '<div class="infr-card ' + riskClass + '" onclick="this.classList.toggle(\'expanded\')">' +
+        '<div class="infr-name">' + escapeHtml(name) + '</div>' +
+        '<div class="infr-meta">' +
+          '<span class="badge ' + (severity === "Major" ? "badge-major" : "badge-minor") + '">' + severity + '</span>' +
+          '<span>Phase: ' + escapeHtml(phase) + '</span>' +
+          '<span>Type: ' + escapeHtml(category) + '</span>' +
+        '</div>' +
+        '<div class="infr-threshold">Allowed limit: <strong>' + threshold + ' warning(s)</strong> before escalation.</div>' +
+        '<div class="infr-detail">' +
+          '<p style="margin-bottom:8px;font-size:0.8rem;color:var(--text-dim);">Action Script:</p>' +
+          '<p style="margin-bottom:8px;color:#f8efd5;">"' + cannedSpiel + '"</p>' +
+          (canned ? '<button class="seal-btn" style="min-width:auto;padding:4px 12px;font-size:0.75rem;" onclick="event.stopPropagation();copyDirectText(this,\'' + canned.text.replace(/'/g, "\\'") + '\')">🎃 Copy Spiel</button>' : '') +
+        '</div>' +
+      '</div>';
+    });
+    grid.innerHTML = html;
+  }
+  /* ============================================================
+     CLIENT POLICIES LOGIC
+     ============================================================ */
+  function renderPolicyDropdown() {
+    var select = document.getElementById("policySelect");
+    if (!select || select.options.length > 0) return;
+    var html = "";
+    for (var i = 0; i < POLICIES.length; i++) {
+      html += '<option value="' + i + '">' + escapeHtml(POLICIES[i][0]) + '</option>';
+    }
+    select.innerHTML = html;
+  }
+  window.renderGenerator = function() {
+    var select = document.getElementById("policySelect");
+    var target = document.getElementById("generatorCards");
+    if (!select || !target) return;
+    var idx = parseInt(select.value, 10) || 0;
+    var p = POLICIES[idx];
+    if (!p) return;
+    target.innerHTML = 
+      '<div class="gen-card">' +
+        '<h4>Break Entitlement</h4>' +
+        '<p>' + escapeHtml(p[2]) + '</p>' +
+        '<button class="seal-btn" onclick="copyDirectText(this, \'Break Policy: ' + p[2].replace(/'/g, "\\'") + '\')">🎃 Copy Policy</button>' +
+      '</div>' +
+      '<div class="gen-card">' +
+        '<h4>Identification & Name Rules</h4>' +
+        '<p>Name Change: ' + escapeHtml(p[1]) + '<br>Name Policy: ' + escapeHtml(p[3]) + '</p>' +
+        '<button class="seal-btn" onclick="copyDirectText(this, \'Name Policy: ' + p[3].replace(/'/g, "\\'") + '\')">🎃 Copy Policy</button>' +
+      '</div>' +
+      '<div class="gen-card">' +
+        '<h4>Environment & Documentation</h4>' +
+        '<p>Browser: ' + escapeHtml(p[4]) + '<br>Materials Allowed: ' + escapeHtml(p[5]) + '</p>' +
+        '<button class="seal-btn" onclick="copyDirectText(this, \'Documentation Policy: ' + p[5].replace(/'/g, "\\'") + '\')">🎃 Copy Policy</button>' +
+      '</div>';
+  };
+  function renderPoliciesTable() {
+    var tbody = document.getElementById("policiesBody");
+    var countEl = document.getElementById("policiesCount");
+    if (!tbody) return;
+    if (countEl) countEl.textContent = "(" + POLICIES.length + " Sponsors)";
+    var html = "";
+    for (var i = 0; i < POLICIES.length; i++) {
+      var row = POLICIES[i];
+      html += '<tr>' +
+        '<td><strong>' + escapeHtml(row[0]) + '</strong></td>' +
+        '<td>' + escapeHtml(row[1]) + '</td>' +
+        '<td>' + escapeHtml(row[2]) + '</td>' +
+        '<td>' + escapeHtml(row[3]) + '</td>' +
+        '<td>' + escapeHtml(row[4]) + '</td>' +
+        '<td>' + escapeHtml(row[5]) + '</td>' +
+      '</tr>';
+    }
+    tbody.innerHTML = html;
+  }
+  /* ============================================================
+     HALLOWEEN CANVAS EMBER PARTICLES
+     ============================================================ */
+  function initFxCanvas() {
+    var canvas = document.getElementById("fxCanvas");
+    if (!canvas) return;
+    var ctx = canvas.getContext("2d");
+    var w = canvas.width = window.innerWidth;
+    var h = canvas.height = window.innerHeight;
+    window.addEventListener("resize", function() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+    var particles = [];
+    for (var i = 0; i < 40; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 2 + 1,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: -Math.random() * 0.8 - 0.2,
+        alpha: Math.random() * 0.6 + 0.2
+      });
+    }
+    function loop() {
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "#ff6600";
+      for (var j = 0; j < particles.length; j++) {
+        var p = particles[j];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.y < 0) { p.y = h; p.x = Math.random() * w; }
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(loop);
+    }
+    loop();
+  }
+  /* ============================================================
+     APPLICATION BOOTSTRAPPER
+     ============================================================ */
+  window.addEventListener("DOMContentLoaded", function() {
+    initTickerText();
+    tickClock();
+    setInterval(tickClock, 1000);
+    renderQuickActions();
+    renderCheckin();
+    renderLibraryFilters();
+    renderLibraryList();
+    renderThresholdFilters();
+    renderThresholdGrid();
+    renderPolicyDropdown();
+    renderGenerator();
+    renderPoliciesTable();
+    updateSidebarLinks("view-home");
+    initFxCanvas();
+  });
+})();
+</script>
+</body>
+</html>
