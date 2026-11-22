@@ -7,25 +7,15 @@
 <style>
   :root {
     --night-deep: #060a14;
-    --night-navy: #0b1329;
-    --night-slate: #0f172a;
     --night-card: rgba(15, 23, 42, 0.88);
     --night-card-hover: rgba(30, 41, 59, 0.95);
-    --frost-border: rgba(148, 163, 184, 0.22);
-    --frost-border-glow: rgba(56, 189, 248, 0.35);
-    --snow-white: #f8fafc;
-    --snow-silver: #e2e8f0;
     --text-main: #f1f5f9;
     --text-dim: #cbd5e1;
     --text-muted: #94a3b8;
     --clan-red: #ef4444;
-    --clan-red-glow: rgba(239, 68, 68, 0.4);
     --pine-green: #10b981;
-    --pine-green-glow: rgba(16, 185, 129, 0.35);
     --imperial-gold: #f59e0b;
-    --imperial-gold-glow: rgba(245, 158, 11, 0.4);
     --frost-ice: #38bdf8;
-    --panel-bg: rgba(11, 19, 41, 0.88);
     --border-line: rgba(148, 163, 184, 0.22);
     --border-soft: rgba(148, 163, 184, 0.12);
     --font-head: Georgia, "Iowan Old Style", "Palatino Linotype", "Hiragino Mincho ProN", serif;
@@ -140,7 +130,7 @@
 
   /* Sidebar */
   .sidebar {
-    position: relative; z-index: 10; width: 310px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
+    z-index: 10; width: 310px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; overflow-y: auto;
     background: linear-gradient(180deg, rgba(11, 19, 41, 0.96), rgba(6, 10, 20, 0.98));
     border-right: 1px solid rgba(148, 163, 184, 0.2);
     backdrop-filter: blur(16px); display: flex; flex-direction: column; padding: 0;
@@ -163,6 +153,7 @@
   .sidebar-header .subtitle { font-size: 0.72rem; color: var(--frost-ice); margin-top: 4px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; }
   .view-selectors { padding: 14px 12px; border-bottom: 1px solid var(--border-line); }
   .view-btn {
+    position: relative; overflow: hidden;
     width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(30, 41, 59, 0.45); border: 1px solid var(--border-line);
     color: var(--text-dim); text-align: left; padding: 11px 14px; font-size: 0.86rem; font-weight: 700;
     border-radius: 8px; cursor: pointer; margin-bottom: 6px; transition: all 0.2s ease;
@@ -189,13 +180,24 @@
 
   /* Main Content Area */
   .main-content { position: relative; z-index: 10; flex-grow: 1; padding: 26px 38px 60px; min-width: 0; }
-  .top-banner-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 24px; }
+  .top-banner-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 24px; gap: 12px; flex-wrap: wrap; }
+  .top-left-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .left-clock-box, .right-date-box {
     background: rgba(15, 23, 42, 0.88); border: 1px solid var(--border-line); border-radius: 20px;
     padding: 6px 18px; backdrop-filter: blur(12px); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
   }
   .top-clock-time { font-family: var(--font-head); font-size: 1.2rem; color: var(--imperial-gold); letter-spacing: 0.05em; font-weight: 800; text-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
   .top-clock-date { font-size: 0.84rem; color: var(--text-dim); font-weight: 700; }
+
+  /* PH Schedule Alarm Trigger Button */
+  .alarm-trigger-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(15, 23, 42, 0.88); border: 1px solid var(--border-line); border-radius: 20px;
+    padding: 8px 16px; color: var(--text-dim); font-size: 0.82rem; font-weight: 800; cursor: pointer;
+    backdrop-filter: blur(12px); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5); transition: all 0.2s ease;
+  }
+  .alarm-trigger-btn:hover { border-color: var(--frost-ice); color: #ffffff; transform: translateY(-1px); }
+  .alarm-trigger-btn.has-alarm { border-color: rgba(245, 158, 11, 0.6); color: #fde68a; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.22); }
 
   /* Hero Stage */
   .main-hero-stage { display: flex; align-items: center; justify-content: center; gap: 36px; margin: 18px 0 34px; position: relative; }
@@ -288,7 +290,6 @@
     padding: 16px 18px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; gap: 18px; transition: all 0.22s ease;
   }
   .card:hover, .card.highlighted { background: rgba(30, 41, 59, 0.95) !important; border-left-color: var(--frost-ice) !important; transform: translateY(-2px); }
-  .card.is-pinned { border-left-color: var(--imperial-gold) !important; }
   .card-body { flex-grow: 1; min-width: 0; }
   .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
   .card-tag { display: inline-block; font-size: 0.64rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-dim); text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1); }
@@ -296,14 +297,8 @@
   .card-tag.mac { background: rgba(192, 132, 252, 0.2); color: #e9d5ff; border-color: rgba(192, 132, 252, 0.4); }
   .card-tag.linux { background: rgba(16, 185, 129, 0.2); color: #a7f3d0; border-color: rgba(16, 185, 129, 0.4); }
   .card-tag.critical { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border-color: rgba(239, 68, 68, 0.45); }
-  .card-tag.hashi { background: rgba(245, 158, 11, 0.2); color: #fde68a; border-color: rgba(245, 158, 11, 0.4); }
   .message-text { font-size: 0.94rem; line-height: 1.65; white-space: pre-line; color: #f1f5f9; font-weight: 500; }
   .card-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; align-items: stretch; }
-  
-  .icon-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border-line); color: var(--text-muted); border-radius: 6px; padding: 6px 10px; font-size: 0.88rem; cursor: pointer; transition: all 0.2s ease; }
-  .icon-btn:hover { background: rgba(56, 189, 248, 0.2); color: var(--frost-ice); border-color: var(--frost-ice); }
-  .icon-btn.on { color: var(--imperial-gold); border-color: var(--imperial-gold); background: rgba(245, 158, 11, 0.2); }
-  .icon-row { display: flex; gap: 6px; }
 
   .seal-btn {
     background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color: #ffffff; border: none; padding: 10px 18px; border-radius: 50px;
@@ -322,13 +317,23 @@
   .path-btn { border: 1px solid var(--border-line); background: rgba(255,255,255,0.05); color: var(--text-main); padding: 8px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 800; cursor: pointer; }
   .path-btn:hover, .path-btn.active { background: rgba(56, 189, 248, 0.2); border-color: var(--frost-ice); color: #ffffff; }
 
+  /* Search Inputs & Clear Button */
   .library-search-box { position: relative; margin-bottom: 22px; }
+  .search-input-wrap { position: relative; display: flex; align-items: center; }
   .search-input {
-    width: 100%; padding: 15px 24px; font-size: 0.98rem; border-radius: 12px; border: 1px solid var(--border-line);
+    width: 100%; padding: 15px 48px 15px 24px; font-size: 0.98rem; border-radius: 12px; border: 1px solid var(--border-line);
     background: rgba(15, 23, 42, 0.92); color: #ffffff; outline: none; font-weight: 600; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
   }
   .search-input::placeholder { color: var(--text-muted); }
   .search-input:focus { border-color: var(--frost-ice); box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
+  .search-clear-btn {
+    position: absolute; right: 14px; width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid var(--border-line); background: rgba(148, 163, 184, 0.16); color: var(--text-dim);
+    display: none; align-items: center; justify-content: center; cursor: pointer;
+    font-size: 1rem; font-weight: 800; line-height: 1; transition: all 0.18s ease;
+  }
+  .search-clear-btn.visible { display: flex; }
+  .search-clear-btn:hover { background: rgba(239, 68, 68, 0.35); border-color: var(--clan-red); color: #ffffff; }
   .suggestions-dropdown {
     position: absolute; top: 100%; left: 0; right: 0; z-index: 100; background: rgba(15, 23, 42, 0.98); border: 1px solid var(--frost-ice);
     border-radius: 0 0 12px 12px; max-height: 280px; overflow-y: auto; display: none; margin-top: 4px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
@@ -373,6 +378,7 @@
   .badge-major { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.5); }
 
   /* Generator & Infractions */
+  .gen-panel { border-radius: 12px; padding: 20px; margin-bottom: 26px; }
   .gen-select { width: 100%; max-width: 440px; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-line); background: rgba(15, 23, 42, 0.9); color: #ffffff; font-size: 0.92rem; margin-bottom: 16px; font-weight: 700; outline: none; }
   .gen-select:focus { border-color: var(--frost-ice); }
   .gen-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
@@ -385,7 +391,7 @@
   .filter-chip:hover, .filter-chip.active { background: rgba(56, 189, 248, 0.2); color: #ffffff; border-color: var(--frost-ice); }
 
   .infraction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
-  .infr-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 16px 18px; background: var(--night-card); cursor: pointer; transition: all 0.2s ease; border-left: 4px solid var(--slate-muted); }
+  .infr-card { border: 1px solid var(--border-line); border-radius: 12px; padding: 16px 18px; background: var(--night-card); cursor: pointer; transition: all 0.2s ease; border-left: 4px solid #94a3b8; }
   .infr-card:hover { transform: translateY(-2px); border-color: var(--frost-ice); }
   .infr-card.risk-green { border-left-color: #10b981; }
   .infr-card.risk-yellow { border-left-color: #f59e0b; }
@@ -413,15 +419,38 @@
     font-size: 0.86rem; color: #f8fafc; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px; font-weight: 500;
   }
 
-  /* Admin Modal */
+  /* Modals (Ticker & Alarms) */
   .dojo-modal-overlay {
     position: fixed; inset: 0; z-index: 999; background: rgba(3, 5, 11, 0.85); backdrop-filter: blur(10px);
     display: none; align-items: center; justify-content: center; padding: 20px;
   }
-  .dojo-modal { background: #0f172a; border: 2px solid var(--frost-ice); border-radius: 12px; padding: 24px; max-width: 500px; width: 100%; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9); text-align: left; }
+  .dojo-modal { background: #0f172a; border: 2px solid var(--frost-ice); border-radius: 12px; padding: 24px; max-width: 520px; width: 100%; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9); text-align: left; }
   .dojo-modal h3 { font-family: var(--font-head); color: var(--frost-ice); margin-bottom: 12px; font-size: 1.2rem; font-weight: 800; }
   .dojo-modal textarea { width: 100%; height: 100px; padding: 12px; border-radius: 8px; border: 1px solid var(--border-line); background: #1e293b; color: #ffffff; font-size: 0.9rem; margin-bottom: 16px; outline: none; resize: vertical; font-weight: 500; }
-  .dojo-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+  .dojo-modal-actions { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+
+  .alarm-form-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .alarm-input {
+    padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border-line);
+    background: #1e293b; color: #ffffff; font-size: 0.88rem; font-weight: 600; outline: none;
+  }
+  .alarm-input:focus { border-color: var(--frost-ice); }
+  .alarm-list { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .alarm-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 10px 12px; border-radius: 8px; background: rgba(30, 41, 59, 0.75); border: 1px solid var(--border-line);
+  }
+  .alarm-item.off { opacity: 0.55; }
+  .alarm-item-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .alarm-item-time { font-family: var(--font-head); font-size: 1.05rem; font-weight: 900; color: var(--imperial-gold); white-space: nowrap; }
+  .alarm-item-label { font-size: 0.86rem; color: #f1f5f9; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .alarm-item-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .alarm-del-btn {
+    background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.45); color: #fca5a5;
+    border-radius: 6px; padding: 4px 9px; font-size: 0.78rem; font-weight: 800; cursor: pointer;
+  }
+  .alarm-del-btn:hover { background: rgba(239, 68, 68, 0.45); color: #ffffff; }
+  .dojo-modal.ringing { border-color: var(--imperial-gold); box-shadow: 0 0 36px rgba(245, 158, 11, 0.45); text-align: center; }
 
   @media (max-width: 960px) {
     .sidebar { width: 260px; }
@@ -697,8 +726,14 @@
   <!-- ================= MAIN CONTENT ================= -->
   <div class="main-content">
     <div class="top-banner-row">
-      <div class="left-clock-box">
-        <div class="top-clock-time" id="clockTime">--:--:--</div>
+      <div class="top-left-group">
+        <div class="left-clock-box">
+          <div class="top-clock-time" id="clockTime">--:--:--</div>
+        </div>
+        <button type="button" class="alarm-trigger-btn" id="alarmTriggerBtn" onclick="openAlarmModal()" title="Manage PH Time Schedule Alarms">
+          <span>⏰</span>
+          <span id="alarmBadgeText">Alarms (0)</span>
+        </button>
       </div>
       <div class="right-date-box">
         <div class="top-clock-date" id="clockDate">Loading PST Manila Time&hellip;</div>
@@ -746,7 +781,7 @@
     <!-- HOME VIEW -->
     <div id="view-home" class="dashboard-view active">
       <h2 class="page-title">Operations Hall</h2>
-      <p class="page-sub">The dojo's main hall — organization structure, shortcuts, and your recent work.</p>
+      <p class="page-sub">The dojo's main hall — organization structure and quick shortcuts.</p>
       
       <div class="org-chart-container">
         <h3 class="section-title" style="border:none;margin-bottom:20px;justify-content:center;">⛩️ FiveActs Dojo Command Hierarchy</h3>
@@ -1376,7 +1411,10 @@
       <h2 class="page-title">Canned Message Library</h2>
       <p class="page-sub">Search our database for instant spiels and copyable candidate responses.</p>
       <div class="library-search-box">
-        <input type="text" id="globalSearch" class="search-input" placeholder="Search database... search spiels, camera, permissions, reboot" oninput="handleLibrarySearch()" onfocus="handleLibrarySearch()" aria-label="Search canned messages">
+        <div class="search-input-wrap">
+          <input type="text" id="globalSearch" class="search-input" placeholder="Search database... search spiels, camera, permissions, reboot" oninput="handleLibrarySearch()" onfocus="handleLibrarySearch()" onkeydown="handleSearchKey(event, clearLibrarySearch)" aria-label="Search canned messages">
+          <button type="button" class="search-clear-btn" id="clear-globalSearch" title="Clear search (Esc)" onclick="clearLibrarySearch()">&times;</button>
+        </div>
         <div class="suggestions-dropdown" id="suggestionsBox"></div>
       </div>
       <div class="search-count" id="searchCount"></div>
@@ -1394,6 +1432,13 @@
         <span><span class="dot" style="background:#f97316;"></span>Critical</span>
         <span><span class="dot" style="background:#ef4444;"></span>Immediate</span>
       </div>
+      <div class="library-search-box" style="margin-bottom:14px;">
+        <div class="search-input-wrap">
+          <input type="text" id="thresholdSearch" class="search-input" placeholder="Search infractions... e.g. camera, phone, break, scan, whiteboard" oninput="handleThresholdSearch()" onkeydown="handleSearchKey(event, clearThresholdSearch)" aria-label="Search infractions">
+          <button type="button" class="search-clear-btn" id="clear-thresholdSearch" title="Clear search (Esc)" onclick="clearThresholdSearch()">&times;</button>
+        </div>
+        <div class="search-count" id="thresholdSearchCount"></div>
+      </div>
       <div class="filter-row" id="thresholdFilters"></div>
       <div class="infraction-grid" id="infractionGrid"></div>
       <div class="empty-state" id="infractionEmpty" style="display:none;margin-top:14px;">No matching infractions.</div>
@@ -1410,6 +1455,13 @@
       </div>
       <div class="section-container">
         <h2 class="section-title">Full Policy Archive <span class="section-count" id="policiesCount"></span></h2>
+        <div class="library-search-box" style="margin-bottom:14px;">
+          <div class="search-input-wrap">
+            <input type="text" id="policiesSearch" class="search-input" placeholder="Search client policies... e.g. NVIDIA, Non-SEB, textbooks, nicknames" oninput="handlePoliciesSearch()" onkeydown="handleSearchKey(event, clearPoliciesSearch)" aria-label="Search client policies">
+            <button type="button" class="search-clear-btn" id="clear-policiesSearch" title="Clear search (Esc)" onclick="clearPoliciesSearch()">&times;</button>
+          </div>
+          <div class="search-count" id="policiesSearchCount"></div>
+        </div>
         <div class="table-responsive">
           <table id="policiesTable">
             <thead>
@@ -1589,6 +1641,39 @@
       <div class="dojo-modal-actions">
         <button class="path-btn" onclick="closeTickerModal()">Cancel</button>
         <button class="seal-btn" style="min-width:auto;padding:8px 16px;" onclick="saveTickerUpdate()">Publish Flash Update</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PH TIME SCHEDULE ALARM MODAL -->
+  <div class="dojo-modal-overlay" id="alarmModal" onclick="if(event.target===this) closeAlarmModal()">
+    <div class="dojo-modal">
+      <h3>⏰ PH Time Schedule Alarms</h3>
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;font-weight:600;">
+        Current PH Time: <strong id="alarmModalClock" style="color:var(--imperial-gold);">--:--:-- PST</strong>
+      </p>
+      <div class="alarm-form-row">
+        <input type="time" id="alarmTimeInput" class="alarm-input" style="width:135px;" aria-label="Alarm time (PH Time)">
+        <input type="text" id="alarmLabelInput" class="alarm-input" style="flex:1;min-width:160px;" placeholder="Schedule note (e.g. Exam Check-In, Shift End)" onkeydown="if(event.key==='Enter') addAlarm()">
+        <button type="button" class="seal-btn" style="min-width:auto;padding:9px 16px;" onclick="addAlarm()">+ Add</button>
+      </div>
+      <div class="alarm-list" id="alarmList"></div>
+      <div class="dojo-modal-actions">
+        <button type="button" class="path-btn" onclick="testAlarmSound()">🔔 Test Sound</button>
+        <button type="button" class="path-btn" onclick="closeAlarmModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALARM RINGING ALERT MODAL -->
+  <div class="dojo-modal-overlay" id="alarmRingModal" style="z-index:1100;">
+    <div class="dojo-modal ringing">
+      <h3 style="color:var(--imperial-gold);font-size:1.35rem;">⏰ SCHEDULE ALARM (PH TIME)</h3>
+      <div id="alarmRingTime" style="font-family:var(--font-head);font-size:2rem;font-weight:900;color:#ffffff;margin:8px 0;">--:-- PST</div>
+      <p id="alarmRingLabel" style="font-size:1rem;color:var(--frost-ice);font-weight:700;margin-bottom:20px;"></p>
+      <div class="dojo-modal-actions" style="justify-content:center;">
+        <button type="button" class="path-btn" onclick="snoozeRingingAlarm()">Snooze +5 min</button>
+        <button type="button" class="seal-btn" style="min-width:140px;" onclick="dismissRingingAlarm()">Dismiss</button>
       </div>
     </div>
   </div>
@@ -1784,34 +1869,34 @@
      INFRACTIONS Data
      ============================================================ */
   var INFRACTIONS = [
-    ["Another person in the room","Check in, Testing","Prohibited Behavior","Minor",2,"person",null],
-    ["Books / Supplemental Materials","Check in, Testing","Prohibited Items","Minor",2,"paper materials",null],
-    ["Camera","Check in, Testing","Prohibited Electronic Device","Minor",2,"camera",null],
-    ["Desk is not cleared off (only)","Check in","Check in","Minor",2,"desk",null],
-    ["Does not do complete scan: 360 room scan, desk/table top, under desk/table","Check in","Check in","Minor",1,"scan",null],
-    ["Eating/drinking without approved Special Accom","Testing","Prohibited Behavior","Minor",1,"beverages",null],
-    ["Environment or camera view too dark/candidate not visible","Check in","Check in","Minor",2,"lighting",null],
-    ["Face coverings","Check in","Check in","Minor",2,"",null],
-    ["Face out of view","Testing","Prohibited Behavior","Minor",2,"head and shoulders",null],
-    ["Failure to return from break","Testing","Prohibited Behavior","Major",0,"break","break-overage"],
-    ["Headphones/Earbuds","Check in","Prohibited Electronic Device","Minor",1,"headphones",null],
-    ["Headwear (unless allowed via accommodation/religious exempt)","Check in","Prohibited Items","Minor",1,"hat",null],
-    ["Internal environment too loud","Check in, Testing","Prohibited Behavior","Minor",2,"environment",null],
-    ["Leaves testing area","Testing","Prohibited Behavior","Minor",1,"permission",null],
-    ["Looking elsewhere","Testing","Prohibited Behavior","Minor",4,"attention forward",null],
-    ["Mobile phone in use","Testing","Prohibited Electronic Device","Major",0,"mobile phone","prohibited-device"],
-    ["Mobile phone visible","Check in","Prohibited Electronic Device","Minor",1,"electronic devices",null],
-    ["Not following proctor instructions","Check in, Testing","Prohibited Behavior","Minor",2,"cooperation",null],
-    ["Proctor harassment (disrespectful, name calling)","Check in, Testing","Prohibited Behavior","Major",0,"disrespectful","foul-language"],
-    ["Proper clothing","Check in","Prohibited Behavior","Minor",1,"dressed appropriately",null],
-    ["Remote Desktop Applications","Check in, Testing","Prohibited Behavior","Major",0,"Remote Desktop","prohibited-app"],
-    ["Secondary device (computer, laptop, calculator)","Check in","Prohibited Electronic Device","Minor",1,"electronic",null],
-    ["Smart Watch","Check in","Prohibited Electronic Device","Minor",1,"smartwatch",null],
-    ["Smoking or Vaping","Check in, Testing","Prohibited Behavior","Minor",1,"",null],
-    ["Suspicious behavior","Testing","Prohibited Behavior","Minor",2,"attention forward",null],
-    ["Talking aloud","Testing","Prohibited Behavior","Minor",2,"aloud",null],
-    ["Talking to others","Testing","Prohibited Behavior","Minor",2,"no one else",null],
-    ["Whiteboard/bulletin board with writing","Check in, Testing","Prohibited Items","Minor",2,"desk",null]
+    ["Another person in the room","Check in, Testing","Prohibited Behavior","Minor",2,null],
+    ["Books / Supplemental Materials","Check in, Testing","Prohibited Items","Minor",2,null],
+    ["Camera","Check in, Testing","Prohibited Electronic Device","Minor",2,null],
+    ["Desk is not cleared off (only)","Check in","Check in","Minor",2,null],
+    ["Does not do complete scan: 360 room scan, desk/table top, under desk/table","Check in","Check in","Minor",1,null],
+    ["Eating/drinking without approved Special Accom","Testing","Prohibited Behavior","Minor",1,null],
+    ["Environment or camera view too dark/candidate not visible","Check in","Check in","Minor",2,null],
+    ["Face coverings","Check in","Check in","Minor",2,null],
+    ["Face out of view","Testing","Prohibited Behavior","Minor",2,null],
+    ["Failure to return from break","Testing","Prohibited Behavior","Major",0,"break-overage"],
+    ["Headphones/Earbuds","Check in","Prohibited Electronic Device","Minor",1,null],
+    ["Headwear (unless allowed via accommodation/religious exempt)","Check in","Prohibited Items","Minor",1,null],
+    ["Internal environment too loud","Check in, Testing","Prohibited Behavior","Minor",2,null],
+    ["Leaves testing area","Testing","Prohibited Behavior","Minor",1,null],
+    ["Looking elsewhere","Testing","Prohibited Behavior","Minor",4,null],
+    ["Mobile phone in use","Testing","Prohibited Electronic Device","Major",0,"prohibited-device"],
+    ["Mobile phone visible","Check in","Prohibited Electronic Device","Minor",1,null],
+    ["Not following proctor instructions","Check in, Testing","Prohibited Behavior","Minor",2,null],
+    ["Proctor harassment (disrespectful, name calling)","Check in, Testing","Prohibited Behavior","Major",0,"foul-language"],
+    ["Proper clothing","Check in","Prohibited Behavior","Minor",1,null],
+    ["Remote Desktop Applications","Check in, Testing","Prohibited Behavior","Major",0,"prohibited-app"],
+    ["Secondary device (computer, laptop, calculator)","Check in","Prohibited Electronic Device","Minor",1,null],
+    ["Smart Watch","Check in","Prohibited Electronic Device","Minor",1,null],
+    ["Smoking or Vaping","Check in, Testing","Prohibited Behavior","Minor",1,null],
+    ["Suspicious behavior","Testing","Prohibited Behavior","Minor",2,null],
+    ["Talking aloud","Testing","Prohibited Behavior","Minor",2,null],
+    ["Talking to others","Testing","Prohibited Behavior","Minor",2,null],
+    ["Whiteboard/bulletin board with writing","Check in, Testing","Prohibited Items","Minor",2,null]
   ];
 
   /* ============================================================
@@ -1843,28 +1928,31 @@
   function saveSet(key, arr){
     try { localStorage.setItem(key, JSON.stringify(arr)); } catch(e){}
   }
-  function toggleInSet(key, id, cap){
+  function toggleInSet(key, id){
     var arr = loadSet(key);
     var idx = arr.indexOf(id);
     if (idx === -1){
       arr.unshift(id);
-      if (cap){ arr = arr.slice(0, cap); }
     } else {
       arr.splice(idx, 1);
     }
     saveSet(key, arr);
     return arr;
   }
-  function addToRecent(key, id, cap){
-    var arr = loadSet(key);
-    var idx = arr.indexOf(id);
-    if (idx !== -1){ arr.splice(idx,1); }
-    arr.unshift(id);
-    arr = arr.slice(0, cap || 10);
-    saveSet(key, arr);
-    return arr;
-  }
   function isIn(key, id){ return loadSet(key).indexOf(id) !== -1; }
+  function pad2(n){ return (n < 10 ? "0" : "") + n; }
+  function toggleClearBtn(inputId){
+    var input = document.getElementById(inputId);
+    var btn = document.getElementById("clear-" + inputId);
+    if (input && btn) {
+      btn.classList.toggle("visible", input.value.length > 0);
+    }
+  }
+  window.handleSearchKey = function(e, clearFn) {
+    if (e.key === "Escape") {
+      clearFn();
+    }
+  };
   window.copyDirectText = function(btn, text) {
     function showCopied(){
       var original = btn.textContent;
@@ -1878,7 +1966,7 @@
       fallbackCopy(text, showCopied);
     }
   };
-  var TAG_LABELS = {win:"Windows", mac:"MAC", linux:"Linux", critical:"Termination risk", hashi:"Hashicorp"};
+  var TAG_LABELS = {win:"Windows", mac:"MAC", linux:"Linux", critical:"Termination risk"};
   function renderTags(tags){
     if (!tags || !tags.length) return "";
     var out = "";
@@ -1890,8 +1978,6 @@
   }
   function renderMessageCard(msg, opts){
     opts = opts || {};
-    var pinned = isIn("ph_pins", msg.id);
-    var faved  = isIn("ph_favs", msg.id);
     var progressBox = "";
     if (opts.progress){
       var done = isIn("ph_progress", msg.id);
@@ -1899,17 +1985,13 @@
         (done ? "checked" : "") + ' onchange="toggleProgress(\'' + msg.id + '\')">';
     }
     return (
-      '<div class="card' + (pinned ? " is-pinned" : "") + '" data-id="' + msg.id + '" data-cat="' + msg.cat + '">' +
+      '<div class="card" data-id="' + msg.id + '" data-cat="' + msg.cat + '">' +
         (progressBox ? '<div>' + progressBox + '</div>' : '') +
         '<div class="card-body">' +
           renderTags(msg.tags) +
           '<p class="message-text">' + escapeHtml(msg.text) + '</p>' +
         '</div>' +
         '<div class="card-actions">' +
-          '<div class="icon-row">' +
-            '<button class="icon-btn' + (faved ? " on" : "") + '" title="Favorite" onclick="toggleFav(\'' + msg.id + '\')">' + (faved ? "★" : "☆") + '</button>' +
-            '<button class="icon-btn' + (pinned ? " on" : "") + '" title="Pin" onclick="togglePin(\'' + msg.id + '\')">📌</button>' +
-          '</div>' +
           '<button class="seal-btn" onclick="copyMessage(this,\'' + msg.id + '\')">🎁 Copy Scroll</button>' +
         '</div>' +
       '</div>'
@@ -1939,7 +2021,7 @@
       var msgs = MESSAGES.filter(function(m){ return m.cat === cat.id; });
       
       html += '<details class="accordion" id="accordion-' + cat.id + '">' +
-        '<summary onclick="handleAccordionToggle(event, \'' + cat.id + '\')">' +
+        '<summary onclick="handleAccordionToggle(\'' + cat.id + '\')">' +
           '<span class="cat-left"><span class="cat-num">' + cat.id + '</span>' + cat.icon + '&nbsp; ' + cat.label + '</span>' +
           '<span class="cat-progress" id="progress-' + cat.id + '"></span>' +
           '<span class="chevron">&#10148;</span>' +
@@ -1979,7 +2061,7 @@
     var acc3 = document.getElementById("accordion-3");
     if (acc3) acc3.open = true;
   };
-  window.handleAccordionToggle = function(e, currentId) {
+  window.handleAccordionToggle = function(currentId) {
     var accordions = document.querySelectorAll("#checkinAccordions .accordion");
     accordions.forEach(function(acc) {
       if (acc.id !== "accordion-" + currentId) {
@@ -2070,8 +2152,8 @@
     } else if (viewId === "view-threshold") {
       labelEl.textContent = "Severity Filter";
       html += '<li><button onclick="setThresholdFilter(\'all\')">All Infractions <span class="cnt">' + INFRACTIONS.length + '</span></button></li>';
-      html += '<li><button onclick="setThresholdFilter(\'minor\')">Minor Violations</button></li>';
-      html += '<li><button onclick="setThresholdFilter(\'major\')">Major Violations</button></li>';
+      html += '<li><button onclick="setThresholdFilter(\'Minor\')">Minor Violations</button></li>';
+      html += '<li><button onclick="setThresholdFilter(\'Major\')">Major Violations</button></li>';
     } else if (viewId === "view-policies") {
       labelEl.textContent = "Client Quick Select";
       for (var p=0; p<POLICIES.length; p++){
@@ -2157,6 +2239,7 @@
     }
   }
   window.handleLibrarySearch = function() {
+    toggleClearBtn("globalSearch");
     var query = document.getElementById("globalSearch").value.trim().toLowerCase();
     var dropdown = document.getElementById("suggestionsBox");
     if (!query) {
@@ -2185,6 +2268,17 @@
     dropdown.style.display = "block";
     filterLibraryOnly();
   };
+  window.clearLibrarySearch = function() {
+    var input = document.getElementById("globalSearch");
+    var dropdown = document.getElementById("suggestionsBox");
+    if (input) {
+      input.value = "";
+      input.focus();
+    }
+    if (dropdown) dropdown.style.display = "none";
+    toggleClearBtn("globalSearch");
+    filterLibraryOnly();
+  };
   window.selectSuggestion = function(msgId) {
     document.getElementById("suggestionsBox").style.display = "none";
     var libCards = document.querySelectorAll("#libraryList .card");
@@ -2208,7 +2302,7 @@
     }
   };
   document.addEventListener("click", function(e) {
-    var searchBox = document.querySelector(".library-search-box");
+    var searchBox = document.querySelector("#view-library .library-search-box");
     if (searchBox && !searchBox.contains(e.target)) {
       var dropdown = document.getElementById("suggestionsBox");
       if (dropdown) dropdown.style.display = "none";
@@ -2216,10 +2310,8 @@
   });
 
   /* ============================================================
-     FAVORITES, PINS, & COPY ACTIONS
+     COPY ACTIONS
      ============================================================ */
-  window.toggleFav = function(id){ toggleInSet("ph_favs", id); renderAllInteractive(); };
-  window.togglePin = function(id){ toggleInSet("ph_pins", id); renderAllInteractive(); };
   window.copyMessage = function(btn, id){
     var msg = findMessageById(id);
     if (!msg) return;
@@ -2230,14 +2322,10 @@
       btn.classList.add("copied");
       setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1500);
     }
-    function afterCopy(){
-      addToRecent("ph_recent", id, 10);
-      showCopied();
-    }
     if (navigator.clipboard && window.isSecureContext){
-      navigator.clipboard.writeText(text).then(afterCopy, function(){ fallbackCopy(text, afterCopy); });
+      navigator.clipboard.writeText(text).then(showCopied, function(){ fallbackCopy(text, showCopied); });
     } else {
-      fallbackCopy(text, afterCopy);
+      fallbackCopy(text, showCopied);
     }
   };
   function fallbackCopy(text, cb){
@@ -2248,24 +2336,274 @@
     document.body.removeChild(ta);
     if (cb) cb();
   }
-  function renderAllInteractive(){
-    renderCheckin();
-    renderLibraryList();
-    filterLibraryOnly();
-  }
 
   /* ============================================================
-     HOME CLOCK (PST / UTC+8)
+     PH TIME CLOCK & SCHEDULE ALARMS (Asia/Manila)
      ============================================================ */
+  var STORAGE_KEY_ALARMS = "dojo_ph_alarms";
+  var originalPageTitle = document.title;
+  var alarmAudioCtx = null;
+  var alarmRingInterval = null;
+  var activeRingingAlarm = null;
+  var titleFlashInterval = null;
+
+  function getManilaParts(dateObj) {
+    var d = dateObj || new Date();
+    var fmt = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Manila",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false
+    });
+    var parts = fmt.formatToParts(d);
+    var map = {};
+    for (var i = 0; i < parts.length; i++) {
+      map[parts[i].type] = parts[i].value;
+    }
+    if (map.hour === "24") map.hour = "00";
+    return map;
+  }
+
+  function unlockAudioContext() {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return null;
+    if (!alarmAudioCtx) {
+      alarmAudioCtx = new Ctx();
+    }
+    if (alarmAudioCtx.state === "suspended") {
+      alarmAudioCtx.resume().catch(function(){});
+    }
+    return alarmAudioCtx;
+  }
+  document.addEventListener("click", unlockAudioContext, { once: true });
+
+  function playAlarmChime() {
+    try {
+      var ctx = unlockAudioContext();
+      if (!ctx) return;
+      var notes = [880, 1174.66, 1318.51];
+      var now = ctx.currentTime;
+      for (var i = 0; i < notes.length; i++) {
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(notes[i], now + i * 0.16);
+        gain.gain.setValueAtTime(0.001, now + i * 0.16);
+        gain.gain.exponentialRampToValueAtTime(0.22, now + i * 0.16 + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.16 + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.16);
+        osc.stop(now + i * 0.16 + 0.36);
+      }
+    } catch (e) {}
+  }
+
+  function loadAlarms() {
+    return loadSet(STORAGE_KEY_ALARMS);
+  }
+  function saveAlarms(arr) {
+    arr.sort(function(a, b) {
+      return a.time < b.time ? -1 : (a.time > b.time ? 1 : 0);
+    });
+    saveSet(STORAGE_KEY_ALARMS, arr);
+    updateAlarmBadge();
+  }
+  function updateAlarmBadge() {
+    var btn = document.getElementById("alarmTriggerBtn");
+    var textEl = document.getElementById("alarmBadgeText");
+    if (!btn || !textEl) return;
+    var alarms = loadAlarms().filter(function(a) { return a.enabled; });
+    if (alarms.length === 0) {
+      btn.classList.remove("has-alarm");
+      textEl.textContent = "Alarms (0)";
+      return;
+    }
+    btn.classList.add("has-alarm");
+    var p = getManilaParts();
+    var nowHM = p.hour + ":" + p.minute;
+    var nextAlarm = null;
+    for (var i = 0; i < alarms.length; i++) {
+      if (alarms[i].time > nowHM) {
+        nextAlarm = alarms[i];
+        break;
+      }
+    }
+    if (!nextAlarm) nextAlarm = alarms[0];
+    textEl.textContent = "Next: " + nextAlarm.time + " (" + alarms.length + ")";
+  }
+  function renderAlarmList() {
+    var listEl = document.getElementById("alarmList");
+    if (!listEl) return;
+    var alarms = loadAlarms();
+    if (alarms.length === 0) {
+      listEl.innerHTML = '<div class="empty-state" style="padding:18px;">No PH Time schedule alarms yet. Add one above!</div>';
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < alarms.length; i++) {
+      var a = alarms[i];
+      html += '<div class="alarm-item' + (a.enabled ? "" : " off") + '">' +
+        '<div class="alarm-item-info">' +
+          '<input type="checkbox" class="progress-check" ' + (a.enabled ? "checked" : "") + ' onchange="toggleAlarm(\'' + a.id + '\')" title="Enable/Disable alarm">' +
+          '<span class="alarm-item-time">' + escapeHtml(a.time) + ' PST</span>' +
+          '<span class="alarm-item-label">' + escapeHtml(a.label || "Scheduled Reminder") + '</span>' +
+        '</div>' +
+        '<div class="alarm-item-actions">' +
+          '<button type="button" class="alarm-del-btn" onclick="deleteAlarm(\'' + a.id + '\')" title="Delete alarm">✕</button>' +
+        '</div>' +
+      '</div>';
+    }
+    listEl.innerHTML = html;
+  }
+  window.openAlarmModal = function() {
+    unlockAudioContext();
+    var p = getManilaParts();
+    var timeInput = document.getElementById("alarmTimeInput");
+    if (timeInput && !timeInput.value) {
+      timeInput.value = p.hour + ":" + p.minute;
+    }
+    renderAlarmList();
+    document.getElementById("alarmModal").style.display = "flex";
+  };
+  window.closeAlarmModal = function() {
+    document.getElementById("alarmModal").style.display = "none";
+  };
+  window.addAlarm = function() {
+    unlockAudioContext();
+    var timeInput = document.getElementById("alarmTimeInput");
+    var labelInput = document.getElementById("alarmLabelInput");
+    var timeVal = timeInput ? timeInput.value.trim() : "";
+    if (!timeVal) {
+      alert("Please select a time (PH Time).");
+      return;
+    }
+    var alarms = loadAlarms();
+    alarms.push({
+      id: "al_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+      time: timeVal,
+      label: labelInput ? labelInput.value.trim() : "",
+      enabled: true,
+      lastTriggeredKey: ""
+    });
+    saveAlarms(alarms);
+    if (labelInput) labelInput.value = "";
+    renderAlarmList();
+  };
+  window.toggleAlarm = function(id) {
+    var alarms = loadAlarms();
+    for (var i = 0; i < alarms.length; i++) {
+      if (alarms[i].id === id) {
+        alarms[i].enabled = !alarms[i].enabled;
+        alarms[i].lastTriggeredKey = "";
+        break;
+      }
+    }
+    saveAlarms(alarms);
+    renderAlarmList();
+  };
+  window.deleteAlarm = function(id) {
+    var alarms = loadAlarms().filter(function(a) { return a.id !== id; });
+    saveAlarms(alarms);
+    renderAlarmList();
+  };
+  window.testAlarmSound = function() {
+    unlockAudioContext();
+    playAlarmChime();
+  };
+  function stopRingingEffects() {
+    if (alarmRingInterval) {
+      clearInterval(alarmRingInterval);
+      alarmRingInterval = null;
+    }
+    if (titleFlashInterval) {
+      clearInterval(titleFlashInterval);
+      titleFlashInterval = null;
+    }
+    document.title = originalPageTitle;
+  }
+  function fireAlarm(alarm) {
+    stopRingingEffects();
+    activeRingingAlarm = alarm;
+    document.getElementById("alarmRingTime").textContent = alarm.time + " PST";
+    document.getElementById("alarmRingLabel").textContent = alarm.label || "Scheduled Reminder";
+    document.getElementById("alarmRingModal").style.display = "flex";
+    playAlarmChime();
+    alarmRingInterval = setInterval(playAlarmChime, 2200);
+    var toggle = false;
+    titleFlashInterval = setInterval(function() {
+      toggle = !toggle;
+      document.title = toggle ? ("⏰ ALARM: " + (alarm.label || alarm.time)) : originalPageTitle;
+    }, 900);
+  }
+  window.dismissRingingAlarm = function() {
+    stopRingingEffects();
+    activeRingingAlarm = null;
+    document.getElementById("alarmRingModal").style.display = "none";
+  };
+  window.snoozeRingingAlarm = function() {
+    var label = activeRingingAlarm ? (activeRingingAlarm.label || "Scheduled Reminder") : "Scheduled Reminder";
+    dismissRingingAlarm();
+    var p = getManilaParts();
+    var totalMins = (parseInt(p.hour, 10) * 60 + parseInt(p.minute, 10) + 5) % 1440;
+    var newTime = pad2(Math.floor(totalMins / 60)) + ":" + pad2(totalMins % 60);
+    var alarms = loadAlarms();
+    alarms.push({
+      id: "al_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+      time: newTime,
+      label: label.indexOf("(Snooze)") === -1 ? (label + " (Snooze)") : label,
+      enabled: true,
+      lastTriggeredKey: ""
+    });
+    saveAlarms(alarms);
+    if (document.getElementById("alarmModal").style.display === "flex") {
+      renderAlarmList();
+    }
+  };
+  function checkAlarms(parts) {
+    var alarms = loadAlarms();
+    if (alarms.length === 0) return;
+    var nowHM = parts.hour + ":" + parts.minute;
+    var triggerKey = parts.year + "-" + parts.month + "-" + parts.day + "_" + nowHM;
+    var changed = false;
+    var toFire = null;
+    for (var i = 0; i < alarms.length; i++) {
+      var a = alarms[i];
+      if (a.enabled && a.time === nowHM && a.lastTriggeredKey !== triggerKey) {
+        a.lastTriggeredKey = triggerKey;
+        changed = true;
+        toFire = a;
+      }
+    }
+    if (changed) {
+      saveAlarms(alarms);
+    }
+    if (toFire) {
+      fireAlarm(toFire);
+    }
+  }
+
   function tickClock(){
     var now = new Date();
     var optsTime = { timeZone: "Asia/Manila", hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" };
     var optsDate = { timeZone: "Asia/Manila", weekday: "long", year: "numeric", month: "long", day: "numeric" };
     
+    var parts = getManilaParts(now);
+    var timeStr = parts.hour + ":" + parts.minute + ":" + parts.second + " PST";
+
     var timeEl = document.getElementById("clockTime");
     var dateEl = document.getElementById("clockDate");
-    if(timeEl) timeEl.textContent = now.toLocaleTimeString("en-US", optsTime) + " PST";
-    if(dateEl) dateEl.textContent = now.toLocaleDateString("en-US", optsDate);
+    var modalClockEl = document.getElementById("alarmModalClock");
+    if (timeEl) timeEl.textContent = timeStr || (now.toLocaleTimeString("en-US", optsTime) + " PST");
+    if (dateEl) dateEl.textContent = now.toLocaleDateString("en-US", optsDate);
+    if (modalClockEl) modalClockEl.textContent = timeStr;
+
+    updateAlarmBadge();
+    checkAlarms(parts);
   }
   function renderQuickActions(){
     var html = "";
@@ -2344,6 +2682,19 @@
     renderThresholdFilters();
     renderThresholdGrid();
   };
+  window.handleThresholdSearch = function() {
+    toggleClearBtn("thresholdSearch");
+    renderThresholdGrid();
+  };
+  window.clearThresholdSearch = function() {
+    var input = document.getElementById("thresholdSearch");
+    if (input) {
+      input.value = "";
+      input.focus();
+    }
+    toggleClearBtn("thresholdSearch");
+    renderThresholdGrid();
+  };
   function getRiskClass(severity, limit) {
     if (severity === "Major") return "risk-red";
     if (limit <= 1) return "risk-orange";
@@ -2353,11 +2704,27 @@
   function renderThresholdGrid() {
     var grid = document.getElementById("infractionGrid");
     var empty = document.getElementById("infractionEmpty");
+    var searchEl = document.getElementById("thresholdSearch");
+    var countEl = document.getElementById("thresholdSearchCount");
     if (!grid) return;
-    var filtered = INFRACTIONS.filter(function(item) {
+
+    var query = searchEl ? searchEl.value.trim().toLowerCase() : "";
+    var bySeverity = INFRACTIONS.filter(function(item) {
       if (thresholdActiveFilter === "all") return true;
       return item[3].toLowerCase() === thresholdActiveFilter.toLowerCase();
     });
+    var filtered = bySeverity.filter(function(item) {
+      if (!query) return true;
+      var termTag = item[5];
+      var canned = termTag ? findByTerm(termTag) : null;
+      var haystack = (item[0] + " " + item[1] + " " + item[2] + " " + item[3] + " " + (canned ? canned.text : "")).toLowerCase();
+      return haystack.indexOf(query) !== -1;
+    });
+
+    if (countEl) {
+      countEl.textContent = query ? ("Showing " + filtered.length + " of " + bySeverity.length + " infractions") : "";
+    }
+
     if (filtered.length === 0) {
       grid.innerHTML = "";
       if (empty) empty.style.display = "block";
@@ -2371,7 +2738,7 @@
       var category = item[2];
       var severity = item[3];
       var threshold = item[4];
-      var termTag = item[6];
+      var termTag = item[5];
       var riskClass = getRiskClass(severity, threshold);
       var canned = termTag ? findByTerm(termTag) : null;
       var cannedSpiel = canned ? escapeHtml(canned.text) : "Issue standard verbal/chat warning to candidate.";
@@ -2429,14 +2796,46 @@
         '<button class="seal-btn" onclick="copyDirectText(this, \'Documentation Policy: ' + p[5].replace(/'/g, "\\'") + '\')">🎁 Copy Policy</button>' +
       '</div>';
   };
+  window.handlePoliciesSearch = function() {
+    toggleClearBtn("policiesSearch");
+    renderPoliciesTable();
+  };
+  window.clearPoliciesSearch = function() {
+    var input = document.getElementById("policiesSearch");
+    if (input) {
+      input.value = "";
+      input.focus();
+    }
+    toggleClearBtn("policiesSearch");
+    renderPoliciesTable();
+  };
   function renderPoliciesTable() {
     var tbody = document.getElementById("policiesBody");
     var countEl = document.getElementById("policiesCount");
+    var emptyEl = document.getElementById("policiesEmpty");
+    var searchEl = document.getElementById("policiesSearch");
+    var searchCountEl = document.getElementById("policiesSearchCount");
     if (!tbody) return;
-    if (countEl) countEl.textContent = "(" + POLICIES.length + " Sponsors)";
+
+    var query = searchEl ? searchEl.value.trim().toLowerCase() : "";
+    var filtered = POLICIES.filter(function(row) {
+      if (!query) return true;
+      return row.join(" ").toLowerCase().indexOf(query) !== -1;
+    });
+
+    if (countEl) {
+      countEl.textContent = query ? ("(" + filtered.length + " of " + POLICIES.length + " Sponsors)") : ("(" + POLICIES.length + " Sponsors)");
+    }
+    if (searchCountEl) {
+      searchCountEl.textContent = query ? ("Showing " + filtered.length + " of " + POLICIES.length + " matching sponsors") : "";
+    }
+    if (emptyEl) {
+      emptyEl.style.display = filtered.length === 0 ? "block" : "none";
+    }
+
     var html = "";
-    for (var i = 0; i < POLICIES.length; i++) {
-      var row = POLICIES[i];
+    for (var i = 0; i < filtered.length; i++) {
+      var row = filtered[i];
       html += '<tr>' +
         '<td><strong>' + escapeHtml(row[0]) + '</strong></td>' +
         '<td>' + escapeHtml(row[1]) + '</td>' +
