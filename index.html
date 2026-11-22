@@ -186,6 +186,16 @@
   }
   .alarm-trigger-btn:hover { border-color: var(--frost-ice); color: #ffffff; transform: translateY(-1px); }
   .alarm-trigger-btn.has-alarm { border-color: rgba(245, 158, 11, 0.6); color: #fde68a; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.22); }
+  .alarm-trigger-btn.ringing {
+    border-color: var(--clan-red);
+    background: rgba(239, 68, 68, 0.35);
+    color: #ffffff;
+    animation: alarmBtnPulse 0.7s ease-in-out infinite alternate;
+  }
+  @keyframes alarmBtnPulse {
+    0% { box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); transform: scale(1); }
+    100% { box-shadow: 0 0 22px rgba(245, 158, 11, 0.95); transform: scale(1.04); }
+  }
   /* Hero Stage */
   .main-hero-stage { display: flex; align-items: center; justify-content: center; gap: 36px; margin: 18px 0 34px; position: relative; }
   .hero-tree { width: 50px; height: 50px; filter: drop-shadow(0 4px 10px rgba(16, 185, 129, 0.4)); }
@@ -419,7 +429,32 @@
     border-radius: 6px; padding: 4px 9px; font-size: 0.78rem; font-weight: 800; cursor: pointer;
   }
   .alarm-del-btn:hover { background: rgba(239, 68, 68, 0.45); color: #ffffff; }
-  .dojo-modal.ringing { border-color: var(--imperial-gold); box-shadow: 0 0 36px rgba(245, 158, 11, 0.45); text-align: center; }
+  .dojo-modal.ringing {
+    border-color: var(--imperial-gold);
+    text-align: center;
+    animation: alarmModalPulse 0.8s ease-in-out infinite alternate;
+  }
+  @keyframes alarmModalPulse {
+    0% { box-shadow: 0 0 28px rgba(239, 68, 68, 0.55); border-color: var(--clan-red); }
+    100% { box-shadow: 0 0 54px rgba(245, 158, 11, 0.85); border-color: var(--imperial-gold); }
+  }
+  .alarm-status-bar {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;
+  }
+  .alarm-status-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 10px; border-radius: 14px; font-size: 0.74rem; font-weight: 800;
+    border: 1px solid var(--border-line); background: rgba(30, 41, 59, 0.85); color: var(--text-dim);
+  }
+  .alarm-status-pill.ok { border-color: rgba(16, 185, 129, 0.55); color: #a7f3d0; background: rgba(16, 185, 129, 0.16); }
+  .alarm-status-pill.warn { border-color: rgba(245, 158, 11, 0.6); color: #fde68a; background: rgba(245, 158, 11, 0.18); cursor: pointer; }
+  .alarm-status-pill.err { border-color: rgba(239, 68, 68, 0.6); color: #fca5a5; background: rgba(239, 68, 68, 0.18); }
+  .alarm-pref-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 8px 12px; margin-bottom: 12px; border-radius: 8px;
+    background: rgba(30, 41, 59, 0.55); border: 1px solid var(--border-soft);
+    font-size: 0.8rem; color: var(--text-dim); font-weight: 600;
+  }
   @media (max-width: 960px) {
     .sidebar { width: 260px; }
     .org-teams-branch { flex-direction: column; align-items: center; gap: 16px; }
@@ -1578,9 +1613,18 @@
   <div class="dojo-modal-overlay" id="alarmModal" onclick="if(event.target===this) closeAlarmModal()">
     <div class="dojo-modal">
       <h3>⏰ PH Time Schedule Alarms</h3>
-      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;font-weight:600;">
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:10px;font-weight:600;">
         Current PH Time: <strong id="alarmModalClock" style="color:var(--imperial-gold);">--:--:-- PST</strong>
       </p>
+      <div class="alarm-status-bar">
+        <span class="alarm-status-pill warn" id="audioStatusPill" onclick="testAlarmSound()" title="Click to unlock and test audio">🔊 Audio: Click to Arm</span>
+        <span class="alarm-status-pill warn" id="notifStatusPill" onclick="requestAlarmNotificationPermission()" title="Click to enable desktop alerts">🔔 Alerts: Checking...</span>
+        <span class="alarm-status-pill" id="wakeStatusPill">🖥️ Wake Lock: Idle</span>
+      </div>
+      <label class="alarm-pref-row" style="cursor:pointer;">
+        <span>Keep screen awake while alarms are armed (prevents OS sleep)</span>
+        <input type="checkbox" id="keepAwakeToggle" class="progress-check" checked onchange="toggleKeepAwakePref(this.checked)">
+      </label>
       <div class="alarm-form-row">
         <input type="time" id="alarmTimeInput" class="alarm-input" style="width:135px;" aria-label="Alarm time (PH Time)">
         <input type="text" id="alarmLabelInput" class="alarm-input" style="flex:1;min-width:160px;" placeholder="Schedule note (e.g. Exam Check-In, Shift End)" onkeydown="if(event.key==='Enter') addAlarm()">
@@ -1588,7 +1632,7 @@
       </div>
       <div class="alarm-list" id="alarmList"></div>
       <div class="dojo-modal-actions">
-        <button type="button" class="path-btn" onclick="testAlarmSound()">🔔 Test Sound</button>
+        <button type="button" class="path-btn" onclick="testAlarmSound()">🔔 Test Full Alarm</button>
         <button type="button" class="path-btn" onclick="closeAlarmModal()">Close</button>
       </div>
     </div>
@@ -1596,12 +1640,16 @@
   <!-- ALARM RINGING ALERT MODAL -->
   <div class="dojo-modal-overlay" id="alarmRingModal" style="z-index:1100;">
     <div class="dojo-modal ringing">
-      <h3 style="color:var(--imperial-gold);font-size:1.35rem;">⏰ SCHEDULE ALARM (PH TIME)</h3>
-      <div id="alarmRingTime" style="font-family:var(--font-head);font-size:2rem;font-weight:900;color:#ffffff;margin:8px 0;">--:-- PST</div>
-      <p id="alarmRingLabel" style="font-size:1rem;color:var(--frost-ice);font-weight:700;margin-bottom:20px;"></p>
+      <h3 style="color:var(--imperial-gold);font-size:1.35rem;">🚨⏰ SCHEDULE ALARM (PH TIME)</h3>
+      <div id="alarmRingTime" style="font-family:var(--font-head);font-size:2.1rem;font-weight:900;color:#ffffff;margin:8px 0;">--:-- PST</div>
+      <p id="alarmRingLabel" style="font-size:1.05rem;color:var(--frost-ice);font-weight:800;margin-bottom:14px;"></p>
+      <p id="alarmAudioFallbackNote" style="display:none;font-size:0.82rem;color:#fde68a;background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.45);border-radius:8px;padding:8px 12px;margin-bottom:14px;font-weight:700;">
+        Browser blocked background autoplay — click anywhere or press "Resume Sound" to play audio!
+      </p>
       <div class="dojo-modal-actions" style="justify-content:center;">
+        <button type="button" class="path-btn" id="resumeAudioBtn" style="display:none;border-color:var(--imperial-gold);color:#fde68a;" onclick="forceResumeAlarmAudio()">🔊 Resume Sound</button>
         <button type="button" class="path-btn" onclick="snoozeRingingAlarm()">Snooze +5 min</button>
-        <button type="button" class="seal-btn" style="min-width:140px;" onclick="dismissRingingAlarm()">Dismiss</button>
+        <button type="button" class="seal-btn" style="min-width:150px;" onclick="dismissRingingAlarm()">Dismiss</button>
       </div>
     </div>
   </div>
@@ -2254,27 +2302,52 @@
     if (cb) cb();
   }
   /* ============================================================
-     PH TIME CLOCK & SCHEDULE ALARMS (Asia/Manila)
+     PH TIME CLOCK & PERSISTENT BACKGROUND ALARMS (Asia/Manila)
      ============================================================ */
   var STORAGE_KEY_ALARMS = "dojo_ph_alarms";
+  var STORAGE_KEY_KEEP_AWAKE = "dojo_ph_alarm_wake";
+  var CATCHUP_WINDOW_MS = 60 * 60 * 1000;
   var originalPageTitle = document.title;
+
+  var manilaPartsFmt = null;
+  var manilaDateFmt = null;
+  var alarmsCache = null;
+
+  var alarmWavUrl = null;
+  var alarmAudioEl = null;
+  var alarmAudioUnlocked = false;
   var alarmAudioCtx = null;
-  var alarmRingInterval = null;
+  var isAlarmRinging = false;
+  var isTestingAudio = false;
   var activeRingingAlarm = null;
+
+  var alarmWatchdogInterval = null;
+  var webAudioLoopInterval = null;
   var titleFlashInterval = null;
+  var vibrateInterval = null;
+  var notifRefreshInterval = null;
+  var activeNotification = null;
+  var wakeLockSentinel = null;
+  var alarmWorker = null;
+  var alarmChannel = null;
+  var originalFaviconHref = null;
+  var dynamicFaviconLink = null;
+  var testAudioStopTimer = null;
+
   function getManilaParts(dateObj) {
-    var d = dateObj || new Date();
-    var fmt = new Intl.DateTimeFormat("en-GB", {
-      timeZone: "Asia/Manila",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false
-    });
-    var parts = fmt.formatToParts(d);
+    if (!manilaPartsFmt) {
+      manilaPartsFmt = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Manila",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      });
+    }
+    var parts = manilaPartsFmt.formatToParts(dateObj || new Date());
     var map = {};
     for (var i = 0; i < parts.length; i++) {
       map[parts[i].type] = parts[i].value;
@@ -2282,72 +2355,577 @@
     if (map.hour === "24") map.hour = "00";
     return map;
   }
-  function unlockAudioContext() {
-    var Ctx = window.AudioContext || window.webkitAudioContext;
-    if (!Ctx) return null;
-    if (!alarmAudioCtx) {
-      alarmAudioCtx = new Ctx();
+
+  function computeNextManilaTimestamp(hhmm, allowCurrentMinute) {
+    var segs = String(hhmm || "00:00").split(":");
+    var targetH = parseInt(segs[0], 10) || 0;
+    var targetM = parseInt(segs[1], 10) || 0;
+    var nowMs = Date.now();
+    var p = getManilaParts(new Date(nowMs));
+    var candidateMs = Date.UTC(
+      parseInt(p.year, 10),
+      parseInt(p.month, 10) - 1,
+      parseInt(p.day, 10),
+      targetH - 8,
+      targetM,
+      0,
+      0
+    );
+    var thresholdMs = allowCurrentMinute ? (nowMs - 59999) : nowMs;
+    while (candidateMs <= thresholdMs) {
+      candidateMs += 86400000;
     }
-    if (alarmAudioCtx.state === "suspended") {
-      alarmAudioCtx.resume().catch(function(){});
-    }
-    return alarmAudioCtx;
+    return candidateMs;
   }
-  document.addEventListener("click", unlockAudioContext, { once: true });
-  function playAlarmChime() {
+
+  function buildAlarmWavBlobUrl() {
+    if (alarmWavUrl) return alarmWavUrl;
+    var sampleRate = 22050;
+    var durationSec = 1.4;
+    var totalSamples = Math.floor(sampleRate * durationSec);
+    var dataSize = totalSamples * 2;
+    var buffer = new ArrayBuffer(44 + dataSize);
+    var view = new DataView(buffer);
+
+    function writeStr(offset, str) {
+      for (var i = 0; i < str.length; i++) {
+        view.setUint8(offset + i, str.charCodeAt(i));
+      }
+    }
+
+    writeStr(0, "RIFF");
+    view.setUint32(4, 36 + dataSize, true);
+    writeStr(8, "WAVE");
+    writeStr(12, "fmt ");
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, 1, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * 2, true);
+    view.setUint16(32, 2, true);
+    view.setUint16(34, 16, true);
+    writeStr(36, "data");
+    view.setUint32(40, dataSize, true);
+
+    var pulses = [
+      { start: 0.00, end: 0.24, f1: 987.77, f2: 1318.51 },
+      { start: 0.32, end: 0.56, f1: 1174.66, f2: 1567.98 },
+      { start: 0.64, end: 1.00, f1: 1318.51, f2: 1760.00 }
+    ];
+
+    for (var s = 0; s < totalSamples; s++) {
+      var t = s / sampleRate;
+      var sample = 0;
+      for (var k = 0; k < pulses.length; k++) {
+        var pl = pulses[k];
+        if (t >= pl.start && t <= pl.end) {
+          var localT = t - pl.start;
+          var pulseLen = pl.end - pl.start;
+          var env = 1;
+          if (localT < 0.012) env = localT / 0.012;
+          else if (localT > pulseLen - 0.015) env = (pulseLen - localT) / 0.015;
+          var raw =
+            0.55 * Math.sin(2 * Math.PI * pl.f1 * t) +
+            0.35 * Math.sin(2 * Math.PI * pl.f2 * t) +
+            0.22 * Math.sin(2 * Math.PI * pl.f1 * 2 * t) +
+            0.14 * Math.sin(2 * Math.PI * pl.f1 * 3 * t);
+          sample = Math.tanh(raw * 1.45) * 0.95 * Math.max(0, Math.min(1, env));
+          break;
+        }
+      }
+      var int16 = Math.max(-32768, Math.min(32767, Math.round(sample * 32767)));
+      view.setInt16(44 + s * 2, int16, true);
+    }
+
+    var blob = new Blob([buffer], { type: "audio/wav" });
+    alarmWavUrl = URL.createObjectURL(blob);
+    return alarmWavUrl;
+  }
+
+  function ensureAudioElements() {
+    if (!alarmAudioEl) {
+      alarmAudioEl = new Audio();
+      alarmAudioEl.src = buildAlarmWavBlobUrl();
+      alarmAudioEl.loop = true;
+      alarmAudioEl.preload = "auto";
+      alarmAudioEl.volume = 1.0;
+      alarmAudioEl.setAttribute("playsinline", "");
+      alarmAudioEl.addEventListener("ended", function() {
+        if (isAlarmRinging) {
+          alarmAudioEl.currentTime = 0;
+          alarmAudioEl.play().catch(function(){});
+        }
+      });
+    }
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (Ctx && !alarmAudioCtx) {
+      try {
+        alarmAudioCtx = new Ctx();
+        alarmAudioCtx.addEventListener("statechange", function() {
+          updateAudioStatusUI();
+          if (isAlarmRinging && alarmAudioCtx.state !== "running") {
+            alarmAudioCtx.resume().catch(function(){});
+          }
+        });
+      } catch (e) {}
+    }
+  }
+
+  function handleUserActivationForAudio() {
+    if (
+      alarmAudioUnlocked &&
+      (!alarmAudioCtx || alarmAudioCtx.state === "running") &&
+      !isAlarmRinging
+    ) {
+      return;
+    }
+
+    ensureAudioElements();
+
+    if (alarmAudioCtx && alarmAudioCtx.state !== "running") {
+      alarmAudioCtx.resume().then(function() {
+        updateAudioStatusUI();
+      }).catch(function(){});
+    }
+
+    if (alarmAudioEl && !alarmAudioUnlocked && !isAlarmRinging && !isTestingAudio) {
+      try {
+        alarmAudioEl.muted = true;
+        alarmAudioEl.volume = 0;
+        var playPromise = alarmAudioEl.play();
+        if (playPromise && typeof playPromise.then === "function") {
+          playPromise.then(function() {
+            if (!isAlarmRinging && !isTestingAudio) {
+              alarmAudioEl.pause();
+              alarmAudioEl.currentTime = 0;
+            }
+            alarmAudioEl.muted = false;
+            alarmAudioEl.volume = 1.0;
+            alarmAudioUnlocked = true;
+            updateAudioStatusUI();
+          }).catch(function() {
+            alarmAudioEl.muted = false;
+            alarmAudioEl.volume = 1.0;
+          });
+        } else {
+          if (!isAlarmRinging && !isTestingAudio) {
+            alarmAudioEl.pause();
+            alarmAudioEl.currentTime = 0;
+          }
+          alarmAudioEl.muted = false;
+          alarmAudioEl.volume = 1.0;
+          alarmAudioUnlocked = true;
+          updateAudioStatusUI();
+        }
+      } catch (err) {
+        alarmAudioEl.muted = false;
+        alarmAudioEl.volume = 1.0;
+      }
+    } else if (isAlarmRinging) {
+      ensureAlarmAudioPlaying();
+    }
+  }
+
+  ["pointerdown", "mousedown", "touchstart", "keydown", "click"].forEach(function(evtName) {
+    document.addEventListener(evtName, handleUserActivationForAudio, { capture: true, passive: true });
+  });
+
+  function playWebAudioAlarmBurst() {
     try {
-      var ctx = unlockAudioContext();
-      if (!ctx) return;
-      var notes = [880, 1174.66, 1318.51];
-      var now = ctx.currentTime;
-      for (var i = 0; i < notes.length; i++) {
-        var osc = ctx.createOscillator();
-        var gain = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(notes[i], now + i * 0.16);
-        gain.gain.setValueAtTime(0.001, now + i * 0.16);
-        gain.gain.exponentialRampToValueAtTime(0.22, now + i * 0.16 + 0.03);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.16 + 0.35);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now + i * 0.16);
-        osc.stop(now + i * 0.16 + 0.36);
+      ensureAudioElements();
+      if (!alarmAudioCtx) return false;
+      if (alarmAudioCtx.state !== "running") {
+        alarmAudioCtx.resume().catch(function(){});
+      }
+      if (alarmAudioCtx.state !== "running") return false;
+
+      var now = alarmAudioCtx.currentTime;
+      var compressor = alarmAudioCtx.createDynamicsCompressor();
+      compressor.threshold.setValueAtTime(-6, now);
+      compressor.ratio.setValueAtTime(12, now);
+      var masterGain = alarmAudioCtx.createGain();
+      masterGain.gain.setValueAtTime(1.0, now);
+      compressor.connect(masterGain);
+      masterGain.connect(alarmAudioCtx.destination);
+
+      var freqs = [987.77, 1318.51, 1760.0];
+      for (var i = 0; i < freqs.length; i++) {
+        var t0 = now + i * 0.28;
+        var osc = alarmAudioCtx.createOscillator();
+        var g = alarmAudioCtx.createGain();
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(freqs[i], t0);
+        g.gain.setValueAtTime(0.001, t0);
+        g.gain.exponentialRampToValueAtTime(0.95, t0 + 0.015);
+        g.gain.setValueAtTime(0.95, t0 + 0.20);
+        g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.24);
+        osc.connect(g);
+        g.connect(compressor);
+        osc.start(t0);
+        osc.stop(t0 + 0.25);
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function startWebAudioFallback() {
+    if (webAudioLoopInterval) return;
+    playWebAudioAlarmBurst();
+    webAudioLoopInterval = setInterval(function() {
+      if (!isAlarmRinging) {
+        stopWebAudioFallback();
+        return;
+      }
+      playWebAudioAlarmBurst();
+    }, 1100);
+  }
+
+  function stopWebAudioFallback() {
+    if (webAudioLoopInterval) {
+      clearInterval(webAudioLoopInterval);
+      webAudioLoopInterval = null;
+    }
+  }
+
+  function setAutoplayBlockedNotice(blocked) {
+    var noteEl = document.getElementById("alarmAudioFallbackNote");
+    var btnEl = document.getElementById("resumeAudioBtn");
+    if (noteEl) noteEl.style.display = blocked ? "block" : "none";
+    if (btnEl) btnEl.style.display = blocked ? "inline-block" : "none";
+  }
+
+  function ensureAlarmAudioPlaying() {
+    if (!isAlarmRinging) return;
+    ensureAudioElements();
+
+    if (alarmAudioEl) {
+      alarmAudioEl.muted = false;
+      alarmAudioEl.volume = 1.0;
+      alarmAudioEl.loop = true;
+
+      if (alarmAudioEl.paused) {
+        var p = alarmAudioEl.play();
+        if (p && typeof p.then === "function") {
+          p.then(function() {
+            alarmAudioUnlocked = true;
+            setAutoplayBlockedNotice(false);
+            stopWebAudioFallback();
+            updateAudioStatusUI();
+          }).catch(function() {
+            var webOk = playWebAudioAlarmBurst();
+            if (webOk) {
+              startWebAudioFallback();
+              setAutoplayBlockedNotice(false);
+            } else {
+              setAutoplayBlockedNotice(true);
+            }
+          });
+        }
+      } else {
+        setAutoplayBlockedNotice(false);
+        stopWebAudioFallback();
+      }
+    } else {
+      startWebAudioFallback();
+    }
+  }
+
+  window.forceResumeAlarmAudio = function() {
+    handleUserActivationForAudio();
+    ensureAlarmAudioPlaying();
+  };
+
+  function setupMediaSession(alarm) {
+    if (!("mediaSession" in navigator)) return;
+    try {
+      if (typeof MediaMetadata !== "undefined") {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: "⏰ " + (alarm.label || "Scheduled Alarm"),
+          artist: "FiveActs Proctor Dojo — PH Time",
+          album: alarm.time + " PST"
+        });
+      }
+      navigator.mediaSession.playbackState = "playing";
+      navigator.mediaSession.setActionHandler("stop", function() { dismissRingingAlarm(); });
+      navigator.mediaSession.setActionHandler("pause", function() {
+        if (isAlarmRinging) ensureAlarmAudioPlaying();
+      });
+    } catch (e) {}
+  }
+
+  function clearMediaSession() {
+    if (!("mediaSession" in navigator)) return;
+    try {
+      navigator.mediaSession.playbackState = "none";
+    } catch (e) {}
+  }
+
+  function updateNotificationStatusUI() {
+    var pill = document.getElementById("notifStatusPill");
+    if (!pill) return;
+    if (!("Notification" in window)) {
+      pill.className = "alarm-status-pill err";
+      pill.textContent = "🔔 Alerts: Unsupported";
+      return;
+    }
+    var perm = Notification.permission;
+    if (perm === "granted") {
+      pill.className = "alarm-status-pill ok";
+      pill.textContent = "🔔 Alerts: Enabled";
+    } else if (perm === "denied") {
+      pill.className = "alarm-status-pill err";
+      pill.textContent = "🔔 Alerts: Blocked (Site Settings)";
+    } else {
+      pill.className = "alarm-status-pill warn";
+      pill.textContent = "🔔 Alerts: Click to Enable";
+    }
+  }
+
+  window.requestAlarmNotificationPermission = function() {
+    if (!("Notification" in window)) return;
+    try {
+      if (Notification.permission === "default") {
+        Notification.requestPermission().then(function() {
+          updateNotificationStatusUI();
+        }).catch(function(){});
+      } else {
+        updateNotificationStatusUI();
+      }
+    } catch (e) {}
+  };
+
+  function showAlarmNotification(alarm) {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    try {
+      if (activeNotification) {
+        try { activeNotification.close(); } catch (e) {}
+        activeNotification = null;
+      }
+      var iconSvg = "data:image/svg+xml," + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">' +
+        '<rect width="64" height="64" rx="14" fill="#b91c1c"/>' +
+        '<text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-size="38">⏰</text>' +
+        '</svg>'
+      );
+      activeNotification = new Notification("⏰ PROCTOR DOJO ALARM — " + alarm.time + " PST", {
+        body: (alarm.label || "Scheduled Reminder") + "\nClick to open Dojo and dismiss.",
+        tag: "dojo-active-alarm",
+        renotify: true,
+        requireInteraction: true,
+        silent: false,
+        icon: iconSvg
+      });
+      activeNotification.onclick = function() {
+        try { window.focus(); } catch (e) {}
+        try { activeNotification.close(); } catch (e) {}
+        ensureAlarmAudioPlaying();
+      };
+    } catch (e) {}
+  }
+
+  function getKeepAwakePref() {
+    try {
+      var v = localStorage.getItem(STORAGE_KEY_KEEP_AWAKE);
+      return v === null ? true : v === "true";
+    } catch (e) {
+      return true;
+    }
+  }
+
+  window.toggleKeepAwakePref = function(checked) {
+    try { localStorage.setItem(STORAGE_KEY_KEEP_AWAKE, String(!!checked)); } catch (e) {}
+    syncWakeLock();
+  };
+
+  function updateWakeLockStatusUI() {
+    var pill = document.getElementById("wakeStatusPill");
+    if (!pill) return;
+    if (!("wakeLock" in navigator) || !window.isSecureContext) {
+      pill.className = "alarm-status-pill";
+      pill.textContent = "🖥️ Wake Lock: HTTPS Only";
+      return;
+    }
+    if (wakeLockSentinel && !wakeLockSentinel.released) {
+      pill.className = "alarm-status-pill ok";
+      pill.textContent = "🖥️ Wake Lock: Active";
+    } else {
+      pill.className = "alarm-status-pill";
+      pill.textContent = "🖥️ Wake Lock: Standby";
+    }
+  }
+
+  function syncWakeLock() {
+    if (!("wakeLock" in navigator) || !window.isSecureContext) {
+      updateWakeLockStatusUI();
+      return;
+    }
+    var hasArmed = loadAlarms().some(function(a) { return a.enabled; });
+    var shouldHold = (isAlarmRinging || (hasArmed && getKeepAwakePref())) && document.visibilityState === "visible";
+
+    if (shouldHold) {
+      if (!wakeLockSentinel || wakeLockSentinel.released) {
+        navigator.wakeLock.request("screen").then(function(sentinel) {
+          wakeLockSentinel = sentinel;
+          wakeLockSentinel.addEventListener("release", function() {
+            updateWakeLockStatusUI();
+          });
+          updateWakeLockStatusUI();
+        }).catch(function() {
+          updateWakeLockStatusUI();
+        });
+      }
+    } else if (wakeLockSentinel && !wakeLockSentinel.released) {
+      wakeLockSentinel.release().then(function() {
+        wakeLockSentinel = null;
+        updateWakeLockStatusUI();
+      }).catch(function(){});
+    } else {
+      updateWakeLockStatusUI();
+    }
+  }
+
+  function setDynamicFavicon(svgMarkup) {
+    try {
+      if (!dynamicFaviconLink) {
+        var existing = document.querySelector('link[rel*="icon"]');
+        if (existing) originalFaviconHref = existing.getAttribute("href");
+        dynamicFaviconLink = existing || document.createElement("link");
+        dynamicFaviconLink.rel = "icon";
+        dynamicFaviconLink.type = "image/svg+xml";
+        if (!existing) document.head.appendChild(dynamicFaviconLink);
+      }
+      dynamicFaviconLink.href = "data:image/svg+xml," + encodeURIComponent(svgMarkup);
+    } catch (e) {}
+  }
+
+  function restoreFavicon() {
+    try {
+      if (dynamicFaviconLink) {
+        if (originalFaviconHref) {
+          dynamicFaviconLink.href = originalFaviconHref;
+        } else if (dynamicFaviconLink.parentNode) {
+          dynamicFaviconLink.parentNode.removeChild(dynamicFaviconLink);
+          dynamicFaviconLink = null;
+        }
       }
     } catch (e) {}
   }
-  function loadAlarms() {
-    return loadSet(STORAGE_KEY_ALARMS);
+
+  function startAttentionAlerts(alarm) {
+    stopAttentionAlerts();
+    var toggle = false;
+    var redIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#ef4444"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="40">⏰</text></svg>';
+    var goldIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#f59e0b"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="40">🚨</text></svg>';
+
+    titleFlashInterval = setInterval(function() {
+      toggle = !toggle;
+      document.title = toggle
+        ? ("🚨⏰ ALARM: " + (alarm.label || alarm.time + " PST"))
+        : ("⚠️ DISMISS ALARM — " + originalPageTitle);
+      setDynamicFavicon(toggle ? redIcon : goldIcon);
+    }, 650);
+
+    if ("vibrate" in navigator) {
+      var triggerVibrate = function() {
+        try { navigator.vibrate([500, 150, 500, 150, 700]); } catch (e) {}
+      };
+      triggerVibrate();
+      vibrateInterval = setInterval(triggerVibrate, 2400);
+    }
+
+    showAlarmNotification(alarm);
+    notifRefreshInterval = setInterval(function() {
+      if (isAlarmRinging && document.hidden) {
+        showAlarmNotification(alarm);
+      }
+    }, 25000);
   }
-  function saveAlarms(arr) {
+
+  function stopAttentionAlerts() {
+    if (titleFlashInterval) { clearInterval(titleFlashInterval); titleFlashInterval = null; }
+    if (vibrateInterval) { clearInterval(vibrateInterval); vibrateInterval = null; }
+    if (notifRefreshInterval) { clearInterval(notifRefreshInterval); notifRefreshInterval = null; }
+    if ("vibrate" in navigator) {
+      try { navigator.vibrate(0); } catch (e) {}
+    }
+    if (activeNotification) {
+      try { activeNotification.close(); } catch (e) {}
+      activeNotification = null;
+    }
+    document.title = originalPageTitle;
+    restoreFavicon();
+  }
+
+  function updateAudioStatusUI() {
+    var pill = document.getElementById("audioStatusPill");
+    if (!pill) return;
+    var ctxOk = alarmAudioCtx && alarmAudioCtx.state === "running";
+    if (alarmAudioUnlocked || ctxOk) {
+      pill.className = "alarm-status-pill ok";
+      pill.textContent = "🔊 Audio: Armed (Max Vol)";
+    } else {
+      pill.className = "alarm-status-pill warn";
+      pill.textContent = "🔊 Audio: Click to Arm";
+    }
+  }
+
+  function loadAlarms() {
+    if (alarmsCache !== null) return alarmsCache;
+    var raw = loadSet(STORAGE_KEY_ALARMS);
+    var changed = false;
+    for (var i = 0; i < raw.length; i++) {
+      var a = raw[i];
+      if (!a.nextTriggerAtMs && a.enabled) {
+        var p = getManilaParts();
+        var todayKey = p.year + "-" + p.month + "-" + p.day + "_" + a.time;
+        var alreadyTriggeredToday = (a.lastTriggeredKey === todayKey);
+        a.nextTriggerAtMs = computeNextManilaTimestamp(a.time, !alreadyTriggeredToday);
+        changed = true;
+      }
+    }
+    if (changed) saveSet(STORAGE_KEY_ALARMS, raw);
+    alarmsCache = raw;
+    return alarmsCache;
+  }
+
+  function saveAlarms(arr, broadcast) {
     arr.sort(function(a, b) {
       return a.time < b.time ? -1 : (a.time > b.time ? 1 : 0);
     });
+    alarmsCache = arr;
     saveSet(STORAGE_KEY_ALARMS, arr);
     updateAlarmBadge();
+    syncWakeLock();
+    if (broadcast !== false && alarmChannel) {
+      try { alarmChannel.postMessage({ type: "alarms-updated" }); } catch (e) {}
+    }
   }
+
   function updateAlarmBadge() {
     var btn = document.getElementById("alarmTriggerBtn");
     var textEl = document.getElementById("alarmBadgeText");
     if (!btn || !textEl) return;
+
+    btn.classList.toggle("ringing", isAlarmRinging);
     var alarms = loadAlarms().filter(function(a) { return a.enabled; });
     if (alarms.length === 0) {
       btn.classList.remove("has-alarm");
-      textEl.textContent = "Alarms (0)";
+      textEl.textContent = isAlarmRinging ? "RINGING!" : "Alarms (0)";
       return;
     }
     btn.classList.add("has-alarm");
-    var p = getManilaParts();
-    var nowHM = p.hour + ":" + p.minute;
-    var nextAlarm = null;
-    for (var i = 0; i < alarms.length; i++) {
-      if (alarms[i].time > nowHM) {
-        nextAlarm = alarms[i];
-        break;
-      }
+    if (isAlarmRinging) {
+      textEl.textContent = "RINGING!";
+      return;
     }
-    if (!nextAlarm) nextAlarm = alarms[0];
-    textEl.textContent = "Next: " + nextAlarm.time + " (" + alarms.length + ")";
+    alarms.sort(function(a, b) {
+      return (a.nextTriggerAtMs || 0) - (b.nextTriggerAtMs || 0);
+    });
+    textEl.textContent = "Next: " + alarms[0].time + " (" + alarms.length + ")";
   }
+
   function renderAlarmList() {
     var listEl = document.getElementById("alarmList");
     if (!listEl) return;
@@ -2363,7 +2941,7 @@
         '<div class="alarm-item-info">' +
           '<input type="checkbox" class="progress-check" ' + (a.enabled ? "checked" : "") + ' onchange="toggleAlarm(\'' + a.id + '\')" title="Enable/Disable alarm">' +
           '<span class="alarm-item-time">' + escapeHtml(a.time) + ' PST</span>' +
-          '<span class="alarm-item-label">' + escapeHtml(a.label || "Scheduled Reminder") + '</span>' +
+          '<span class="alarm-item-label">' + escapeHtml(a.label || "Scheduled Reminder") + (a.oneShot ? " (Snooze)" : "") + '</span>' +
         '</div>' +
         '<div class="alarm-item-actions">' +
           '<button type="button" class="alarm-del-btn" onclick="deleteAlarm(\'' + a.id + '\')" title="Delete alarm">✕</button>' +
@@ -2372,148 +2950,354 @@
     }
     listEl.innerHTML = html;
   }
+
   window.openAlarmModal = function() {
-    unlockAudioContext();
+    handleUserActivationForAudio();
     var p = getManilaParts();
     var timeInput = document.getElementById("alarmTimeInput");
     if (timeInput && !timeInput.value) {
       timeInput.value = p.hour + ":" + p.minute;
     }
+    var wakeToggle = document.getElementById("keepAwakeToggle");
+    if (wakeToggle) wakeToggle.checked = getKeepAwakePref();
+    updateAudioStatusUI();
+    updateNotificationStatusUI();
+    updateWakeLockStatusUI();
     renderAlarmList();
     document.getElementById("alarmModal").style.display = "flex";
   };
+
   window.closeAlarmModal = function() {
     document.getElementById("alarmModal").style.display = "none";
   };
+
   window.addAlarm = function() {
-    unlockAudioContext();
+    handleUserActivationForAudio();
+    if ("Notification" in window && Notification.permission === "default") {
+      requestAlarmNotificationPermission();
+    }
     var timeInput = document.getElementById("alarmTimeInput");
     var labelInput = document.getElementById("alarmLabelInput");
     var timeVal = timeInput ? timeInput.value.trim() : "";
     if (!timeVal) {
-      alert("Please select a time (PH Time).");
+      if (timeInput) timeInput.focus();
       return;
     }
-    var alarms = loadAlarms();
+
+    var alarms = loadAlarms().slice();
     alarms.push({
       id: "al_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
       time: timeVal,
       label: labelInput ? labelInput.value.trim() : "",
       enabled: true,
-      lastTriggeredKey: ""
+      oneShot: false,
+      lastTriggeredKey: "",
+      nextTriggerAtMs: computeNextManilaTimestamp(timeVal, false)
     });
     saveAlarms(alarms);
     if (labelInput) labelInput.value = "";
     renderAlarmList();
   };
+
   window.toggleAlarm = function(id) {
-    var alarms = loadAlarms();
+    handleUserActivationForAudio();
+    var alarms = loadAlarms().slice();
     for (var i = 0; i < alarms.length; i++) {
       if (alarms[i].id === id) {
         alarms[i].enabled = !alarms[i].enabled;
         alarms[i].lastTriggeredKey = "";
+        alarms[i].nextTriggerAtMs = alarms[i].enabled
+          ? computeNextManilaTimestamp(alarms[i].time, false)
+          : 0;
         break;
       }
     }
     saveAlarms(alarms);
     renderAlarmList();
   };
+
   window.deleteAlarm = function(id) {
     var alarms = loadAlarms().filter(function(a) { return a.id !== id; });
     saveAlarms(alarms);
     renderAlarmList();
   };
+
   window.testAlarmSound = function() {
-    unlockAudioContext();
-    playAlarmChime();
+    isTestingAudio = true;
+    handleUserActivationForAudio();
+    ensureAudioElements();
+    if (testAudioStopTimer) {
+      clearTimeout(testAudioStopTimer);
+      testAudioStopTimer = null;
+    }
+    if (isAlarmRinging) {
+      isTestingAudio = false;
+      return;
+    }
+
+    if (alarmAudioEl) {
+      alarmAudioEl.muted = false;
+      alarmAudioEl.volume = 1.0;
+      alarmAudioEl.currentTime = 0;
+      alarmAudioEl.play().then(function() {
+        alarmAudioUnlocked = true;
+        updateAudioStatusUI();
+        testAudioStopTimer = setTimeout(function() {
+          isTestingAudio = false;
+          if (!isAlarmRinging && alarmAudioEl) {
+            alarmAudioEl.pause();
+            alarmAudioEl.currentTime = 0;
+          }
+        }, 1450);
+      }).catch(function() {
+        isTestingAudio = false;
+        playWebAudioAlarmBurst();
+      });
+    } else {
+      isTestingAudio = false;
+      playWebAudioAlarmBurst();
+    }
   };
-  function stopRingingEffects() {
-    if (alarmRingInterval) {
-      clearInterval(alarmRingInterval);
-      alarmRingInterval = null;
-    }
-    if (titleFlashInterval) {
-      clearInterval(titleFlashInterval);
-      titleFlashInterval = null;
-    }
-    document.title = originalPageTitle;
-  }
+
   function fireAlarm(alarm) {
-    stopRingingEffects();
+    if (testAudioStopTimer) {
+      clearTimeout(testAudioStopTimer);
+      testAudioStopTimer = null;
+    }
+    isTestingAudio = false;
+    isAlarmRinging = true;
     activeRingingAlarm = alarm;
     document.getElementById("alarmRingTime").textContent = alarm.time + " PST";
     document.getElementById("alarmRingLabel").textContent = alarm.label || "Scheduled Reminder";
     document.getElementById("alarmRingModal").style.display = "flex";
-    playAlarmChime();
-    alarmRingInterval = setInterval(playAlarmChime, 2200);
-    var toggle = false;
-    titleFlashInterval = setInterval(function() {
-      toggle = !toggle;
-      document.title = toggle ? ("⏰ ALARM: " + (alarm.label || alarm.time)) : originalPageTitle;
-    }, 900);
+
+    updateAlarmBadge();
+    syncWakeLock();
+    setupMediaSession(alarm);
+    ensureAlarmAudioPlaying();
+    startAttentionAlerts(alarm);
+
+    if (alarmWatchdogInterval) clearInterval(alarmWatchdogInterval);
+    alarmWatchdogInterval = setInterval(function() {
+      if (!isAlarmRinging) {
+        clearInterval(alarmWatchdogInterval);
+        alarmWatchdogInterval = null;
+        return;
+      }
+      ensureAlarmAudioPlaying();
+    }, 500);
   }
-  window.dismissRingingAlarm = function() {
-    stopRingingEffects();
+
+  function stopRingingAll() {
+    isAlarmRinging = false;
     activeRingingAlarm = null;
+    if (alarmWatchdogInterval) {
+      clearInterval(alarmWatchdogInterval);
+      alarmWatchdogInterval = null;
+    }
+    stopWebAudioFallback();
+    stopAttentionAlerts();
+    clearMediaSession();
+    setAutoplayBlockedNotice(false);
+
+    if (alarmAudioEl) {
+      try {
+        alarmAudioEl.pause();
+        alarmAudioEl.currentTime = 0;
+      } catch (e) {}
+    }
     document.getElementById("alarmRingModal").style.display = "none";
+    updateAlarmBadge();
+    syncWakeLock();
+  }
+
+  window.dismissRingingAlarm = function(fromBroadcast) {
+    stopRingingAll();
+    if (!fromBroadcast && alarmChannel) {
+      try { alarmChannel.postMessage({ type: "alarm-dismissed" }); } catch (e) {}
+    }
   };
+
   window.snoozeRingingAlarm = function() {
-    var label = activeRingingAlarm ? (activeRingingAlarm.label || "Scheduled Reminder") : "Scheduled Reminder";
+    var baseLabel = activeRingingAlarm ? (activeRingingAlarm.label || "Scheduled Reminder") : "Scheduled Reminder";
     dismissRingingAlarm();
-    var p = getManilaParts();
-    var totalMins = (parseInt(p.hour, 10) * 60 + parseInt(p.minute, 10) + 5) % 1440;
-    var newTime = pad2(Math.floor(totalMins / 60)) + ":" + pad2(totalMins % 60);
-    var alarms = loadAlarms();
+
+    var targetMs = Date.now() + 5 * 60 * 1000;
+    var p = getManilaParts(new Date(targetMs));
+    var newTime = p.hour + ":" + p.minute;
+    var alarms = loadAlarms().slice();
     alarms.push({
       id: "al_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
       time: newTime,
-      label: label.indexOf("(Snooze)") === -1 ? (label + " (Snooze)") : label,
+      label: baseLabel.replace(/\s*\(Snooze\)$/, ""),
       enabled: true,
-      lastTriggeredKey: ""
+      oneShot: true,
+      lastTriggeredKey: "",
+      nextTriggerAtMs: targetMs
     });
     saveAlarms(alarms);
     if (document.getElementById("alarmModal").style.display === "flex") {
       renderAlarmList();
     }
   };
-  function checkAlarms(parts) {
+
+  function checkAlarms() {
     var alarms = loadAlarms();
     if (alarms.length === 0) return;
-    var nowHM = parts.hour + ":" + parts.minute;
-    var triggerKey = parts.year + "-" + parts.month + "-" + parts.day + "_" + nowHM;
+
+    var nowMs = Date.now();
+    var p = getManilaParts(new Date(nowMs));
+    var triggerKey = p.year + "-" + p.month + "-" + p.day + "_" + p.hour + ":" + p.minute;
     var changed = false;
     var toFire = null;
+    var remaining = [];
+
     for (var i = 0; i < alarms.length; i++) {
       var a = alarms[i];
-      if (a.enabled && a.time === nowHM && a.lastTriggeredKey !== triggerKey) {
-        a.lastTriggeredKey = triggerKey;
-        changed = true;
-        toFire = a;
+      if (!a.enabled || !a.nextTriggerAtMs) {
+        remaining.push(a);
+        continue;
       }
+      if (nowMs >= a.nextTriggerAtMs) {
+        var lagMs = nowMs - a.nextTriggerAtMs;
+        changed = true;
+        if (lagMs <= CATCHUP_WINDOW_MS && a.lastTriggeredKey !== triggerKey) {
+          toFire = { id: a.id, time: a.time, label: a.label };
+        }
+        if (a.oneShot) {
+          continue;
+        }
+        a.lastTriggeredKey = triggerKey;
+        while (a.nextTriggerAtMs <= nowMs) {
+          a.nextTriggerAtMs += 86400000;
+        }
+      }
+      remaining.push(a);
     }
+
     if (changed) {
-      saveAlarms(alarms);
+      saveAlarms(remaining);
+      if (document.getElementById("alarmModal").style.display === "flex") {
+        renderAlarmList();
+      }
     }
     if (toFire) {
       fireAlarm(toFire);
     }
   }
-  function tickClock(){
+
+  function tickClock() {
     var now = new Date();
-    var optsTime = { timeZone: "Asia/Manila", hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" };
-    var optsDate = { timeZone: "Asia/Manila", weekday: "long", year: "numeric", month: "long", day: "numeric" };
-    
+    if (!manilaDateFmt) {
+      manilaDateFmt = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Manila",
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+    }
     var parts = getManilaParts(now);
     var timeStr = parts.hour + ":" + parts.minute + ":" + parts.second + " PST";
+
     var timeEl = document.getElementById("clockTime");
     var dateEl = document.getElementById("clockDate");
     var modalClockEl = document.getElementById("alarmModalClock");
-    if (timeEl) timeEl.textContent = timeStr || (now.toLocaleTimeString("en-US", optsTime) + " PST");
-    if (dateEl) dateEl.textContent = now.toLocaleDateString("en-US", optsDate);
+    if (timeEl) timeEl.textContent = timeStr;
+    if (dateEl) dateEl.textContent = manilaDateFmt.format(now);
     if (modalClockEl) modalClockEl.textContent = timeStr;
+
     updateAlarmBadge();
-    checkAlarms(parts);
+    checkAlarms();
   }
+
+  function startBackgroundWorker() {
+    if (typeof Worker === "undefined" || typeof Blob === "undefined") return;
+    try {
+      var workerCode = "setInterval(function(){ postMessage('tick'); }, 1000);";
+      var blobUrl = URL.createObjectURL(new Blob([workerCode], { type: "application/javascript" }));
+      alarmWorker = new Worker(blobUrl);
+      alarmWorker.onmessage = function() {
+        checkAlarms();
+        if (isAlarmRinging) ensureAlarmAudioPlaying();
+      };
+      alarmWorker.onerror = function() {
+        alarmWorker = null;
+      };
+    } catch (e) {
+      alarmWorker = null;
+    }
+  }
+
+  function setupLifecycleListeners() {
+    document.addEventListener("visibilitychange", function() {
+      tickClock();
+      syncWakeLock();
+      if (isAlarmRinging) {
+        ensureAlarmAudioPlaying();
+        if (document.hidden && activeRingingAlarm) {
+          showAlarmNotification(activeRingingAlarm);
+        }
+      }
+    });
+
+    window.addEventListener("focus", function() {
+      tickClock();
+      syncWakeLock();
+      if (isAlarmRinging) ensureAlarmAudioPlaying();
+    });
+
+    window.addEventListener("pageshow", function() {
+      tickClock();
+      syncWakeLock();
+      if (isAlarmRinging) ensureAlarmAudioPlaying();
+    });
+
+    window.addEventListener("storage", function(e) {
+      if (e && e.key === STORAGE_KEY_ALARMS) {
+        alarmsCache = null;
+        updateAlarmBadge();
+        syncWakeLock();
+        if (document.getElementById("alarmModal").style.display === "flex") {
+          renderAlarmList();
+        }
+      }
+    });
+
+    if ("BroadcastChannel" in window) {
+      try {
+        alarmChannel = new BroadcastChannel("dojo_ph_alarm_sync");
+        alarmChannel.onmessage = function(evt) {
+          if (!evt || !evt.data) return;
+          if (evt.data.type === "alarms-updated") {
+            alarmsCache = null;
+            updateAlarmBadge();
+            syncWakeLock();
+            if (document.getElementById("alarmModal").style.display === "flex") {
+              renderAlarmList();
+            }
+          } else if (evt.data.type === "alarm-dismissed") {
+            dismissRingingAlarm(true);
+          }
+        };
+      } catch (e) {
+        alarmChannel = null;
+      }
+    }
+  }
+
+  function initAlarmSubsystem() {
+    ensureAudioElements();
+    setupLifecycleListeners();
+    startBackgroundWorker();
+    tickClock();
+    setInterval(tickClock, 1000);
+    syncWakeLock();
+    updateAudioStatusUI();
+    updateNotificationStatusUI();
+    updateWakeLockStatusUI();
+  }
+
   function renderQuickActions(){
     var html = "";
     for (var i=0;i<QUICK_ACTIONS.length;i++){
@@ -2576,236 +3360,4 @@
     var wrap = document.getElementById("thresholdFilters");
     if (!wrap) return;
     wrap.innerHTML = 
-      '<button class="filter-chip' + (thresholdActiveFilter === "all" ? " active" : "") + '" onclick="setThresholdFilter(\'all\')">All (' + INFRACTIONS.length + ')</button>' +
-      '<button class="filter-chip' + (thresholdActiveFilter === "Minor" ? " active" : "") + '" onclick="setThresholdFilter(\'Minor\')">Minor Violations</button>' +
-      '<button class="filter-chip' + (thresholdActiveFilter === "Major" ? " active" : "") + '" onclick="setThresholdFilter(\'Major\')">Major Violations</button>';
-  }
-  window.setThresholdFilter = function(filter) {
-    thresholdActiveFilter = filter;
-    renderThresholdFilters();
-    renderThresholdGrid();
-  };
-  window.handleThresholdSearch = function() {
-    toggleClearBtn("thresholdSearch");
-    renderThresholdGrid();
-  };
-  window.clearThresholdSearch = function() {
-    var input = document.getElementById("thresholdSearch");
-    if (input) {
-      input.value = "";
-      input.focus();
-    }
-    toggleClearBtn("thresholdSearch");
-    renderThresholdGrid();
-  };
-  function getRiskClass(severity, limit) {
-    if (severity === "Major") return "risk-red";
-    if (limit <= 1) return "risk-orange";
-    if (limit === 2) return "risk-yellow";
-    return "risk-green";
-  }
-  function renderThresholdGrid() {
-    var grid = document.getElementById("infractionGrid");
-    var empty = document.getElementById("infractionEmpty");
-    var searchEl = document.getElementById("thresholdSearch");
-    var countEl = document.getElementById("thresholdSearchCount");
-    if (!grid) return;
-    var query = searchEl ? searchEl.value.trim().toLowerCase() : "";
-    var bySeverity = INFRACTIONS.filter(function(item) {
-      if (thresholdActiveFilter === "all") return true;
-      return item[3].toLowerCase() === thresholdActiveFilter.toLowerCase();
-    });
-    var filtered = bySeverity.filter(function(item) {
-      if (!query) return true;
-      var termTag = item[5];
-      var canned = termTag ? findByTerm(termTag) : null;
-      var haystack = (item[0] + " " + item[1] + " " + item[2] + " " + item[3] + " " + (canned ? canned.text : "")).toLowerCase();
-      return haystack.indexOf(query) !== -1;
-    });
-    if (countEl) {
-      countEl.textContent = query ? ("Showing " + filtered.length + " of " + bySeverity.length + " infractions") : "";
-    }
-    if (filtered.length === 0) {
-      grid.innerHTML = "";
-      if (empty) empty.style.display = "block";
-      return;
-    }
-    if (empty) empty.style.display = "none";
-    var html = "";
-    filtered.forEach(function(item) {
-      var name = item[0];
-      var phase = item[1];
-      var category = item[2];
-      var severity = item[3];
-      var threshold = item[4];
-      var termTag = item[5];
-      var riskClass = getRiskClass(severity, threshold);
-      var canned = termTag ? findByTerm(termTag) : null;
-      var cannedSpiel = canned ? escapeHtml(canned.text) : "Issue standard verbal/chat warning to candidate.";
-      html += '<div class="infr-card ' + riskClass + '" onclick="this.classList.toggle(\'expanded\')">' +
-        '<div class="infr-name">' + escapeHtml(name) + '</div>' +
-        '<div class="infr-meta">' +
-          '<span class="badge ' + (severity === "Major" ? "badge-major" : "badge-minor") + '">' + severity + '</span>' +
-          '<span>Phase: ' + escapeHtml(phase) + '</span>' +
-          '<span>Type: ' + escapeHtml(category) + '</span>' +
-        '</div>' +
-        '<div class="infr-threshold">Allowed limit: <strong>' + threshold + ' warning(s)</strong> before escalation.</div>' +
-        '<div class="infr-detail">' +
-          '<p style="margin-bottom:8px;font-size:0.8rem;color:var(--text-muted);font-weight:700;">Action Script:</p>' +
-          '<p style="margin-bottom:8px;color:#f8fafc;font-weight:500;">"' + cannedSpiel + '"</p>' +
-          (canned ? '<button class="seal-btn" style="min-width:auto;padding:4px 12px;font-size:0.75rem;" onclick="event.stopPropagation();copyDirectText(this,\'' + canned.text.replace(/'/g, "\\'") + '\')">❄️ Copy Spiel</button>' : '') +
-        '</div>' +
-      '</div>';
-    });
-    grid.innerHTML = html;
-  }
-  /* ============================================================
-     CLIENT POLICIES LOGIC
-     ============================================================ */
-  function renderPolicyDropdown() {
-    var select = document.getElementById("policySelect");
-    if (!select || select.options.length > 0) return;
-    var html = "";
-    for (var i = 0; i < POLICIES.length; i++) {
-      html += '<option value="' + i + '">' + escapeHtml(POLICIES[i][0]) + '</option>';
-    }
-    select.innerHTML = html;
-  }
-  window.renderGenerator = function() {
-    var select = document.getElementById("policySelect");
-    var target = document.getElementById("generatorCards");
-    if (!select || !target) return;
-    var idx = parseInt(select.value, 10) || 0;
-    var p = POLICIES[idx];
-    if (!p) return;
-    target.innerHTML = 
-      '<div class="gen-card">' +
-        '<h4>Break Entitlement</h4>' +
-        '<p>' + escapeHtml(p[2]) + '</p>' +
-        '<button class="seal-btn" onclick="copyDirectText(this, \'Break Policy: ' + p[2].replace(/'/g, "\\'") + '\')">🎁 Copy Policy</button>' +
-      '</div>' +
-      '<div class="gen-card">' +
-        '<h4>Identification & Name Rules</h4>' +
-        '<p>Name Change: ' + escapeHtml(p[1]) + '<br>Name Policy: ' + escapeHtml(p[3]) + '</p>' +
-        '<button class="seal-btn" onclick="copyDirectText(this, \'Name Policy: ' + p[3].replace(/'/g, "\\'") + '\')">🎁 Copy Policy</button>' +
-      '</div>' +
-      '<div class="gen-card">' +
-        '<h4>Environment & Documentation</h4>' +
-        '<p>Browser: ' + escapeHtml(p[4]) + '<br>Materials Allowed: ' + escapeHtml(p[5]) + '</p>' +
-        '<button class="seal-btn" onclick="copyDirectText(this, \'Documentation Policy: ' + p[5].replace(/'/g, "\\'") + '\')">🎁 Copy Policy</button>' +
-      '</div>';
-  };
-  window.handlePoliciesSearch = function() {
-    toggleClearBtn("policiesSearch");
-    renderPoliciesTable();
-  };
-  window.clearPoliciesSearch = function() {
-    var input = document.getElementById("policiesSearch");
-    if (input) {
-      input.value = "";
-      input.focus();
-    }
-    toggleClearBtn("policiesSearch");
-    renderPoliciesTable();
-  };
-  function renderPoliciesTable() {
-    var tbody = document.getElementById("policiesBody");
-    var countEl = document.getElementById("policiesCount");
-    var emptyEl = document.getElementById("policiesEmpty");
-    var searchEl = document.getElementById("policiesSearch");
-    var searchCountEl = document.getElementById("policiesSearchCount");
-    if (!tbody) return;
-    var query = searchEl ? searchEl.value.trim().toLowerCase() : "";
-    var filtered = POLICIES.filter(function(row) {
-      if (!query) return true;
-      return row.join(" ").toLowerCase().indexOf(query) !== -1;
-    });
-    if (countEl) {
-      countEl.textContent = query ? ("(" + filtered.length + " of " + POLICIES.length + " Sponsors)") : ("(" + POLICIES.length + " Sponsors)");
-    }
-    if (searchCountEl) {
-      searchCountEl.textContent = query ? ("Showing " + filtered.length + " of " + POLICIES.length + " matching sponsors") : "";
-    }
-    if (emptyEl) {
-      emptyEl.style.display = filtered.length === 0 ? "block" : "none";
-    }
-    var html = "";
-    for (var i = 0; i < filtered.length; i++) {
-      var row = filtered[i];
-      html += '<tr>' +
-        '<td><strong>' + escapeHtml(row[0]) + '</strong></td>' +
-        '<td>' + escapeHtml(row[1]) + '</td>' +
-        '<td>' + escapeHtml(row[2]) + '</td>' +
-        '<td>' + escapeHtml(row[3]) + '</td>' +
-        '<td>' + escapeHtml(row[4]) + '</td>' +
-        '<td>' + escapeHtml(row[5]) + '</td>' +
-      '</tr>';
-    }
-    tbody.innerHTML = html;
-  }
-  /* ============================================================
-     FALLING SNOW CANVAS ANIMATION
-     ============================================================ */
-  function initFxCanvas() {
-    var canvas = document.getElementById("fxCanvas");
-    if (!canvas) return;
-    var ctx = canvas.getContext("2d");
-    var w = canvas.width = window.innerWidth;
-    var h = canvas.height = window.innerHeight;
-    window.addEventListener("resize", function() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    });
-    var flakes = [];
-    for (var i = 0; i < 75; i++) {
-      flakes.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        r: Math.random() * 2.8 + 1.2,
-        vx: (Math.random() - 0.45) * 0.7,
-        vy: Math.random() * 1.1 + 0.5,
-        alpha: Math.random() * 0.7 + 0.3
-      });
-    }
-    function loop() {
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = "#ffffff";
-      for (var j = 0; j < flakes.length; j++) {
-        var f = flakes[j];
-        f.x += f.vx;
-        f.y += f.vy;
-        if (f.y > h) { f.y = -5; f.x = Math.random() * w; }
-        if (f.x < 0) f.x = w;
-        if (f.x > w) f.x = 0;
-        ctx.globalAlpha = f.alpha;
-        ctx.beginPath();
-        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      requestAnimationFrame(loop);
-    }
-    loop();
-  }
-  /* ============================================================
-     APPLICATION BOOTSTRAPPER
-     ============================================================ */
-  window.addEventListener("DOMContentLoaded", function() {
-    initTickerText();
-    tickClock();
-    setInterval(tickClock, 1000);
-    renderQuickActions();
-    renderCheckin();
-    renderLibraryFilters();
-    renderLibraryList();
-    renderThresholdFilters();
-    renderThresholdGrid();
-    renderPolicyDropdown();
-    renderGenerator();
-    renderPoliciesTable();
-    updateSidebarLinks("view-home");
-    initFxCanvas();
-  });
-})();
-</script>
-</body>
-</html>
+      '<button class="filter-chip' +
